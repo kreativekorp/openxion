@@ -1,0 +1,61 @@
+function sixpoints x
+	return round(x * 1000000) / 1000000
+end sixpoints
+
+put zero && never && one && once && two && twice && three && thrice
+put four && five && six && seven && eight && nine && ten && eleven && twelve
+put thirteen && fourteen && fifteen && sixteen && seventeen && eighteen && nineteen && twenty
+put sixpoints(phi) && sixpoints(euler) && sixpoints(pi) && sixpoints(π)
+put ∞ && inf && infinity && forever && nan
+put empty
+put the chartonum of null && the chartonum of backspace && the chartonum of tab ¬
+	&& the chartonum of linefeed && the chartonum of newline && the chartonum of formfeed ¬
+	&& the chartonum of return && the chartonum of escape && the chartonum of space ¬
+	&& the chartonum of del && the chartonum of delete
+put quote & apostrophe & comma & period & fullstop & slash & colon & semicolon & backslash
+put true && false
+
+put pi into x
+put sixpoints(x)
+const hi = 5
+put hi into x
+put sixpoints(x)
+
+-- most of this is to test whether XNInterpreter.reset() clears user-defined constants
+-- if it doesn't, this is likely to make future tests fail due to the common variable names
+const a = 9
+const b = 8
+const c = 7
+const d = 6
+const e = 5
+const z = 4
+const y = 3
+const x = 2
+const w = 1
+
+put w
+put x
+put y
+put z
+put e
+put d
+put c
+put b
+put a
+
+ordinal l = 909
+ordinal h = 808
+ordinal n = 707
+ordinal p = 606
+ordinal q = 505
+ordinal foo = 5
+ordinal bar = 7
+
+local alpha as list
+put ("a","b","c","d","e","f","g","h","i") into alpha
+put foo element of alpha
+put bar element of alpha
+
+put "abcdefghi" into alphastr
+put foo char of alphastr
+put bar char of alphastr

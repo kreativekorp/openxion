@@ -1,0 +1,38 @@
+put "This is a parser test. It does not test the interpreter."
+exit to interpreter
+
+object type blah
+end blah
+
+object type blah aka bleh
+end blah
+
+object type blah pl blahs
+end blah
+
+object type blah pl blahs aka bleh pl blehs
+end blah
+
+object type blah blah blah
+end blah blah blah
+
+object type blah blah blah aka bleh bleh bleh
+end blah blah blah
+
+object type blah blah blah pl blah blah blahs
+end blah blah blah
+
+object type blah blah blah pl blah blah blahs aka bleh bleh bleh pl bleh bleh blehs
+end blah blah blah
+
+object type blih blih extends blah blah
+end blih blih
+
+∞∞
+object type bloh bloh implements blah blah, bleh bleh
+end bloh bloh
+
+object type bluh bluh extends blah blah implements bleh bleh, blih blih
+end bluh bluh
+∞∞
+

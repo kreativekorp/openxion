@@ -1,0 +1,193 @@
+local ll as list is ("hello",zero,one,true)
+local tmp as list
+
+put the number of elements in ll
+
+put ll into tmp
+put "x" into element 0 of tmp
+put tmp
+put ll into tmp
+put "x" into element 1 of tmp
+put tmp
+put ll into tmp
+put "x" into element 2 of tmp
+put tmp
+put ll into tmp
+put "x" into element 3 of tmp
+put tmp
+put ll into tmp
+put "x" into element 4 of tmp
+put tmp
+put ll into tmp
+put "x" into element 5 of tmp
+put tmp
+put ll into tmp
+put "x" into element 6 of tmp
+put tmp
+put ll into tmp
+put "x" into element 7 of tmp
+put tmp
+
+put ll into tmp
+put "x" into element 0 of tmp
+put tmp
+put ll into tmp
+put "x" into element -1 of tmp
+put tmp
+put ll into tmp
+put "x" into element -2 of tmp
+put tmp
+put ll into tmp
+put "x" into element -3 of tmp
+put tmp
+put ll into tmp
+put "x" into element -4 of tmp
+put tmp
+put ll into tmp
+put "x" into element -5 of tmp
+put tmp
+put ll into tmp
+put "x" into element -6 of tmp
+put tmp
+put ll into tmp
+put "x" into element -7 of tmp
+put tmp
+
+put ll into tmp
+put "x" into elements -8 to -6 of tmp
+put tmp
+put ll into tmp
+put "x" into elements -6 to -2 of tmp
+put tmp
+put ll into tmp
+put "x" into elements 2 to 6 of tmp
+put tmp
+put ll into tmp
+put "x" into elements 6 to 8 of tmp
+put tmp
+
+put ll into tmp
+put "x" before element 0 of tmp
+put tmp
+put ll into tmp
+put "x" before element 1 of tmp
+put tmp
+put ll into tmp
+put "x" before element 2 of tmp
+put tmp
+put ll into tmp
+put "x" before element 3 of tmp
+put tmp
+put ll into tmp
+put "x" before element 4 of tmp
+put tmp
+put ll into tmp
+put "x" before element 5 of tmp
+put tmp
+put ll into tmp
+put "x" before element 6 of tmp
+put tmp
+put ll into tmp
+put "x" before element 7 of tmp
+put tmp
+
+put ll into tmp
+put "x" before element 0 of tmp
+put tmp
+put ll into tmp
+put "x" before element -1 of tmp
+put tmp
+put ll into tmp
+put "x" before element -2 of tmp
+put tmp
+put ll into tmp
+put "x" before element -3 of tmp
+put tmp
+put ll into tmp
+put "x" before element -4 of tmp
+put tmp
+put ll into tmp
+put "x" before element -5 of tmp
+put tmp
+put ll into tmp
+put "x" before element -6 of tmp
+put tmp
+put ll into tmp
+put "x" before element -7 of tmp
+put tmp
+
+put ll into tmp
+put "x" before elements -8 to -6 of tmp
+put tmp
+put ll into tmp
+put "x" before elements -6 to -2 of tmp
+put tmp
+put ll into tmp
+put "x" before elements 2 to 6 of tmp
+put tmp
+put ll into tmp
+put "x" before elements 6 to 8 of tmp
+put tmp
+
+put ll into tmp
+put "x" after element 0 of tmp
+put tmp
+put ll into tmp
+put "x" after element 1 of tmp
+put tmp
+put ll into tmp
+put "x" after element 2 of tmp
+put tmp
+put ll into tmp
+put "x" after element 3 of tmp
+put tmp
+put ll into tmp
+put "x" after element 4 of tmp
+put tmp
+put ll into tmp
+put "x" after element 5 of tmp
+put tmp
+put ll into tmp
+put "x" after element 6 of tmp
+put tmp
+put ll into tmp
+put "x" after element 7 of tmp
+put tmp
+
+put ll into tmp
+put "x" after element 0 of tmp
+put tmp
+put ll into tmp
+put "x" after element -1 of tmp
+put tmp
+put ll into tmp
+put "x" after element -2 of tmp
+put tmp
+put ll into tmp
+put "x" after element -3 of tmp
+put tmp
+put ll into tmp
+put "x" after element -4 of tmp
+put tmp
+put ll into tmp
+put "x" after element -5 of tmp
+put tmp
+put ll into tmp
+put "x" after element -6 of tmp
+put tmp
+put ll into tmp
+put "x" after element -7 of tmp
+put tmp
+
+put ll into tmp
+put "x" after elements -8 to -6 of tmp
+put tmp
+put ll into tmp
+put "x" after elements -6 to -2 of tmp
+put tmp
+put ll into tmp
+put "x" after elements 2 to 6 of tmp
+put tmp
+put ll into tmp
+put "x" after elements 6 to 8 of tmp
+put tmp

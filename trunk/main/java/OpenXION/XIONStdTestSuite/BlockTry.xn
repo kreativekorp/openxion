@@ -1,0 +1,81 @@
+global b,c,d
+
+-- try-catch-finally
+
+try put "Hello" catch whatever put "Uh-oh" finally put "I'm outta here"
+
+try put "Hello"
+catch whatever put "Uh-oh" finally put "I'm outta here"
+
+try put "Hello"
+catch whatever put "Uh-oh"
+finally put "I'm outta here"
+
+try
+	put "Hello"
+catch whatever put "Uh-oh" finally put "I'm outta here"
+
+try
+	put "Hello"
+catch whatever
+	put "Uh-oh"
+finally put "I'm outta here"
+
+try
+	put "Hello"
+catch whatever
+	put "Uh-oh"
+finally
+	put "I'm outta here"
+end try
+
+-- try-catch
+
+try put "Hello" catch whatever put "Uh-oh"
+
+try put "Hello"
+catch whatever put "Uh-oh"
+
+try
+	put "Hello"
+catch whatever put "Uh-oh"
+
+try
+	put "Hello"
+catch whatever
+	put "Uh-oh"
+end try
+
+-- try-finally
+
+try put "Hello" finally put "I'm outta here"
+
+try put "Hello"
+finally put "I'm outta here"
+
+try
+	put "Hello"
+finally put "I'm outta here"
+
+try
+	put "Hello"
+finally
+	put "I'm outta here"
+end try
+
+-- try
+
+try put "Hello"
+
+try
+	put "Hello"
+end try
+
+-- HyperTalk-esque crazyness
+
+try put "Hello" catch e1 try put "Aloha" catch e2 put "Ohno!" finally put "Aloha" finally put "Goodbye"
+try catch e1 put "wtf!?" finally put "goodbye"
+try put "Hello" catch e1 finally put "goodbye"
+
+try put "Hello" catch e1 put "wtf!?" finally
+end try

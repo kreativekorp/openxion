@@ -1,0 +1,14 @@
+put 7
+on foo a
+	put 1
+end foo
+on bar a
+	exit to interpreter
+	put 2
+end bar
+foo 9
+bar 9
+foo 1
+foo 2
+foo 3
+put "done"

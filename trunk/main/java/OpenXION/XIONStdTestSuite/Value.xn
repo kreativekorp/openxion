@@ -1,0 +1,12 @@
+put value("HyperCard")
+put value("2.2")
+put value("HyperCard 2.2")
+put value("3 + 4")
+put value("2+2")
+put value("                                HyperCard                2.2                           ")
+try
+	put value("2 + true")
+catch e
+	put e
+end try
+put value("2+")

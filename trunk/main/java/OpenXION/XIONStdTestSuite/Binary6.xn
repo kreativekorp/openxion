@@ -1,0 +1,482 @@
+local test as binary is "12EBECCA"
+local tmp as binary
+
+put test into tmp
+put -1 into tinyInt -6 of tmp
+put -6 && tmp
+put test into tmp
+put -1 into tinyInt -5 of tmp
+put -5 && tmp
+put test into tmp
+put -1 into tinyInt -4 of tmp
+put -4 && tmp
+put test into tmp
+put -1 into tinyInt -3 of tmp
+put -3 && tmp
+put test into tmp
+put -1 into tinyInt -2 of tmp
+put -2 && tmp
+put test into tmp
+put -1 into tinyInt -1 of tmp
+put -1 && tmp
+put test into tmp
+put -1 into tinyInt 0 of tmp
+put 0 && tmp
+put test into tmp
+put -1 into tinyInt 1 of tmp
+put 1 && tmp
+put test into tmp
+put -1 into tinyInt 2 of tmp
+put 2 && tmp
+put test into tmp
+put -1 into tinyInt 3 of tmp
+put 3 && tmp
+put test into tmp
+put -1 into tinyInt 4 of tmp
+put 4 && tmp
+put test into tmp
+put -1 into tinyInt 5 of tmp
+put 5 && tmp
+put test into tmp
+put -1 into tinyInt 6 of tmp
+put 6 && tmp
+
+put test into tmp
+put -1 into shortInt -6 of tmp
+put -6 && tmp
+put test into tmp
+put -1 into shortInt -5 of tmp
+put -5 && tmp
+put test into tmp
+put -1 into shortInt -4 of tmp
+put -4 && tmp
+put test into tmp
+put -1 into shortInt -3 of tmp
+put -3 && tmp
+put test into tmp
+put -1 into shortInt -2 of tmp
+put -2 && tmp
+put test into tmp
+put -1 into shortInt -1 of tmp
+put -1 && tmp
+put test into tmp
+put -1 into shortInt 0 of tmp
+put 0 && tmp
+put test into tmp
+put -1 into shortInt 1 of tmp
+put 1 && tmp
+put test into tmp
+put -1 into shortInt 2 of tmp
+put 2 && tmp
+put test into tmp
+put -1 into shortInt 3 of tmp
+put 3 && tmp
+put test into tmp
+put -1 into shortInt 4 of tmp
+put 4 && tmp
+put test into tmp
+put -1 into shortInt 5 of tmp
+put 5 && tmp
+put test into tmp
+put -1 into shortInt 6 of tmp
+put 6 && tmp
+
+put test into tmp
+put -1 into medInt -6 of tmp
+put -6 && tmp
+put test into tmp
+put -1 into medInt -5 of tmp
+put -5 && tmp
+put test into tmp
+put -1 into medInt -4 of tmp
+put -4 && tmp
+put test into tmp
+put -1 into medInt -3 of tmp
+put -3 && tmp
+put test into tmp
+put -1 into medInt -2 of tmp
+put -2 && tmp
+put test into tmp
+put -1 into medInt -1 of tmp
+put -1 && tmp
+put test into tmp
+put -1 into medInt 0 of tmp
+put 0 && tmp
+put test into tmp
+put -1 into medInt 1 of tmp
+put 1 && tmp
+put test into tmp
+put -1 into medInt 2 of tmp
+put 2 && tmp
+put test into tmp
+put -1 into medInt 3 of tmp
+put 3 && tmp
+put test into tmp
+put -1 into medInt 4 of tmp
+put 4 && tmp
+put test into tmp
+put -1 into medInt 5 of tmp
+put 5 && tmp
+put test into tmp
+put -1 into medInt 6 of tmp
+put 6 && tmp
+
+put test into tmp
+put -1 into longInt -6 of tmp
+put -6 && tmp
+put test into tmp
+put -1 into longInt -5 of tmp
+put -5 && tmp
+put test into tmp
+put -1 into longInt -4 of tmp
+put -4 && tmp
+put test into tmp
+put -1 into longInt -3 of tmp
+put -3 && tmp
+put test into tmp
+put -1 into longInt -2 of tmp
+put -2 && tmp
+put test into tmp
+put -1 into longInt -1 of tmp
+put -1 && tmp
+put test into tmp
+put -1 into longInt 0 of tmp
+put 0 && tmp
+put test into tmp
+put -1 into longInt 1 of tmp
+put 1 && tmp
+put test into tmp
+put -1 into longInt 2 of tmp
+put 2 && tmp
+put test into tmp
+put -1 into longInt 3 of tmp
+put 3 && tmp
+put test into tmp
+put -1 into longInt 4 of tmp
+put 4 && tmp
+put test into tmp
+put -1 into longInt 5 of tmp
+put 5 && tmp
+put test into tmp
+put -1 into longInt 6 of tmp
+put 6 && tmp
+
+put test into tmp
+put -1 before tinyInt -6 of tmp
+put -6 && tmp
+put test into tmp
+put -1 before tinyInt -5 of tmp
+put -5 && tmp
+put test into tmp
+put -1 before tinyInt -4 of tmp
+put -4 && tmp
+put test into tmp
+put -1 before tinyInt -3 of tmp
+put -3 && tmp
+put test into tmp
+put -1 before tinyInt -2 of tmp
+put -2 && tmp
+put test into tmp
+put -1 before tinyInt -1 of tmp
+put -1 && tmp
+put test into tmp
+put -1 before tinyInt 0 of tmp
+put 0 && tmp
+put test into tmp
+put -1 before tinyInt 1 of tmp
+put 1 && tmp
+put test into tmp
+put -1 before tinyInt 2 of tmp
+put 2 && tmp
+put test into tmp
+put -1 before tinyInt 3 of tmp
+put 3 && tmp
+put test into tmp
+put -1 before tinyInt 4 of tmp
+put 4 && tmp
+put test into tmp
+put -1 before tinyInt 5 of tmp
+put 5 && tmp
+put test into tmp
+put -1 before tinyInt 6 of tmp
+put 6 && tmp
+
+put test into tmp
+put -1 before shortInt -6 of tmp
+put -6 && tmp
+put test into tmp
+put -1 before shortInt -5 of tmp
+put -5 && tmp
+put test into tmp
+put -1 before shortInt -4 of tmp
+put -4 && tmp
+put test into tmp
+put -1 before shortInt -3 of tmp
+put -3 && tmp
+put test into tmp
+put -1 before shortInt -2 of tmp
+put -2 && tmp
+put test into tmp
+put -1 before shortInt -1 of tmp
+put -1 && tmp
+put test into tmp
+put -1 before shortInt 0 of tmp
+put 0 && tmp
+put test into tmp
+put -1 before shortInt 1 of tmp
+put 1 && tmp
+put test into tmp
+put -1 before shortInt 2 of tmp
+put 2 && tmp
+put test into tmp
+put -1 before shortInt 3 of tmp
+put 3 && tmp
+put test into tmp
+put -1 before shortInt 4 of tmp
+put 4 && tmp
+put test into tmp
+put -1 before shortInt 5 of tmp
+put 5 && tmp
+put test into tmp
+put -1 before shortInt 6 of tmp
+put 6 && tmp
+
+put test into tmp
+put -1 before medInt -6 of tmp
+put -6 && tmp
+put test into tmp
+put -1 before medInt -5 of tmp
+put -5 && tmp
+put test into tmp
+put -1 before medInt -4 of tmp
+put -4 && tmp
+put test into tmp
+put -1 before medInt -3 of tmp
+put -3 && tmp
+put test into tmp
+put -1 before medInt -2 of tmp
+put -2 && tmp
+put test into tmp
+put -1 before medInt -1 of tmp
+put -1 && tmp
+put test into tmp
+put -1 before medInt 0 of tmp
+put 0 && tmp
+put test into tmp
+put -1 before medInt 1 of tmp
+put 1 && tmp
+put test into tmp
+put -1 before medInt 2 of tmp
+put 2 && tmp
+put test into tmp
+put -1 before medInt 3 of tmp
+put 3 && tmp
+put test into tmp
+put -1 before medInt 4 of tmp
+put 4 && tmp
+put test into tmp
+put -1 before medInt 5 of tmp
+put 5 && tmp
+put test into tmp
+put -1 before medInt 6 of tmp
+put 6 && tmp
+
+put test into tmp
+put -1 before longInt -6 of tmp
+put -6 && tmp
+put test into tmp
+put -1 before longInt -5 of tmp
+put -5 && tmp
+put test into tmp
+put -1 before longInt -4 of tmp
+put -4 && tmp
+put test into tmp
+put -1 before longInt -3 of tmp
+put -3 && tmp
+put test into tmp
+put -1 before longInt -2 of tmp
+put -2 && tmp
+put test into tmp
+put -1 before longInt -1 of tmp
+put -1 && tmp
+put test into tmp
+put -1 before longInt 0 of tmp
+put 0 && tmp
+put test into tmp
+put -1 before longInt 1 of tmp
+put 1 && tmp
+put test into tmp
+put -1 before longInt 2 of tmp
+put 2 && tmp
+put test into tmp
+put -1 before longInt 3 of tmp
+put 3 && tmp
+put test into tmp
+put -1 before longInt 4 of tmp
+put 4 && tmp
+put test into tmp
+put -1 before longInt 5 of tmp
+put 5 && tmp
+put test into tmp
+put -1 before longInt 6 of tmp
+put 6 && tmp
+
+put test into tmp
+put -1 after tinyInt -6 of tmp
+put -6 && tmp
+put test into tmp
+put -1 after tinyInt -5 of tmp
+put -5 && tmp
+put test into tmp
+put -1 after tinyInt -4 of tmp
+put -4 && tmp
+put test into tmp
+put -1 after tinyInt -3 of tmp
+put -3 && tmp
+put test into tmp
+put -1 after tinyInt -2 of tmp
+put -2 && tmp
+put test into tmp
+put -1 after tinyInt -1 of tmp
+put -1 && tmp
+put test into tmp
+put -1 after tinyInt 0 of tmp
+put 0 && tmp
+put test into tmp
+put -1 after tinyInt 1 of tmp
+put 1 && tmp
+put test into tmp
+put -1 after tinyInt 2 of tmp
+put 2 && tmp
+put test into tmp
+put -1 after tinyInt 3 of tmp
+put 3 && tmp
+put test into tmp
+put -1 after tinyInt 4 of tmp
+put 4 && tmp
+put test into tmp
+put -1 after tinyInt 5 of tmp
+put 5 && tmp
+put test into tmp
+put -1 after tinyInt 6 of tmp
+put 6 && tmp
+
+put test into tmp
+put -1 after shortInt -6 of tmp
+put -6 && tmp
+put test into tmp
+put -1 after shortInt -5 of tmp
+put -5 && tmp
+put test into tmp
+put -1 after shortInt -4 of tmp
+put -4 && tmp
+put test into tmp
+put -1 after shortInt -3 of tmp
+put -3 && tmp
+put test into tmp
+put -1 after shortInt -2 of tmp
+put -2 && tmp
+put test into tmp
+put -1 after shortInt -1 of tmp
+put -1 && tmp
+put test into tmp
+put -1 after shortInt 0 of tmp
+put 0 && tmp
+put test into tmp
+put -1 after shortInt 1 of tmp
+put 1 && tmp
+put test into tmp
+put -1 after shortInt 2 of tmp
+put 2 && tmp
+put test into tmp
+put -1 after shortInt 3 of tmp
+put 3 && tmp
+put test into tmp
+put -1 after shortInt 4 of tmp
+put 4 && tmp
+put test into tmp
+put -1 after shortInt 5 of tmp
+put 5 && tmp
+put test into tmp
+put -1 after shortInt 6 of tmp
+put 6 && tmp
+
+put test into tmp
+put -1 after medInt -6 of tmp
+put -6 && tmp
+put test into tmp
+put -1 after medInt -5 of tmp
+put -5 && tmp
+put test into tmp
+put -1 after medInt -4 of tmp
+put -4 && tmp
+put test into tmp
+put -1 after medInt -3 of tmp
+put -3 && tmp
+put test into tmp
+put -1 after medInt -2 of tmp
+put -2 && tmp
+put test into tmp
+put -1 after medInt -1 of tmp
+put -1 && tmp
+put test into tmp
+put -1 after medInt 0 of tmp
+put 0 && tmp
+put test into tmp
+put -1 after medInt 1 of tmp
+put 1 && tmp
+put test into tmp
+put -1 after medInt 2 of tmp
+put 2 && tmp
+put test into tmp
+put -1 after medInt 3 of tmp
+put 3 && tmp
+put test into tmp
+put -1 after medInt 4 of tmp
+put 4 && tmp
+put test into tmp
+put -1 after medInt 5 of tmp
+put 5 && tmp
+put test into tmp
+put -1 after medInt 6 of tmp
+put 6 && tmp
+
+put test into tmp
+put -1 after longInt -6 of tmp
+put -6 && tmp
+put test into tmp
+put -1 after longInt -5 of tmp
+put -5 && tmp
+put test into tmp
+put -1 after longInt -4 of tmp
+put -4 && tmp
+put test into tmp
+put -1 after longInt -3 of tmp
+put -3 && tmp
+put test into tmp
+put -1 after longInt -2 of tmp
+put -2 && tmp
+put test into tmp
+put -1 after longInt -1 of tmp
+put -1 && tmp
+put test into tmp
+put -1 after longInt 0 of tmp
+put 0 && tmp
+put test into tmp
+put -1 after longInt 1 of tmp
+put 1 && tmp
+put test into tmp
+put -1 after longInt 2 of tmp
+put 2 && tmp
+put test into tmp
+put -1 after longInt 3 of tmp
+put 3 && tmp
+put test into tmp
+put -1 after longInt 4 of tmp
+put 4 && tmp
+put test into tmp
+put -1 after longInt 5 of tmp
+put 5 && tmp
+put test into tmp
+put -1 after longInt 6 of tmp
+put 6 && tmp
