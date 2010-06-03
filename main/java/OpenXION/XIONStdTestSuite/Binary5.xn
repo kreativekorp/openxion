@@ -1,0 +1,162 @@
+local test as binary is "12EBECCA"
+local tmp as binary
+
+put test into tmp
+delete tinyInt -6 of tmp
+put -6 && tmp
+put test into tmp
+delete tinyInt -5 of tmp
+put -5 && tmp
+put test into tmp
+delete tinyInt -4 of tmp
+put -4 && tmp
+put test into tmp
+delete tinyInt -3 of tmp
+put -3 && tmp
+put test into tmp
+delete tinyInt -2 of tmp
+put -2 && tmp
+put test into tmp
+delete tinyInt -1 of tmp
+put -1 && tmp
+put test into tmp
+delete tinyInt 0 of tmp
+put 0 && tmp
+put test into tmp
+delete tinyInt 1 of tmp
+put 1 && tmp
+put test into tmp
+delete tinyInt 2 of tmp
+put 2 && tmp
+put test into tmp
+delete tinyInt 3 of tmp
+put 3 && tmp
+put test into tmp
+delete tinyInt 4 of tmp
+put 4 && tmp
+put test into tmp
+delete tinyInt 5 of tmp
+put 5 && tmp
+put test into tmp
+delete tinyInt 6 of tmp
+put 6 && tmp
+
+put test into tmp
+delete shortInt -6 of tmp
+put -6 && tmp
+put test into tmp
+delete shortInt -5 of tmp
+put -5 && tmp
+put test into tmp
+delete shortInt -4 of tmp
+put -4 && tmp
+put test into tmp
+delete shortInt -3 of tmp
+put -3 && tmp
+put test into tmp
+delete shortInt -2 of tmp
+put -2 && tmp
+put test into tmp
+delete shortInt -1 of tmp
+put -1 && tmp
+put test into tmp
+delete shortInt 0 of tmp
+put 0 && tmp
+put test into tmp
+delete shortInt 1 of tmp
+put 1 && tmp
+put test into tmp
+delete shortInt 2 of tmp
+put 2 && tmp
+put test into tmp
+delete shortInt 3 of tmp
+put 3 && tmp
+put test into tmp
+delete shortInt 4 of tmp
+put 4 && tmp
+put test into tmp
+delete shortInt 5 of tmp
+put 5 && tmp
+put test into tmp
+delete shortInt 6 of tmp
+put 6 && tmp
+
+put test into tmp
+delete medInt -6 of tmp
+put -6 && tmp
+put test into tmp
+delete medInt -5 of tmp
+put -5 && tmp
+put test into tmp
+delete medInt -4 of tmp
+put -4 && tmp
+put test into tmp
+delete medInt -3 of tmp
+put -3 && tmp
+put test into tmp
+delete medInt -2 of tmp
+put -2 && tmp
+put test into tmp
+delete medInt -1 of tmp
+put -1 && tmp
+put test into tmp
+delete medInt 0 of tmp
+put 0 && tmp
+put test into tmp
+delete medInt 1 of tmp
+put 1 && tmp
+put test into tmp
+delete medInt 2 of tmp
+put 2 && tmp
+put test into tmp
+delete medInt 3 of tmp
+put 3 && tmp
+put test into tmp
+delete medInt 4 of tmp
+put 4 && tmp
+put test into tmp
+delete medInt 5 of tmp
+put 5 && tmp
+put test into tmp
+delete medInt 6 of tmp
+put 6 && tmp
+
+put test into tmp
+delete longInt -6 of tmp
+put -6 && tmp
+put test into tmp
+delete longInt -5 of tmp
+put -5 && tmp
+put test into tmp
+delete longInt -4 of tmp
+put -4 && tmp
+put test into tmp
+delete longInt -3 of tmp
+put -3 && tmp
+put test into tmp
+delete longInt -2 of tmp
+put -2 && tmp
+put test into tmp
+delete longInt -1 of tmp
+put -1 && tmp
+put test into tmp
+delete longInt 0 of tmp
+put 0 && tmp
+put test into tmp
+delete longInt 1 of tmp
+put 1 && tmp
+put test into tmp
+delete longInt 2 of tmp
+put 2 && tmp
+put test into tmp
+delete longInt 3 of tmp
+put 3 && tmp
+put test into tmp
+delete longInt 4 of tmp
+put 4 && tmp
+put test into tmp
+delete longInt 5 of tmp
+put 5 && tmp
+put test into tmp
+delete longInt 6 of tmp
+put 6 && tmp

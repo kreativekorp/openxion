@@ -1,0 +1,50 @@
+local L as list
+
+put "hello",0,1,true,"2",23,19,"5",56,false,"goodbye","March 17, 1987","February 14, 1946","December 10, 1815","aloha","17","lol","June 16, 1999","April 1, 1977",101,29,"3","October 22, 1986" into L
+sort L
+put L
+
+put "hello",0,1,true,"2",23,19,"5",56,false,"goodbye","March 17, 1987","February 14, 1946","December 10, 1815","aloha","17","lol","June 16, 1999","April 1, 1977",101,29,"3","October 22, 1986" into L
+sort L descending
+put L
+
+put "hello",0,1,true,"2",23,19,"5",56,false,"goodbye","March 17, 1987","February 14, 1946","December 10, 1815","aloha","17","lol","June 16, 1999","April 1, 1977",101,29,"3","October 22, 1986" into L
+sort L numeric by the number of chars in each
+put L
+
+put 0,1,"2",23,19,"5",56,"17",101,29,"3" into L
+sort L
+put L
+
+put 0,1,"2",23,19,"5",56,"17",101,29,"3" into L
+sort L numeric
+put L
+
+put 0,1,"2",23,19,"5",56,"17",101,29,"3" into L
+sort L descending numeric
+put L
+
+put "March 17, 1987","February 14, 1946","December 10, 1815","June 16, 1999","April 1, 1977","October 22, 1986" into L
+sort L dateTime
+put L
+
+put "March 17, 1987","February 14, 1946","December 10, 1815","June 16, 1999","April 1, 1977","October 22, 1986" into L
+sort L descending dateTime
+put L
+
+put "hello",0,1,true,"2",23,19,"5",56,false,"goodbye","March 17, 1987","February 14, 1946","December 10, 1815","aloha","17","lol","June 16, 1999","April 1, 1977",101,29,"3","October 22, 1986" into L
+sort elements 5 to 16 of L
+put L
+
+put "hello",0,1,true,"2",23,19,"5",56,false,"goodbye","March 17, 1987","February 14, 1946","December 10, 1815","aloha","17","lol","June 16, 1999","April 1, 1977",101,29,"3","October 22, 1986" into L
+sort elements 5 to 16 of L Descending
+put L
+
+put "hello",0,1,true,"2",23,19,"5",56,false,"goodbye","March 17, 1987","February 14, 1946","December 10, 1815","aloha","17","lol","June 16, 1999","April 1, 1977",101,29,"3","October 22, 1986" into L
+sort elements 5 to 9 of L descending Numeric
+put L
+
+put "hello",0,1,true,"2",23,19,"5",56,false,"goodbye","March 17, 1987","February 14, 1946","December 10, 1815","aloha","17","lol","June 16, 1999","April 1, 1977",101,29,"3","October 22, 1986" into L
+sort elements 12 to 14 of L ascending dateTime
+put L
+

@@ -1,0 +1,119 @@
+local test as binary is "12EBECCA"
+
+set the unsigned to true
+
+set the littleEndian to false
+
+put -6 && tinyInt -6 of test
+put -5 && tinyInt -5 of test
+put -4 && tinyInt -4 of test
+put -3 && tinyInt -3 of test
+put -2 && tinyInt -2 of test
+put -1 && tinyInt -1 of test
+put 0 && tinyInt 0 of test
+put 1 && tinyInt 1 of test
+put 2 && tinyInt 2 of test
+put 3 && tinyInt 3 of test
+put 4 && tinyInt 4 of test
+put 5 && tinyInt 5 of test
+put 6 && tinyInt 6 of test
+
+put -6 && shortInt -6 of test
+put -5 && shortInt -5 of test
+put -4 && shortInt -4 of test
+put -3 && shortInt -3 of test
+put -2 && shortInt -2 of test
+put -1 && shortInt -1 of test
+put 0 && shortInt 0 of test
+put 1 && shortInt 1 of test
+put 2 && shortInt 2 of test
+put 3 && shortInt 3 of test
+put 4 && shortInt 4 of test
+put 5 && shortInt 5 of test
+put 6 && shortInt 6 of test
+
+put -6 && medInt -6 of test
+put -5 && medInt -5 of test
+put -4 && medInt -4 of test
+put -3 && medInt -3 of test
+put -2 && medInt -2 of test
+put -1 && medInt -1 of test
+put 0 && medInt 0 of test
+put 1 && medInt 1 of test
+put 2 && medInt 2 of test
+put 3 && medInt 3 of test
+put 4 && medInt 4 of test
+put 5 && medInt 5 of test
+put 6 && medInt 6 of test
+
+put -6 && longInt -6 of test
+put -5 && longInt -5 of test
+put -4 && longInt -4 of test
+put -3 && longInt -3 of test
+put -2 && longInt -2 of test
+put -1 && longInt -1 of test
+put 0 && longInt 0 of test
+put 1 && longInt 1 of test
+put 2 && longInt 2 of test
+put 3 && longInt 3 of test
+put 4 && longInt 4 of test
+put 5 && longInt 5 of test
+put 6 && longInt 6 of test
+
+set the littleEndian to true
+
+put -6 && tinyInt -6 of test
+put -5 && tinyInt -5 of test
+put -4 && tinyInt -4 of test
+put -3 && tinyInt -3 of test
+put -2 && tinyInt -2 of test
+put -1 && tinyInt -1 of test
+put 0 && tinyInt 0 of test
+put 1 && tinyInt 1 of test
+put 2 && tinyInt 2 of test
+put 3 && tinyInt 3 of test
+put 4 && tinyInt 4 of test
+put 5 && tinyInt 5 of test
+put 6 && tinyInt 6 of test
+
+put -6 && shortInt -6 of test
+put -5 && shortInt -5 of test
+put -4 && shortInt -4 of test
+put -3 && shortInt -3 of test
+put -2 && shortInt -2 of test
+put -1 && shortInt -1 of test
+put 0 && shortInt 0 of test
+put 1 && shortInt 1 of test
+put 2 && shortInt 2 of test
+put 3 && shortInt 3 of test
+put 4 && shortInt 4 of test
+put 5 && shortInt 5 of test
+put 6 && shortInt 6 of test
+
+put -6 && medInt -6 of test
+put -5 && medInt -5 of test
+put -4 && medInt -4 of test
+put -3 && medInt -3 of test
+put -2 && medInt -2 of test
+put -1 && medInt -1 of test
+put 0 && medInt 0 of test
+put 1 && medInt 1 of test
+put 2 && medInt 2 of test
+put 3 && medInt 3 of test
+put 4 && medInt 4 of test
+put 5 && medInt 5 of test
+put 6 && medInt 6 of test
+
+put -6 && longInt -6 of test
+put -5 && longInt -5 of test
+put -4 && longInt -4 of test
+put -3 && longInt -3 of test
+put -2 && longInt -2 of test
+put -1 && longInt -1 of test
+put 0 && longInt 0 of test
+put 1 && longInt 1 of test
+put 2 && longInt 2 of test
+put 3 && longInt 3 of test
+put 4 && longInt 4 of test
+put 5 && longInt 5 of test
+put 6 && longInt 6 of test

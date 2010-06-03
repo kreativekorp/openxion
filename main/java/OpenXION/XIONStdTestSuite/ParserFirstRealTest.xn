@@ -1,0 +1,59 @@
+put "This is a parser test. It does not test the interpreter."
+exit to interpreter
+
+global a,b,c
+put sqrt(a^2 + b^2) into c
+exit to hypercard
+exit repeat
+next repeat
+next case
+
+
+
+throw "Can't understand this"
+send "mouseup" to hypercard
+return 2+2=4
+pass to hypercard
+const myconstant = 7901234409876544
+ordinal myconstantth = 7901234409876544
+return myconstant
+
+do "play harpsichord c4q d e f g a b c5h" as hypertalk
+do "tell application \"Finder\" to quit" as applescript
+exit myCommand
+exit to hypercard
+exit myCommand with error "Can't understand this"
+exit to hypercard with error "Can't understand this"
+exit repeat
+exit if
+exit switch
+exit tell
+exit try
+global d,e,f
+shared g,h,i
+static j as integer is 3, k as number is pi, l as string is "hello"
+local m as integers is (1,2,3), n as numbers is (pi, euler, phi), o as strings is (up, down, left, right)
+next repeat
+next case
+pass mouseUp
+pass to hypercard
+return 4
+return "hello"
+send "hello"
+send "hello" to hypercard
+send "hello" with reply
+send "hello" to hypercard with reply
+send "hello" without reply
+send "hello" to hypercard without reply
+throw "Can't understand this"
+
+
+
+
+
+add 2 to 2
+subtract x from y
+multiply 3 by 3
+divide 8 by 3 rounding up
+
+
