@@ -1,0 +1,138 @@
+put the lineEnding into saveLineEnding
+
+put "Unix\nMacOS\rMSDOS\r\nUnicode\u2028Paragraph\u2029Break" into x
+set the lineEnding to newline
+put "x" into line 10 of x
+put ("\n" is in x) ¬
+	&& ("\r" is in x) ¬
+	&& ("\r\n" is in x) ¬
+	&& ("\u2028" is in x) ¬
+	&& ("\u2029" is in x) ¬
+	&& ("\n\n" is in x) ¬
+	&& ("\r\r" is in x) ¬
+	&& ("\r\n\r\n" is in x) ¬
+	&& ("\u2028\u2028" is in x) ¬
+	&& ("\u2029\u2029" is in x) ¬
+	&& (the number of lines in x) ¬
+	&& (line 10 of x)
+delete lines 1 through 7 of x
+put ("\n" is in x) ¬
+	&& ("\r" is in x) ¬
+	&& ("\r\n" is in x) ¬
+	&& ("\u2028" is in x) ¬
+	&& ("\u2029" is in x) ¬
+	&& ("\n\n" is in x) ¬
+	&& ("\r\r" is in x) ¬
+	&& ("\r\n\r\n" is in x) ¬
+	&& ("\u2028\u2028" is in x) ¬
+	&& ("\u2029\u2029" is in x)
+
+put "Unix\nMacOS\rMSDOS\r\nUnicode\u2028Paragraph\u2029Break" into x
+set the lineEnding to return
+put "x" into line 10 of x
+put ("\n" is in x) ¬
+	&& ("\r" is in x) ¬
+	&& ("\r\n" is in x) ¬
+	&& ("\u2028" is in x) ¬
+	&& ("\u2029" is in x) ¬
+	&& ("\n\n" is in x) ¬
+	&& ("\r\r" is in x) ¬
+	&& ("\r\n\r\n" is in x) ¬
+	&& ("\u2028\u2028" is in x) ¬
+	&& ("\u2029\u2029" is in x) ¬
+	&& (the number of lines in x) ¬
+	&& (line 10 of x)
+delete lines 1 through 7 of x
+put ("\n" is in x) ¬
+	&& ("\r" is in x) ¬
+	&& ("\r\n" is in x) ¬
+	&& ("\u2028" is in x) ¬
+	&& ("\u2029" is in x) ¬
+	&& ("\n\n" is in x) ¬
+	&& ("\r\r" is in x) ¬
+	&& ("\r\n\r\n" is in x) ¬
+	&& ("\u2028\u2028" is in x) ¬
+	&& ("\u2029\u2029" is in x)
+
+put "Unix\nMacOS\rMSDOS\r\nUnicode\u2028Paragraph\u2029Break" into x
+set the lineEnding to return&newline
+put "x" into line 10 of x
+put ("\n" is in x) ¬
+	&& ("\r" is in x) ¬
+	&& ("\r\n" is in x) ¬
+	&& ("\u2028" is in x) ¬
+	&& ("\u2029" is in x) ¬
+	&& ("\n\n" is in x) ¬
+	&& ("\r\r" is in x) ¬
+	&& ("\r\n\r\n" is in x) ¬
+	&& ("\u2028\u2028" is in x) ¬
+	&& ("\u2029\u2029" is in x) ¬
+	&& (the number of lines in x) ¬
+	&& (line 10 of x)
+delete lines 1 through 7 of x
+put ("\n" is in x) ¬
+	&& ("\r" is in x) ¬
+	&& ("\r\n" is in x) ¬
+	&& ("\u2028" is in x) ¬
+	&& ("\u2029" is in x) ¬
+	&& ("\n\n" is in x) ¬
+	&& ("\r\r" is in x) ¬
+	&& ("\r\n\r\n" is in x) ¬
+	&& ("\u2028\u2028" is in x) ¬
+	&& ("\u2029\u2029" is in x)
+
+put "Unix\nMacOS\rMSDOS\r\nUnicode\u2028Paragraph\u2029Break" into x
+set the lineEnding to linesep
+put "x" into line 10 of x
+put ("\n" is in x) ¬
+	&& ("\r" is in x) ¬
+	&& ("\r\n" is in x) ¬
+	&& ("\u2028" is in x) ¬
+	&& ("\u2029" is in x) ¬
+	&& ("\n\n" is in x) ¬
+	&& ("\r\r" is in x) ¬
+	&& ("\r\n\r\n" is in x) ¬
+	&& ("\u2028\u2028" is in x) ¬
+	&& ("\u2029\u2029" is in x) ¬
+	&& (the number of lines in x) ¬
+	&& (line 10 of x)
+delete lines 1 through 7 of x
+put ("\n" is in x) ¬
+	&& ("\r" is in x) ¬
+	&& ("\r\n" is in x) ¬
+	&& ("\u2028" is in x) ¬
+	&& ("\u2029" is in x) ¬
+	&& ("\n\n" is in x) ¬
+	&& ("\r\r" is in x) ¬
+	&& ("\r\n\r\n" is in x) ¬
+	&& ("\u2028\u2028" is in x) ¬
+	&& ("\u2029\u2029" is in x)
+
+put "Unix\nMacOS\rMSDOS\r\nUnicode\u2028Paragraph\u2029Break" into x
+set the lineEnding to parasep
+put "x" into line 10 of x
+put ("\n" is in x) ¬
+	&& ("\r" is in x) ¬
+	&& ("\r\n" is in x) ¬
+	&& ("\u2028" is in x) ¬
+	&& ("\u2029" is in x) ¬
+	&& ("\n\n" is in x) ¬
+	&& ("\r\r" is in x) ¬
+	&& ("\r\n\r\n" is in x) ¬
+	&& ("\u2028\u2028" is in x) ¬
+	&& ("\u2029\u2029" is in x) ¬
+	&& (the number of lines in x) ¬
+	&& (line 10 of x)
+delete lines 1 through 7 of x
+put ("\n" is in x) ¬
+	&& ("\r" is in x) ¬
+	&& ("\r\n" is in x) ¬
+	&& ("\u2028" is in x) ¬
+	&& ("\u2029" is in x) ¬
+	&& ("\n\n" is in x) ¬
+	&& ("\r\r" is in x) ¬
+	&& ("\r\n\r\n" is in x) ¬
+	&& ("\u2028\u2028" is in x) ¬
+	&& ("\u2029\u2029" is in x)
+
+set the lineEnding to saveLineEnding

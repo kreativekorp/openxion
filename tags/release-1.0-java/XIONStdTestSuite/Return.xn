@@ -1,0 +1,22 @@
+function testFunction
+	return 3
+	return 4
+end testFunction
+
+on testCommand
+	return 7
+	return 8
+end testCommand
+
+put testFunction()
+testCommand
+put the result
+
+-- below tests case-sensitivity of parameters, keywords, and functions
+
+FUNCTION MYsqrt A
+	retURn sQrt(a)
+eNd mySQRt
+
+put Sixteen Into N
+pUT mySqrt(n)

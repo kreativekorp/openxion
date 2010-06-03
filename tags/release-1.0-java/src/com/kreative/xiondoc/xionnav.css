@@ -1,0 +1,107 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background: white;
+	margin: 9pt;
+}
+
+h1 {
+	font-family: Palatino, Times, Times New Roman, serif;
+	font-size: 14pt;
+	font-weight: bold;
+	margin-bottom: 8pt;
+}
+
+p, ul, ol, table {
+	font-family: Palatino, Times, Times New Roman, serif;
+	font-size: 11.5pt;
+	margin-bottom: 9pt;
+}
+
+p b, ul b, ol b, table b {
+	font-family: Palatino, Times, Times New Roman, serif;
+	font-size: 11.5pt;
+	font-weight: bold;
+}
+
+p i, ul i, ol i, table i {
+	font-family: Palatino, Times, Times New Roman, serif;
+	font-size: 11.5pt;
+	font-style: italic;
+}
+
+p code, ul code, ol code, table code {
+	font-family: Courier, Courier New, monospace;
+	font-size: 10.5pt;
+	/* margin-left: 3px; */
+	/* margin-right: 3px; */
+}
+
+li {
+	font-family: Palatino, Times, Times New Roman, serif;
+	font-size: 11.5pt;
+	list-style-type: none;
+	white-space: nowrap;
+}
+
+li b {
+	font-family: Palatino, Times, Times New Roman, serif;
+	font-size: 11.5pt;
+	font-weight: bold;
+}
+
+li i {
+	font-family: Palatino, Times, Times New Roman, serif;
+	font-size: 11.5pt;
+	font-style: italic;
+}
+
+li code {
+	font-family: Courier, Courier New, monospace;
+	font-size: 10.5pt;
+	/* margin-left: 3px; */
+	/* margin-right: 3px; */
+}
+
+.code {
+	font-family: Courier, Courier New, monospace;
+	font-size: 10.5pt;
+}
+
+.code b {
+	font-family: Palatino, Times, Times New Roman, serif;
+	font-size: 11.5pt;
+	font-weight: bold;
+}
+
+.code i {
+	font-family: Palatino, Times, Times New Roman, serif;
+	font-size: 11.5pt;
+	font-style: italic;
+}
+
+.code code {
+	font-family: Courier, Courier New, monospace;
+	font-size: 10.5pt;
+}
+
+li .expl {
+	font-family: Palatino, Times, Times New Roman, serif;
+	font-size: 9pt;
+	font-weight: normal;
+	font-style: italic;
+	color: #FFFFFF;
+	visibility: hidden;
+}
+
+li:hover .expl {
+	font-family: Palatino, Times, Times New Roman, serif;
+	font-size: 9pt;
+	font-weight: normal;
+	font-style: italic;
+	color: #555555;
+	visibility: visible;
+}

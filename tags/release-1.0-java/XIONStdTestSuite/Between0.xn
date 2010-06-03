@@ -1,0 +1,60 @@
+put 3 between 2 and 4
+put 3 between 2 and 4 inclusive
+put 3 between 2 and 4 left inclusive
+put 3 between 2 and 4 right inclusive
+put 3 between 2 and 4 exclusive
+put ""
+put 2 between 2 and 4
+put 2 between 2 and 4 inclusive
+put 2 between 2 and 4 left inclusive
+put 2 between 2 and 4 right inclusive
+put 2 between 2 and 4 exclusive
+put ""
+put 4 between 2 and 4
+put 4 between 2 and 4 inclusive
+put 4 between 2 and 4 left inclusive
+put 4 between 2 and 4 right inclusive
+put 4 between 2 and 4 exclusive
+put ""
+put 1 between 2 and 4
+put 1 between 2 and 4 inclusive
+put 1 between 2 and 4 left inclusive
+put 1 between 2 and 4 right inclusive
+put 1 between 2 and 4 exclusive
+put ""
+put 5 between 2 and 4
+put 5 between 2 and 4 inclusive
+put 5 between 2 and 4 left inclusive
+put 5 between 2 and 4 right inclusive
+put 5 between 2 and 4 exclusive
+put ""
+put ""
+put 3 not between 2 and 4
+put 3 not between 2 and 4 inclusive
+put 3 not between 2 and 4 left inclusive
+put 3 not between 2 and 4 right inclusive
+put 3 not between 2 and 4 exclusive
+put ""
+put 2 not between 2 and 4
+put 2 not between 2 and 4 inclusive
+put 2 not between 2 and 4 left inclusive
+put 2 not between 2 and 4 right inclusive
+put 2 not between 2 and 4 exclusive
+put ""
+put 4 not between 2 and 4
+put 4 not between 2 and 4 inclusive
+put 4 not between 2 and 4 left inclusive
+put 4 not between 2 and 4 right inclusive
+put 4 not between 2 and 4 exclusive
+put ""
+put 1 not between 2 and 4
+put 1 not between 2 and 4 inclusive
+put 1 not between 2 and 4 left inclusive
+put 1 not between 2 and 4 right inclusive
+put 1 not between 2 and 4 exclusive
+put ""
+put 5 not between 2 and 4
+put 5 not between 2 and 4 inclusive
+put 5 not between 2 and 4 left inclusive
+put 5 not between 2 and 4 right inclusive
+put 5 not between 2 and 4 exclusive

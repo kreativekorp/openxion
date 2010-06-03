@@ -1,0 +1,209 @@
+local ll as list is ("hello",zero,one,true)
+local tmp as list
+
+put the number of elements in ll
+
+put element 1 of ll
+put element 2 of ll
+put element 3 of ll
+put element 4 of ll
+put element -1 of ll
+put element -2 of ll
+put element -3 of ll
+put element -4 of ll
+put middle element of ll
+put element 1 to 4 of ll
+put element 2 to 3 of ll
+put element 1 to -1 of ll
+put element 2 to -2 of ll
+put element -4 to -1 of ll
+put element -3 to -2 of ll
+put first to middle elements of ll
+put middle to last elements of ll
+
+put ll into tmp
+delete element 1 of tmp
+put tmp
+put ll into tmp
+delete element 2 of tmp
+put tmp
+put ll into tmp
+delete element 3 of tmp
+put tmp
+put ll into tmp
+delete element 4 of tmp
+put tmp
+put ll into tmp
+delete element 1 to 2 of tmp
+put tmp
+put ll into tmp
+delete element 2 to 3 of tmp
+put tmp
+put ll into tmp
+delete element 3 to 4 of tmp
+put tmp
+put ll into tmp
+delete element 1 to 3 of tmp
+put tmp
+put ll into tmp
+delete element 2 to 4 of tmp
+put tmp
+put ll into tmp
+delete element 1 to 4 of tmp
+put tmp
+put ll into tmp
+delete element 1 to -1 of tmp
+put tmp
+put ll into tmp
+delete element 2 to -2 of tmp
+put tmp
+put ll into tmp
+delete middle element of tmp
+put tmp
+
+put ll into tmp
+put "x" into element 1 of tmp
+put tmp
+put ll into tmp
+put "x" into element 2 of tmp
+put tmp
+put ll into tmp
+put "x" into element 3 of tmp
+put tmp
+put ll into tmp
+put "x" into element 4 of tmp
+put tmp
+put ll into tmp
+put "x" into element 1 to 2 of tmp
+put tmp
+put ll into tmp
+put "x" into element 2 to 3 of tmp
+put tmp
+put ll into tmp
+put "x" into element 3 to 4 of tmp
+put tmp
+put ll into tmp
+put "x" into element 1 to 3 of tmp
+put tmp
+put ll into tmp
+put "x" into element 2 to 4 of tmp
+put tmp
+put ll into tmp
+put "x" into element 1 to 4 of tmp
+put tmp
+put ll into tmp
+put "x" into element 1 to -1 of tmp
+put tmp
+put ll into tmp
+put "x" into element 2 to -2 of tmp
+put tmp
+put ll into tmp
+put "x" into middle element of tmp
+put tmp
+
+put ll into tmp
+put "x" before element 1 of tmp
+put tmp
+put ll into tmp
+put "x" before element 2 of tmp
+put tmp
+put ll into tmp
+put "x" before element 3 of tmp
+put tmp
+put ll into tmp
+put "x" before element 4 of tmp
+put tmp
+put ll into tmp
+put "x" before element 1 to 2 of tmp
+put tmp
+put ll into tmp
+put "x" before element 2 to 3 of tmp
+put tmp
+put ll into tmp
+put "x" before element 3 to 4 of tmp
+put tmp
+put ll into tmp
+put "x" before element 1 to 3 of tmp
+put tmp
+put ll into tmp
+put "x" before element 2 to 4 of tmp
+put tmp
+put ll into tmp
+put "x" before element 1 to 4 of tmp
+put tmp
+put ll into tmp
+put "x" before element 1 to -1 of tmp
+put tmp
+put ll into tmp
+put "x" before element 2 to -2 of tmp
+put tmp
+put ll into tmp
+put "x" before middle element of tmp
+put tmp
+
+put ll into tmp
+put "x" after element 1 of tmp
+put tmp
+put ll into tmp
+put "x" after element 2 of tmp
+put tmp
+put ll into tmp
+put "x" after element 3 of tmp
+put tmp
+put ll into tmp
+put "x" after element 4 of tmp
+put tmp
+put ll into tmp
+put "x" after element 1 to 2 of tmp
+put tmp
+put ll into tmp
+put "x" after element 2 to 3 of tmp
+put tmp
+put ll into tmp
+put "x" after element 3 to 4 of tmp
+put tmp
+put ll into tmp
+put "x" after element 1 to 3 of tmp
+put tmp
+put ll into tmp
+put "x" after element 2 to 4 of tmp
+put tmp
+put ll into tmp
+put "x" after element 1 to 4 of tmp
+put tmp
+put ll into tmp
+put "x" after element 1 to -1 of tmp
+put tmp
+put ll into tmp
+put "x" after element 2 to -2 of tmp
+put tmp
+put ll into tmp
+put "x" after middle element of tmp
+put tmp
+
+put elements 4 to 1 of ll
+put elements 3 to 2 of ll
+put ll into tmp
+delete elements 4 to 1 of tmp
+put tmp
+put ll into tmp
+delete elements 3 to 2 of tmp
+put tmp
+put ll into tmp
+put "x" into elements 4 to 1 of tmp
+put tmp
+put ll into tmp
+put "x" into elements 3 to 2 of tmp
+put tmp
+put ll into tmp
+put "x" before elements 4 to 1 of tmp
+put tmp
+put ll into tmp
+put "x" before elements 3 to 2 of tmp
+put tmp
+put ll into tmp
+put "x" after elements 4 to 1 of tmp
+put tmp
+put ll into tmp
+put "x" after elements 3 to 2 of tmp
+put tmp
