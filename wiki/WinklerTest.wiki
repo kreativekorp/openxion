@@ -2,7 +2,7 @@
 
 = SampleCode - !WinklerTest =
 
-This snippet of code is an example of obfuscated HyperTalk code that was used to test XION's compatibility with its immediate ancestor, HyperTalk.
+This snippet of code is an example of obfuscated !HyperTalk code that was used to test XION's compatibility.
 
 {{{
 put empty into a
