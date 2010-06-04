@@ -1,0 +1,22 @@
+#summary Sample code to test XION's compatibility with its immediate ancestor, HyperTalk.
+
+= SampleCode - !WinklerTest =
+
+This snippet of code is an example of obfuscated HyperTalk code that was used to test XION's compatibility with its immediate ancestor, HyperTalk.
+
+{{{
+put empty into a
+put "a b c" into item
+put 1 into char
+put 2 into word
+if true then repeat with word char of item = char char to word of word char of char to word char to char of char char of word
+	put a&&"HyperTalk is a bitch to parse
+end repeat else beep
+}}}
+
+The correct output is:
+
+{{{
+1 "HyperTalk is a bitch to parse
+2 "HyperTalk is a bitch to parse
+}}}
