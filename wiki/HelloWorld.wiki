@@ -1,6 +1,6 @@
 #summary Sample code to greet the world.
 
-= SampleCode - HelloWorld =
+= SampleCode - !HelloWorld =
 
 {{{
 put "Hello, World!"
