@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 13.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 14948)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="549px" height="162px" viewBox="0 0 549 162" enable-background="new 0 0 549 162" xml:space="preserve">
+<g>
+	<circle fill="#FFFFFF" cx="45" cy="81" r="36"/>
+	<circle fill="#FFFFFF" cx="81" cy="45" r="36"/>
+	<circle fill="#FFFFFF" cx="81" cy="117" r="36"/>
+	<circle fill="#FFFF00" cx="117" cy="81" r="36"/>
+	<g>
+		<g>
+			<path fill="#00FFFF" d="M81,81c-19.883,0-36,16.117-36,36C64.883,117,81,100.883,81,81z"/>
+		</g>
+	</g>
+	<g>
+		<g>
+			<path fill="#FF00FF" d="M45,45c0,19.882,16.117,36,36,36C81,61.118,64.883,45,45,45z"/>
+		</g>
+	</g>
+	<g>
+		<g>
+			<path fill="#00FF00" d="M81,81c0,19.883,16.117,36,36,36C117,97.117,100.883,81,81,81z"/>
+		</g>
+	</g>
+	<g>
+		<g>
+			<path fill="#F7931E" d="M117,45c-19.883,0-36,16.118-36,36C100.883,81,117,64.882,117,45z"/>
+		</g>
+	</g>
+	<circle fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" cx="117" cy="81" r="36"/>
+	<circle fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" cx="45" cy="81" r="36"/>
+	<circle fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" cx="81" cy="45" r="36"/>
+	<circle fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" cx="81" cy="117" r="36"/>
+</g>
+<g>
+	<g>
+		<circle fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" cx="180" cy="99" r="18"/>
+		
+			<line fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" x1="162" y1="81" x2="162" y2="153"/>
+	</g>
+	<g>
+		<path fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" d="M236.906,112.5
+			c-3.172,2.801-7.34,4.5-11.906,4.5c-9.941,0-18-8.059-18-18s8.059-18,18-18s18,8.059,18,18"/>
+		
+			<line fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" x1="207" y1="99" x2="243" y2="99"/>
+	</g>
+	<g>
+		<path fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" d="M252,99
+			c0-9.941,8.059-18,18-18s18,8.059,18,18"/>
+		
+			<line fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" x1="252" y1="81" x2="252" y2="117"/>
+		
+			<line fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" x1="288" y1="99" x2="288" y2="117"/>
+	</g>
+	<g>
+		
+			<line fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" x1="297" y1="45" x2="369" y2="117"/>
+		
+			<line fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" x1="369" y1="45" x2="297" y2="117"/>
+	</g>
+	
+		<line fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" x1="378" y1="45" x2="378" y2="117"/>
+	<circle fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" cx="423" cy="81" r="36"/>
+	<polyline fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" points="468,117 468,45 
+		540,117 540,45 	"/>
+</g>
+</svg>
