@@ -5,3 +5,4 @@
   * HelloWorld
   * HyperQuine
   * [99Bottles]
+  * WinklerTest
