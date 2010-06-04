@@ -3,4 +3,5 @@
 = SampleCode =
 
   * HelloWorld
+  * HyperQuine
   * [99Bottles]
