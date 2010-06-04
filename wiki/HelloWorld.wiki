@@ -1,0 +1,7 @@
+#summary Sample code to greet the world.
+
+= SampleCode - HelloWorld =
+
+{{{
+put "Hello, World!"
+}}}
