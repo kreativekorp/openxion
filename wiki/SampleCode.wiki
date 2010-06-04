@@ -1,8 +1,12 @@
 #summary Sample code to demonstrate the XION scripting language.
 
-= SampleCode =
+= !SampleCode =
 
   * HelloWorld
   * HyperQuine
   * [99Bottles]
+  * [Primes]
+  * [Factor]
+  * [Grapher]
+  * EquivalentImpedence
   * WinklerTest
