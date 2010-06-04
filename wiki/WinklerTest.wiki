@@ -2,7 +2,7 @@
 
 = SampleCode - !WinklerTest =
 
-This snippet of code is an example of obfuscated !HyperTalk code that was used to test XION's compatibility.
+This snippet of code is an example of obfuscated !HyperTalk code that was used to test XION's compatibility. It is known as the Winkler Test, after Dan Winkler, the creator of !HyperTalk, who would never in his life write code that looked like this.
 
 {{{
 put empty into a
@@ -19,4 +19,23 @@ The correct output is:
 {{{
 1 "HyperTalk is a bitch to parse
 2 "HyperTalk is a bitch to parse
+}}}
+
+A radio edit version of the Winkler test is as follows:
+
+{{{
+put empty into a
+put "a b c" into item
+put 1 into char
+put 2 into word
+if true then repeat with word char of item = char char to word of word char of char to word char to char of char char of word
+	put a&&"How much word could a word char char if a word char could char word?
+end repeat else beep
+}}}
+
+The correct output is:
+
+{{{
+1 "How much word could a word char char if a word char could char word?
+2 "How much word could a word char char if a word char could char word?
 }}}
