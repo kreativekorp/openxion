@@ -13,9 +13,9 @@ import java.util.Arrays;
  * @version 3.1, June 6, 2010
  */
 public class BareBonesBrowserLaunch {
-	static final String[] browsers = { "google-chrome", "firefox", "opera",
-			"epiphany", "konqueror", "conkeror", "midori", "kazehakase",
-			"mozilla" };
+	static final String[] browsers = { "xdg-open", "sensible-browser",
+			"google-chrome", "firefox", "opera", "epiphany", "konqueror",
+			"conkeror", "midori", "kazehakase", "mozilla" };
 	static final String errMsg = "Error attempting to launch web browser";
 
 	/**
