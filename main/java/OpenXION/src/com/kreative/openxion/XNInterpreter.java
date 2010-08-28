@@ -1391,9 +1391,13 @@ public class XNInterpreter {
 				XOMVariant vlang = (elang == null) ? XOMEmpty.EMPTY : evaluateExpression(elang).unwrap();
 				String slang = vlang.toTextString(context);
 				if (slang.equalsIgnoreCase("") || slang.equalsIgnoreCase("xion") || slang.equalsIgnoreCase("openxion") || slang.equalsIgnoreCase("hypertalk")) {
+					if (!context.allow(XNSecurityKey.DO_AND_VALUE))
+						throw new XNScriptError("Security settings do not allow do");
 					executeScriptString(what.toTextString(context));
 					return XNHandlerExit.ended();
 				} else if (context.hasExternalLanguage(slang)) {
+					if (!context.allow(XNSecurityKey.EXTERNAL_SCRIPTS))
+						throw new XNScriptError("Security settings do not allow do");
 					XOMVariant returnValue = context.getExternalLanguage(slang).execute(what.toTextString(context));
 					if (returnValue != null) {
 						context.setResult(returnValue);
@@ -1661,6 +1665,8 @@ public class XNInterpreter {
 					if (!reply) context.setResult(null);
 					return XNHandlerExit.ended();
 				} else if (XOMInterpreterType.instance.canMakeInstanceFrom(context, recip)) {
+					if (!context.allow(XNSecurityKey.DO_AND_VALUE))
+						throw new XNScriptError("Security settings do not allow send");
 					sendMessageString(null, message);
 					if (!reply) context.setResult(null);
 					return XNHandlerExit.ended();
@@ -1749,6 +1755,8 @@ public class XNInterpreter {
 				}
 				return exit;
 			} else if (stat instanceof XNUseStatement) {
+				if (!context.allow(XNSecurityKey.MODULE_LOAD))
+					throw new XNScriptError("Security settings do not allow use");
 				XNExpression cln = ((XNUseStatement)stat).className;
 				String[] classNames = evaluateExpression(cln).unwrap().toTextString(context).split("[,:;]");
 				for (String className : classNames) {

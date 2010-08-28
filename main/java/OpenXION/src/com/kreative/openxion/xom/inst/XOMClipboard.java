@@ -31,6 +31,8 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.*;
 import java.util.*;
 import com.kreative.openxion.XNContext;
+import com.kreative.openxion.XNSecurityKey;
+import com.kreative.openxion.XNScriptError;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMComparator;
 
@@ -67,29 +69,39 @@ public class XOMClipboard extends XOMVariant implements ClipboardOwner {
 	}
 	
 	public boolean canGetContents(XNContext ctx) {
-		return true;
+		return ctx.allow(XNSecurityKey.CLIPBOARD_READ);
 	}
 	public XOMVariant getContents(XNContext ctx) {
+		if (!ctx.allow(XNSecurityKey.CLIPBOARD_READ))
+			throw new XNScriptError("Security settings do not allow clipboard access");
 		return new XOMString(getClipboardString());
 	}
 	
 	public boolean canPutContents(XNContext ctx) {
-		return true;
+		return ctx.allow(XNSecurityKey.CLIPBOARD_WRITE);
 	}
 	public void putIntoContents(XNContext ctx, XOMVariant contents) {
+		if (!ctx.allow(XNSecurityKey.CLIPBOARD_WRITE))
+			throw new XNScriptError("Security settings do not allow clipboard access");
 		setClipboardString(contents.toTextString(ctx));
 	}
 	public void putBeforeContents(XNContext ctx, XOMVariant contents) {
+		if (!ctx.allow(XNSecurityKey.CLIPBOARD_WRITE))
+			throw new XNScriptError("Security settings do not allow clipboard access");
 		setClipboardString(contents.toTextString(ctx) + getClipboardString());
 	}
 	public void putAfterContents(XNContext ctx, XOMVariant contents) {
+		if (!ctx.allow(XNSecurityKey.CLIPBOARD_WRITE))
+			throw new XNScriptError("Security settings do not allow clipboard access");
 		setClipboardString(getClipboardString() + contents.toTextString(ctx));
 	}
 	
 	public boolean canSortContents(XNContext ctx) {
-		return true;
+		return ctx.allow(XNSecurityKey.CLIPBOARD_WRITE);
 	}
 	public void sortContents(XNContext ctx, XOMComparator cmp) {
+		if (!ctx.allow(XNSecurityKey.CLIPBOARD_WRITE))
+			throw new XNScriptError("Security settings do not allow clipboard access");
 		List<XOMVariant> toSort = new Vector<XOMVariant>();
 		String[] strs = getClipboardString().split("\r\n|\r|\n|\u2028|\u2029");
 		for (String str : strs) toSort.add(new XOMString(str));
@@ -111,6 +123,8 @@ public class XOMClipboard extends XOMVariant implements ClipboardOwner {
 		return "clipboard";
 	}
 	public String toTextString(XNContext ctx) {
+		if (!ctx.allow(XNSecurityKey.CLIPBOARD_READ))
+			throw new XNScriptError("Security settings do not allow clipboard access");
 		return getClipboardString();
 	}
 	public List<XOMVariant> toList(XNContext ctx) {

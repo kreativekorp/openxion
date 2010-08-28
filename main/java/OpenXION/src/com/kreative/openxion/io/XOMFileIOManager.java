@@ -30,6 +30,7 @@ package com.kreative.openxion.io;
 import java.io.*;
 import java.util.*;
 import com.kreative.openxion.XNContext;
+import com.kreative.openxion.XNSecurityKey;
 import com.kreative.openxion.XNScriptError;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.inst.XOMFile;
@@ -93,11 +94,24 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public void open(XNContext ctx, XOMVariant obj, XNIOMethod method, String type) {
+		boolean write;
+		if (ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE)) write = true;
+		else if (ctx.allow(XNSecurityKey.FILE_SYSTEM_READ)) write = false;
+		else throw new XNScriptError("Security settings do not allow open file");
 		try {
 			XOMFile xf = XOMFileType.instance.makeInstanceFrom(ctx, obj);
 			File f = xf.toFile().getAbsoluteFile();
 			String p = f.getAbsolutePath();
-			XNIOStream stream = new XNFileIOStream(f, "rwd");
+			XNIOStream stream;
+			if (write) {
+				try {
+					stream = new XNFileIOStream(f, "rwd");
+				} catch (IOException e) {
+					stream = new XNFileIOStream(f, "r");
+				}
+			} else {
+				stream = new XNFileIOStream(f, "r");
+			}
 			streams.put(obj, stream);
 			streams.put(xf, stream);
 			streams.put(f, stream);
@@ -113,6 +127,8 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj) {
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+			throw new XNScriptError("Security settings do not allow read from file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {
@@ -123,6 +139,8 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, XOMVariant stop) {
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+			throw new XNScriptError("Security settings do not allow read from file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {
@@ -133,6 +151,8 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, int len) {
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+			throw new XNScriptError("Security settings do not allow read from file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {
@@ -143,6 +163,8 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, int len, XOMVariant stop) {
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+			throw new XNScriptError("Security settings do not allow read from file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {
@@ -153,6 +175,8 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos) {
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+			throw new XNScriptError("Security settings do not allow read from file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {
@@ -163,6 +187,8 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos, XOMVariant stop) {
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+			throw new XNScriptError("Security settings do not allow read from file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {
@@ -173,6 +199,8 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos, int len) {
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+			throw new XNScriptError("Security settings do not allow read from file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {
@@ -183,6 +211,8 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos, int len, XOMVariant stop) {
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+			throw new XNScriptError("Security settings do not allow read from file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {
@@ -193,6 +223,8 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public void write(XNContext ctx, XOMVariant obj, XOMVariant data) {
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE))
+			throw new XNScriptError("Security settings do not allow write to file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {
@@ -203,6 +235,8 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public void write(XNContext ctx, XOMVariant obj, XOMVariant data, long pos) {
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE))
+			throw new XNScriptError("Security settings do not allow write to file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {
@@ -213,6 +247,8 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public void truncate(XNContext ctx, XOMVariant obj) {
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE))
+			throw new XNScriptError("Security settings do not allow truncate file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {
@@ -223,6 +259,8 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public void truncate(XNContext ctx, XOMVariant obj, long pos) {
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE))
+			throw new XNScriptError("Security settings do not allow truncate file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {
