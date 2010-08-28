@@ -190,6 +190,75 @@ public class XNStdInOutUI implements XNUI {
 		out.print("\u0007");
 	}
 	
+	public void promptSecurity(XNSecurityKey[] type, boolean[] allow, boolean[] forall) {
+		out.println("\u001B[1m======================== SECURITY WARNING ========================\u001B[0m");
+		for (XNSecurityKey t : type) {
+			switch (t) {
+			case DO_AND_VALUE: out.println("This script is requesting the execution of arbitrary XION code."); break;
+			case EXTERNAL_SCRIPTS: out.println("This script is requesting the execution of arbitrary code."); break;
+			case MODULE_LOAD: out.println("This script is requesting to load another module."); break;
+			case SYSTEM_INFO: out.println("This script is requesting information about your system."); break;
+			case CLIPBOARD_READ: out.println("This script is requesting read access to the clipboard."); break;
+			case CLIPBOARD_WRITE: out.println("This script is requesting write access to the clipboard."); break;
+			case FILE_LAUNCH: out.println("This script is requesting to launch an external program."); break;
+			case FILE_SYSTEM_READ: out.println("This script is requesting read access to the file system."); break;
+			case FILE_SYSTEM_WRITE: out.println("This script is requesting write access to the file system."); break;
+			case BROWSER_LAUNCH: out.println("This script is requesting to launch a web browser."); break;
+			case INTERNET_ACCESS: out.println("This script is requesting access to the Internet."); break;
+			default: out.println("This script is requesting "+t.name()+"."); break;
+			}
+		}
+		out.println("Would you like to allow this, or prevent the script from continuing?");
+		out.println("\u001B[1mDo not allow unless you trust the source of this script.\u001B[0m");
+		while (true) {
+			out.println("  [1:Allow] [2:Allow All] [3:Deny] [4:Deny All] [5:Kill Script]");
+			String s = getLine().trim();
+			try {
+				int i = Integer.parseInt(s);
+				switch (i) {
+				case 1:
+					for (int k = 0; k < allow.length; k++) allow[k] = true;
+					for (int k = 0; k < forall.length; k++) forall[k] = false;
+					return;
+				case 2:
+					for (int k = 0; k < allow.length; k++) allow[k] = true;
+					for (int k = 0; k < forall.length; k++) forall[k] = true;
+					return;
+				case 3:
+					for (int k = 0; k < allow.length; k++) allow[k] = false;
+					for (int k = 0; k < forall.length; k++) forall[k] = false;
+					return;
+				case 4:
+					for (int k = 0; k < allow.length; k++) allow[k] = true;
+					for (int k = 0; k < forall.length; k++) forall[k] = true;
+					return;
+				case 5:
+					throw new XNExitedToInterpreterException("User requested end of script execution.");
+				}
+			} catch (NumberFormatException e) {}
+			s = s.replaceAll("\\s+", "");
+			if (s.equalsIgnoreCase("allow")) {
+				for (int k = 0; k < allow.length; k++) allow[k] = true;
+				for (int k = 0; k < forall.length; k++) forall[k] = false;
+				return;
+			} else if (s.equalsIgnoreCase("allowall")) {
+				for (int k = 0; k < allow.length; k++) allow[k] = true;
+				for (int k = 0; k < forall.length; k++) forall[k] = true;
+				return;
+			} else if (s.equalsIgnoreCase("deny")) {
+				for (int k = 0; k < allow.length; k++) allow[k] = false;
+				for (int k = 0; k < forall.length; k++) forall[k] = false;
+				return;
+			} else if (s.equalsIgnoreCase("denyall")) {
+				for (int k = 0; k < allow.length; k++) allow[k] = true;
+				for (int k = 0; k < forall.length; k++) forall[k] = true;
+				return;
+			} else if (s.equalsIgnoreCase("kill") || s.equalsIgnoreCase("killscript")) {
+				throw new XNExitedToInterpreterException("User requested end of script execution.");
+			}
+		}
+	}
+	
 	public void put(String s) {
 		out.println(s);
 	}
