@@ -46,7 +46,7 @@ import com.kreative.openxion.xom.inst.XOMEmpty;
 
 /**
  * XNContext is the main class responsible for the state of the
- * XION interpreter, including loaded modules, constants, ordinals,
+ * XION interpreter, including loaded modules, security settings,
  * variables, the message-passing hierarchy, and the call stack.
  * @since OpenXION 0.9
  * @author Rebecca G. Bettencourt, Kreative Software
@@ -55,6 +55,7 @@ public class XNContext implements Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
 	
 	private XNUI ui;
+	private XNSecurityProfile security;
 	private XNContext parent;
 	
 	/**
@@ -62,6 +63,20 @@ public class XNContext implements Serializable, Cloneable {
 	 */
 	public XNContext(XNUI ui) {
 		this.ui = ui;
+		this.security = new XNSecurityProfile();
+		this.parent = null;
+		initLanguageConstructs();
+		initRuntime();
+		initEnvironment();
+		initStack();
+	}
+	
+	/**
+	 * Creates a new XNContext.
+	 */
+	public XNContext(XNUI ui, XNSecurityProfile security) {
+		this.ui = ui;
+		this.security = security;
 		this.parent = null;
 		initLanguageConstructs();
 		initRuntime();
@@ -83,6 +98,22 @@ public class XNContext implements Serializable, Cloneable {
 	 */
 	public void setUI(XNUI ui) {
 		this.ui = ui;
+	}
+	
+	/**
+	 * Returns the security profile used to control security settings in this context.
+	 * @return the security profile used to control security settings in this context.
+	 */
+	public XNSecurityProfile getSecurityProfile() {
+		return security;
+	}
+	
+	/**
+	 * Changes the security profile used to control security settings in this context.
+	 * @param security the security profile used to control security settings in this context.
+	 */
+	public void setSecurityProfile(XNSecurityProfile security) {
+		this.security = security;
 	}
 	
 	/**
@@ -132,6 +163,29 @@ public class XNContext implements Serializable, Cloneable {
 	}
 	
 	/**
+	 * Determines whether the current security settings allow for certain functionality.
+	 * If security settings are set to ask the user, the user will be prompted.
+	 * If the user chooses to always allow or always deny, the current security settings
+	 * will be modified to reflect the user's choice.
+	 * @param type the security key for the functionality being requested.
+	 * @return true if the functionality is allowed, false otherwise.
+	 */
+	public boolean allow(XNSecurityKey type) {
+		if (security.containsKey(type)) {
+			switch (security.get(type)) {
+			case ALLOW: return true;
+			case DENY: return false;
+			}
+		}
+		XNSecurityKey[] t = new XNSecurityKey[]{ type };
+		boolean[] a = new boolean[1];
+		boolean[] fa = new boolean[1];
+		ui.promptSecurity(t, a, fa);
+		if (fa[0]) security.put(type, a[0] ? XNSecurityValue.ALLOW : XNSecurityValue.DENY);
+		return a[0];
+	}
+	
+	/**
 	 * Creates a new XNContext with the same loaded modules,
 	 * global variables, and environment as this XNContext.
 	 * @return a forked XNContext.
@@ -141,6 +195,7 @@ public class XNContext implements Serializable, Cloneable {
 	}
 	private XNContext(XNContext parent) {
 		this.ui = parent.ui;
+		this.security = parent.security;
 		this.parent = parent;
 		initLanguageConstructs(parent);
 		initRuntime(parent);

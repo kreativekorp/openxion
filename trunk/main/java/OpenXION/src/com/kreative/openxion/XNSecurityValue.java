@@ -21,31 +21,29 @@
  * other provisions required by the LGPL License. If you do not delete
  * the provisions above, a recipient may use your version of this file
  * under either the MPL or the LGPL License.
- * @since OpenXION 0.9
+ * @since OpenXION 1.1
  * @author Rebecca G. Bettencourt, Kreative Software
  */
 
 package com.kreative.openxion;
 
-import java.io.File;
-
 /**
- * An XNUI is responsible for any interaction between the OpenXION
- * interpreter and the outside world.
- * @since OpenXION 0.9
+ * XNSecurityValue represents the current security setting
+ * of an area of functionality available to XION scripts.
+ * @since OpenXION 1.1
  * @author Rebecca G. Bettencourt, Kreative Software
  */
-public interface XNUI {
-	public void put(String s);
-	public String answer(String prompt, String[] options, int x, int y);
-	public String answerList(String prompt, String[] options, int x, int y);
-	public File answerFile(String prompt, String[] types, int x, int y);
-	public File answerFolder(String prompt, int x, int y);
-	public File answerDisk(String prompt, int x, int y);
-	public String ask(String prompt, String deftext, int x, int y);
-	public String askPassword(String prompt, String deftext, int x, int y);
-	public File askFile(String prompt, String deftext, int x, int y);
-	public File askFolder(String prompt, String deftext, int x, int y);
-	public void beep();
-	public void promptSecurity(XNSecurityKey[] type, boolean[] allow, boolean[] forall);
+public enum XNSecurityValue {
+	/**
+	 * The security setting indicating that all attempts to use certain functionality should fail.
+	 */
+	DENY,
+	/**
+	 * The security setting indicating that the user should be asked when a script wants to use certain functionality.
+	 */
+	ASK,
+	/**
+	 * The security setting indicating that the script is always allowed to use certain functionality.
+	 */
+	ALLOW
 }

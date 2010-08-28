@@ -41,7 +41,7 @@ import com.kreative.openxion.xom.type.XOMStringType;
  */
 public class XNMain {
 	public static final String XION_NAME = "OpenXION";
-	public static final String XION_VERSION = "1.0";
+	public static final String XION_VERSION = "1.1";
 	
 	public static void main(String[] args) {
 		final XNStdInOutUI ui = new XNStdInOutUI();
