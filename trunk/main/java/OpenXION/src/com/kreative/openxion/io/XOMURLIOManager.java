@@ -32,6 +32,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.*;
 import com.kreative.openxion.XNContext;
+import com.kreative.openxion.XNSecurityKey;
 import com.kreative.openxion.XNScriptError;
 import com.kreative.openxion.util.BareBonesBrowserLaunch;
 import com.kreative.openxion.xom.XOMVariant;
@@ -92,6 +93,8 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public void open(XNContext ctx, XOMVariant obj) {
+		if (!ctx.allow(XNSecurityKey.BROWSER_LAUNCH))
+			throw new XNScriptError("Security settings do not allow open URL");
 		try {
 			XOMURL xu = XOMURLType.instance.makeInstanceFrom(ctx, obj);
 			URL u = xu.toURL();
@@ -103,6 +106,8 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public void open(XNContext ctx, XOMVariant obj, XNIOMethod method, String type) {
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS))
+			throw new XNScriptError("Security settings do not allow open URL");
 		try {
 			XOMURL xu = XOMURLType.instance.makeInstanceFrom(ctx, obj);
 			URL u = xu.toURL();
@@ -123,6 +128,8 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj) {
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS))
+			throw new XNScriptError("Security settings do not allow read from URL");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {
@@ -133,6 +140,8 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, XOMVariant stop) {
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS))
+			throw new XNScriptError("Security settings do not allow read from URL");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {
@@ -143,6 +152,8 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, int len) {
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS))
+			throw new XNScriptError("Security settings do not allow read from URL");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {
@@ -153,6 +164,8 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, int len, XOMVariant stop) {
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS))
+			throw new XNScriptError("Security settings do not allow read from URL");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {
@@ -163,6 +176,8 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos) {
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS))
+			throw new XNScriptError("Security settings do not allow read from URL");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {
@@ -173,6 +188,8 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos, XOMVariant stop) {
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS))
+			throw new XNScriptError("Security settings do not allow read from URL");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {
@@ -183,6 +200,8 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos, int len) {
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS))
+			throw new XNScriptError("Security settings do not allow read from URL");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {
@@ -193,6 +212,8 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos, int len, XOMVariant stop) {
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS))
+			throw new XNScriptError("Security settings do not allow read from URL");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {
@@ -203,6 +224,8 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public void write(XNContext ctx, XOMVariant obj, XOMVariant data) {
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS))
+			throw new XNScriptError("Security settings do not allow write to URL");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {
@@ -213,6 +236,8 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public void write(XNContext ctx, XOMVariant obj, XOMVariant data, long pos) {
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS))
+			throw new XNScriptError("Security settings do not allow write to URL");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {
@@ -223,6 +248,8 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public void truncate(XNContext ctx, XOMVariant obj) {
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS))
+			throw new XNScriptError("Security settings do not allow truncate URL");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {
@@ -233,6 +260,8 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public void truncate(XNContext ctx, XOMVariant obj, long pos) {
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS))
+			throw new XNScriptError("Security settings do not allow truncate URL");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
 		if (stream == null || method == null) {

@@ -30,6 +30,8 @@ package com.kreative.openxion.xom.type;
 import java.io.File;
 import java.util.*;
 import com.kreative.openxion.XNContext;
+import com.kreative.openxion.XNSecurityKey;
+import com.kreative.openxion.XNScriptError;
 import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.xom.XOMDataType;
 import com.kreative.openxion.xom.XOMVariant;
@@ -55,9 +57,11 @@ public class XOMDiskType extends XOMDataType<XOMFile> {
 	 */
 	
 	public boolean canGetMassInstance(XNContext ctx) {
-		return true;
+		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ);
 	}
 	public XOMVariant getMassInstance(XNContext ctx) {
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+			throw new XNScriptError("Security settings do not allow file system access");
 		File[] roots = File.listRoots();
 		List<XOMFile> xroots = new Vector<XOMFile>();
 		for (File root : roots) {
@@ -67,14 +71,16 @@ public class XOMDiskType extends XOMDataType<XOMFile> {
 	}
 	
 	public boolean canGetInstanceByIndex(XNContext ctx, int index) {
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ)) return false;
 		File[] roots = File.listRoots();
 		index = XIONUtil.index(1, roots.length, index, index)[0];
 		return (index >= 1 && index <= roots.length);
 	}
 	public boolean canGetInstanceByIndex(XNContext ctx, int startIndex, int endIndex) {
-		return true;
+		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ);
 	}
 	public boolean canGetInstanceByName(XNContext ctx, String name) {
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ)) return false;
 		File[] roots = File.listRoots();
 		for (File root : roots) {
 			if (root.getName().equalsIgnoreCase(name)) {
@@ -84,6 +90,8 @@ public class XOMDiskType extends XOMDataType<XOMFile> {
 		return false;
 	}
 	public XOMVariant getInstanceByIndex(XNContext ctx, int index) {
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+			throw new XNScriptError("Security settings do not allow file system access");
 		File[] roots = File.listRoots();
 		index = XIONUtil.index(1, roots.length, index, index)[0];
 		if (index >= 1 && index <= roots.length) {
@@ -93,6 +101,8 @@ public class XOMDiskType extends XOMDataType<XOMFile> {
 		}
 	}
 	public XOMVariant getInstanceByIndex(XNContext ctx, int startIndex, int endIndex) {
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+			throw new XNScriptError("Security settings do not allow file system access");
 		File[] roots = File.listRoots();
 		int[] indexes = XIONUtil.index(1, roots.length, startIndex, endIndex);
 		if (indexes[0] < 1) indexes[0] = 1;
@@ -106,6 +116,8 @@ public class XOMDiskType extends XOMDataType<XOMFile> {
 		return new XOMList(xroots);
 	}
 	public XOMVariant getInstanceByName(XNContext ctx, String name) {
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+			throw new XNScriptError("Security settings do not allow file system access");
 		File[] roots = File.listRoots();
 		for (File root : roots) {
 			if (root.getName().equalsIgnoreCase(name)) {

@@ -30,6 +30,8 @@ package com.kreative.openxion.xom.type;
 import java.io.File;
 import java.util.*;
 import com.kreative.openxion.XNContext;
+import com.kreative.openxion.XNSecurityKey;
+import com.kreative.openxion.XNScriptError;
 import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.xom.XOMDataType;
 import com.kreative.openxion.xom.XOMVariant;
@@ -56,13 +58,11 @@ public class XOMForkType extends XOMDataType<XOMFile> {
 	 */
 	
 	public boolean canGetChildMassVariant(XNContext ctx, XOMVariant parent) {
-		if (XOMFileType.instance.canMakeInstanceFrom(ctx, parent)) {
-			return true;
-		} else {
-			return false;
-		}
+		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ) && (XOMFileType.instance.canMakeInstanceFrom(ctx, parent));
 	}
 	public XOMVariant getChildMassVariant(XNContext ctx, XOMVariant parent) {
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+			throw new XNScriptError("Security settings do not allow file system access");
 		if (XOMFileType.instance.canMakeInstanceFrom(ctx, parent)) {
 			File theFile = XOMFileType.instance.makeInstanceFrom(ctx, parent).toFile();
 			File theForkHandle = new File(theFile, "..namedfork");
@@ -78,7 +78,7 @@ public class XOMForkType extends XOMDataType<XOMFile> {
 	}
 	
 	public boolean canGetChildVariantByIndex(XNContext ctx, XOMVariant parent, int index) {
-		if (XOMFileType.instance.canMakeInstanceFrom(ctx, parent)) {
+		if (ctx.allow(XNSecurityKey.FILE_SYSTEM_READ) && XOMFileType.instance.canMakeInstanceFrom(ctx, parent)) {
 			File theFile = XOMFileType.instance.makeInstanceFrom(ctx, parent).toFile();
 			File theForkHandle = new File(theFile, "..namedfork");
 			File theDataFork = new File(theForkHandle, "data");
@@ -93,14 +93,10 @@ public class XOMForkType extends XOMDataType<XOMFile> {
 		}
 	}
 	public boolean canGetChildVariantByIndex(XNContext ctx, XOMVariant parent, int startIndex, int endIndex) {
-		if (XOMFileType.instance.canMakeInstanceFrom(ctx, parent)) {
-			return true;
-		} else {
-			return false;
-		}
+		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ) && (XOMFileType.instance.canMakeInstanceFrom(ctx, parent));
 	}
 	public boolean canGetChildVariantByName(XNContext ctx, XOMVariant parent, String name) {
-		if (XOMFileType.instance.canMakeInstanceFrom(ctx, parent)) {
+		if (ctx.allow(XNSecurityKey.FILE_SYSTEM_READ) && XOMFileType.instance.canMakeInstanceFrom(ctx, parent)) {
 			File theFile = XOMFileType.instance.makeInstanceFrom(ctx, parent).toFile();
 			File theForkHandle = new File(theFile, "..namedfork");
 			File theFork = new File(theForkHandle, name);
@@ -110,6 +106,8 @@ public class XOMForkType extends XOMDataType<XOMFile> {
 		}
 	}
 	public XOMVariant getChildVariantByIndex(XNContext ctx, XOMVariant parent, int index) {
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+			throw new XNScriptError("Security settings do not allow file system access");
 		if (XOMFileType.instance.canMakeInstanceFrom(ctx, parent)) {
 			File theFile = XOMFileType.instance.makeInstanceFrom(ctx, parent).toFile();
 			File theForkHandle = new File(theFile, "..namedfork");
@@ -129,6 +127,8 @@ public class XOMForkType extends XOMDataType<XOMFile> {
 		}
 	}
 	public XOMVariant getChildVariantByIndex(XNContext ctx, XOMVariant parent, int startIndex, int endIndex) {
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+			throw new XNScriptError("Security settings do not allow file system access");
 		if (XOMFileType.instance.canMakeInstanceFrom(ctx, parent)) {
 			File theFile = XOMFileType.instance.makeInstanceFrom(ctx, parent).toFile();
 			File theForkHandle = new File(theFile, "..namedfork");
@@ -148,6 +148,8 @@ public class XOMForkType extends XOMDataType<XOMFile> {
 		}
 	}
 	public XOMVariant getChildVariantByName(XNContext ctx, XOMVariant parent, String name) {
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+			throw new XNScriptError("Security settings do not allow file system access");
 		if (XOMFileType.instance.canMakeInstanceFrom(ctx, parent)) {
 			File theFile = XOMFileType.instance.makeInstanceFrom(ctx, parent).toFile();
 			File theForkHandle = new File(theFile, "..namedfork");
@@ -163,13 +165,11 @@ public class XOMForkType extends XOMDataType<XOMFile> {
 	}
 	
 	public boolean canCreateChildVariantByName(XNContext ctx, XOMVariant parent, String name) {
-		if (XOMFileType.instance.canMakeInstanceFrom(ctx, parent)) {
-			return true;
-		} else {
-			return false;
-		}
+		return (ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE) && XOMFileType.instance.canMakeInstanceFrom(ctx, parent));
 	}
 	public XOMVariant createChildVariantByName(XNContext ctx, XOMVariant parent, String name) {
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE))
+			throw new XNScriptError("Security settings do not allow file system access");
 		if (XOMFileType.instance.canMakeInstanceFrom(ctx, parent)) {
 			File theFile = XOMFileType.instance.makeInstanceFrom(ctx, parent).toFile();
 			File theForkHandle = new File(theFile, "..namedfork");

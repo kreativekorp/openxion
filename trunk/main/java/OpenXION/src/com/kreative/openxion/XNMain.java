@@ -70,6 +70,7 @@ public class XNMain {
 					else if (arg.equals("-m")) lastOption = Option.MODULE;
 					else if (arg.equals("-E")) lastOption = Option.TEXT_ENCODING;
 					else if (arg.equals("-D")) lastOption = Option.VARIABLE;
+					else if (arg.equals("-s")) lastOption = Option.SECURITY_PROFILE;
 					else if (arg.equals("-h") || arg.equals("-help") || arg.equals("--help")) help();
 					else if (arg.equals("-v") || arg.equals("-version") || arg.equals("--version")) version();
 					else if (arg.equals("-r")) ctx.reset();
@@ -86,13 +87,9 @@ public class XNMain {
 							boolean fail = false;
 							
 							System.out.println("Testing: "+arg+"...");
-							PrintStream stdout = System.out;
-							PrintStream stderr = System.err;
 							ByteArrayOutputStream capture = new ByteArrayOutputStream();
 							PrintStream captureStream = new PrintStream(capture);
-							System.setOut(captureStream);
-							System.setErr(captureStream);
-							ui.reset();
+							ctx.setUI(new TestUI(ui, captureStream));
 							
 							try {
 								ctx.reset();
@@ -101,21 +98,17 @@ public class XNMain {
 								List<XNStatement> program = par.parse();
 								interp.executeScript(program);
 							} catch (IOException e) {
-								System.err.println("Could not read script file: "+arg);
+								captureStream.println("Could not read script file: "+arg);
 								if (stackTrace) e.printStackTrace();
 							} catch (XNScriptError se) {
-								System.err.println(se.getMessage() + " on line " + se.getLine() + " at character " + se.getCol());
+								captureStream.println(se.getMessage() + " on line " + se.getLine() + " at character " + se.getCol());
 								if (stackTrace) se.printStackTrace();
 							} catch (Exception e) {
-								System.setOut(stdout);
-								System.setErr(stderr);
 								e.printStackTrace();
 								System.exit(0);
 							}
-
-							System.setOut(stdout);
-							System.setErr(stderr);
-							ui.reset();
+							
+							ctx.setUI(ui);
 							ByteArrayInputStream captureStream2 = new ByteArrayInputStream(capture.toByteArray());
 							try {
 								Process p = Runtime.getRuntime().exec(new String[]{"diff", new File(arg+".out").getAbsolutePath(), "-"});
@@ -127,7 +120,7 @@ public class XNMain {
 								p.getOutputStream().close();
 								while ((len = p.getInputStream().read(stuff)) > 0) {
 									fail = true;
-									stdout.write(stuff, 0, len);
+									System.out.write(stuff, 0, len);
 								}
 							} catch (IOException ioe) {}
 							
@@ -188,6 +181,31 @@ public class XNMain {
 							System.err.println("Can't understand -D option: "+arg);
 						}
 						break;
+					case SECURITY_PROFILE:
+						if (arg.equalsIgnoreCase("allow")) ctx.setSecurityProfile(new XNSecurityProfile(XNSecurityValue.ALLOW));
+						else if (arg.equalsIgnoreCase("ask")) ctx.setSecurityProfile(new XNSecurityProfile(XNSecurityValue.ASK));
+						else if (arg.equalsIgnoreCase("deny")) ctx.setSecurityProfile(new XNSecurityProfile(XNSecurityValue.DENY));
+						else if (arg.matches("[A-Z0-9_]+=[A-Z0-9_]+")) {
+							String[] sss = arg.split("=", 2);
+							XNSecurityKey k = XNSecurityKey.valueOf(sss[0]);
+							XNSecurityValue v = XNSecurityValue.valueOf(sss[1]);
+							if (k != null && v != null) {
+								ctx.getSecurityProfile().put(k, v);
+							} else {
+								try {
+									ctx.getSecurityProfile().read(new Scanner(new File(arg), "UTF-8"));
+								} catch (IOException ioe) {
+									System.err.println("Could not load security profile: "+arg);
+								}
+							}
+						} else {
+							try {
+								ctx.getSecurityProfile().read(new Scanner(new File(arg), "UTF-8"));
+							} catch (IOException ioe) {
+								System.err.println("Could not load security profile: "+arg);
+							}
+						}
+						break;
 					}
 					lastOption = Option.SCRIPT_FILE;
 				}
@@ -205,7 +223,8 @@ public class XNMain {
 		STATEMENT,
 		MODULE,
 		TEXT_ENCODING,
-		VARIABLE
+		VARIABLE,
+		SECURITY_PROFILE
 	}
 	
 	private static void shell(XNInterpreter interp, XNContext ctx, boolean stackTrace) {
@@ -230,20 +249,24 @@ public class XNMain {
 				if (line.length() > 0) {
 					if (line.equalsIgnoreCase("exit") || line.equalsIgnoreCase("quit")) {
 						break;
-					} else try {
-						interp.executeScriptString(line);
-					} catch (XNScriptError se1) { try {
-						System.out.println(interp.evaluateExpressionString(line).unwrap().toTextString(ctx));
-					} catch (XNScriptError se3) {
-						if (stackTrace) {
-							System.err.println("Attempted as statement:");
-							se1.printStackTrace();
-							System.err.println("Attempted as expression:");
-							se3.printStackTrace();
-						} else {
-							System.out.println(se1.getMessage());
+					} else {
+						try {
+							interp.executeScriptString(line);
+						} catch (XNScriptError se1) {
+							try {
+								System.out.println(interp.evaluateExpressionString(line).unwrap().toTextString(ctx));
+							} catch (XNScriptError se3) {
+								if (stackTrace) {
+									System.err.println("Attempted as statement:");
+									se1.printStackTrace();
+									System.err.println("Attempted as expression:");
+									se3.printStackTrace();
+								} else {
+									System.out.println(se1.getMessage());
+								}
+							}
 						}
-					}}
+					}
 				}
 			} else {
 				break;
@@ -254,23 +277,27 @@ public class XNMain {
 	private static void help() {
 		// // // // // // //<---10---><---20---><---30---><---40---><---50---><---60---><---70---><---80--->
 		System.out.println("Usage: xion [options] [--] [programfile] [programfile] [...]");
-		System.out.println("  -c statement    execute the specified statements");
-		System.out.println("  -D var=value    set the value of a global variable");
-		System.out.println("  -E encoding     specify the text encoding used to read script files");
-		System.out.println("  -e expression   evaluate and print the specified expression");
-		System.out.println("  -f programfile  execute the specified script file");
-		System.out.println("  -h              print help screen");
-		System.out.println("  -i              start an interactive shell");
-		System.out.println("  -m classname    load an XNModule with the specified class name");
-		System.out.println("  -R              clear runtime state AND unload all modules");
-		System.out.println("  -r              clear runtime state ONLY");
-		System.out.println("  -S              print a stack trace for every exception");
-		System.out.println("  -T              instead of printing output, print file name and");
-		System.out.println("                  diff of output against .out file (testing mode)");
-		System.out.println("  -v              print OpenXION, Java, and OS version numbers");
-		System.out.println("  --help          print help screen");
-		System.out.println("  --version       print OpenXION, Java, and OS version numbers");
-		System.out.println("  --              treat remaining arguments as file names");
+		System.out.println("  -c statement        execute the specified statements");
+		System.out.println("  -D var=value        set the value of a global variable");
+		System.out.println("  -E encoding         specify the text encoding used to read script files");
+		System.out.println("  -e expression       evaluate and print the specified expression");
+		System.out.println("  -f programfile      execute the specified script file");
+		System.out.println("  -h                  print help screen");
+		System.out.println("  -i                  start an interactive shell");
+		System.out.println("  -m classname        load an XNModule with the specified class name");
+		System.out.println("  -R                  clear runtime state AND unload all modules");
+		System.out.println("  -r                  clear runtime state ONLY");
+		System.out.println("  -S                  print a stack trace for every exception");
+		System.out.println("  -s allow|ask|deny   set security settings to allow|ask|deny every request");
+		System.out.println("  -s key=value        set security setting for one kind of request only");
+		System.out.println("  -s file             read security settings from file as key=value pairs");
+		System.out.println("  -T                  instead of printing output, print file name and");
+		System.out.println("                      diff of output against .out file (testing mode)");
+		System.out.println("                      (-s allow recommended with this option)");
+		System.out.println("  -v                  print OpenXION, Java, and OS version numbers");
+		System.out.println("  --help              print help screen");
+		System.out.println("  --version           print OpenXION, Java, and OS version numbers");
+		System.out.println("  --                  treat remaining arguments as file names");
 	}
 	
 	private static void version() {
@@ -361,5 +388,54 @@ public class XNMain {
 			}
 			out.close();
 		} catch (IOException ioe) {}
+	}
+	
+	private static class TestUI implements XNUI {
+		private XNUI ui;
+		private PrintWriter put;
+		public TestUI(XNUI ui, PrintStream put) {
+			this.ui = ui;
+			try {
+				this.put = new PrintWriter(new OutputStreamWriter(put, "UTF-8"), true);
+			} catch (UnsupportedEncodingException uee) {
+				this.put = new PrintWriter(new OutputStreamWriter(put), true);
+			}
+		}
+		public void put(String s) {
+			put.println(s);
+		}
+		public String answer(String prompt, String[] options, int x, int y) {
+			return ui.answer(prompt, options, x, y);
+		}
+		public File answerDisk(String prompt, int x, int y) {
+			return ui.answerDisk(prompt, x, y);
+		}
+		public File answerFile(String prompt, String[] types, int x, int y) {
+			return ui.answerFile(prompt, types, x, y);
+		}
+		public File answerFolder(String prompt, int x, int y) {
+			return ui.answerFolder(prompt, x, y);
+		}
+		public String answerList(String prompt, String[] options, int x, int y) {
+			return ui.answerList(prompt, options, x, y);
+		}
+		public String ask(String prompt, String deftext, int x, int y) {
+			return ui.ask(prompt, deftext, x, y);
+		}
+		public File askFile(String prompt, String deftext, int x, int y) {
+			return ui.askFile(prompt, deftext, x, y);
+		}
+		public File askFolder(String prompt, String deftext, int x, int y) {
+			return ui.askFolder(prompt, deftext, x, y);
+		}
+		public String askPassword(String prompt, String deftext, int x, int y) {
+			return ui.askPassword(prompt, deftext, x, y);
+		}
+		public void beep() {
+			ui.beep();
+		}
+		public void promptSecurity(XNSecurityKey[] type, boolean[] allow, boolean[] forall) {
+			ui.promptSecurity(type, allow, forall);
+		}
 	}
 }

@@ -2385,6 +2385,8 @@ public class XNStandardModule extends XNModule {
 			XOMVariant object = interp.evaluateExpression(parameters.get(0)).unwrap();
 			XOMVariant opener = (parameters.size() > 2) ? interp.evaluateExpression(parameters.get(2)).unwrap() : null;
 			if (opener != null) {
+				if (!ctx.allow(XNSecurityKey.FILE_LAUNCH))
+					throw new XNScriptError("Security settings do not allow close");
 				String app = opener.toTextString(ctx);
 				String doc = object.toTextString(ctx);
 				File a = XIONUtil.locateApplication(ctx, app, true);
@@ -2401,6 +2403,8 @@ public class XNStandardModule extends XNModule {
 			} else if (ctx.hasIOManager(object)) {
 				ctx.getIOManager(object).close(ctx, object);
 			} else {
+				if (!ctx.allow(XNSecurityKey.FILE_LAUNCH))
+					throw new XNScriptError("Security settings do not allow close");
 				String name = object.toTextString(ctx);
 				File f = XIONUtil.locateApplication(ctx, name, true);
 				if (f == null) {
@@ -2474,6 +2478,8 @@ public class XNStandardModule extends XNModule {
 				}
 			}
 			else if (opener != null) {
+				if (!ctx.allow(XNSecurityKey.FILE_LAUNCH))
+					throw new XNScriptError("Security settings do not allow open");
 				String app = opener.toTextString(ctx);
 				String doc = object.toTextString(ctx);
 				File a = XIONUtil.locateApplication(ctx, app, true);
@@ -2492,6 +2498,8 @@ public class XNStandardModule extends XNModule {
 				ctx.getIOManager(object).open(ctx, object);
 			}
 			else {
+				if (!ctx.allow(XNSecurityKey.FILE_LAUNCH))
+					throw new XNScriptError("Security settings do not allow open");
 				String name = object.toTextString(ctx);
 				File f = XIONUtil.locateApplicationOrDocument(ctx, name, true);
 				if (f == null) {
@@ -2945,6 +2953,8 @@ public class XNStandardModule extends XNModule {
 	private static final Function f_applicationfile = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) throw new XNScriptError("Can't understand arguments to applicationFile");
+			if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+				throw new XNScriptError("Security settings do not allow applicationFile");
 			File f = XIONUtil.locateApplication(ctx, parameter.toTextString(ctx), false);
 			if (f == null) return XOMEmpty.EMPTY;
 			else return new XOMFile(f);
@@ -2954,6 +2964,8 @@ public class XNStandardModule extends XNModule {
 	private static final Function f_applicationpath = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) throw new XNScriptError("Can't understand arguments to applicationPath");
+			if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+				throw new XNScriptError("Security settings do not allow applicationPath");
 			File f = XIONUtil.locateApplication(ctx, parameter.toTextString(ctx), false);
 			if (f == null) return XOMEmpty.EMPTY;
 			else return new XOMString(f.getAbsolutePath());
@@ -2963,6 +2975,8 @@ public class XNStandardModule extends XNModule {
 	private static final Function f_applicationordocumentfile = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) throw new XNScriptError("Can't understand arguments to applicationOrDocumentFile");
+			if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+				throw new XNScriptError("Security settings do not allow applicationOrDocumentFile");
 			File f = XIONUtil.locateApplicationOrDocument(ctx, parameter.toTextString(ctx), false);
 			if (f == null) return XOMEmpty.EMPTY;
 			else return new XOMFile(f);
@@ -2972,6 +2986,8 @@ public class XNStandardModule extends XNModule {
 	private static final Function f_applicationordocumentpath = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) throw new XNScriptError("Can't understand arguments to applicationOrDocumentPath");
+			if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+				throw new XNScriptError("Security settings do not allow applicationOrDocumentPath");
 			File f = XIONUtil.locateApplicationOrDocument(ctx, parameter.toTextString(ctx), false);
 			if (f == null) return XOMEmpty.EMPTY;
 			else return new XOMString(f.getAbsolutePath());
@@ -3579,6 +3595,8 @@ public class XNStandardModule extends XNModule {
 	private static final Function f_documentfile = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) throw new XNScriptError("Can't understand arguments to documentFile");
+			if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+				throw new XNScriptError("Security settings do not allow documentFile");
 			File f = XIONUtil.locateDocument(ctx, parameter.toTextString(ctx), false);
 			if (f == null) return XOMEmpty.EMPTY;
 			else return new XOMFile(f);
@@ -3588,6 +3606,8 @@ public class XNStandardModule extends XNModule {
 	private static final Function f_documentpath = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) throw new XNScriptError("Can't understand arguments to documentPath");
+			if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+				throw new XNScriptError("Security settings do not allow documentPath");
 			File f = XIONUtil.locateDocument(ctx, parameter.toTextString(ctx), false);
 			if (f == null) return XOMEmpty.EMPTY;
 			else return new XOMString(f.getAbsolutePath());
@@ -4957,6 +4977,8 @@ public class XNStandardModule extends XNModule {
 	private static final Function f_systemname = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			assertEmptyParameter(functionName, parameter);
+			if (!ctx.allow(XNSecurityKey.SYSTEM_INFO))
+				throw new XNScriptError("Security settings do not allow systemName");
 			return new XOMString(System.getProperty("os.name"));
 		}
 	};
@@ -4964,6 +4986,8 @@ public class XNStandardModule extends XNModule {
 	private static final Function f_systemversion = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			assertEmptyParameter(functionName, parameter);
+			if (!ctx.allow(XNSecurityKey.SYSTEM_INFO))
+				throw new XNScriptError("Security settings do not allow systemVersion");
 			return new XOMString(System.getProperty("os.version"));
 		}
 	};
@@ -5133,13 +5157,17 @@ public class XNStandardModule extends XNModule {
 	private static final Function f_value = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) throw new XNScriptError("Can't understand arguments to value");
-			else return new XNInterpreter(ctx).evaluateExpressionStringOrLiteral(parameter.toTextString(ctx));
+			if (!ctx.allow(XNSecurityKey.DO_AND_VALUE))
+				throw new XNScriptError("Security settings do not allow value");
+			return new XNInterpreter(ctx).evaluateExpressionStringOrLiteral(parameter.toTextString(ctx));
 		}
 	};
 	
 	private static final Function f_version = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) throw new XNScriptError("Can't understand arguments to version");
+			if (!ctx.allow(XNSecurityKey.SYSTEM_INFO))
+				throw new XNScriptError("Security settings do not allow version");
 			String s = parameter.toTextString(ctx);
 			if (ctx.hasVersion(s)) {
 				Version v = ctx.getVersion(s);

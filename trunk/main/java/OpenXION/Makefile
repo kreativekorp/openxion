@@ -84,7 +84,7 @@ XION-Language-Module.tgz:
 	tar -czf XION-Language-Module.tgz -C bbedit XION.plist
 
 test: OpenXION.jar
-	java -jar OpenXION.jar -T XIONStdTestSuite/*.xn
+	java -jar OpenXION.jar -s allow -T XIONStdTestSuite/*.xn
 
 localuninstall:
 	rm xe
