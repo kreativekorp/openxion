@@ -86,6 +86,7 @@
 		<string>if</string>
 		<string>implements</string>
 		<string>in</string>
+		<string>include</string>
 		<string>inclusive</string>
 		<string>instanceof</string>
 		<string>international</string>
@@ -147,6 +148,7 @@
 		<string>rem</string>
 		<string>repeat</string>
 		<string>reply</string>
+		<string>require</string>
 		<string>return</string>
 		<string>right</string>
 		<string>rightinclusive</string>
@@ -189,6 +191,7 @@
 		<string>type</string>
 		<string>until</string>
 		<string>up</string>
+		<string>use</string>
 		<string>wait</string>
 		<string>while</string>
 		<string>with</string>
