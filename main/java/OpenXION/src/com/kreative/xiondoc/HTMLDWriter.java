@@ -725,6 +725,12 @@ public class HTMLDWriter implements XIONDocWriter {
 				out.println("<p>"+format(p,n,false)+"</p>");
 			}
 		}
+		if (n.getTerm().getSecurity() != null && n.getTerm().getSecurity().size() > 0) {
+			out.println("<h3>Security</h3>");
+			for (String p : n.getTerm().getSecurity()) {
+				out.println("<p>"+format(p,n,false)+"</p>");
+			}
+		}
 		Collection<String> sy = (dl == null) ? n.getTerm().getNames() : n.getTerm().getNames(dl);
 		if (sy != null && sy.size() > 1) {
 			out.println("<h3>Synonyms</h3>");

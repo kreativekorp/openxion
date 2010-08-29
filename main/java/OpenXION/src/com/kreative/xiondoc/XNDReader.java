@@ -163,6 +163,7 @@ public class XNDReader implements XIONDocReader {
 								}
 								else if (it.equalsIgnoreCase("script")) v.getScripts().add(htmldecode(ic.trim()));
 								else if (it.equalsIgnoreCase("note")) v.getNotes().add(htmldecode(ic.trim()));
+								else if (it.equalsIgnoreCase("security")) v.getSecurity().add(htmldecode(ic.trim()));
 								else if (it.equalsIgnoreCase("see-also")) {
 									String[] sas = htmldecode(ic.trim()).split("[,;]");
 									for (String sa : sas) {

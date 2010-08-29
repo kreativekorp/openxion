@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE xiondoc PUBLIC "-//Kreative//DTD XIONDoc 1.0//EN" "xiondoc-1.0.dtd">
+<!DOCTYPE xiondoc PUBLIC "-//Kreative//DTD XIONDoc 1.1//EN" "xiondoc-1.1.dtd">
 <documentationset>
 
 <dialect>
@@ -1892,6 +1892,11 @@
 		The XION Scripting Language Standard does not require support for any
 		particular external language; only support for the syntax.
 	</description>
+	<security>
+		To execute arbitrary XION code, OpenXION's security settings must allow the [[DO_AND_VALUE]] security key.
+		To execute code in other scripting languages, OpenXION's security settings must allow the [[EXTERNAL_SCRIPTS]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 	<see-also>[[fn:value]]</see-also>
 </structure>
 
@@ -2300,6 +2305,10 @@
 		or script containing the [[*]] statement after the message has been
 		intercepted.
 	</description>
+	<security>
+		To send a message to [[the ]][[dt:interpreter]], OpenXION's security settings must allow the [[DO_AND_VALUE]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 	<see-also>[[cs:tell]], [[cs:pass]]</see-also>
 </structure>
 
@@ -2327,6 +2336,10 @@
 		Since the mechanism for loading modules is dependent on the XION implementation,
 		the [[*]] statement as described here is specific to OpenXION.
 	</note>
+	<security>
+		To load modules, OpenXION's security settings must allow the [[MODULE_LOAD]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 	<see-also>[[cs:include]], [[cs:require]]</see-also>
 </structure>
 
@@ -4913,6 +4926,11 @@
 	<descriptors>
 		index, ordinal, name
 	</descriptors>
+	<security>
+		To use [[*]]s, OpenXION's security settings must allow the [[FILE_SYSTEM_READ]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
+	<see-also>[[dt:folder]]</see-also>
 </datatype>
 
 <datatype>
@@ -4925,6 +4943,11 @@
 	<descriptors>
 		index-range, ordinal-range, mass
 	</descriptors>
+	<security>
+		To use [[*]], OpenXION's security settings must allow the [[FILE_SYSTEM_READ]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
+	<see-also>[[dt:folder]]</see-also>
 </datatype>
 
 <datatype>
@@ -4942,6 +4965,12 @@
 		If no parent [[dt:disk]], [[dt:volume]], [[dt:folder]], or [[dt:directory]]
 		is specified, the current directory is used as the parent.
 	</note>
+	<security>
+		To use [[*]]s, OpenXION's security settings must allow the [[FILE_SYSTEM_READ]] security key.
+		To delete or change the properties of [[*]]s, OpenXION's security settings must allow the [[FILE_SYSTEM_WRITE]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
+	<see-also>[[dt:disk]], [[dt:file]]</see-also>
 </datatype>
 
 <datatype>
@@ -4958,6 +4987,12 @@
 		If no parent [[dt:disk]], [[dt:volume]], [[dt:folder]], or [[dt:directory]]
 		is specified, the current directory is used as the parent.
 	</note>
+	<security>
+		To use [[*]], OpenXION's security settings must allow the [[FILE_SYSTEM_READ]] security key.
+		To delete or change the properties of [[*]], OpenXION's security settings must allow the [[FILE_SYSTEM_WRITE]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
+	<see-also>[[dt:disk]], [[dt:file]]</see-also>
 </datatype>
 
 <datatype>
@@ -4974,6 +5009,12 @@
 		If no parent [[dt:disk]], [[dt:volume]], [[dt:folder]], or [[dt:directory]]
 		is specified, the current directory is used as the parent.
 	</note>
+	<security>
+		To use [[*]]s, OpenXION's security settings must allow the [[FILE_SYSTEM_READ]] security key.
+		To delete or change the properties of [[*]]s, OpenXION's security settings must allow the [[FILE_SYSTEM_WRITE]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
+	<see-also>[[dt:fork]], [[dt:folder]], [[mg:file]], [[cm:open]], [[cm:read]], [[cm:write]], [[cm:truncate]], [[cm:close]]</see-also>
 </datatype>
 
 <datatype>
@@ -4989,6 +5030,12 @@
 		If no parent [[dt:disk]], [[dt:volume]], [[dt:folder]], or [[dt:directory]]
 		is specified, the current directory is used as the parent.
 	</note>
+	<security>
+		To use [[*]], OpenXION's security settings must allow the [[FILE_SYSTEM_READ]] security key.
+		To delete or change the properties of [[*]], OpenXION's security settings must allow the [[FILE_SYSTEM_WRITE]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
+	<see-also>[[dt:fork]], [[dt:folder]], [[mg:file]], [[cm:open]], [[cm:read]], [[cm:write]], [[cm:truncate]], [[cm:close]]</see-also>
 </datatype>
 
 <datatype>
@@ -5000,6 +5047,12 @@
 	<descriptors>
 		child-index, child-ordinal, child-name
 	</descriptors>
+	<security>
+		To use [[*]]s, OpenXION's security settings must allow the [[FILE_SYSTEM_READ]] security key.
+		To delete or change the properties of [[*]]s, OpenXION's security settings must allow the [[FILE_SYSTEM_WRITE]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
+	<see-also>[[dt:file]], [[mg:file]], [[cm:open]], [[cm:read]], [[cm:write]], [[cm:truncate]], [[cm:close]]</see-also>
 </datatype>
 
 <datatype>
@@ -5011,6 +5064,12 @@
 	<descriptors>
 		child-index-range, child-ordinal-range, child-mass
 	</descriptors>
+	<security>
+		To use [[*]], OpenXION's security settings must allow the [[FILE_SYSTEM_READ]] security key.
+		To delete or change the properties of [[*]], OpenXION's security settings must allow the [[FILE_SYSTEM_WRITE]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
+	<see-also>[[dt:file]], [[mg:file]], [[cm:open]], [[cm:read]], [[cm:write]], [[cm:truncate]], [[cm:close]]</see-also>
 </datatype>
 
 <datatype>
@@ -5023,6 +5082,11 @@
 	<descriptors>
 		singleton
 	</descriptors>
+	<security>
+		To read the contents of the clipboard, OpenXION's security settings must allow the [[CLIPBOARD_READ]] security key.
+		To change the contents of the clipboard, OpenXION's security settings must allow the [[CLIPBOARD_WRITE]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 </datatype>
 
 <datatype>
@@ -5031,6 +5095,11 @@
 		The [[*]] data type represents a [[dt:list]] that consists
 		entirely of [[dt:clipboard]]s.
 	</description>
+	<security>
+		To read the contents of the clipboard, OpenXION's security settings must allow the [[CLIPBOARD_READ]] security key.
+		To change the contents of the clipboard, OpenXION's security settings must allow the [[CLIPBOARD_WRITE]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 </datatype>
 
 <datatype>
@@ -5047,6 +5116,7 @@
 		an I/O method allows using the [[cm:read]] and [[cm:write]] commands to read and
 		write to the URL.
 	</note>
+	<see-also>[[mg:URL]], [[cm:open]], [[cm:read]], [[cm:write]], [[cm:truncate]], [[cm:close]]</see-also>
 </datatype>
 
 <datatype>
@@ -5055,6 +5125,7 @@
 		The [[dt:URLs]] data type represents a [[dt:list]] that consists
 		entirely of [[dt:URL]]s.
 	</description>
+	<see-also>[[mg:URL]], [[cm:open]], [[cm:read]], [[cm:write]], [[cm:truncate]], [[cm:close]]</see-also>
 </datatype>
 
 <property>
@@ -5163,6 +5234,10 @@
 	<note>
 		The [[*]] property is specific to OpenXION; it is not part of the XION Scripting Language Standard.
 	</note>
+	<security>
+		To change the value of this property, OpenXION's security settings must allow the [[SEARCH_PATHS]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 	<see-also>[[cm:open]], [[fn:appPath]], [[fn:appFile]], [[fn:appOrDocPath]], [[fn:appOrDocFile]]</see-also>
 </property>
 
@@ -5220,6 +5295,10 @@
 	<note>
 		The [[*]] property is specific to OpenXION; it is not part of the XION Scripting Language Standard.
 	</note>
+	<security>
+		To change the value of this property, OpenXION's security settings must allow the [[SEARCH_PATHS]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 	<see-also>[[cm:open]], [[fn:docPath]], [[fn:docFile]], [[fn:appOrDocPath]], [[fn:appOrDocFile]]</see-also>
 </property>
 
@@ -5248,6 +5327,10 @@
 	<note>
 		The [[*]] property is specific to OpenXION; it is not part of the XION Scripting Language Standard.
 	</note>
+	<security>
+		To change the value of this property, OpenXION's security settings must allow the [[SEARCH_PATHS]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 	<see-also>[[cs:include]], [[cs:require]], [[fn:includePath]], [[fn:includeFile]]</see-also>
 </property>
 
@@ -5362,53 +5445,53 @@
 	<description>
 		The following table illustrates various number formats:\\\\
 		::TABLE
-		{{Format}}      :: {{0}}        :: {{0.00715}}  :: {{0.0715}}   :: {{0.715}}    :: {{7.15}}     :: {{71.5}}      :: {{715}}        :: {{7150}}
-		.....................................................................................................................................................
-		[[0.######]]    :: [[0]]        :: [[0.00715]]  :: [[0.0715]]   :: [[0.715]]    :: [[7.15]]     :: [[71.5]]      :: [[715]]        :: [[7150]]
-		.....................................................................................................................................................
-		[[0.##]]        :: [[0]]        :: [[0.01]]     :: [[0.07]]     :: [[0.72]]     :: [[7.15]]     :: [[71.5]]      :: [[715]]        :: [[7150]]
-		.....................................................................................................................................................
-		[[0.#]]         :: [[0]]        :: [[0]]        :: [[0.1]]      :: [[0.7]]      :: [[7.2]]      :: [[71.5]]      :: [[715]]        :: [[7150]]
-		.....................................................................................................................................................
-		[[0.000000]]    :: [[0.000000]] :: [[0.007150]] :: [[0.071500]] :: [[0.715000]] :: [[7.150000]] :: [[71.500000]] :: [[715.000000]] :: [[7150.000000]]
-		.....................................................................................................................................................
-		[[0.00]]        :: [[0.00]]     :: [[0.01]]     :: [[0.07]]     :: [[0.72]]     :: [[7.15]]     :: [[71.50]]     :: [[715.00]]     :: [[7150.00]]
-		.....................................................................................................................................................
-		[[0.0]]         :: [[0.0]]      :: [[0.0]]      :: [[0.1]]      :: [[0.7]]      :: [[7.2]]      :: [[71.5]]      :: [[715.0]]      :: [[7150.0]]
-		.....................................................................................................................................................
-		[[0.00##]]      :: [[0.00]]     :: [[0.0072]]   :: [[0.0715]]   :: [[0.715]]    :: [[7.15]]     :: [[71.50]]     :: [[715.00]]     :: [[7150.00]]
-		.....................................................................................................................................................
-		[[0.0#]]        :: [[0.0]]      :: [[0.01]]     :: [[0.07]]     :: [[0.72]]     :: [[7.15]]     :: [[71.5]]      :: [[715.0]]      :: [[7150.0]]
-		.....................................................................................................................................................
-		[[0]]           :: [[0]]        :: [[0]]        :: [[0]]        :: [[1]]        :: [[7]]        :: [[72]]        :: [[715]]        :: [[7150]]
-		.....................................................................................................................................................
-		[[0.###E0]]     :: [[0E0]]      :: [[7.15E-3]]  :: [[7.15E-2]]  :: [[7.15E-1]]  :: [[7.15E0]]   :: [[7.15E1]]    :: [[7.15E2]]     :: [[7.15E3]]
-		.....................................................................................................................................................
-		[[0.#E0]]       :: [[0E0]]      :: [[7.2E-3]]   :: [[7.2E-2]]   :: [[7.2E-1]]   :: [[7.2E0]]    :: [[7.2E1]]     :: [[7.2E2]]      :: [[7.2E3]]
-		.....................................................................................................................................................
-		[[0.#E00]]      :: [[0E00]]     :: [[7.2E-03]]  :: [[7.2E-02]]  :: [[7.2E-01]]  :: [[7.2E00]]   :: [[7.2E01]]    :: [[7.2E02]]     :: [[7.2E03]]
-		.....................................................................................................................................................
-		[[0.000E0]]     :: [[0.000E0]]  :: [[7.150E-3]] :: [[7.150E-2]] :: [[7.150E-1]] :: [[7.150E0]]  :: [[7.150E1]]   :: [[7.150E2]]    :: [[7.150E3]]
-		.....................................................................................................................................................
-		[[0.##E0<-3>3]] :: [[0]]        :: [[7.15E-3]]  :: [[0.07]]     :: [[0.72]]     :: [[7.15]]     :: [[71.5]]      :: [[715]]        :: [[7.15E3]]
-		.....................................................................................................................................................
-		[[0.##E0<-2>2]] :: [[0]]        :: [[7.15E-3]]  :: [[7.15E-2]]  :: [[0.72]]     :: [[7.15]]     :: [[71.5]]      :: [[7.15E2]]     :: [[7.15E3]]
-		.....................................................................................................................................................
-		[[0.##E0<-1>1]] :: [[0]]        :: [[7.15E-3]]  :: [[7.15E-2]]  :: [[7.15E-1]]  :: [[7.15]]     :: [[7.15E1]]    :: [[7.15E2]]     :: [[7.15E3]]
-		.....................................................................................................................................................
-		[[0.###'0]]     :: [[0'0]]      :: [[7.15''3]]  :: [[7.15''2]]  :: [[7.15''1]]  :: [[7.15'0]]   :: [[7.15'1]]    :: [[7.15'2]]     :: [[7.15'3]]
-		.....................................................................................................................................................
-		[[0.#'0]]       :: [[0'0]]      :: [[7.2''3]]   :: [[7.2''2]]   :: [[7.2''1]]   :: [[7.2'0]]    :: [[7.2'1]]     :: [[7.2'2]]      :: [[7.2'3]]
-		.....................................................................................................................................................
-		[[0.#'00]]      :: [[0'00]]     :: [[7.2''03]]  :: [[7.2''02]]  :: [[7.2''01]]  :: [[7.2'00]]   :: [[7.2'01]]    :: [[7.2'02]]     :: [[7.2'03]]
-		.....................................................................................................................................................
-		[[0.000'0]]     :: [[0.000'0]]  :: [[7.150''3]] :: [[7.150''2]] :: [[7.150''1]] :: [[7.150'0]]  :: [[7.150'1]]   :: [[7.150'2]]    :: [[7.150'3]]
-		.....................................................................................................................................................
-		[[0.##'0<-3>3]] :: [[0]]        :: [[7.15''3]]  :: [[0.07]]     :: [[0.72]]     :: [[7.15]]     :: [[71.5]]      :: [[715]]        :: [[7.15'3]]
-		.....................................................................................................................................................
-		[[0.##'0<-2>2]] :: [[0]]        :: [[7.15''3]]  :: [[7.15''2]]  :: [[0.72]]     :: [[7.15]]     :: [[71.5]]      :: [[7.15'2]]     :: [[7.15'3]]
-		.....................................................................................................................................................
-		[[0.##'0<-1>1]] :: [[0]]        :: [[7.15''3]]  :: [[7.15''2]]  :: [[7.15''1]]  :: [[7.15]]     :: [[7.15'1]]    :: [[7.15'2]]     :: [[7.15'3]]
+		{{Format}}            :: {{0}}        :: {{0.00715}}  :: {{0.0715}}   :: {{0.715}}    :: {{7.15}}     :: {{71.5}}      :: {{715}}        :: {{7150}}
+		...........................................................................................................................................................
+		[[0.######]]          :: [[0]]        :: [[0.00715]]  :: [[0.0715]]   :: [[0.715]]    :: [[7.15]]     :: [[71.5]]      :: [[715]]        :: [[7150]]
+		...........................................................................................................................................................
+		[[0.##]]              :: [[0]]        :: [[0.01]]     :: [[0.07]]     :: [[0.72]]     :: [[7.15]]     :: [[71.5]]      :: [[715]]        :: [[7150]]
+		...........................................................................................................................................................
+		[[0.#]]               :: [[0]]        :: [[0]]        :: [[0.1]]      :: [[0.7]]      :: [[7.2]]      :: [[71.5]]      :: [[715]]        :: [[7150]]
+		...........................................................................................................................................................
+		[[0.000000]]          :: [[0.000000]] :: [[0.007150]] :: [[0.071500]] :: [[0.715000]] :: [[7.150000]] :: [[71.500000]] :: [[715.000000]] :: [[7150.000000]]
+		...........................................................................................................................................................
+		[[0.00]]              :: [[0.00]]     :: [[0.01]]     :: [[0.07]]     :: [[0.72]]     :: [[7.15]]     :: [[71.50]]     :: [[715.00]]     :: [[7150.00]]
+		...........................................................................................................................................................
+		[[0.0]]               :: [[0.0]]      :: [[0.0]]      :: [[0.1]]      :: [[0.7]]      :: [[7.2]]      :: [[71.5]]      :: [[715.0]]      :: [[7150.0]]
+		...........................................................................................................................................................
+		[[0.00##]]            :: [[0.00]]     :: [[0.0072]]   :: [[0.0715]]   :: [[0.715]]    :: [[7.15]]     :: [[71.50]]     :: [[715.00]]     :: [[7150.00]]
+		...........................................................................................................................................................
+		[[0.0#]]              :: [[0.0]]      :: [[0.01]]     :: [[0.07]]     :: [[0.72]]     :: [[7.15]]     :: [[71.5]]      :: [[715.0]]      :: [[7150.0]]
+		...........................................................................................................................................................
+		[[0]]                 :: [[0]]        :: [[0]]        :: [[0]]        :: [[1]]        :: [[7]]        :: [[72]]        :: [[715]]        :: [[7150]]
+		...........................................................................................................................................................
+		[[0.###E0]]           :: [[0E0]]      :: [[7.15E-3]]  :: [[7.15E-2]]  :: [[7.15E-1]]  :: [[7.15E0]]   :: [[7.15E1]]    :: [[7.15E2]]     :: [[7.15E3]]
+		...........................................................................................................................................................
+		[[0.#E0]]             :: [[0E0]]      :: [[7.2E-3]]   :: [[7.2E-2]]   :: [[7.2E-1]]   :: [[7.2E0]]    :: [[7.2E1]]     :: [[7.2E2]]      :: [[7.2E3]]
+		...........................................................................................................................................................
+		[[0.#E00]]            :: [[0E00]]     :: [[7.2E-03]]  :: [[7.2E-02]]  :: [[7.2E-01]]  :: [[7.2E00]]   :: [[7.2E01]]    :: [[7.2E02]]     :: [[7.2E03]]
+		...........................................................................................................................................................
+		[[0.000E0]]           :: [[0.000E0]]  :: [[7.150E-3]] :: [[7.150E-2]] :: [[7.150E-1]] :: [[7.150E0]]  :: [[7.150E1]]   :: [[7.150E2]]    :: [[7.150E3]]
+		...........................................................................................................................................................
+		[[0.##E0&lt;-3&gt;3]] :: [[0]]        :: [[7.15E-3]]  :: [[0.07]]     :: [[0.72]]     :: [[7.15]]     :: [[71.5]]      :: [[715]]        :: [[7.15E3]]
+		...........................................................................................................................................................
+		[[0.##E0&lt;-2&gt;2]] :: [[0]]        :: [[7.15E-3]]  :: [[7.15E-2]]  :: [[0.72]]     :: [[7.15]]     :: [[71.5]]      :: [[7.15E2]]     :: [[7.15E3]]
+		...........................................................................................................................................................
+		[[0.##E0&lt;-1&gt;1]] :: [[0]]        :: [[7.15E-3]]  :: [[7.15E-2]]  :: [[7.15E-1]]  :: [[7.15]]     :: [[7.15E1]]    :: [[7.15E2]]     :: [[7.15E3]]
+		...........................................................................................................................................................
+		[[0.###'0]]           :: [[0'0]]      :: [[7.15''3]]  :: [[7.15''2]]  :: [[7.15''1]]  :: [[7.15'0]]   :: [[7.15'1]]    :: [[7.15'2]]     :: [[7.15'3]]
+		...........................................................................................................................................................
+		[[0.#'0]]             :: [[0'0]]      :: [[7.2''3]]   :: [[7.2''2]]   :: [[7.2''1]]   :: [[7.2'0]]    :: [[7.2'1]]     :: [[7.2'2]]      :: [[7.2'3]]
+		...........................................................................................................................................................
+		[[0.#'00]]            :: [[0'00]]     :: [[7.2''03]]  :: [[7.2''02]]  :: [[7.2''01]]  :: [[7.2'00]]   :: [[7.2'01]]    :: [[7.2'02]]     :: [[7.2'03]]
+		...........................................................................................................................................................
+		[[0.000'0]]           :: [[0.000'0]]  :: [[7.150''3]] :: [[7.150''2]] :: [[7.150''1]] :: [[7.150'0]]  :: [[7.150'1]]   :: [[7.150'2]]    :: [[7.150'3]]
+		...........................................................................................................................................................
+		[[0.##'0&lt;-3&gt;3]] :: [[0]]        :: [[7.15''3]]  :: [[0.07]]     :: [[0.72]]     :: [[7.15]]     :: [[71.5]]      :: [[715]]        :: [[7.15'3]]
+		...........................................................................................................................................................
+		[[0.##'0&lt;-2&gt;2]] :: [[0]]        :: [[7.15''3]]  :: [[7.15''2]]  :: [[0.72]]     :: [[7.15]]     :: [[71.5]]      :: [[7.15'2]]     :: [[7.15'3]]
+		...........................................................................................................................................................
+		[[0.##'0&lt;-1&gt;1]] :: [[0]]        :: [[7.15''3]]  :: [[7.15''2]]  :: [[7.15''1]]  :: [[7.15]]     :: [[7.15'1]]    :: [[7.15'2]]     :: [[7.15'3]]
 		ELBAT::
 	</description>
 	<note>
@@ -6426,6 +6509,11 @@
 		[[*]] command closes an open application or document. OpenXION currently only
 		supports this on Mac OS X.
 	</description>
+	<security>
+		To close an open application or document, OpenXION's security settings must allow the [[FILE_LAUNCH]] security key.
+		To close an object with an I/O manager, any security keys required are determined by the I/O manager; see the documentation for the I/O manager itself.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 	<see-also>[[cm:open]], [[cm:read]], [[cm:write]], [[cm:truncate]]</see-also>
 </command>
 
@@ -6555,6 +6643,11 @@
 	<note>
 		HyperTalk does not support the [[as]] parameter or reading from or writing to URLs.
 	</note>
+	<security>
+		To launch applications and documents, OpenXION's security settings must allow the [[FILE_LAUNCH]] security key.
+		To open an object with an I/O manager, any security keys required are determined by the I/O manager; see the documentation for the I/O manager itself.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 	<see-also>
 		[[cm:read]], [[cm:write]], [[cm:truncate]], [[cm:close]],
 		[[mg:file]], [[mg:URL]], [[mt:text]], [[mt:binary]]
@@ -6960,6 +7053,10 @@
 	<note>
 		The [[*]] function is specific to OpenXION; it is not part of the XION Scripting Language Standard.
 	</note>
+	<security>
+		To use this function, OpenXION's security settings must allow the [[FILE_SYSTEM_READ]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 	<see-also>[[cm:open]], [[pr:applicationPaths]], [[fn:appPath]], [[fn:docPath]], [[fn:docFile]], [[fn:appOrDocPath]], [[fn:appOrDocFile]]</see-also>
 </function>
 
@@ -6980,6 +7077,10 @@
 	<note>
 		The [[*]] function is specific to OpenXION; it is not part of the XION Scripting Language Standard.
 	</note>
+	<security>
+		To use this function, OpenXION's security settings must allow the [[FILE_SYSTEM_READ]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 	<see-also>[[cm:open]], [[pr:applicationPaths]], [[fn:appFile]], [[fn:docPath]], [[fn:docFile]], [[fn:appOrDocPath]], [[fn:appOrDocFile]]</see-also>
 </function>
 
@@ -7000,6 +7101,10 @@
 	<note>
 		The [[*]] function is specific to OpenXION; it is not part of the XION Scripting Language Standard.
 	</note>
+	<security>
+		To use this function, OpenXION's security settings must allow the [[FILE_SYSTEM_READ]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 	<see-also>[[cm:open]], [[pr:applicationPaths]], [[pr:documentPaths]], [[fn:appPath]], [[fn:appFile]], [[fn:docPath]], [[fn:docFile]], [[fn:appOrDocPath]]</see-also>
 </function>
 
@@ -7021,6 +7126,10 @@
 	<note>
 		The [[*]] function is specific to OpenXION; it is not part of the XION Scripting Language Standard.
 	</note>
+	<security>
+		To use this function, OpenXION's security settings must allow the [[FILE_SYSTEM_READ]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 	<see-also>[[cm:open]], [[pr:applicationPaths]], [[pr:documentPaths]], [[fn:appPath]], [[fn:appFile]], [[fn:docPath]], [[fn:docFile]], [[fn:appOrDocFile]]</see-also>
 </function>
 
@@ -8097,6 +8206,10 @@
 	<note>
 		The [[*]] function is specific to OpenXION; it is not part of the XION Scripting Language Standard.
 	</note>
+	<security>
+		To use this function, OpenXION's security settings must allow the [[FILE_SYSTEM_READ]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 	<see-also>[[cm:open]], [[pr:documentPaths]], [[fn:appPath]], [[fn:appFile]], [[fn:docPath]], [[fn:appOrDocPath]], [[fn:appOrDocFile]]</see-also>
 </function>
 
@@ -8115,6 +8228,10 @@
 	<note>
 		The [[*]] function is specific to OpenXION; it is not part of the XION Scripting Language Standard.
 	</note>
+	<security>
+		To use this function, OpenXION's security settings must allow the [[FILE_SYSTEM_READ]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 	<see-also>[[cm:open]], [[pr:documentPaths]], [[fn:appPath]], [[fn:appFile]], [[fn:docFile]], [[fn:appOrDocPath]], [[fn:appOrDocFile]]</see-also>
 </function>
 
@@ -8616,6 +8733,10 @@
 	<note>
 		The [[*]] function is specific to OpenXION; it is not part of the XION Scripting Language Standard.
 	</note>
+	<security>
+		To use this function, OpenXION's security settings must allow the [[FILE_SYSTEM_READ]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 	<see-also>[[cs:include]], [[cs:require]], [[pr:includePaths]], [[fn:includePath]]</see-also>
 </function>
 
@@ -8633,6 +8754,10 @@
 	<note>
 		The [[*]] function is specific to OpenXION; it is not part of the XION Scripting Language Standard.
 	</note>
+	<security>
+		To use this function, OpenXION's security settings must allow the [[FILE_SYSTEM_READ]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 	<see-also>[[cs:include]], [[cs:require]], [[pr:includePaths]], [[fn:includeFile]]</see-also>
 </function>
 
@@ -10217,6 +10342,10 @@
 	<note>
 		OpenXION gets the value of this function from the [[os.name]] system property.
 	</note>
+	<security>
+		To use this function, OpenXION's security settings must allow the [[SYSTEM_INFO]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 </function>
 
 <function>
@@ -10237,6 +10366,10 @@
 	<note>
 		OpenXION gets the value of this function from the [[os.version]] system property.
 	</note>
+	<security>
+		To use this function, OpenXION's security settings must allow the [[SYSTEM_INFO]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 </function>
 
 <function>
@@ -10610,6 +10743,11 @@
 		  put the value of expression -- yields 7\\
 		end demoValue]]
 	</script>
+	<security>
+		To evaluate arbitrary XION expressions with this function,
+		OpenXION's security settings must allow the [[DO_AND_VALUE]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 	<see-also>[[cs:do]]</see-also>
 </function>
 
@@ -10625,6 +10763,10 @@
 		The [[*]] function returns the version number of an object
 		or component.
 	</description>
+	<security>
+		To use this function, OpenXION's security settings must allow the [[SYSTEM_INFO]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 </function>
 
 <function>
@@ -10718,6 +10860,10 @@
 		In HyperTalk, the [[*]] function returns the number of bytes
 		of heap space currently available to HyperCard.
 	</description>
+	<security>
+		To use this function, OpenXION's security settings must allow the [[SYSTEM_INFO]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 </function>
 
 <function>
@@ -10902,6 +11048,10 @@
 	<note>
 		OpenXION gets the value of this function from the [[java.name]] system property.
 	</note>
+	<security>
+		To use this function, OpenXION's security settings must allow the [[SYSTEM_INFO]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 </function>
 
 <function>
@@ -10917,6 +11067,10 @@
 	<note>
 		OpenXION gets the value of this function from the [[java.version]] system property.
 	</note>
+	<security>
+		To use this function, OpenXION's security settings must allow the [[SYSTEM_INFO]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 </function>
 
 <function>
@@ -11161,6 +11315,10 @@
 	<note>
 		OpenXION gets the value of this function from the [[java.vm.name]] system property.
 	</note>
+	<security>
+		To use this function, OpenXION's security settings must allow the [[SYSTEM_INFO]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 </function>
 
 <function>
@@ -11176,6 +11334,10 @@
 	<note>
 		OpenXION gets the value of this function from the [[java.vm.version]] system property.
 	</note>
+	<security>
+		To use this function, OpenXION's security settings must allow the [[SYSTEM_INFO]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 </function>
 
 <version>
@@ -11358,6 +11520,12 @@
 		HyperTalk does not support the [[as]] keyword.
 		HyperTalk assumes the MacRoman text encoding.
 	</note>
+	<security>
+		To open files, OpenXION's security settings must allow one or both of the [[FILE_SYSTEM_READ]] and [[FILE_SYSTEM_WRITE]] security keys.
+		To read from files, OpenXION's security settings must allow the [[FILE_SYSTEM_READ]] security key.
+		To write to files, OpenXION's security settings must allow the [[FILE_SYSTEM_WRITE]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 	<see-also>[[cm:open]], [[cm:read]], [[cm:write]], [[cm:truncate]], [[cm:close]]</see-also>
 </iomanager>
 
@@ -11385,6 +11553,11 @@
 		HyperTalk does not support the [[as]] keyword.
 		HyperTalk can only launch URLs, and cannot read from or write to them.
 	</note>
+	<security>
+		To launch URLs, OpenXION's security settings must allow the [[BROWSER_LAUNCH]] security key.
+		To read from or write to URLs, OpenXION's security settings must allow the [[INTERNET_ACCESS]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 	<see-also>[[cm:open]], [[cm:read]], [[cm:write]], [[cm:truncate]], [[cm:close]]</see-also>
 </iomanager>
 

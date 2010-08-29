@@ -46,6 +46,7 @@ public class Term {
 	private List<String> properties;
 	private List<String> scripts;
 	private List<String> notes;
+	private List<String> security;
 	private List<String> seeAlso;
 	
 	public Term(Type type) {
@@ -64,6 +65,7 @@ public class Term {
 		this.properties = new Vector<String>();
 		this.scripts = new Vector<String>();
 		this.notes = new Vector<String>();
+		this.security = new Vector<String>();
 		this.seeAlso = new Vector<String>();
 	}
 
@@ -245,6 +247,10 @@ public class Term {
 
 	public List<String> getNotes() {
 		return notes;
+	}
+	
+	public List<String> getSecurity() {
+		return security;
 	}
 	
 	public List<String> getSeeAlso() {
