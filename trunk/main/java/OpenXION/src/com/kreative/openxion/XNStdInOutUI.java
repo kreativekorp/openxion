@@ -205,6 +205,15 @@ public class XNStdInOutUI implements XNUI {
 			case FILE_SYSTEM_WRITE: out.println("This script is requesting write access to the file system."); break;
 			case BROWSER_LAUNCH: out.println("This script is requesting to launch a web browser."); break;
 			case INTERNET_ACCESS: out.println("This script is requesting access to the Internet."); break;
+			case PRINTING: out.println("This script is requesting access to the printer."); break;
+			case TELEPHONY: out.println("This script is requesting to make calls or access a modem."); break;
+			case MESSAGE_HIERARCHY: out.println("This script is requesting to change the message-passing hierarchy."); break;
+			case INTERAPP_COMM: out.println("This script is requesting control of an external program."); break;
+			case LOCAL_AUTOMATION: out.println("This script is requesting control of the mouse and keyboard."); break;
+			case GLOBAL_AUTOMATION: out.println("This script is requesting control of the mouse and keyboard."); break;
+			case HARDWARE_ACCESS: out.println("This script is requesting control of external hardware."); break;
+			case SCRIPT_READ: out.println("This script is requesting read access to other scripts."); break;
+			case SCRIPT_WRITE: out.println("This script is requesting write access to other scripts."); break;
 			default: out.println("This script is requesting "+t.name()+"."); break;
 			}
 		}
