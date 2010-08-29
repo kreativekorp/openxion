@@ -51,7 +51,7 @@ public class XNStandardModule extends XNModule {
 	private static final long serialVersionUID = 2L;
 	
 	public static final String MODULE_NAME = "OpenXION Standard Module";
-	public static final String MODULE_VERSION = "1.0";
+	public static final String MODULE_VERSION = "1.1";
 	
 	private static final GregorianCalendar TICKS_REF = new GregorianCalendar(2009,GregorianCalendar.MAY,20);
 	
