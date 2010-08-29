@@ -544,6 +544,17 @@ public class XIONUtil {
 		return "";
 	}
 	
+	public static String getIncludePaths(XNContext ctx) {
+		String v = ctx.getIncludePaths();
+		if (v != null) return v;
+		String lineEnding = ctx.getLineEnding();
+		try {
+			String cwd = System.getProperty("user.dir");
+			return cwd + lineEnding;
+		} catch (Exception e) {}
+		return "";
+	}
+	
 	public static File locateApplication(XNContext ctx, String name, boolean ask) {
 		try {
 			if (name.contains(System.getProperty("file.separator"))) return new File(name);
@@ -613,6 +624,24 @@ public class XIONUtil {
 		for (String path : dpaths) {
 			File f = new File(path, name);
 			if (f != null && f.exists()) return f;
+		}
+		if (ask) {
+			return ctx.getUI().answerFile("Where is "+name+"?", new String[0], 0, 0);
+		}
+		return null;
+	}
+	
+	public static File locateInclude(XNContext ctx, String name, boolean ask) {
+		try {
+			if (name.contains(System.getProperty("file.separator"))) return new File(name);
+		} catch (Exception e) {}
+		String[] extensions = { "", ".xn" };
+		String[] ipaths = getIncludePaths(ctx).split("(\r|\n|\u2028|\u2029)+");
+		for (String path : ipaths) {
+			for (String ext : extensions) {
+				File f = new File(path, name+ext);
+				if (f != null && f.exists()) return f;
+			}
 		}
 		if (ask) {
 			return ctx.getUI().answerFile("Where is "+name+"?", new String[0], 0, 0);

@@ -82,6 +82,10 @@ public enum XNSecurityKey {
 	 */
 	INTERNET_ACCESS,
 	/**
+	 * The security key controlling whether a script can modify search paths.
+	 */
+	SEARCH_PATHS,
+	/**
 	 * The security key controlling whether a script can access the printer.
 	 */
 	PRINTING,

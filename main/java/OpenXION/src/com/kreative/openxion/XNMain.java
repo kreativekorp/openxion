@@ -333,12 +333,14 @@ public class XNMain {
 			StringBuffer u = new StringBuffer();
 			StringBuffer a = new StringBuffer();
 			StringBuffer d = new StringBuffer();
+			StringBuffer i = new StringBuffer();
 			Scanner sc = new Scanner(getEnvironFile(), "UTF-8");
 			while (sc.hasNextLine()) {
 				String s = sc.nextLine();
 				if (s.startsWith("Username=")) u.append(s.substring(9)+"\n");
 				if (s.startsWith("Applications=")) a.append(s.substring(13)+"\n");
 				if (s.startsWith("Documents=")) d.append(s.substring(10)+"\n");
+				if (s.startsWith("Includes=")) i.append(s.substring(9)+"\n");
 			}
 			sc.close();
 			if (u.length() > 0) {
@@ -353,6 +355,9 @@ public class XNMain {
 			if (d.length() > 0) {
 				ctx.setDocumentPaths(d.toString());
 			}
+			if (i.length() > 0) {
+				ctx.setIncludePaths(i.toString());
+			}
 		} catch (IOException ioe) {}
 	}
 	
@@ -362,6 +367,7 @@ public class XNMain {
 			String u = ctx.getUsername();
 			String a = ctx.getApplicationPaths();
 			String d = ctx.getDocumentPaths();
+			String i = ctx.getIncludePaths();
 			if (u != null) {
 				String[] ss = u.split("\r|\n");
 				for (String s : ss) {
@@ -383,6 +389,14 @@ public class XNMain {
 				for (String s : ss) {
 					if (s.length() > 0) {
 						out.println("Documents="+s);
+					}
+				}
+			}
+			if (i != null) {
+				String[] ss = d.split("\r|\n");
+				for (String s : ss) {
+					if (s.length() > 0) {
+						out.println("Includes="+s);
 					}
 				}
 			}
