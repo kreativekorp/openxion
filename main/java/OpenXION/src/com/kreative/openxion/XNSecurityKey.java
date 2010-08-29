@@ -80,5 +80,43 @@ public enum XNSecurityKey {
 	/**
 	 * The security key controlling whether a script can read data from or write data to a URL.
 	 */
-	INTERNET_ACCESS
+	INTERNET_ACCESS,
+	/**
+	 * The security key controlling whether a script can access the printer.
+	 */
+	PRINTING,
+	/**
+	 * The security key controlling whether a script can access a modem or make telephone calls.
+	 */
+	TELEPHONY,
+	/**
+	 * The security key controlling whether a script can change the message-passing hierarchy.
+	 */
+	MESSAGE_HIERARCHY,
+	/**
+	 * The security key controlling whether a script can control other applications.
+	 */
+	INTERAPP_COMM,
+	/**
+	 * The security key controlling whether a script can take over control
+	 * of the mouse and keyboard within the current environment only.
+	 */
+	LOCAL_AUTOMATION,
+	/**
+	 * The security key controlling whether a script can take over control
+	 * of the mouse and keyboard for the entire system.
+	 */
+	GLOBAL_AUTOMATION,
+	/**
+	 * The security key controlling whether a script can control external hardware.
+	 */
+	HARDWARE_ACCESS,
+	/**
+	 * The security key controlling whether a script can read other scripts.
+	 */
+	SCRIPT_READ,
+	/**
+	 * The security key controlling whether a script can modify other scripts.
+	 */
+	SCRIPT_WRITE,
 }
