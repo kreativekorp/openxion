@@ -236,11 +236,13 @@ public class XNContext implements Serializable, Cloneable {
 	private Map<String, XOMVariable> globalVariables;
 	private Map<String, XNMessageHandler> globalUserCommands;
 	private Map<String, XNFunctionHandler> globalUserFunctions;
+	private Set<String> includedScripts;
 	
 	/* ENVIRONMENT */
 	private String username;
 	private String applicationPaths;
 	private String documentPaths;
+	private String includePaths;
 	private char itemDelimiter;
 	private char columnDelimiter;
 	private char rowDelimiter;
@@ -298,6 +300,7 @@ public class XNContext implements Serializable, Cloneable {
 		globalVariables = new HashMap<String, XOMVariable>();
 		globalUserCommands = new HashMap<String, XNMessageHandler>();
 		globalUserFunctions = new HashMap<String, XNFunctionHandler>();
+		includedScripts = new HashSet<String>();
 	}
 	
 	private void initRuntime(XNContext parent) {
@@ -308,6 +311,7 @@ public class XNContext implements Serializable, Cloneable {
 		globalVariables.putAll(parent.globalVariables);
 		globalUserCommands.putAll(parent.globalUserCommands);
 		globalUserFunctions.putAll(parent.globalUserFunctions);
+		includedScripts.addAll(parent.includedScripts);
 	}
 	
 	/* ENVIRONMENT */
@@ -316,6 +320,7 @@ public class XNContext implements Serializable, Cloneable {
 		username = null;
 		applicationPaths = null;
 		documentPaths = null;
+		includePaths = null;
 		itemDelimiter = ',';
 		columnDelimiter = '\uFFF0';
 		rowDelimiter = '\uFFF1';
@@ -332,6 +337,7 @@ public class XNContext implements Serializable, Cloneable {
 		username = parent.username;
 		applicationPaths = parent.applicationPaths;
 		documentPaths = parent.documentPaths;
+		includePaths = parent.includePaths;
 		itemDelimiter = parent.itemDelimiter;
 		columnDelimiter = parent.columnDelimiter;
 		rowDelimiter = parent.rowDelimiter;
@@ -571,6 +577,14 @@ public class XNContext implements Serializable, Cloneable {
 		return globalUserFunctions.get(name);
 	}
 	
+	public void addIncludedScript(String path) {
+		includedScripts.add(path);
+	}
+	
+	public boolean hasIncludedScript(String path) {
+		return includedScripts.contains(path);
+	}
+	
 	/* ENVIRONMENT */
 	
 	public String getUsername() {
@@ -586,7 +600,7 @@ public class XNContext implements Serializable, Cloneable {
 	}
 	
 	public void setApplicationPaths(String s) {
-		applicationPaths = null;
+		applicationPaths = s;
 	}
 	
 	public String getDocumentPaths() {
@@ -594,7 +608,15 @@ public class XNContext implements Serializable, Cloneable {
 	}
 	
 	public void setDocumentPaths(String s) {
-		documentPaths = null;
+		documentPaths = s;
+	}
+	
+	public String getIncludePaths() {
+		return includePaths;
+	}
+	
+	public void setIncludePaths(String s) {
+		includePaths = s;
 	}
 	
 	public char getItemDelimiter() {

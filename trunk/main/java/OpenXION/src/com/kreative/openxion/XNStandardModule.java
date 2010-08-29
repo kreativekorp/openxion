@@ -449,6 +449,8 @@ public class XNStandardModule extends XNModule {
 		functions.put("im",f_im);
 		functions.put("implode",f_implode);
 		functions.put("inc",f_asc);
+		functions.put("includefile", f_includefile);
+		functions.put("includepath", f_includepath);
 		functions.put("increasing",f_asc);
 		functions.put("instr",f_instr);
 		functions.put("int",f_trunc);
@@ -576,6 +578,7 @@ public class XNStandardModule extends XNModule {
 		properties.put("applicationpaths", p_applicationPaths);
 		properties.put("programpaths", p_applicationPaths);
 		properties.put("documentpaths", p_documentPaths);
+		properties.put("includepaths", p_includePaths);
 		properties.put("itemdelimiter", p_itemdelimiter);
 		properties.put("columndelimiter", p_columndelimiter);
 		properties.put("rowdelimiter", p_rowdelimiter);
@@ -3883,6 +3886,28 @@ public class XNStandardModule extends XNModule {
 		}
 	};
 	
+	private static final Function f_includefile = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			if (parameter == null) throw new XNScriptError("Can't understand arguments to includeFile");
+			if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+				throw new XNScriptError("Security settings do not allow includeFile");
+			File f = XIONUtil.locateInclude(ctx, parameter.toTextString(ctx), false);
+			if (f == null) return XOMEmpty.EMPTY;
+			else return new XOMFile(f);
+		}
+	};
+	
+	private static final Function f_includepath = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			if (parameter == null) throw new XNScriptError("Can't understand arguments to includePath");
+			if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+				throw new XNScriptError("Security settings do not allow includePath");
+			File f = XIONUtil.locateInclude(ctx, parameter.toTextString(ctx), false);
+			if (f == null) return XOMEmpty.EMPTY;
+			else return new XOMString(f.getAbsolutePath());
+		}
+	};
+	
 	private static final Function f_instr = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
@@ -5258,12 +5283,14 @@ public class XNStandardModule extends XNModule {
 			return true;
 		}
 		public boolean canSetProperty(XNContext ctx, String propertyName) {
-			return true;
+			return ctx.allow(XNSecurityKey.SEARCH_PATHS);
 		}
 		public XOMVariant getProperty(XNContext ctx, XNModifier modifier, String propertyName) {
 			return new XOMString(XIONUtil.getApplicationPaths(ctx));
 		}
 		public void setProperty(XNContext ctx, String propertyName, XOMVariant value) {
+			if (!ctx.allow(XNSecurityKey.SEARCH_PATHS))
+				throw new XNScriptError("Security settings do not allow set the applicationPaths");
 			ctx.setApplicationPaths(value.unwrap().toTextString(ctx));
 		}
 	};
@@ -5273,13 +5300,32 @@ public class XNStandardModule extends XNModule {
 			return true;
 		}
 		public boolean canSetProperty(XNContext ctx, String propertyName) {
-			return true;
+			return ctx.allow(XNSecurityKey.SEARCH_PATHS);
 		}
 		public XOMVariant getProperty(XNContext ctx, XNModifier modifier, String propertyName) {
 			return new XOMString(XIONUtil.getDocumentPaths(ctx));
 		}
 		public void setProperty(XNContext ctx, String propertyName, XOMVariant value) {
+			if (!ctx.allow(XNSecurityKey.SEARCH_PATHS))
+				throw new XNScriptError("Security settings do not allow set the documentPaths");
 			ctx.setDocumentPaths(value.unwrap().toTextString(ctx));
+		}
+	};
+	
+	private static final Property p_includePaths = new Property() {
+		public boolean canGetProperty(XNContext ctx, String propertyName) {
+			return true;
+		}
+		public boolean canSetProperty(XNContext ctx, String propertyName) {
+			return ctx.allow(XNSecurityKey.SEARCH_PATHS);
+		}
+		public XOMVariant getProperty(XNContext ctx, XNModifier modifier, String propertyName) {
+			return new XOMString(XIONUtil.getIncludePaths(ctx));
+		}
+		public void setProperty(XNContext ctx, String propertyName, XOMVariant value) {
+			if (!ctx.allow(XNSecurityKey.SEARCH_PATHS))
+				throw new XNScriptError("Security settings do not allow set the includePaths");
+			ctx.setIncludePaths(value.unwrap().toTextString(ctx));
 		}
 	};
 	

@@ -2111,6 +2111,37 @@
 </structure>
 
 <structure>
+	<name dialects="oxnb1">include</name>
+	<syntax>include {scriptName}</syntax>
+	<syntax>include {scriptName} once</syntax>
+	<syntax>include {scriptName} with dialog</syntax>
+	<syntax>include {scriptName} once with dialog</syntax>
+	<syntax>include {scriptName} without dialog</syntax>
+	<syntax>include {scriptName} once without dialog</syntax>
+	<syntax-note>
+		{ScriptName} yields the name or path of an XION script file.
+	</syntax-note>
+	<description>
+		The [[*]] statement executes the statements contained in an XION script file.
+		If the script file cannot be found, the user will be asked to locate it,
+		unless the [[without dialog]] keyword is used. If the script file cannot be
+		found and the user cancels or the [[without dialog]] keyword is used,
+		nothing happens.
+		(For a version that triggers a script error, see [[cs:require]].)
+		If the [[once]] keyword is used and the script has been executed before,
+		it will not be executed again.
+	</description>
+	<description>
+		In OpenXION, the locations searched for included scripts are determined by
+		the [[pr:includePaths]] property.
+	</description>
+	<note>
+		The [[*]] statement as described here is specific to OpenXION.
+	</note>
+	<see-also>[[cs:require]], [[pr:includePaths]], [[fn:includePath]], [[fn:includeFile]]</see-also>
+</structure>
+
+<structure>
 	<name dialects="xn1,oxnb1,hyp">next</name>
 	<syntax>next repeat</syntax>
 	<syntax>next case</syntax>
@@ -2182,6 +2213,37 @@
 </structure>
 
 <structure>
+	<name dialects="oxnb1">require</name>
+	<syntax>require {scriptName}</syntax>
+	<syntax>require {scriptName} once</syntax>
+	<syntax>require {scriptName} with dialog</syntax>
+	<syntax>require {scriptName} once with dialog</syntax>
+	<syntax>require {scriptName} without dialog</syntax>
+	<syntax>require {scriptName} once without dialog</syntax>
+	<syntax-note>
+		{ScriptName} yields the name or path of an XION script file.
+	</syntax-note>
+	<description>
+		The [[*]] statement executes the statements contained in an XION script file.
+		If the script file cannot be found, the user will be asked to locate it,
+		unless the [[without dialog]] keyword is used. If the script file cannot be
+		found and the user cancels or the [[without dialog]] keyword is used, the
+		[[*]] statement triggers a script error.
+		(For a version that does not trigger a script error, see [[cs:include]].)
+		If the [[once]] keyword is used and the script has been executed before,
+		it will not be executed again.
+	</description>
+	<description>
+		In OpenXION, the locations searched for included scripts are determined by
+		the [[pr:includePaths]] property.
+	</description>
+	<note>
+		The [[*]] statement as described here is specific to OpenXION.
+	</note>
+	<see-also>[[cs:include]], [[pr:includePaths]], [[fn:includePath]], [[fn:includeFile]]</see-also>
+</structure>
+
+<structure>
 	<name dialects="xn1,oxnb1,hyp">return</name>
 	<syntax>return {expression}</syntax>
 	<description>
@@ -2247,6 +2309,7 @@
 		Since the mechanism for loading modules is dependent on the XION implementation,
 		the [[*]] statement as described here is specific to OpenXION.
 	</note>
+	<see-also>[[cs:include]], [[cs:require]]</see-also>
 </structure>
 
 <keyword>
@@ -4202,7 +4265,7 @@
 	<properties>
 		name, version,
 		itemDelimiter, columnDelimiter, rowDelimiter, littleEndian, unsigned, textEncoding, lineEnding,
-		userName, applicationPaths, documentPaths, mathProcessor
+		userName, applicationPaths, documentPaths, includePaths, mathProcessor
 	</properties>
 </datatype>
 
@@ -5143,6 +5206,34 @@
 </property>
 
 <property>
+	<name dialects="oxn1">includePaths</name>
+	<applies-to>Global environment</applies-to>
+	<syntax>set the [[*]] to {string}</syntax>
+	<syntax-note>{String} yields a list of file system paths delimited by line breaks.</syntax-note>
+	<example>set [[*]] to the [[*]] &amp; newline &amp; "/home/jdoe/scripts/"</example>
+	<description>
+		The [[*]] property determines or changes the list of file system paths
+		searched by the [[cs:include]] and [[cs:require]] keywords and the [[fn:includePath]]
+		and [[fn:includeFile]] functions to locate include files.
+	</description>
+	<note>
+		The default list of paths in OpenXION consists solely of the current working directory.
+	</note>
+	<note>
+		OpenXION reads the value of this property from a file at startup
+		and writes it back to the file upon exit. This file is located at
+		[[~/Library/Preferences/com.kreative.openxion.conf]] (on Mac OS X),
+		[[~\Application Data\OpenXION\xion.conf]] (on Windows),
+		or [[~/.xion.conf]] (on all other systems).
+		This is a plain text file that can be edited with any text editor.
+	</note>
+	<note>
+		The [[*]] property is specific to OpenXION; it is not part of the XION Scripting Language Standard.
+	</note>
+	<see-also>[[cs:include]], [[cs:require]], [[fn:includePath]], [[fn:includeFile]]</see-also>
+</property>
+
+<property>
 	<name dialects="xn1,oxn1,hyp">itemDelimiter</name>
 	<applies-to>Global environment</applies-to>
 	<syntax>set the [[*]] to {string}</syntax>
@@ -5350,7 +5441,7 @@
 	<description>
 		The [[*]] property determines or changes the line endings created by the [[dt:line]]
 		chunk type and the [[cm:sort]] command, and the line endings used in the default
-		[[pr:applicationPaths]] and [[pr:documentPaths]].
+		[[pr:applicationPaths]], [[pr:documentPaths]], and [[pr:includePaths]].
 	</description>
 	<note>
 		The default line ending in OpenXION is [[cn:newline]].
@@ -8494,6 +8585,40 @@
 </function>
 
 <function>
+	<name dialects="oxn1">includeFile</name>
+	<syntax>the [[*]] of {factor}</syntax>
+	<syntax>[[*]]({expression})</syntax>
+	<syntax-note>{Factor} and {expression} yield [[dt:string]]s.</syntax-note>
+	<description>
+		The [[*]] function returns a [[dt:file]] that represents the include with the specified name.
+		If no such include can be found, the [[*]] function returns [[cn:empty]].
+		In OpenXION, the locations searched for includes are determined by the
+		[[pr:includePaths]] property.
+	</description>
+	<note>
+		The [[*]] function is specific to OpenXION; it is not part of the XION Scripting Language Standard.
+	</note>
+	<see-also>[[cs:include]], [[cs:require]], [[pr:includePaths]], [[fn:includePath]]</see-also>
+</function>
+
+<function>
+	<name dialects="oxn1">includePath</name>
+	<syntax>the [[*]] of {factor}</syntax>
+	<syntax>[[*]]({expression})</syntax>
+	<syntax-note>{Factor} and {expression} yield [[dt:string]]s.</syntax-note>
+	<description>
+		The [[*]] function returns the path of the include with the specified name.
+		If no such include can be found, the [[*]] function returns [[cn:empty]].
+		In OpenXION, the locations searched for includes are determined by the
+		[[pr:includePaths]] property.
+	</description>
+	<note>
+		The [[*]] function is specific to OpenXION; it is not part of the XION Scripting Language Standard.
+	</note>
+	<see-also>[[cs:include]], [[cs:require]], [[pr:includePaths]], [[fn:includeFile]]</see-also>
+</function>
+
+<function>
 	<name dialects="xn1,oxn1">instr</name>
 	<syntax>the instr of ({haystack}, {needle})</syntax>
 	<syntax>instr({haystack}, {needle})</syntax>
@@ -11525,7 +11650,7 @@
 		.................................................................................................................
 		[[fn:appOrDocFile]]  :: [[fn:applicationOrDocumentFile]] :: [[fn:progOrDocFile]] :: [[fn:programOrDocumentFile]]
 		.................................................................................................................
-		[[fn:path]]          ::                                  ::                      ::  
+		[[fn:includePath]]   :: [[fn:includeFile]]               :: [[fn:path]]          ::  
 		ELBAT::
 	</content>
 </article>

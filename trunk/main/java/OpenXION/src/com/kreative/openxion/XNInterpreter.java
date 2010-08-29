@@ -30,6 +30,7 @@ package com.kreative.openxion;
 import java.io.*;
 import java.math.*;
 import java.util.*;
+
 import com.kreative.openxion.ast.*;
 import com.kreative.openxion.math.*;
 import com.kreative.openxion.util.*;
@@ -1448,6 +1449,30 @@ public class XNInterpreter {
 						exit = XNHandlerExit.ended();
 					}
 					return exit;
+				} else {
+					return XNHandlerExit.ended();
+				}
+			} else if (stat instanceof XNIncludeStatement) {
+				XNIncludeStatement is = (XNIncludeStatement)stat;
+				String path = evaluateExpression(is.scriptName).unwrap().toTextString(context);
+				File file = XIONUtil.locateInclude(context, path, is.ask);
+				if (file != null) {
+					if (!(is.once && context.hasIncludedScript(file.getAbsolutePath()))) {
+						context.addIncludedScript(file.getAbsolutePath());
+						try {
+							XNLexer lex = new XNLexer(new InputStreamReader(new FileInputStream(file), context.getTextEncoding()));
+							XNParser par = new XNParser(context, lex);
+							List<XNStatement> program = par.parse();
+							executeScript(program);
+						} catch (IOException ioe) {
+							if (is.require) {
+								throw new XNScriptError("Cannot read required include " + path);
+							}
+						}
+					}
+					return XNHandlerExit.ended();
+				} else if (is.require) {
+					throw new XNScriptError("Cannot find required include " + path);
 				} else {
 					return XNHandlerExit.ended();
 				}

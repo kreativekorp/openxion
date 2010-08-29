@@ -2546,6 +2546,43 @@ public class XNParser {
 		}
 	}
 	
+	private XNStatement getIncludeStatement(Collection<String> keywords) {
+		boolean require;
+		XNExpression scname;
+		boolean once;
+		boolean ask;
+		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("include")) {
+			getToken();
+			require = false;
+		} else if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("require")) {
+			getToken();
+			require = true;
+		} else {
+			throw new XNParseError("include or require", lookToken(1));
+		}
+		scname = getListExpression(keywords);
+		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("once")) {
+			getToken();
+			once = true;
+		} else {
+			once = false;
+		}
+		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("without")
+				&& lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("dialog")) {
+			getToken();
+			getToken();
+			ask = false;
+		} else if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("with")
+				&& lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("dialog")) {
+			getToken();
+			getToken();
+			ask = true;
+		} else {
+			ask = true;
+		}
+		return new XNIncludeStatement(require, scname, once, ask);
+	}
+	
 	private XNStatement getNextStatement(Collection<String> keywords) {
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("next")) {
 			getToken();
@@ -2710,9 +2747,11 @@ public class XNParser {
 			else if (lookToken(1).image.equalsIgnoreCase("do")) st = getDoStatement(keywords);
 			else if (lookToken(1).image.equalsIgnoreCase("exit")) st = getExitStatement(keywords);
 			else if (XNVariableScope.forName(lookToken(1).image) != null) st = getVariableDeclaration(keywords);
+			else if (lookToken(1).image.equalsIgnoreCase("include")) st = getIncludeStatement(keywords);
 			else if (lookToken(1).image.equalsIgnoreCase("next")) st = getNextStatement(keywords);
 			else if (lookToken(1).image.equalsIgnoreCase("ordinal")) st = getOrdinalDeclaration(keywords);
 			else if (lookToken(1).image.equalsIgnoreCase("pass")) st = getPassStatement(keywords);
+			else if (lookToken(1).image.equalsIgnoreCase("require")) st = getIncludeStatement(keywords);
 			else if (lookToken(1).image.equalsIgnoreCase("return")) st = getReturnStatement(keywords);
 			else if (lookToken(1).image.equalsIgnoreCase("send")) st = getSendStatement(keywords);
 			else if (lookToken(1).image.equalsIgnoreCase("throw")) st = getThrowStatement(keywords);
