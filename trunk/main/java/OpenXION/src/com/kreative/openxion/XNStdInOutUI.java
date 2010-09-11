@@ -28,7 +28,7 @@
 package com.kreative.openxion;
 
 import java.io.*;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * XNTUI is the XNUI that uses standard input and output
@@ -190,7 +190,7 @@ public class XNStdInOutUI implements XNUI {
 		out.print("\u0007");
 	}
 	
-	public void promptSecurity(XNSecurityKey[] type, boolean[] allow, boolean[] forall) {
+	public void promptSecurity(XNSecurityKey[] type, boolean[] allow, boolean[] forall, Map<String,String>[] details) {
 		out.println("\u001B[1m======================== SECURITY WARNING ========================\u001B[0m");
 		for (XNSecurityKey t : type) {
 			switch (t) {
@@ -221,7 +221,7 @@ public class XNStdInOutUI implements XNUI {
 		out.println("Would you like to allow this, or prevent the script from continuing?");
 		out.println("\u001B[1mDo not allow unless you trust the source of this script.\u001B[0m");
 		while (true) {
-			out.println("  [1:Allow] [2:Allow All] [3:Deny] [4:Deny All] [5:Kill Script]");
+			out.println("  [1:Allow] [2:Allow All] [3:Deny] [4:Deny All] [5:Kill Script] [6:Details]");
 			String s = getLine().trim();
 			try {
 				int i = Integer.parseInt(s);
@@ -244,27 +244,43 @@ public class XNStdInOutUI implements XNUI {
 					return;
 				case 5:
 					throw new XNExitedToInterpreterException("User requested end of script execution.");
+				case 6:
+					for (int j = 0; j < type.length && j < details.length; j++) {
+						out.println("SecurityKey: " + type[j].name());
+						for (Map.Entry<String,String> en : details[j].entrySet()) {
+							out.println(en.getKey() + ": " + en.getValue());
+						}
+					}
+					break;
 				}
-			} catch (NumberFormatException e) {}
-			s = s.replaceAll("\\s+", "");
-			if (s.equalsIgnoreCase("allow")) {
-				for (int k = 0; k < allow.length; k++) allow[k] = true;
-				for (int k = 0; k < forall.length; k++) forall[k] = false;
-				return;
-			} else if (s.equalsIgnoreCase("allowall")) {
-				for (int k = 0; k < allow.length; k++) allow[k] = true;
-				for (int k = 0; k < forall.length; k++) forall[k] = true;
-				return;
-			} else if (s.equalsIgnoreCase("deny")) {
-				for (int k = 0; k < allow.length; k++) allow[k] = false;
-				for (int k = 0; k < forall.length; k++) forall[k] = false;
-				return;
-			} else if (s.equalsIgnoreCase("denyall")) {
-				for (int k = 0; k < allow.length; k++) allow[k] = true;
-				for (int k = 0; k < forall.length; k++) forall[k] = true;
-				return;
-			} else if (s.equalsIgnoreCase("kill") || s.equalsIgnoreCase("killscript")) {
-				throw new XNExitedToInterpreterException("User requested end of script execution.");
+			} catch (NumberFormatException e) {
+				s = s.replaceAll("\\s+", "");
+				if (s.equalsIgnoreCase("allow")) {
+					for (int k = 0; k < allow.length; k++) allow[k] = true;
+					for (int k = 0; k < forall.length; k++) forall[k] = false;
+					return;
+				} else if (s.equalsIgnoreCase("allowall")) {
+					for (int k = 0; k < allow.length; k++) allow[k] = true;
+					for (int k = 0; k < forall.length; k++) forall[k] = true;
+					return;
+				} else if (s.equalsIgnoreCase("deny")) {
+					for (int k = 0; k < allow.length; k++) allow[k] = false;
+					for (int k = 0; k < forall.length; k++) forall[k] = false;
+					return;
+				} else if (s.equalsIgnoreCase("denyall")) {
+					for (int k = 0; k < allow.length; k++) allow[k] = true;
+					for (int k = 0; k < forall.length; k++) forall[k] = true;
+					return;
+				} else if (s.equalsIgnoreCase("kill") || s.equalsIgnoreCase("killscript")) {
+					throw new XNExitedToInterpreterException("User requested end of script execution.");
+				} else if (s.equalsIgnoreCase("detail") || s.equalsIgnoreCase("details")) {
+					for (int j = 0; j < type.length && j < details.length; j++) {
+						out.println("SecurityKey: " + type[j].name());
+						for (Map.Entry<String,String> en : details[j].entrySet()) {
+							out.println(en.getKey() + ": " + en.getValue());
+						}
+					}
+				}
 			}
 		}
 	}

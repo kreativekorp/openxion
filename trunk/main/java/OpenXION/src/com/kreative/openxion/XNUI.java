@@ -28,6 +28,7 @@
 package com.kreative.openxion;
 
 import java.io.File;
+import java.util.Map;
 
 /**
  * An XNUI is responsible for any interaction between the OpenXION
@@ -47,5 +48,5 @@ public interface XNUI {
 	public File askFile(String prompt, String deftext, int x, int y);
 	public File askFolder(String prompt, String deftext, int x, int y);
 	public void beep();
-	public void promptSecurity(XNSecurityKey[] type, boolean[] allow, boolean[] forall);
+	public void promptSecurity(XNSecurityKey[] type, boolean[] allow, boolean[] forall, Map<String,String>[] details);
 }

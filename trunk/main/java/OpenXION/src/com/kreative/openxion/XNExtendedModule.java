@@ -134,7 +134,7 @@ public class XNExtendedModule extends XNModule {
 	private static final Function f_heapspace = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			assertEmptyParameter(functionName, parameter);
-			if (!ctx.allow(XNSecurityKey.SYSTEM_INFO))
+			if (!ctx.allow(XNSecurityKey.SYSTEM_INFO, "Function", functionName))
 				throw new XNScriptError("Security settings do not allow heapSpace");
 			return new XOMInteger(Runtime.getRuntime().freeMemory());
 		}
@@ -491,7 +491,7 @@ public class XNExtendedModule extends XNModule {
 	private static final Function f_javaname = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			assertEmptyParameter(functionName, parameter);
-			if (!ctx.allow(XNSecurityKey.SYSTEM_INFO))
+			if (!ctx.allow(XNSecurityKey.SYSTEM_INFO, "Function", functionName))
 				throw new XNScriptError("Security settings do not allow javaName");
 			return new XOMString(System.getProperty("java.runtime.name"));
 		}
@@ -500,7 +500,7 @@ public class XNExtendedModule extends XNModule {
 	private static final Function f_javaversion = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			assertEmptyParameter(functionName, parameter);
-			if (!ctx.allow(XNSecurityKey.SYSTEM_INFO))
+			if (!ctx.allow(XNSecurityKey.SYSTEM_INFO, "Function", functionName))
 				throw new XNScriptError("Security settings do not allow javaVersion");
 			return new XOMString(System.getProperty("java.runtime.version"));
 		}
@@ -640,7 +640,7 @@ public class XNExtendedModule extends XNModule {
 	private static final Function f_vmname = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			assertEmptyParameter(functionName, parameter);
-			if (!ctx.allow(XNSecurityKey.SYSTEM_INFO))
+			if (!ctx.allow(XNSecurityKey.SYSTEM_INFO, "Function", functionName))
 				throw new XNScriptError("Security settings do not allow vmName");
 			return new XOMString(System.getProperty("java.vm.name"));
 		}
@@ -649,7 +649,7 @@ public class XNExtendedModule extends XNModule {
 	private static final Function f_vmversion = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			assertEmptyParameter(functionName, parameter);
-			if (!ctx.allow(XNSecurityKey.SYSTEM_INFO))
+			if (!ctx.allow(XNSecurityKey.SYSTEM_INFO, "Function", functionName))
 				throw new XNScriptError("Security settings do not allow vmVersion");
 			return new XOMString(System.getProperty("java.vm.version"));
 		}
