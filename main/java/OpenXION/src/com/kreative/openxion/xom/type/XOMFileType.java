@@ -58,10 +58,10 @@ public class XOMFileType extends XOMDataType<XOMFile> {
 	 */
 	
 	public boolean canGetMassInstance(XNContext ctx) {
-		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ);
+		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFiles");
 	}
 	public XOMVariant getMassInstance(XNContext ctx) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFiles"))
 			throw new XNScriptError("Security settings do not allow file system access");
 		File theDir = new File(".");
 		File[] theFiles = theDir.listFiles();
@@ -75,21 +75,21 @@ public class XOMFileType extends XOMDataType<XOMFile> {
 	}
 	
 	public boolean canGetInstanceByIndex(XNContext ctx, int index) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ)) return false;
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFile", "Index", Integer.toString(index))) return false;
 		List<? extends XOMVariant> theXFiles = getMassInstance(ctx).toList(ctx);
 		index = XIONUtil.index(1, theXFiles.size(), index, index)[0];
 		return (index >= 1 && index <= theXFiles.size());
 	}
 	public boolean canGetInstanceByIndex(XNContext ctx, int startIndex, int endIndex) {
-		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ);
+		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFile", "StartIndex", Integer.toString(startIndex), "EndIndex", Integer.toString(endIndex));
 	}
 	public boolean canGetInstanceByName(XNContext ctx, String name) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ)) return false;
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFile", "Name", name)) return false;
 		File theFile = new File(name);
 		return (theFile.exists() && !theFile.isDirectory());
 	}
 	public XOMVariant getInstanceByIndex(XNContext ctx, int index) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFile", "Index", Integer.toString(index)))
 			throw new XNScriptError("Security settings do not allow file system access");
 		List<? extends XOMVariant> theXFiles = getMassInstance(ctx).toList(ctx);
 		index = XIONUtil.index(1, theXFiles.size(), index, index)[0];
@@ -100,7 +100,7 @@ public class XOMFileType extends XOMDataType<XOMFile> {
 		}
 	}
 	public XOMVariant getInstanceByIndex(XNContext ctx, int startIndex, int endIndex) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFile", "StartIndex", Integer.toString(startIndex), "EndIndex", Integer.toString(endIndex)))
 			throw new XNScriptError("Security settings do not allow file system access");
 		List<? extends XOMVariant> theXFiles = getMassInstance(ctx).toList(ctx);
 		int[] indexes = XIONUtil.index(1, theXFiles.size(), startIndex, endIndex);
@@ -111,7 +111,7 @@ public class XOMFileType extends XOMDataType<XOMFile> {
 		return new XOMList(theXFiles.subList(indexes[0]-1, indexes[1]));
 	}
 	public XOMVariant getInstanceByName(XNContext ctx, String name) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFile", "Name", name))
 			throw new XNScriptError("Security settings do not allow file system access");
 		File theFile = new File(name);
 		if (/* theFile.exists() && */ !theFile.isDirectory()) {
@@ -122,10 +122,10 @@ public class XOMFileType extends XOMDataType<XOMFile> {
 	}
 	
 	public boolean canCreateInstanceByName(XNContext ctx, String name) {
-		return ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE);
+		return ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE, "Operation", "Create", "Name", name);
 	}
 	public XOMVariant createInstanceByName(XNContext ctx, String name) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE, "Operation", "Create", "Name", name))
 			throw new XNScriptError("Security settings do not allow file system access");
 		try {
 			File theNewFile = new File(name);
@@ -144,10 +144,10 @@ public class XOMFileType extends XOMDataType<XOMFile> {
 	 */
 	
 	public boolean canGetChildMassVariant(XNContext ctx, XOMVariant parent) {
-		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ) && (XOMFolderType.instance.canMakeInstanceFrom(ctx, parent));
+		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFiles", "Parent", parent.toDescriptionString()) && (XOMFolderType.instance.canMakeInstanceFrom(ctx, parent));
 	}
 	public XOMVariant getChildMassVariant(XNContext ctx, XOMVariant parent) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFiles", "Parent", parent.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow file system access");
 		if (XOMFolderType.instance.canMakeInstanceFrom(ctx, parent)) {
 			File theDir = XOMFolderType.instance.makeInstanceFrom(ctx, parent).toFile();
@@ -165,17 +165,17 @@ public class XOMFileType extends XOMDataType<XOMFile> {
 	}
 	
 	public boolean canGetChildVariantByIndex(XNContext ctx, XOMVariant parent, int index) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ)) return false;
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFile", "Parent", parent.toDescriptionString(), "Index", Integer.toString(index))) return false;
 		if (!canGetChildMassVariant(ctx, parent)) return false;
 		List<? extends XOMVariant> theXFiles = getChildMassVariant(ctx, parent).toList(ctx);
 		index = XIONUtil.index(1, theXFiles.size(), index, index)[0];
 		return (index >= 1 && index <= theXFiles.size());
 	}
 	public boolean canGetChildVariantByIndex(XNContext ctx, XOMVariant parent, int startIndex, int endIndex) {
-		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ);
+		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFile", "Parent", parent.toDescriptionString(), "StartIndex", Integer.toString(startIndex), "EndIndex", Integer.toString(endIndex));
 	}
 	public boolean canGetChildVariantByName(XNContext ctx, XOMVariant parent, String name) {
-		if (ctx.allow(XNSecurityKey.FILE_SYSTEM_READ) && XOMFolderType.instance.canMakeInstanceFrom(ctx, parent)) {
+		if (ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFile", "Parent", parent.toDescriptionString(), "Name", name) && XOMFolderType.instance.canMakeInstanceFrom(ctx, parent)) {
 			File theDir = XOMFolderType.instance.makeInstanceFrom(ctx, parent).toFile();
 			File theFile = new File(theDir, name);
 			return (theFile.exists() && !theFile.isDirectory());
@@ -184,7 +184,7 @@ public class XOMFileType extends XOMDataType<XOMFile> {
 		}
 	}
 	public XOMVariant getChildVariantByIndex(XNContext ctx, XOMVariant parent, int index) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFile", "Parent", parent.toDescriptionString(), "Index", Integer.toString(index)))
 			throw new XNScriptError("Security settings do not allow file system access");
 		List<? extends XOMVariant> theXFiles = getChildMassVariant(ctx, parent).toList(ctx);
 		index = XIONUtil.index(1, theXFiles.size(), index, index)[0];
@@ -195,7 +195,7 @@ public class XOMFileType extends XOMDataType<XOMFile> {
 		}
 	}
 	public XOMVariant getChildVariantByIndex(XNContext ctx, XOMVariant parent, int startIndex, int endIndex) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFile", "Parent", parent.toDescriptionString(), "StartIndex", Integer.toString(startIndex), "EndIndex", Integer.toString(endIndex)))
 			throw new XNScriptError("Security settings do not allow file system access");
 		List<? extends XOMVariant> theXFiles = getChildMassVariant(ctx, parent).toList(ctx);
 		int[] indexes = XIONUtil.index(1, theXFiles.size(), startIndex, endIndex);
@@ -206,7 +206,7 @@ public class XOMFileType extends XOMDataType<XOMFile> {
 		return new XOMList(theXFiles.subList(indexes[0]-1, indexes[1]));
 	}
 	public XOMVariant getChildVariantByName(XNContext ctx, XOMVariant parent, String name) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFile", "Parent", parent.toDescriptionString(), "Name", name))
 			throw new XNScriptError("Security settings do not allow file system access");
 		if (XOMFolderType.instance.canMakeInstanceFrom(ctx, parent)) {
 			File theDir = XOMFolderType.instance.makeInstanceFrom(ctx, parent).toFile();
@@ -222,10 +222,10 @@ public class XOMFileType extends XOMDataType<XOMFile> {
 	}
 	
 	public boolean canCreateChildVariantByName(XNContext ctx, XOMVariant parent, String name) {
-		return (ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE) && XOMFolderType.instance.canMakeInstanceFrom(ctx, parent));
+		return (ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE, "Operation", "Create", "Parent", parent.toDescriptionString(), "Name", name) && XOMFolderType.instance.canMakeInstanceFrom(ctx, parent));
 	}
 	public XOMVariant createChildVariantByName(XNContext ctx, XOMVariant parent, String name) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE, "Operation", "Create", "Parent", parent.toDescriptionString(), "Name", name))
 			throw new XNScriptError("Security settings do not allow file system access");
 		if (XOMFolderType.instance.canMakeInstanceFrom(ctx, parent)) {
 			try {

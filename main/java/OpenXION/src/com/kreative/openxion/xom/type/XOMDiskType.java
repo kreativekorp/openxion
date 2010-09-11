@@ -57,10 +57,10 @@ public class XOMDiskType extends XOMDataType<XOMFile> {
 	 */
 	
 	public boolean canGetMassInstance(XNContext ctx) {
-		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ);
+		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetDisks");
 	}
 	public XOMVariant getMassInstance(XNContext ctx) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetDisks"))
 			throw new XNScriptError("Security settings do not allow file system access");
 		File[] roots = File.listRoots();
 		List<XOMFile> xroots = new Vector<XOMFile>();
@@ -71,16 +71,16 @@ public class XOMDiskType extends XOMDataType<XOMFile> {
 	}
 	
 	public boolean canGetInstanceByIndex(XNContext ctx, int index) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ)) return false;
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetDisk", "Index", Integer.toString(index))) return false;
 		File[] roots = File.listRoots();
 		index = XIONUtil.index(1, roots.length, index, index)[0];
 		return (index >= 1 && index <= roots.length);
 	}
 	public boolean canGetInstanceByIndex(XNContext ctx, int startIndex, int endIndex) {
-		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ);
+		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetDisk", "StartIndex", Integer.toString(startIndex), "EndIndex", Integer.toString(endIndex));
 	}
 	public boolean canGetInstanceByName(XNContext ctx, String name) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ)) return false;
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetDisk", "Name", name)) return false;
 		File[] roots = File.listRoots();
 		for (File root : roots) {
 			if (root.getName().equalsIgnoreCase(name)) {
@@ -90,7 +90,7 @@ public class XOMDiskType extends XOMDataType<XOMFile> {
 		return false;
 	}
 	public XOMVariant getInstanceByIndex(XNContext ctx, int index) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetDisk", "Index", Integer.toString(index)))
 			throw new XNScriptError("Security settings do not allow file system access");
 		File[] roots = File.listRoots();
 		index = XIONUtil.index(1, roots.length, index, index)[0];
@@ -101,7 +101,7 @@ public class XOMDiskType extends XOMDataType<XOMFile> {
 		}
 	}
 	public XOMVariant getInstanceByIndex(XNContext ctx, int startIndex, int endIndex) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetDisk", "StartIndex", Integer.toString(startIndex), "EndIndex", Integer.toString(endIndex)))
 			throw new XNScriptError("Security settings do not allow file system access");
 		File[] roots = File.listRoots();
 		int[] indexes = XIONUtil.index(1, roots.length, startIndex, endIndex);
@@ -116,7 +116,7 @@ public class XOMDiskType extends XOMDataType<XOMFile> {
 		return new XOMList(xroots);
 	}
 	public XOMVariant getInstanceByName(XNContext ctx, String name) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetDisk", "Name", name))
 			throw new XNScriptError("Security settings do not allow file system access");
 		File[] roots = File.listRoots();
 		for (File root : roots) {

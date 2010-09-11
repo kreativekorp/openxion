@@ -95,8 +95,8 @@ public class XOMFileIOManager implements XNIOManager {
 
 	public void open(XNContext ctx, XOMVariant obj, XNIOMethod method, String type) {
 		boolean write;
-		if (ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE)) write = true;
-		else if (ctx.allow(XNSecurityKey.FILE_SYSTEM_READ)) write = false;
+		if (ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE, "Operation", "Open", "Object", obj.toDescriptionString(), "Method", method.getClass().getSimpleName(), "Type", type)) write = true;
+		else if (ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "Open", "Object", obj.toDescriptionString(), "Method", method.getClass().getSimpleName(), "Type", type)) write = false;
 		else throw new XNScriptError("Security settings do not allow open file");
 		try {
 			XOMFile xf = XOMFileType.instance.makeInstanceFrom(ctx, obj);
@@ -127,7 +127,7 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
@@ -139,7 +139,7 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, XOMVariant stop) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
@@ -151,7 +151,7 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, int len) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
@@ -163,7 +163,7 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, int len, XOMVariant stop) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
@@ -175,7 +175,7 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
@@ -187,7 +187,7 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos, XOMVariant stop) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
@@ -199,7 +199,7 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos, int len) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
@@ -211,7 +211,7 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos, int len, XOMVariant stop) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
@@ -223,7 +223,7 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public void write(XNContext ctx, XOMVariant obj, XOMVariant data) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE, "Operation", "Write", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow write to file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
@@ -235,7 +235,7 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public void write(XNContext ctx, XOMVariant obj, XOMVariant data, long pos) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE, "Operation", "Write", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow write to file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
@@ -247,7 +247,7 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public void truncate(XNContext ctx, XOMVariant obj) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE, "Operation", "Truncate", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow truncate file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);
@@ -259,7 +259,7 @@ public class XOMFileIOManager implements XNIOManager {
 	}
 
 	public void truncate(XNContext ctx, XOMVariant obj, long pos) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE, "Operation", "Truncate", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow truncate file");
 		XNIOStream stream = getStream(ctx, obj);
 		XNIOMethod method = getMethod(ctx, obj);

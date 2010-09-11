@@ -170,7 +170,8 @@ public class XNContext implements Serializable, Cloneable {
 	 * @param type the security key for the functionality being requested.
 	 * @return true if the functionality is allowed, false otherwise.
 	 */
-	public boolean allow(XNSecurityKey type) {
+	@SuppressWarnings("unchecked")
+	public boolean allow(XNSecurityKey type, String... details) {
 		if (security.containsKey(type)) {
 			switch (security.get(type)) {
 			case ALLOW: return true;
@@ -180,7 +181,10 @@ public class XNContext implements Serializable, Cloneable {
 		XNSecurityKey[] t = new XNSecurityKey[]{ type };
 		boolean[] a = new boolean[1];
 		boolean[] fa = new boolean[1];
-		ui.promptSecurity(t, a, fa);
+		Map<String,String> d = new LinkedHashMap<String,String>();
+		for (int i = 0; i < details.length; i+=2) d.put(details[i], details[i+1]);
+		Map<String,String>[] da = (Map<String,String>[])new Map[]{d};
+		ui.promptSecurity(t, a, fa, da);
 		if (fa[0]) security.put(type, a[0] ? XNSecurityValue.ALLOW : XNSecurityValue.DENY);
 		return a[0];
 	}

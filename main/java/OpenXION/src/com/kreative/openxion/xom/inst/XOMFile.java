@@ -71,10 +71,10 @@ public class XOMFile extends XOMVariant {
 	}
 	
 	public boolean hasParent(XNContext ctx) {
-		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ) && !(theFile == null || theFile.getParentFile() == null);
+		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetParent") && !(theFile == null || theFile.getParentFile() == null);
 	}
 	public XOMVariant getParent(XNContext ctx) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetParent"))
 			throw new XNScriptError("Security settings do not allow file system access");
 		if (theFile == null || theFile.getParentFile() == null) {
 			return null;
@@ -84,10 +84,10 @@ public class XOMFile extends XOMVariant {
 	}
 	
 	public boolean canDelete(XNContext ctx) {
-		return ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE);
+		return ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE, "Operation", "Delete");
 	}
 	public void delete(XNContext ctx) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE, "Operation", "Delete"))
 			throw new XNScriptError("Security settings do not allow file system access");
 		if (!theFile.delete()) {
 			super.delete(ctx);
@@ -95,7 +95,7 @@ public class XOMFile extends XOMVariant {
 	}
 	
 	public boolean canGetProperty(XNContext ctx, String property) {
-		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ) && (
+		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetProperty", "Property", property) && (
 				property.equalsIgnoreCase("name") ||
 				property.equalsIgnoreCase("path") ||
 				property.equalsIgnoreCase("modificationDate") ||
@@ -104,7 +104,7 @@ public class XOMFile extends XOMVariant {
 		);
 	}
 	public XOMVariant getProperty(XNContext ctx, XNModifier modifier, String property) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetProperty", "Property", property))
 			throw new XNScriptError("Security settings do not allow file system access");
 		if (property.equalsIgnoreCase("name")) {
 			return new XOMString(theFile.getName());
@@ -122,14 +122,14 @@ public class XOMFile extends XOMVariant {
 	}
 	
 	public boolean canSetProperty(XNContext ctx, String property) {
-		return ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE) && (
+		return ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE, "Operation", "SetProperty", "Property", property) && (
 				property.equalsIgnoreCase("name") ||
 				property.equalsIgnoreCase("path") ||
 				property.equalsIgnoreCase("modificationDate")
 		);
 	}
 	public void setProperty(XNContext ctx, String property, XOMVariant value) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE, "Operation", "SetProperty", "Property", property, "Value", value.toTextString(ctx)))
 			throw new XNScriptError("Security settings do not allow file system access");
 		if (property.equalsIgnoreCase("name")) {
 			theFile.renameTo(new File(theFile.getParentFile(), value.toTextString(ctx)));

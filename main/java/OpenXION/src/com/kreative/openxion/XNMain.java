@@ -448,8 +448,8 @@ public class XNMain {
 		public void beep() {
 			ui.beep();
 		}
-		public void promptSecurity(XNSecurityKey[] type, boolean[] allow, boolean[] forall) {
-			ui.promptSecurity(type, allow, forall);
+		public void promptSecurity(XNSecurityKey[] type, boolean[] allow, boolean[] forall, Map<String,String>[] details) {
+			ui.promptSecurity(type, allow, forall, details);
 		}
 	}
 }
