@@ -103,6 +103,9 @@ public class XNExtendedModule extends XNModule {
 		if (XIONUtil.isMacOS()) {
 			externalLanguages.put("applescript", e_applescript);
 		}
+		if (XIONUtil.isWindows()) {
+			externalLanguages.put("vbscript", e_vbscript);
+		}
 		if (!XIONUtil.isWindows()) {
 			externalLanguages.put("bash", e_bash);
 			externalLanguages.put("perl", e_perl);
@@ -668,6 +671,28 @@ public class XNExtendedModule extends XNModule {
 				Runtime.getRuntime().exec(args);
 			} catch (IOException e) {
 				throw new XNScriptError("Error running AppleScript: "+e.getMessage());
+			}
+			return XOMEmpty.EMPTY;
+		}
+	};
+	
+	private static final ExternalLanguage e_vbscript = new ExternalLanguage() {
+		public XOMVariant execute(String script) {
+			File tmp;
+			try {
+				tmp = File.createTempFile("XNExt-", ".vbs");
+			} catch (IOException e2) {
+				tmp = new File("XNExt-"+System.currentTimeMillis()+".vbs");
+				tmp.deleteOnExit();
+			}
+			try {
+				String[] lines = script.split("\n|\r\n|\r|\u2028|\u2029");
+				PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(tmp), "UTF-8"), true);
+				for (String line : lines) out.println(line);
+				out.close();
+				Runtime.getRuntime().exec(new String[]{"cmd", "/c", "start", "\"X\"", tmp.getAbsolutePath()});
+			} catch (IOException e) {
+				throw new XNScriptError("Error running Windows Scripting Host: "+e.getMessage());
 			}
 			return XOMEmpty.EMPTY;
 		}

@@ -11434,6 +11434,18 @@
 </extlang>
 
 <extlang>
+	<name dialects="oxne11">vbScript</name>
+	<syntax>do {script} as "[[*]]"</syntax>
+	<description>
+		Executes the specified text as a VBScript script.
+	</description>
+	<note>
+		This external language is only available when OpenXION is running under Windows.
+	</note>
+	<see-also>[[cs:do]]</see-also>
+</extlang>
+
+<extlang>
 	<name dialects="oxne1,oxne11">bash</name>
 	<syntax>do {script} as "[[*]]"</syntax>
 	<description>
