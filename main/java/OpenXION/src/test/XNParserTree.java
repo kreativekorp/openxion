@@ -39,7 +39,6 @@ public class XNParserTree {
 		f.setVisible(true);
 	}
 	
-	@SuppressWarnings("unchecked")
 	private static DefaultMutableTreeNode objectToTreeNode(String pfx, Object o) {
 		DefaultMutableTreeNode top;
 		if (o == null) {
@@ -54,18 +53,18 @@ public class XNParserTree {
 			}
 			else if (o instanceof Collection) {
 				int i = 0;
-				for (Object oo : (Collection)o) {
+				for (Object oo : (Collection<?>)o) {
 					top.add(objectToTreeNode(Integer.toString(i++)+": ", oo));
 				}
 			}
 			else if (o instanceof Map) {
-				for (Object oo : ((Map)o).entrySet()) {
-					Map.Entry e = (Map.Entry)oo;
+				for (Object oo : ((Map<?,?>)o).entrySet()) {
+					Map.Entry<?,?> e = (Map.Entry<?,?>)oo;
 					top.add(objectToTreeNode(toString(e.getKey())+": ", e.getValue()));
 				}
 			}
 			else {
-				Class c = o.getClass();
+				Class<?> c = o.getClass();
 				while (c.getSimpleName().startsWith("XN")) {
 					Field[] flds = c.getDeclaredFields();
 					for (Field fld : flds) {

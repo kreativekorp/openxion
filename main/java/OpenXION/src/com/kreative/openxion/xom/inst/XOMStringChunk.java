@@ -62,7 +62,7 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 	
 	private static class StringChunkInfo {
 		public String parentContent;
-		public int chunkCount;
+		//public int chunkCount;
 		public int startChunkIndex;
 		public int endChunkIndex;
 		public int startCharIndex;
@@ -149,7 +149,7 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 			}
 			StringChunkInfo ci = new StringChunkInfo();
 			ci.parentContent = ts;
-			ci.chunkCount = count;
+			//ci.chunkCount = count;
 			ci.startChunkIndex = s;
 			ci.endChunkIndex = e;
 			ci.startCharIndex = StringChunkEx.start(ts, chunkType, s, id, cd, rd);

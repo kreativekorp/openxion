@@ -27,7 +27,6 @@ public class XNParserTest {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	private static void printObject(String ind, String pfx, Object o) {
 		if (o == null) {
 			System.out.println(ind+pfx+"(null)");
@@ -41,18 +40,18 @@ public class XNParserTest {
 			}
 			else if (o instanceof Collection) {
 				int i = 0;
-				for (Object oo : (Collection)o) {
+				for (Object oo : (Collection<?>)o) {
 					printObject(ind+"\t", Integer.toString(i++)+": ", oo);
 				}
 			}
 			else if (o instanceof Map) {
-				for (Object oo : ((Map)o).entrySet()) {
-					Map.Entry e = (Map.Entry)oo;
+				for (Object oo : ((Map<?,?>)o).entrySet()) {
+					Map.Entry<?,?> e = (Map.Entry<?,?>)oo;
 					printObject(ind+"\t", toString(e.getKey())+": ", e.getValue());
 				}
 			}
 			else {
-				Class c = o.getClass();
+				Class<?> c = o.getClass();
 				while (c.getSimpleName().startsWith("XN")) {
 					Field[] flds = c.getDeclaredFields();
 					for (Field fld : flds) {
