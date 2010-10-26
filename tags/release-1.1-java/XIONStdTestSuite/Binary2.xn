@@ -1,0 +1,314 @@
+local test as binary is "0123456789ABCDEF"
+local tmp as binary
+
+
+
+put test into tmp
+put "FF" into byte 0 of tmp
+put tmp
+put test into tmp
+put "FF" into byte 1 of tmp
+put tmp
+put test into tmp
+put "FF" into byte 2 of tmp
+put tmp
+put test into tmp
+put "FF" into byte 3 of tmp
+put tmp
+put test into tmp
+put "FF" into byte 4 of tmp
+put tmp
+put test into tmp
+put "FF" into byte 5 of tmp
+put tmp
+put test into tmp
+put "FF" into byte 6 of tmp
+put tmp
+put test into tmp
+put "FF" into byte 7 of tmp
+put tmp
+
+put test into tmp
+put -1 into TinyInt 0 of tmp
+put tmp
+put test into tmp
+put -1 into TinyInt 1 of tmp
+put tmp
+put test into tmp
+put -1 into TinyInt 2 of tmp
+put tmp
+put test into tmp
+put -1 into TinyInt 3 of tmp
+put tmp
+put test into tmp
+put -1 into TinyInt 4 of tmp
+put tmp
+put test into tmp
+put -1 into TinyInt 5 of tmp
+put tmp
+put test into tmp
+put -1 into TinyInt 6 of tmp
+put tmp
+put test into tmp
+put -1 into TinyInt 7 of tmp
+put tmp
+
+put test into tmp
+put -1 into shortint 0 of tmp
+put tmp
+put test into tmp
+put -1 into shortint 1 of tmp
+put tmp
+put test into tmp
+put -1 into shortint 2 of tmp
+put tmp
+put test into tmp
+put -1 into shortint 3 of tmp
+put tmp
+put test into tmp
+put -1 into shortint 4 of tmp
+put tmp
+put test into tmp
+put -1 into shortint 5 of tmp
+put tmp
+put test into tmp
+put -1 into shortint 6 of tmp
+put tmp
+
+put test into tmp
+put -1 into Mediumint 0 of tmp
+put tmp
+put test into tmp
+put -1 into Mediumint 1 of tmp
+put tmp
+put test into tmp
+put -1 into Mediumint 2 of tmp
+put tmp
+put test into tmp
+put -1 into Mediumint 3 of tmp
+put tmp
+put test into tmp
+put -1 into Mediumint 4 of tmp
+put tmp
+
+put test into tmp
+put -1 into LONGint 0 of tmp
+put tmp
+
+put test into tmp
+put "FF" into bytes 0 to 6 of tmp
+put tmp
+put test into tmp
+put "FF" into byte 1 to 7 of tmp
+put tmp
+put test into tmp
+put "FF" into bytes 4 to 5 of tmp
+put tmp
+
+
+
+put test into tmp
+put "FF" before byte 0 of tmp
+put tmp
+put test into tmp
+put "FF" before byte 1 of tmp
+put tmp
+put test into tmp
+put "FF" before byte 2 of tmp
+put tmp
+put test into tmp
+put "FF" before byte 3 of tmp
+put tmp
+put test into tmp
+put "FF" before byte 4 of tmp
+put tmp
+put test into tmp
+put "FF" before byte 5 of tmp
+put tmp
+put test into tmp
+put "FF" before byte 6 of tmp
+put tmp
+put test into tmp
+put "FF" before byte 7 of tmp
+put tmp
+
+put test into tmp
+put -1 before TinyInt 0 of tmp
+put tmp
+put test into tmp
+put -1 before TinyInt 1 of tmp
+put tmp
+put test into tmp
+put -1 before TinyInt 2 of tmp
+put tmp
+put test into tmp
+put -1 before TinyInt 3 of tmp
+put tmp
+put test into tmp
+put -1 before TinyInt 4 of tmp
+put tmp
+put test into tmp
+put -1 before TinyInt 5 of tmp
+put tmp
+put test into tmp
+put -1 before TinyInt 6 of tmp
+put tmp
+put test into tmp
+put -1 before TinyInt 7 of tmp
+put tmp
+
+put test into tmp
+put -1 before shortint 0 of tmp
+put tmp
+put test into tmp
+put -1 before shortint 1 of tmp
+put tmp
+put test into tmp
+put -1 before shortint 2 of tmp
+put tmp
+put test into tmp
+put -1 before shortint 3 of tmp
+put tmp
+put test into tmp
+put -1 before shortint 4 of tmp
+put tmp
+put test into tmp
+put -1 before shortint 5 of tmp
+put tmp
+put test into tmp
+put -1 before shortint 6 of tmp
+put tmp
+
+put test into tmp
+put -1 before Mediumint 0 of tmp
+put tmp
+put test into tmp
+put -1 before Mediumint 1 of tmp
+put tmp
+put test into tmp
+put -1 before Mediumint 2 of tmp
+put tmp
+put test into tmp
+put -1 before Mediumint 3 of tmp
+put tmp
+put test into tmp
+put -1 before Mediumint 4 of tmp
+put tmp
+
+put test into tmp
+put -1 before LONGint 0 of tmp
+put tmp
+
+put test into tmp
+put "FF" before bytes 0 to 6 of tmp
+put tmp
+put test into tmp
+put "FF" before byte 1 to 7 of tmp
+put tmp
+put test into tmp
+put "FF" before bytes 4 to 5 of tmp
+put tmp
+
+
+
+put test into tmp
+put "FF" after byte 0 of tmp
+put tmp
+put test into tmp
+put "FF" after byte 1 of tmp
+put tmp
+put test into tmp
+put "FF" after byte 2 of tmp
+put tmp
+put test into tmp
+put "FF" after byte 3 of tmp
+put tmp
+put test into tmp
+put "FF" after byte 4 of tmp
+put tmp
+put test into tmp
+put "FF" after byte 5 of tmp
+put tmp
+put test into tmp
+put "FF" after byte 6 of tmp
+put tmp
+put test into tmp
+put "FF" after byte 7 of tmp
+put tmp
+
+put test into tmp
+put -1 after TinyInt 0 of tmp
+put tmp
+put test into tmp
+put -1 after TinyInt 1 of tmp
+put tmp
+put test into tmp
+put -1 after TinyInt 2 of tmp
+put tmp
+put test into tmp
+put -1 after TinyInt 3 of tmp
+put tmp
+put test into tmp
+put -1 after TinyInt 4 of tmp
+put tmp
+put test into tmp
+put -1 after TinyInt 5 of tmp
+put tmp
+put test into tmp
+put -1 after TinyInt 6 of tmp
+put tmp
+put test into tmp
+put -1 after TinyInt 7 of tmp
+put tmp
+
+put test into tmp
+put -1 after shortint 0 of tmp
+put tmp
+put test into tmp
+put -1 after shortint 1 of tmp
+put tmp
+put test into tmp
+put -1 after shortint 2 of tmp
+put tmp
+put test into tmp
+put -1 after shortint 3 of tmp
+put tmp
+put test into tmp
+put -1 after shortint 4 of tmp
+put tmp
+put test into tmp
+put -1 after shortint 5 of tmp
+put tmp
+put test into tmp
+put -1 after shortint 6 of tmp
+put tmp
+
+put test into tmp
+put -1 after Mediumint 0 of tmp
+put tmp
+put test into tmp
+put -1 after Mediumint 1 of tmp
+put tmp
+put test into tmp
+put -1 after Mediumint 2 of tmp
+put tmp
+put test into tmp
+put -1 after Mediumint 3 of tmp
+put tmp
+put test into tmp
+put -1 after Mediumint 4 of tmp
+put tmp
+
+put test into tmp
+put -1 after LONGint 0 of tmp
+put tmp
+
+put test into tmp
+put "FF" after bytes 0 to 6 of tmp
+put tmp
+put test into tmp
+put "FF" after byte 1 to 7 of tmp
+put tmp
+put test into tmp
+put "FF" after bytes 4 to 5 of tmp
+put tmp

@@ -1,0 +1,65 @@
+open file "iotest5.tmp"
+write "Hello" to file "iotest5.tmp"
+close file "iotest5.tmp"
+
+open file "iotest5.tmp"
+read from file "iotest5.tmp"
+put it
+close file "iotest5.tmp"
+
+open file "iotest5.tmp"
+read from file "iotest5.tmp" for 1000
+put it
+close file "iotest5.tmp"
+
+open file "iotest5.tmp"
+read from file "iotest5.tmp" until "$"
+put it
+close file "iotest5.tmp"
+
+open file "iotest5.tmp"
+read from file "iotest5.tmp" for 1000 until "$"
+put it
+close file "iotest5.tmp"
+
+open file "iotest5.tmp"
+read from file "iotest5.tmp" at 2
+put it
+close file "iotest5.tmp"
+
+open file "iotest5.tmp"
+read from file "iotest5.tmp" at 2 for 1000
+put it
+close file "iotest5.tmp"
+
+open file "iotest5.tmp"
+read from file "iotest5.tmp" at 2 until "$"
+put it
+close file "iotest5.tmp"
+
+open file "iotest5.tmp"
+read from file "iotest5.tmp" at 2 for 1000 until "$"
+put it
+close file "iotest5.tmp"
+
+open file "iotest5.tmp"
+read from file "iotest5.tmp" at 200
+put it
+close file "iotest5.tmp"
+
+open file "iotest5.tmp"
+read from file "iotest5.tmp" at 200 for 1000
+put it
+close file "iotest5.tmp"
+
+open file "iotest5.tmp"
+read from file "iotest5.tmp" at 200 until "$"
+put it
+close file "iotest5.tmp"
+
+open file "iotest5.tmp"
+read from file "iotest5.tmp" at 200 for 1000 until "$"
+put it
+close file "iotest5.tmp"
+
+delete file "iotest5.tmp"

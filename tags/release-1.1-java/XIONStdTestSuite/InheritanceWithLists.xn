@@ -1,0 +1,107 @@
+∞∞∞∞∞∞∞∞∞∞∞
+      a
+      |
+      b
+     / \
+    c   f
+   / \
+  d   e
+∞∞∞∞∞∞∞∞∞∞∞
+
+object type aaa pl aaaa
+	to get contents
+		return "omg"
+	end get
+end aaa
+
+object type bbb pl bbbb extends aaa
+	to get contents
+		return "wtf"
+	end get
+end bbb
+
+object type ccc pl cccc extends bbb
+	to get contents
+		return "bbq"
+	end get
+end ccc
+
+object type ddd pl dddd extends ccc
+	to get contents
+		return "o rly?"
+	end get
+end ddd
+
+object type eee pl eeee extends ccc
+	to get contents
+		return "ya rly!"
+	end get
+end eee
+
+object type fff pl ffff extends bbb
+	to get contents
+		return "no wai!"
+	end get
+end fff
+
+create aaa "aa"
+create bbb "bb"
+create ccc "cc"
+create ddd "dd"
+create eee "ee"
+create fff "ff"
+
+local a as aaaa is (aaa "aa", aaa "aa")
+local b as bbbb is (bbb "bb", bbb "bb")
+local c as cccc is (ccc "cc", ccc "cc")
+local d as dddd is (ddd "dd", ddd "dd")
+local e as eeee is (eee "ee", eee "ee")
+local f as ffff is (fff "ff", fff "ff")
+
+put "What is A?"
+put a are aaaa
+put a are bbbb
+put a are cccc
+put a are dddd
+put a are eeee
+put a are ffff
+
+put "What is B?"
+put b are aaaa
+put b are bbbb
+put b are cccc
+put b are dddd
+put b are eeee
+put b are ffff
+
+put "What is C?"
+put c are aaaa
+put c are bbbb
+put c are cccc
+put c are dddd
+put c are eeee
+put c are ffff
+
+put "What is D?"
+put d are aaaa
+put d are bbbb
+put d are cccc
+put d are dddd
+put d are eeee
+put d are ffff
+
+put "What is E?"
+put e are aaaa
+put e are bbbb
+put e are cccc
+put e are dddd
+put e are eeee
+put e are ffff
+
+put "What is F?"
+put f are aaaa
+put f are bbbb
+put f are cccc
+put f are dddd
+put f are eeee
+put f are ffff

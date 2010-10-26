@@ -1,0 +1,17 @@
+function isprime n
+	if n < 2 then return false
+	repeat with x = 2 to the sqrt of n
+		if n mod x == 0 then return false
+	end repeat
+	return true
+end isprime
+
+on primes cnt
+	repeat with x = 0 to cnt
+		if isprime(x) then
+			put x
+		end if
+	end repeat
+end primes
+
+primes 1000

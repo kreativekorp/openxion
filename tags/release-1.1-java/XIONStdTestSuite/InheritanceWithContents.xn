@@ -1,0 +1,107 @@
+∞∞∞∞∞∞∞∞∞∞∞
+      a
+      |
+      b
+     / \
+    c   f
+   / \
+  d   e
+∞∞∞∞∞∞∞∞∞∞∞
+
+object type aaa
+	to get contents
+		return "omg"
+	end get
+end aaa
+
+object type bbb extends aaa
+	to get contents
+		return "wtf"
+	end get
+end bbb
+
+object type ccc extends bbb
+	to get contents
+		return "bbq"
+	end get
+end ccc
+
+object type ddd extends ccc
+	to get contents
+		return "o rly?"
+	end get
+end ddd
+
+object type eee extends ccc
+	to get contents
+		return "ya rly!"
+	end get
+end eee
+
+object type fff extends bbb
+	to get contents
+		return "no wai!"
+	end get
+end fff
+
+create aaa "aa"
+create bbb "bb"
+create ccc "cc"
+create ddd "dd"
+create eee "ee"
+create fff "ff"
+
+local a as aaa is aaa "aa"
+local b as bbb is bbb "bb"
+local c as ccc is ccc "cc"
+local d as ddd is ddd "dd"
+local e as eee is eee "ee"
+local f as fff is fff "ff"
+
+put "What is A?"
+put a is an aaa
+put a is a bbb
+put a is a ccc
+put a is a ddd
+put a is an eee
+put a is an fff
+
+put "What is B?"
+put b is an aaa
+put b is a bbb
+put b is a ccc
+put b is a ddd
+put b is an eee
+put b is an fff
+
+put "What is C?"
+put c is an aaa
+put c is a bbb
+put c is a ccc
+put c is a ddd
+put c is an eee
+put c is an fff
+
+put "What is D?"
+put d is an aaa
+put d is a bbb
+put d is a ccc
+put d is a ddd
+put d is an eee
+put d is an fff
+
+put "What is E?"
+put e is an aaa
+put e is a bbb
+put e is a ccc
+put e is a ddd
+put e is an eee
+put e is an fff
+
+put "What is F?"
+put f is an aaa
+put f is a bbb
+put f is a ccc
+put f is a ddd
+put f is an eee
+put f is an fff

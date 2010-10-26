@@ -1,0 +1,22 @@
+#!/usr/bin/xion
+
+function factor theNumber
+	put empty into theFactors
+	repeat with theDivisor = 2 to the sqrt of theNumber
+		repeat while theNumber mod theDivisor is zero
+			put theDivisor & "*" after theFactors
+			divide theNumber by theDivisor
+		end repeat
+		if theNumber is one then exit repeat
+	end repeat
+	if theNumber is not one
+	then put theNumber after theFactors
+	else delete last char of theFactors
+	return theFactors
+end factor
+
+repeat
+	ask "Number to factor:"
+	if it is empty or the result is "Cancel" then exit repeat
+	else put factor(it)
+end repeat
