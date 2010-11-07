@@ -1,0 +1,75 @@
+#labels Featured
+= Using the Downloaded Files =
+
+You can use OpenXION without any complex installation procedure. Just execute the jar from the command line:
+
+{{{
+java -jar OpenXION.jar
+}}}
+
+To get a list of command line options, execute:
+
+{{{
+java -jar OpenXION.jar --help
+}}}
+
+However, if you'd like to make more of a permanent home for OpenXION on your system, follow the following complex installation procedure.
+
+= Installation from Downloaded Files =
+
+The only files you'll need to download to make a complete OpenXION environment are *OpenXION-1.1.jar* and *XIONDoc-1.1.jar*. Download these to a known location. Then use these commands to move them to their final destinations:
+
+{{{
+sudo mv OpenXION-1.1.jar /usr/lib/OpenXION.jar
+sudo mv XIONDoc-1.1.jar /usr/lib/XIONDoc.jar
+}}}
+
+Now, create /usr/bin/xion
+
+{{{
+#!/bin/sh
+java -Xmx1024M -jar /usr/lib/OpenXION.jar "$@"
+}}}
+
+and make it executable.
+
+Create /usr/bin/xe
+
+{{{
+#!/bin/sh
+java -Xmx1024M -jar /usr/lib/OpenXION.jar -e "$*"
+}}}
+
+and make it executable.
+
+Create /usr/bin/xiondoc
+
+{{{
+#!/bin/sh
+java -Xmx1024M -jar /usr/lib/XIONDoc.jar "$@"
+}}}
+
+and make it executable.
+
+= Installation from Source =
+
+Use this command to check out the latest project source:
+
+{{{
+svn checkout http://openxion.googlecode.com/svn/trunk/main/java/OpenXION/ openxion
+}}}
+
+Change to the directory you just checked out:
+
+{{{
+cd openxion
+}}}
+
+Build and install with make:
+
+{{{
+make
+sudo make install
+}}}
+
+Enter your administrator password when prompted.
