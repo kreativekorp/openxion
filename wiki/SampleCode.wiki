@@ -1,4 +1,5 @@
 #summary Sample code to demonstrate the XION scripting language.
+#labels Featured
 
 = !SampleCode =
 
