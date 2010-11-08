@@ -3,29 +3,33 @@ INSTBINDIR = /usr/bin
 SRCFILES = src/test/*.java src/com/kreative/*/*.java src/com/kreative/*/*/*.java src/com/kreative/*/*/*/*.java
 PACKAGES = com.kreative.openxion com.kreative.openxion.ast com.kreative.openxion.io com.kreative.openxion.math com.kreative.openxion.util com.kreative.openxion.xom com.kreative.openxion.xom.inst com.kreative.openxion.xom.type com.kreative.xiondoc
 
-all: clean bin doc osxclean OpenXION.jar XIONDoc.jar OpenXION-src.tgz XIONDoc-src.tgz OpenXION-test.tgz OpenXION-xndocs.tgz XION-Language-Module.tgz
+all: clean bin doc osxclean OpenXION.jar XIONDoc.jar OpenXION-src.tgz XIONDoc-src.tgz OpenXION-test.tgz OpenXION-xndocs.tgz XION-Language-Module.tgz OpenXION-dist.zip
 
-eclipseall: eclipseclean osxclean OpenXION.jar XIONDoc.jar OpenXION-src.tgz XIONDoc-src.tgz OpenXION-test.tgz OpenXION-xndocs.tgz XION-Language-Module.tgz
+eclipseall: eclipseclean osxclean OpenXION.jar XIONDoc.jar OpenXION-src.tgz XIONDoc-src.tgz OpenXION-test.tgz OpenXION-xndocs.tgz XION-Language-Module.tgz OpenXION-dist.zip
 
 clean:
 	rm -rf bin
 	rm -rf doc
 	rm -rf OpenXION*.jar
 	rm -rf OpenXION*.tgz
+	rm -rf OpenXION*.zip
 	rm -rf XIONDoc*.jar
 	rm -rf XIONDoc*.tgz
 	rm -rf XION-*.jar
 	rm -rf XION-*.tgz
 	rm -rf xndoc/doc.htmld
+	rm -rf dist
 
 eclipseclean:
 	rm -rf OpenXION*.jar
 	rm -rf OpenXION*.tgz
+	rm -rf OpenXION*.zip
 	rm -rf XIONDoc*.jar
 	rm -rf XIONDoc*.tgz
 	rm -rf XION-*.jar
 	rm -rf XION-*.tgz
 	rm -rf xndoc/doc.htmld
+	rm -rf dist
 
 bin:
 	mkdir -p bin
@@ -82,6 +86,35 @@ OpenXION-xndocs.tgz: XIONDoc.jar
 
 XION-Language-Module.tgz:
 	tar -czf XION-Language-Module.tgz -C bbedit XION.plist
+
+OpenXION-dist.zip: OpenXION.jar XIONDoc.jar
+	mkdir dist
+	cp OpenXION.jar dist/OpenXION.jar
+	cp XIONDoc.jar dist/XIONDoc.jar
+	echo "#!/bin/sh" > dist/xe
+	echo "#!/bin/sh" > dist/xion
+	echo "#!/bin/sh" > dist/xiondoc
+	echo 'java -Xmx1024M -jar OpenXION.jar -e "$$*"' >> dist/xe
+	echo 'java -Xmx1024M -jar OpenXION.jar "$$@"' >> dist/xion
+	echo 'java -Xmx1024M -jar XIONDoc.jar "$$@"' >> dist/xiondoc
+	chmod +x dist/xe
+	chmod +x dist/xion
+	chmod +x dist/xiondoc
+	echo "#!/bin/sh" > dist/install
+	echo 'cp -f OpenXION.jar /usr/lib/OpenXION.jar' >> dist/install
+	echo 'cp -f XIONDoc.jar /usr/lib/XIONDoc.jar' >> dist/install
+	echo 'echo "#!/bin/sh" > /usr/bin/xe' >> dist/install
+	echo 'echo "#!/bin/sh" > /usr/bin/xion' >> dist/install
+	echo 'echo "#!/bin/sh" > /usr/bin/xiondoc' >> dist/install
+	echo "echo 'java -Xmx1024M -jar \"/usr/lib/OpenXION.jar\" -e \"\$$*\"' >> /usr/bin/xe" >> dist/install
+	echo "echo 'java -Xmx1024M -jar \"/usr/lib/OpenXION.jar\" \"\$$@\"' >> /usr/bin/xion" >> dist/install
+	echo "echo 'java -Xmx1024M -jar \"/usr/lib/XIONDoc.jar\" \"\$$@\"' >> /usr/bin/xiondoc" >> dist/install
+	echo 'chmod +x /usr/bin/xe' >> dist/install
+	echo 'chmod +x /usr/bin/xion' >> dist/install
+	echo 'chmod +x /usr/bin/xiondoc' >> dist/install
+	chmod +x dist/install
+	zip -j OpenXION-dist.zip dist/*
+	rm -rf dist
 
 test: OpenXION.jar
 	java -jar OpenXION.jar -s allow -T XIONStdTestSuite/*.xn
