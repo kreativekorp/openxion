@@ -1,0 +1,44 @@
+#summary Questions about OpenXION are answered here.
+#labels Featured
+
+= Will OpenXION run on my computer? =
+
+As long as you have Java SE 5 or later, yes.
+
+= How do I download/run/install OpenXION? =
+
+Just follow the [Installation] instructions.
+
+= Will OpenXION run off a USB drive? =
+
+You may run OpenXION from anywhere, so yes. Installation is optional.
+
+= What file extension do I use for XION scripts? =
+
+OpenXION doesn't care what file extension you use, but .xn is the file extension we use.
+
+= How to I spell/capitalize XION/OpenXION/XIONDoc? =
+
+In English text, XION, OpenXION, and XIONDoc are all one word, spelled and capitalized as seen here.
+
+In URLs and file names, they may be all lowercase: xion, openxion, xiondoc
+
+= How do I pronounce XION/OpenXION/XIONDoc? =
+
+XION is pronounced EK-shun.
+
+OpenXION is pronounced OH-pen-EK-shun.
+
+XIONDoc is pronounced EK-shun-dock.
+
+(Programmers have a history of creating words with ambiguous or counterintuitive pronunciation just to mess with people. Observe GIF, Linux, Mac OS X. In the event of an XION pronunciation holy war, take whatever side you want, but I'm siding with EK-shun.)
+
+= What does XION stand for? =
+
+Officially, XION does not stand for anything.
+
+Unofficially, you may think of it as standing for Xtalk ImplementatiON.
+
+Officially, the file extension .xn is just a shortening of XION.
+
+Unofficially, the file extension .xn stands for eXtremely Numerous.
