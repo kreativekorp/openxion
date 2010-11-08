@@ -1,0 +1,15 @@
+#summary A brief history of time()
+
+In 1987, Apple Computer introduced HyperCard, and we saw why 1987 was not like 1984. HyperCard used a card and stack metaphor that allowed people to organize information on a stack of cards. Its powerful scripting language, HyperTalk, allowed anyone to add interactivity to their stacks. HyperTalk was so powerful that people built not only databases but entire applications out of it. The popular computer game Myst, for example, was built in HyperCard.
+
+Also in 1987, Rebecca Bettencourt was born.
+
+In 1998, Steve Jobs returned to Apple. In an infamous quote, he said, "there have been rumors about us canceling HyperCard, which is complete bullshit." HyperCard was incorporated into the QuickTime Interactive project, which was ultimately canceled.
+
+Sometime around 2002, Tyler James Vano and Rebecca Bettencourt started a project to develop a modern IDE for HyperCard, initially called Sphere Project and eventually renamed WildFire. This project evolved into a complete HyperCard clone, called Project 11, whose scripting language was called XION. Project 11 was never finished.
+
+In January 2009, Rebecca Bettencourt started her senior project at Cal Poly San Luis Obispo. This project was the first version of OpenXION, which was completed over a course of six months. The final project was submitted in mid-June. The final report and a copy of OpenXION 0.9 are available at Cal Poly's Kennedy Library.
+
+Rebecca Bettencourt continued to actively develop OpenXION. In June 2010, the source code was imported into Google Code and OpenXION 1.0 was finally released.
+
+In November 2010, Joe Hardesty registered openxion.org and became the first outside contributor. Thanks Joe!
