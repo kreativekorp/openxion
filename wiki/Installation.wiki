@@ -1,4 +1,6 @@
+#summary How to install OpenXION on Mac OS X and Unix/Linux-based systems.
 #labels Featured
+
 = Downloading =
 
 Download the single file OpenXION-1.1-dist.zip. Unzip to the directory of your choice.
