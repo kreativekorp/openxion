@@ -27,6 +27,7 @@
 
 package com.kreative.openxion.xom.type;
 
+import java.text.*;
 import java.util.*;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.xom.XOMDataType;
@@ -256,10 +257,29 @@ public class XOMListType extends XOMDataType<XOMList> {
 		}
 		return true;
 	}
+	private String[] splitElements(String in) {
+		Vector<String> out = new Vector<String>();
+		CharacterIterator ci = new StringCharacterIterator(in);
+		boolean done = false;
+		int level = 0;
+		while (!done) {
+			StringBuffer tmp = new StringBuffer();
+			while (true) {
+				char ch = ci.next();
+				if (ch == CharacterIterator.DONE) { done = true; break; } 
+				else if (ch == '(') { level++; tmp.append(ch); }
+				else if (ch == ')') { level--; tmp.append(ch); }
+				else if (ch == ',' && level == 0) { done = false; break; }
+				else tmp.append(ch);
+			}
+			out.add(tmp.toString());
+		}
+		return out.toArray(new String[0]);
+	}
 	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
 		if (allCanMorph(ctx, instance.toList(ctx))) {
 			return true;
-		} else if (allCanMorph(ctx, instance.toTextString(ctx).split(","))) {
+		} else if (allCanMorph(ctx, splitElements(instance.toTextString(ctx)))) {
 			return true;
 		} else {
 			return false;
@@ -283,7 +303,7 @@ public class XOMListType extends XOMDataType<XOMList> {
 			}
 			return new XOMList(newElements);
 		}
-		String[] ss = instance.toTextString(ctx).split(",");
+		String[] ss = splitElements(instance.toTextString(ctx));
 		if (allCanMorph(ctx, ss)) {
 			List<XOMVariant> newElements = new Vector<XOMVariant>();
 			for (String s : ss) {

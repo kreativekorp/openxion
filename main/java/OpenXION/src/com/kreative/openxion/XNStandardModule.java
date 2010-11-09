@@ -2776,9 +2776,9 @@ public class XNStandardModule extends XNModule {
 		}
 		if (parameter instanceof XOMList) {
 			Class<? extends XOMVariant> clazz = ((XOMList)parameter).getElementClass();
-			if (clazz.isAssignableFrom(XOMComplex.class)) return parameter.toList(ctx);
-			else if (clazz.isAssignableFrom(XOMNumber.class)) return parameter.toList(ctx);
-			else if (clazz.isAssignableFrom(XOMInteger.class)) return parameter.toList(ctx);
+			if (clazz.isAssignableFrom(XOMInteger.class)) return (XOMComplexType.listInstance.makeInstanceFrom(ctx, parameter)).toList(ctx);
+			else if (clazz.isAssignableFrom(XOMNumber.class)) return (XOMNumberType.listInstance.makeInstanceFrom(ctx, parameter)).toList(ctx);
+			else if (clazz.isAssignableFrom(XOMComplex.class)) return (XOMIntegerType.listInstance.makeInstanceFrom(ctx, parameter)).toList(ctx);
 		}
 		if (XOMIntegerType.listInstance.canMakeInstanceFrom(ctx, parameter)) {
 			return (XOMIntegerType.listInstance.makeInstanceFrom(ctx, parameter)).toList(ctx);
@@ -2800,8 +2800,8 @@ public class XNStandardModule extends XNModule {
 		}
 		if (parameter instanceof XOMList) {
 			Class<? extends XOMVariant> clazz = ((XOMList)parameter).getElementClass();
-			if (clazz.isAssignableFrom(XOMComplex.class)) return parameter.toList(ctx);
-			else if (clazz.isAssignableFrom(XOMNumber.class)) return parameter.toList(ctx);
+			if (clazz.isAssignableFrom(XOMNumber.class)) return (XOMNumberType.listInstance.makeInstanceFrom(ctx, parameter)).toList(ctx);
+			else if (clazz.isAssignableFrom(XOMComplex.class)) return (XOMComplexType.listInstance.makeInstanceFrom(ctx, parameter)).toList(ctx);
 		}
 		if (XOMNumberType.listInstance.canMakeInstanceFrom(ctx, parameter)) {
 			return (XOMNumberType.listInstance.makeInstanceFrom(ctx, parameter)).toList(ctx);
