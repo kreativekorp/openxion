@@ -1887,8 +1887,8 @@
 		The [[as ]]{scriptingLanguage} form causes the XION interpreter to execute
 		the specified string as a script in some other scripting language.
 		HyperTalk supports AppleScript as well as any OSA-compliant scripting component.
-		OpenXION supports AppleScript on Mac OS X, and [[bash]], Perl, PHP, Python,
-		and Ruby on non-Windows systems.
+		OpenXION supports AppleScript on Mac OS X, VBScript on Windows, and [[bash]],
+		Perl, PHP, Python, and Ruby on Mac OS X and other systems other than Windows.
 		The XION Scripting Language Standard does not require support for any
 		particular external language; only support for the syntax.
 	</description>
@@ -3868,6 +3868,12 @@
 		Every list is considered a [[dt:list]], and every other single value, piece of data, or
 		object is considered a [[dt:list]] of one [[dt:element]].
 	</description>
+	<description>
+		When a list is converted to a string, the result is the concatenation of each
+		element as a string, with a comma between each element. If any element is itself a list,
+		its string representation will be enclosed in parentheses. (This prevents the list
+		from being flattened in certain circumstances.)
+	</description>
 </datatype>
 
 <datatype>
@@ -3878,6 +3884,12 @@
 		is considered a [[dt:lists]] of one [[dt:list]]. Every other single value,
 		piece of data, or object is considered a [[dt:lists]] of one [[dt:list]] of
 		one [[dt:element]].
+	</description>
+	<description>
+		When a list is converted to a string, the result is the concatenation of each
+		element as a string, with a comma between each element. If any element is itself a list,
+		its string representation will be enclosed in parentheses. (This prevents the list
+		from being flattened in certain circumstances.)
 	</description>
 </datatype>
 

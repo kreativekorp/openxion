@@ -155,7 +155,9 @@ public class XOMList extends XOMVariant {
 		if (theList == null) return "";
 		StringBuffer theString = new StringBuffer();
 		for (XOMVariant theInstance : theList) {
+			if (theInstance instanceof XOMList) theString.append("(");
 			theString.append(theInstance.toDescriptionString());
+			if (theInstance instanceof XOMList) theString.append(")");
 			theString.append(",");
 		}
 		if (theString.length() > 0) theString.deleteCharAt(theString.length()-1);
@@ -165,7 +167,9 @@ public class XOMList extends XOMVariant {
 		if (theList == null) return "";
 		StringBuffer theString = new StringBuffer();
 		for (XOMVariant theInstance : theList) {
+			if (theInstance instanceof XOMList) theString.append("(");
 			theString.append(theInstance.toTextString(ctx));
+			if (theInstance instanceof XOMList) theString.append(")");
 			theString.append(",");
 		}
 		if (theString.length() > 0) theString.deleteCharAt(theString.length()-1);
