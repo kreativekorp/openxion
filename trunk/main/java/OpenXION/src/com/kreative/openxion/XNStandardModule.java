@@ -53,7 +53,7 @@ public class XNStandardModule extends XNModule {
 	public static final String MODULE_NAME = "OpenXION Standard Module";
 	public static final String MODULE_VERSION = "1.2";
 	
-	private static final GregorianCalendar TICKS_REF = new GregorianCalendar(2009,GregorianCalendar.MAY,20);
+	private static final GregorianCalendar TICKS_REF = new GregorianCalendar(2010,GregorianCalendar.NOVEMBER,8);
 	
 	private static XNStandardModule instance = null;
 	public static final synchronized XNStandardModule instance() {
