@@ -31,7 +31,7 @@ import java.io.*;
 
 public class XIONDoc {
 	public static final String XIONDOC_NAME = "XIONDoc";
-	public static final String XIONDOC_VERSION = "1.1";
+	public static final String XIONDOC_VERSION = "1.2";
 	
 	public static void main(String[] args) {
 		if (args.length == 0) {
