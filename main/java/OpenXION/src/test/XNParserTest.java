@@ -12,7 +12,7 @@ public class XNParserTest {
 				System.out.println("Parsing "+new File(arg).getName()+"...");
 				FileInputStream str = new FileInputStream(arg);
 				Reader r = new InputStreamReader(str, "UTF-8");
-				XNContext ctx = new XNContext(new XNStdInOutUI());
+				XNContext ctx = new XNContext(new XNNullUI());
 				ctx.loadModule(XNStandardModule.instance());
 				ctx.loadModule(XNExtendedModule.instance());
 				XNLexer lex = new XNLexer(r);

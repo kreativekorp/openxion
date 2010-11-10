@@ -41,10 +41,10 @@ import com.kreative.openxion.xom.type.XOMStringType;
  */
 public class XNMain {
 	public static final String XION_NAME = "OpenXION";
-	public static final String XION_VERSION = "1.1";
+	public static final String XION_VERSION = "1.2";
 	
 	public static void main(String[] args) {
-		final XNStdInOutUI ui = new XNStdInOutUI();
+		final XNStdInOutUI ui = new XNStdInOutUI(true);
 		final XNContext ctx = new XNContext(ui);
 		readEnviron(ctx);
 		ctx.loadModule(XNStandardModule.instance());
@@ -53,6 +53,7 @@ public class XNMain {
 		if (args.length == 0) {
 			shell(interp, ctx, false);
 		} else {
+			boolean somethingOfConsequenceHappened = false;
 			String textEncoding = "UTF-8";
 			boolean processOptions = true;
 			Option lastOption = Option.SCRIPT_FILE;
@@ -63,7 +64,10 @@ public class XNMain {
 			int testsFailed = 0;
 			for (String arg : args) {
 				if (processOptions && arg.startsWith("-")) {
-					if (arg.equals("-i")) shell(interp, ctx, stackTrace);
+					if (arg.equals("-i")) {
+						somethingOfConsequenceHappened = true;
+						shell(interp, ctx, stackTrace);
+					}
 					else if (arg.equals("-f")) lastOption = Option.SCRIPT_FILE;
 					else if (arg.equals("-e")) lastOption = Option.EXPRESSION;
 					else if (arg.equals("-c")) lastOption = Option.STATEMENT;
@@ -71,8 +75,16 @@ public class XNMain {
 					else if (arg.equals("-E")) lastOption = Option.TEXT_ENCODING;
 					else if (arg.equals("-D")) lastOption = Option.VARIABLE;
 					else if (arg.equals("-s")) lastOption = Option.SECURITY_PROFILE;
-					else if (arg.equals("-h") || arg.equals("-help") || arg.equals("--help")) help();
-					else if (arg.equals("-v") || arg.equals("-version") || arg.equals("--version")) version();
+					else if (arg.equals("-h") || arg.equals("-help") || arg.equals("--help")) {
+						somethingOfConsequenceHappened = true;
+						help();
+					}
+					else if (arg.equals("-v") || arg.equals("-version") || arg.equals("--version")) {
+						somethingOfConsequenceHappened = true;
+						version();
+					}
+					else if (arg.equals("-p")) ui.setFancyPrompts(false);
+					else if (arg.equals("-P")) ui.setFancyPrompts(true);
 					else if (arg.equals("-r")) ctx.reset();
 					else if (arg.equals("-R")) ctx.resetAll();
 					else if (arg.equals("-S")) stackTrace = true;
@@ -82,6 +94,7 @@ public class XNMain {
 				} else {
 					switch (lastOption) {
 					case SCRIPT_FILE:
+						somethingOfConsequenceHappened = true;
 						if (testMode) {
 							testsTotal++;
 							boolean fail = false;
@@ -142,6 +155,7 @@ public class XNMain {
 						}
 						break;
 					case EXPRESSION:
+						somethingOfConsequenceHappened = true;
 						try {
 							System.out.println(interp.evaluateExpressionString(arg).unwrap().toTextString(ctx));
 						} catch (XNScriptError se) {
@@ -150,6 +164,7 @@ public class XNMain {
 						}
 						break;
 					case STATEMENT:
+						somethingOfConsequenceHappened = true;
 						try {
 							interp.executeScriptString(arg);
 						} catch (XNScriptError se) {
@@ -212,6 +227,9 @@ public class XNMain {
 			}
 			if (testsTotal > 0) {
 				System.out.println("PASSED: "+testsPassed+"/"+testsTotal+"  FAILED: "+testsFailed+"/"+testsTotal);
+			}
+			if (!somethingOfConsequenceHappened) {
+				shell(interp, ctx, stackTrace);
 			}
 		}
 		writeEnviron(ctx);
@@ -285,6 +303,8 @@ public class XNMain {
 		System.out.println("  -h                  print help screen");
 		System.out.println("  -i                  start an interactive shell");
 		System.out.println("  -m classname        load an XNModule with the specified class name");
+		System.out.println("  -P                  use fancy prompts simulating dialog boxes (default)");
+		System.out.println("  -p                  use simple, more traditional prompts");
 		System.out.println("  -R                  clear runtime state AND unload all modules");
 		System.out.println("  -r                  clear runtime state ONLY");
 		System.out.println("  -S                  print a stack trace for every exception");

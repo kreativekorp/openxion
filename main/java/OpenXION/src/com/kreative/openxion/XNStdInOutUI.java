@@ -31,7 +31,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * XNTUI is the XNUI that uses standard input and output
+ * XNStdInOutUI is the XNUI that uses standard input and output
  * for user interaction.
  * @since OpenXION 0.9
  * @author Rebecca G. Bettencourt, Kreative Software
@@ -39,9 +39,11 @@ import java.util.*;
 public class XNStdInOutUI implements XNUI {
 	private Scanner in;
 	private PrintWriter out;
+	private boolean fancyPrompts;
 	
-	public XNStdInOutUI() {
+	public XNStdInOutUI(boolean fancyPrompts) {
 		reset();
+		setFancyPrompts(fancyPrompts);
 	}
 	
 	public void reset() {
@@ -53,24 +55,47 @@ public class XNStdInOutUI implements XNUI {
 		}
 	}
 	
+	public boolean fancyPrompts() {
+		return fancyPrompts;
+	}
+	
+	public void setFancyPrompts(boolean fancyPrompts) {
+		this.fancyPrompts = fancyPrompts;
+	}
+	
 	private String getLine() {
 		if (in.hasNextLine()) return in.nextLine();
 		else return null;
 	}
 	
 	public String answer(String prompt, String[] options, int x, int y) {
-		out.println(prompt);
-		if (options == null || options.length == 0) {
-			out.println("  [[1:OK]]");
+		if (fancyPrompts) {
+			out.println(prompt);
+			if (options == null || options.length == 0) {
+				out.println("  [[1:OK]]");
+			} else {
+				for (int i = 0; i < options.length; i++) {
+					if (i == options.length-1) {
+						out.print("  [[" + (i+1) + ":" + options[i] + "]]");
+					} else {
+						out.print("  [" + (i+1) + ":" + options[i] + "]");
+					}
+				}
+				out.println();
+			}
 		} else {
-			for (int i = 0; i < options.length; i++) {
-				if (i == options.length-1) {
-					out.print("  [[" + (i+1) + ":" + options[i] + "]]");
-				} else {
-					out.print("  [" + (i+1) + ":" + options[i] + "]");
+			out.println(prompt);
+			if (options == null || options.length == 0) {
+				out.println("  \u001B[1m1: OK\u001B[0m");
+			} else {
+				for (int i = 0; i < options.length; i++) {
+					if (i == options.length-1) {
+						out.println("  \u001B[1m" + (i+1) + ": " + options[i] + "\u001B[0m");
+					} else {
+						out.println("  " + (i+1) + ": " + options[i]);
+					}
 				}
 			}
-			out.println();
 		}
 		String s = getLine().trim();
 		if (options == null || options.length == 0) {
@@ -136,18 +161,21 @@ public class XNStdInOutUI implements XNUI {
 		while (true) {
 			out.println(prompt);
 			String t = getLine();
-			out.println("  [1:Change] [2:Cancel] [[3:OK]]");
-			String s = getLine().trim();
-			try {
-				int i = Integer.parseInt(s);
-				if (i == 1) continue;
-				else if (i == 2) return null;
-				else if (i == 3) return t;
-			} catch (Exception e) {}
 			
-			if (s.equalsIgnoreCase("change")) continue;
-			else if (s.equalsIgnoreCase("cancel")) return null;
-			else if (s.equalsIgnoreCase("ok")) return t;
+			if (fancyPrompts) {
+				out.println("  [1:Change] [2:Cancel] [[3:OK]]");
+				String s = getLine().trim();
+				try {
+					int i = Integer.parseInt(s);
+					if (i == 1) continue;
+					else if (i == 2) return null;
+					else if (i == 3) return t;
+				} catch (Exception e) {}
+
+				if (s.equalsIgnoreCase("change")) continue;
+				else if (s.equalsIgnoreCase("cancel")) return null;
+				else if (s.equalsIgnoreCase("ok")) return t;
+			}
 			
 			return t;
 		}
@@ -169,18 +197,21 @@ public class XNStdInOutUI implements XNUI {
 			out.print("\u001B[8m");
 			String t = getLine();
 			out.print("\u001B[0m");
-			out.println("  [1:Change] [2:Cancel] [[3:OK]]");
-			String s = getLine().trim();
-			try {
-				int i = Integer.parseInt(s);
-				if (i == 1) continue;
-				else if (i == 2) return null;
-				else if (i == 3) return t;
-			} catch (Exception e) {}
 			
-			if (s.equalsIgnoreCase("change")) continue;
-			else if (s.equalsIgnoreCase("cancel")) return null;
-			else if (s.equalsIgnoreCase("ok")) return t;
+			if (fancyPrompts) {
+				out.println("  [1:Change] [2:Cancel] [[3:OK]]");
+				String s = getLine().trim();
+				try {
+					int i = Integer.parseInt(s);
+					if (i == 1) continue;
+					else if (i == 2) return null;
+					else if (i == 3) return t;
+				} catch (Exception e) {}
+
+				if (s.equalsIgnoreCase("change")) continue;
+				else if (s.equalsIgnoreCase("cancel")) return null;
+				else if (s.equalsIgnoreCase("ok")) return t;
+			}
 			
 			return t;
 		}
@@ -221,7 +252,16 @@ public class XNStdInOutUI implements XNUI {
 		out.println("Would you like to allow this, or prevent the script from continuing?");
 		out.println("\u001B[1mDo not allow unless you trust the source of this script.\u001B[0m");
 		while (true) {
-			out.println("  [1:Allow] [2:Allow All] [3:Deny] [4:Deny All] [5:Kill Script] [6:Details]");
+			if (fancyPrompts) {
+				out.println("  [1:Allow] [2:Allow All] [3:Deny] [4:Deny All] [5:Kill Script] [6:Details]");
+			} else {
+				out.println("  1: Allow");
+				out.println("  2: Allow All");
+				out.println("  3: Deny");
+				out.println("  4: Deny All");
+				out.println("  5: Kill Script");
+				out.println("  6: Details");
+			}
 			String s = getLine().trim();
 			try {
 				int i = Integer.parseInt(s);
