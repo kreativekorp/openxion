@@ -247,7 +247,7 @@ public class XNMain {
 	
 	private static void shell(XNStdInOutUI ui, XNInterpreter interp, XNContext ctx, boolean stackTrace) {
 		while (true) {
-			String line = ui.getCommandLine(false);
+			String line = ui.getCommandLine();
 			if (line != null) {
 				if (line.length() > 0) {
 					if (line.equalsIgnoreCase("exit") || line.equalsIgnoreCase("quit")) {

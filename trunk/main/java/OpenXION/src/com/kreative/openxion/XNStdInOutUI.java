@@ -72,7 +72,7 @@ public class XNStdInOutUI implements XNUI {
 		out.println(s);
 	}
 	
-	String getCommandLine(boolean continuation) {
+	String getCommandLine() {
 		out.print(">");
 		out.flush();
 		if (in.hasNextLine()) {
