@@ -28,6 +28,7 @@
 package com.kreative.openxion;
 
 import java.io.*;
+import java.lang.reflect.*;
 import java.util.*;
 
 /**
@@ -37,22 +38,58 @@ import java.util.*;
  * @author Rebecca G. Bettencourt, Kreative Software
  */
 public class XNStdInOutUI implements XNUI {
+	private Class<?> terminalClass;
+	private Class<?> consoleReaderClass;
+	private Object consoleReaderObject;
+	private Method consoleReaderUseHistory;
+	private Method consoleReaderPrint;
+	private Method consoleReaderPrintln;
+	private Method consoleReaderReadlnPrompt;
+	private Method consoleReaderReadlnPwprompt;
+	private Class<?> historyClass;
+	private Object historyObject;
+	private Method historyAdd;
 	private Scanner in;
 	private PrintWriter out;
 	private boolean fancyPrompts;
 	
 	public XNStdInOutUI(boolean fancyPrompts) {
-		reset();
-		setFancyPrompts(fancyPrompts);
-	}
-	
-	public void reset() {
-		in = new Scanner(System.in);
 		try {
-			out = new PrintWriter(new OutputStreamWriter(System.out, "UTF-8"), true);
-		} catch (UnsupportedEncodingException uee) {
-			out = new PrintWriter(new OutputStreamWriter(System.out), true);
+			terminalClass = Class.forName("jline.Terminal");
+			terminalClass.getMethod("setupTerminal").invoke(null);
+			consoleReaderClass = Class.forName("jline.ConsoleReader");
+			consoleReaderObject = consoleReaderClass.newInstance();
+			consoleReaderUseHistory = consoleReaderClass.getMethod("setUseHistory", boolean.class);
+			consoleReaderPrint = consoleReaderClass.getMethod("printString", String.class);
+			consoleReaderPrintln = consoleReaderClass.getMethod("printNewline");
+			consoleReaderReadlnPrompt = consoleReaderClass.getMethod("readLine", String.class);
+			consoleReaderReadlnPwprompt = consoleReaderClass.getMethod("readLine", String.class, Character.class);
+			historyClass = Class.forName("jline.History");
+			historyObject = consoleReaderClass.getMethod("getHistory").invoke(consoleReaderObject);
+			historyAdd = historyClass.getMethod("addToHistory", String.class);
+			consoleReaderUseHistory.invoke(consoleReaderObject, false);
+			in = null;
+			out = null;
+		} catch (Exception e) {
+			terminalClass = null;
+			consoleReaderClass = null;
+			consoleReaderObject = null;
+			consoleReaderUseHistory = null;
+			consoleReaderPrint = null;
+			consoleReaderPrintln = null;
+			consoleReaderReadlnPrompt = null;
+			consoleReaderReadlnPwprompt = null;
+			historyClass = null;
+			historyObject = null;
+			historyAdd = null;
+			in = new Scanner(System.in);
+			try {
+				out = new PrintWriter(new OutputStreamWriter(System.out, "UTF-8"), true);
+			} catch (UnsupportedEncodingException uee) {
+				out = new PrintWriter(new OutputStreamWriter(System.out), true);
+			}
 		}
+		this.fancyPrompts = fancyPrompts;
 	}
 	
 	public boolean fancyPrompts() {
@@ -64,51 +101,113 @@ public class XNStdInOutUI implements XNUI {
 	}
 	
 	void print(String s) {
-		out.print(s);
-		out.flush();
+		if (consoleReaderObject != null && consoleReaderPrint != null) {
+			try {
+				consoleReaderPrint.invoke(consoleReaderObject, s);
+			} catch (Exception e) {}
+		} else if (out != null) {
+			out.print(s);
+			out.flush();
+		}
 	}
 	
 	void println(String s) {
-		out.println(s);
+		if (consoleReaderObject != null && consoleReaderPrint != null && consoleReaderPrintln != null) {
+			try {
+				consoleReaderPrint.invoke(consoleReaderObject, s);
+				consoleReaderPrintln.invoke(consoleReaderObject);
+			} catch (Exception e) {}
+		} else if (out != null) {
+			out.println(s);
+		}
 	}
 	
 	String getCommandLine() {
-		out.print(">");
-		out.flush();
-		if (in.hasNextLine()) {
-			String line = in.nextLine().trim();
-			while (line.endsWith("\\")) {
-				if (line.endsWith("\\\\")) {
-					line = line.substring(0, line.length()-2).trim() + "\n";
+		if (consoleReaderObject != null && consoleReaderReadlnPrompt != null && historyObject != null && historyAdd != null) {
+			try {
+				String line = (String)consoleReaderReadlnPrompt.invoke(consoleReaderObject, ">");
+				if (line != null) {
+					line = line.trim();
+					while (line.endsWith("\\")) {
+						if (line.endsWith("\\\\")) {
+							line = line.substring(0, line.length()-2).trim() + "\n";
+						} else {
+							line = line.substring(0, line.length()-1).trim() + " ";
+						}
+						String moreline = (String)consoleReaderReadlnPrompt.invoke(consoleReaderObject, "-");
+						if (moreline != null) {
+							line += moreline.trim();
+						}
+					}
+					line = line.trim();
+					historyAdd.invoke(historyObject, line);
+					return line;
 				} else {
-					line = line.substring(0, line.length()-1).trim() + " ";
+					return null;
 				}
-				out.print("-");
-				out.flush();
-				if (in.hasNextLine()) {
-					line += in.nextLine().trim();
-				}
+			} catch (Exception e) {
+				return null;
 			}
-			return line.trim();
+		} else if (in != null && out != null) {
+			out.print(">");
+			out.flush();
+			if (in.hasNextLine()) {
+				String line = in.nextLine().trim();
+				while (line.endsWith("\\")) {
+					if (line.endsWith("\\\\")) {
+						line = line.substring(0, line.length()-2).trim() + "\n";
+					} else {
+						line = line.substring(0, line.length()-1).trim() + " ";
+					}
+					out.print("-");
+					out.flush();
+					if (in.hasNextLine()) {
+						line += in.nextLine().trim();
+					}
+				}
+				return line.trim();
+			} else {
+				return null;
+			}
 		} else {
 			return null;
 		}
 	}
 	
 	private String getLine() {
-		if (in.hasNextLine()) return in.nextLine();
-		else return null;
+		if (consoleReaderObject != null && consoleReaderReadlnPrompt != null) {
+			try {
+				return (String)consoleReaderReadlnPrompt.invoke(consoleReaderObject, "");
+			} catch (Exception e) {
+				return null;
+			}
+		} else if (in != null) {
+			if (in.hasNextLine()) return in.nextLine();
+			else return null;
+		} else {
+			return null;
+		}
 	}
 	
 	private String getPasswordLine() {
-		out.print("\u001B[8m");
-		out.flush();
-		String t;
-		if (in.hasNextLine()) t = in.nextLine();
-		else t = null;
-		out.print("\u001B[0m");
-		out.flush();
-		return t;
+		if (consoleReaderObject != null && consoleReaderReadlnPwprompt != null) {
+			try {
+				return (String)consoleReaderReadlnPwprompt.invoke(consoleReaderObject, "", Character.valueOf('*'));
+			} catch (Exception e) {
+				return null;
+			}
+		} else if (in != null && out != null) {
+			out.print("\u001B[8m");
+			out.flush();
+			String t;
+			if (in.hasNextLine()) t = in.nextLine();
+			else t = null;
+			out.print("\u001B[0m");
+			out.flush();
+			return t;
+		} else {
+			return null;
+		}
 	}
 	
 	public String answer(String prompt, String[] options, int x, int y) {
