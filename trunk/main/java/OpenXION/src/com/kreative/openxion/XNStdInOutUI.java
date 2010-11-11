@@ -63,36 +63,63 @@ public class XNStdInOutUI implements XNUI {
 		this.fancyPrompts = fancyPrompts;
 	}
 	
+	void print(String s) {
+		out.print(s);
+		out.flush();
+	}
+	
+	void println(String s) {
+		out.println(s);
+	}
+	
+	String getCommandLine(boolean continuation) {
+		out.print(continuation ? "-" : ">");
+		out.flush();
+		if (in.hasNextLine()) return in.nextLine();
+		else return null;
+	}
+	
 	private String getLine() {
 		if (in.hasNextLine()) return in.nextLine();
 		else return null;
 	}
 	
+	private String getPasswordLine() {
+		out.print("\u001B[8m");
+		out.flush();
+		String t;
+		if (in.hasNextLine()) t = in.nextLine();
+		else t = null;
+		out.print("\u001B[0m");
+		out.flush();
+		return t;
+	}
+	
 	public String answer(String prompt, String[] options, int x, int y) {
 		if (fancyPrompts) {
-			out.println(prompt);
+			println(prompt);
 			if (options == null || options.length == 0) {
-				out.println("  [[1:OK]]");
+				println("  [[1:OK]]");
 			} else {
 				for (int i = 0; i < options.length; i++) {
 					if (i == options.length-1) {
-						out.print("  [[" + (i+1) + ":" + options[i] + "]]");
+						print("  [[" + (i+1) + ":" + options[i] + "]]");
 					} else {
-						out.print("  [" + (i+1) + ":" + options[i] + "]");
+						print("  [" + (i+1) + ":" + options[i] + "]");
 					}
 				}
-				out.println();
+				println("");
 			}
 		} else {
-			out.println(prompt);
+			println(prompt);
 			if (options == null || options.length == 0) {
-				out.println("  \u001B[1m1: OK\u001B[0m");
+				println("  \u001B[1m1: OK\u001B[0m");
 			} else {
 				for (int i = 0; i < options.length; i++) {
 					if (i == options.length-1) {
-						out.println("  \u001B[1m" + (i+1) + ": " + options[i] + "\u001B[0m");
+						println("  \u001B[1m" + (i+1) + ": " + options[i] + "\u001B[0m");
 					} else {
-						out.println("  " + (i+1) + ": " + options[i]);
+						println("  " + (i+1) + ": " + options[i]);
 					}
 				}
 			}
@@ -117,25 +144,25 @@ public class XNStdInOutUI implements XNUI {
 	}
 	
 	public File answerDisk(String prompt, int x, int y) {
-		out.println(prompt);
+		println(prompt);
 		return new File(getLine());
 	}
 	
 	public File answerFile(String prompt, String[] types, int x, int y) {
-		out.println(prompt);
+		println(prompt);
 		return new File(getLine());
 	}
 	
 	public File answerFolder(String prompt, int x, int y) {
-		out.println(prompt);
+		println(prompt);
 		return new File(getLine());
 	}
 	
 	public String answerList(String prompt, String[] options, int x, int y) {
-		out.println(prompt);
+		println(prompt);
 		if (options != null && options.length > 0) {
 			for (int i = 0; i < options.length; i++) {
-				out.println("  " + (i+1) + ": " + options[i]);
+				println("  " + (i+1) + ": " + options[i]);
 			}
 		}
 		String s = getLine().trim();
@@ -159,11 +186,11 @@ public class XNStdInOutUI implements XNUI {
 	
 	public String ask(String prompt, String deftext, int x, int y) {
 		while (true) {
-			out.println(prompt);
+			println(prompt);
 			String t = getLine();
 			
 			if (fancyPrompts) {
-				out.println("  [1:Change] [2:Cancel] [[3:OK]]");
+				println("  [1:Change] [2:Cancel] [[3:OK]]");
 				String s = getLine().trim();
 				try {
 					int i = Integer.parseInt(s);
@@ -182,24 +209,22 @@ public class XNStdInOutUI implements XNUI {
 	}
 	
 	public File askFile(String prompt, String deftext, int x, int y) {
-		out.println(prompt);
+		println(prompt);
 		return new File(getLine());
 	}
 	
 	public File askFolder(String prompt, String deftext, int x, int y) {
-		out.println(prompt);
+		println(prompt);
 		return new File(getLine());
 	}
 	
 	public String askPassword(String prompt, String deftext, int x, int y) {
 		while (true) {
-			out.println(prompt);
-			out.print("\u001B[8m");
-			String t = getLine();
-			out.print("\u001B[0m");
+			println(prompt);
+			String t = getPasswordLine();
 			
 			if (fancyPrompts) {
-				out.println("  [1:Change] [2:Cancel] [[3:OK]]");
+				println("  [1:Change] [2:Cancel] [[3:OK]]");
 				String s = getLine().trim();
 				try {
 					int i = Integer.parseInt(s);
@@ -218,49 +243,49 @@ public class XNStdInOutUI implements XNUI {
 	}
 	
 	public void beep() {
-		out.print("\u0007");
+		print("\u0007");
 	}
 	
 	public void promptSecurity(XNSecurityKey[] type, boolean[] allow, boolean[] forall, Map<String,String>[] details) {
-		out.println("\u001B[1m======================== SECURITY WARNING ========================\u001B[0m");
+		println("\u001B[1m======================== SECURITY WARNING ========================\u001B[0m");
 		for (XNSecurityKey t : type) {
 			switch (t) {
-			case DO_AND_VALUE: out.println("This script is requesting the execution of arbitrary XION code."); break;
-			case EXTERNAL_SCRIPTS: out.println("This script is requesting the execution of arbitrary code."); break;
-			case MODULE_LOAD: out.println("This script is requesting to load another module."); break;
-			case SYSTEM_INFO: out.println("This script is requesting information about your system."); break;
-			case CLIPBOARD_READ: out.println("This script is requesting read access to the clipboard."); break;
-			case CLIPBOARD_WRITE: out.println("This script is requesting write access to the clipboard."); break;
-			case FILE_LAUNCH: out.println("This script is requesting to launch an external program."); break;
-			case FILE_SYSTEM_READ: out.println("This script is requesting read access to the file system."); break;
-			case FILE_SYSTEM_WRITE: out.println("This script is requesting write access to the file system."); break;
-			case BROWSER_LAUNCH: out.println("This script is requesting to launch a web browser."); break;
-			case INTERNET_ACCESS: out.println("This script is requesting access to the Internet."); break;
-			case SEARCH_PATHS: out.println("This script is requesting to change search paths."); break;
-			case PRINTING: out.println("This script is requesting access to the printer."); break;
-			case TELEPHONY: out.println("This script is requesting to make calls or access a modem."); break;
-			case MESSAGE_HIERARCHY: out.println("This script is requesting to change the message-passing hierarchy."); break;
-			case INTERAPP_COMM: out.println("This script is requesting control of an external program."); break;
-			case LOCAL_AUTOMATION: out.println("This script is requesting control of the mouse and keyboard."); break;
-			case GLOBAL_AUTOMATION: out.println("This script is requesting control of the mouse and keyboard."); break;
-			case HARDWARE_ACCESS: out.println("This script is requesting control of external hardware."); break;
-			case SCRIPT_READ: out.println("This script is requesting read access to other scripts."); break;
-			case SCRIPT_WRITE: out.println("This script is requesting write access to other scripts."); break;
-			default: out.println("This script is requesting "+t.name()+"."); break;
+			case DO_AND_VALUE: println("This script is requesting the execution of arbitrary XION code."); break;
+			case EXTERNAL_SCRIPTS: println("This script is requesting the execution of arbitrary code."); break;
+			case MODULE_LOAD: println("This script is requesting to load another module."); break;
+			case SYSTEM_INFO: println("This script is requesting information about your system."); break;
+			case CLIPBOARD_READ: println("This script is requesting read access to the clipboard."); break;
+			case CLIPBOARD_WRITE: println("This script is requesting write access to the clipboard."); break;
+			case FILE_LAUNCH: println("This script is requesting to launch an external program."); break;
+			case FILE_SYSTEM_READ: println("This script is requesting read access to the file system."); break;
+			case FILE_SYSTEM_WRITE: println("This script is requesting write access to the file system."); break;
+			case BROWSER_LAUNCH: println("This script is requesting to launch a web browser."); break;
+			case INTERNET_ACCESS: println("This script is requesting access to the Internet."); break;
+			case SEARCH_PATHS: println("This script is requesting to change search paths."); break;
+			case PRINTING: println("This script is requesting access to the printer."); break;
+			case TELEPHONY: println("This script is requesting to make calls or access a modem."); break;
+			case MESSAGE_HIERARCHY: println("This script is requesting to change the message-passing hierarchy."); break;
+			case INTERAPP_COMM: println("This script is requesting control of an external program."); break;
+			case LOCAL_AUTOMATION: println("This script is requesting control of the mouse and keyboard."); break;
+			case GLOBAL_AUTOMATION: println("This script is requesting control of the mouse and keyboard."); break;
+			case HARDWARE_ACCESS: println("This script is requesting control of external hardware."); break;
+			case SCRIPT_READ: println("This script is requesting read access to other scripts."); break;
+			case SCRIPT_WRITE: println("This script is requesting write access to other scripts."); break;
+			default: println("This script is requesting "+t.name()+"."); break;
 			}
 		}
-		out.println("Would you like to allow this, or prevent the script from continuing?");
-		out.println("\u001B[1mDo not allow unless you trust the source of this script.\u001B[0m");
+		println("Would you like to allow this, or prevent the script from continuing?");
+		println("\u001B[1mDo not allow unless you trust the source of this script.\u001B[0m");
 		while (true) {
 			if (fancyPrompts) {
-				out.println("  [1:Allow] [2:Allow All] [3:Deny] [4:Deny All] [5:Kill Script] [6:Details]");
+				println("  [1:Allow] [2:Allow All] [3:Deny] [4:Deny All] [5:Kill Script] [6:Details]");
 			} else {
-				out.println("  1: Allow");
-				out.println("  2: Allow All");
-				out.println("  3: Deny");
-				out.println("  4: Deny All");
-				out.println("  5: Kill Script");
-				out.println("  6: Details");
+				println("  1: Allow");
+				println("  2: Allow All");
+				println("  3: Deny");
+				println("  4: Deny All");
+				println("  5: Kill Script");
+				println("  6: Details");
 			}
 			String s = getLine().trim();
 			try {
@@ -286,9 +311,9 @@ public class XNStdInOutUI implements XNUI {
 					throw new XNExitedToInterpreterException("User requested end of script execution.");
 				case 6:
 					for (int j = 0; j < type.length && j < details.length; j++) {
-						out.println("SecurityKey: " + type[j].name());
+						println("SecurityKey: " + type[j].name());
 						for (Map.Entry<String,String> en : details[j].entrySet()) {
-							out.println(en.getKey() + ": " + en.getValue());
+							println(en.getKey() + ": " + en.getValue());
 						}
 					}
 					break;
@@ -315,9 +340,9 @@ public class XNStdInOutUI implements XNUI {
 					throw new XNExitedToInterpreterException("User requested end of script execution.");
 				} else if (s.equalsIgnoreCase("detail") || s.equalsIgnoreCase("details")) {
 					for (int j = 0; j < type.length && j < details.length; j++) {
-						out.println("SecurityKey: " + type[j].name());
+						println("SecurityKey: " + type[j].name());
 						for (Map.Entry<String,String> en : details[j].entrySet()) {
-							out.println(en.getKey() + ": " + en.getValue());
+							println(en.getKey() + ": " + en.getValue());
 						}
 					}
 				}
@@ -326,6 +351,6 @@ public class XNStdInOutUI implements XNUI {
 	}
 	
 	public void put(String s) {
-		out.println(s);
+		println(s);
 	}
 }

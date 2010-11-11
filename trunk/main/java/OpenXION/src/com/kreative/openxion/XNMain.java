@@ -51,7 +51,7 @@ public class XNMain {
 		ctx.loadModule(XNExtendedModule.instance());
 		final XNInterpreter interp = new XNInterpreter(ctx);
 		if (args.length == 0) {
-			shell(interp, ctx, false);
+			shell(ui, interp, ctx, false);
 		} else {
 			boolean somethingOfConsequenceHappened = false;
 			String textEncoding = "UTF-8";
@@ -66,7 +66,7 @@ public class XNMain {
 				if (processOptions && arg.startsWith("-")) {
 					if (arg.equals("-i")) {
 						somethingOfConsequenceHappened = true;
-						shell(interp, ctx, stackTrace);
+						shell(ui, interp, ctx, stackTrace);
 					}
 					else if (arg.equals("-f")) lastOption = Option.SCRIPT_FILE;
 					else if (arg.equals("-e")) lastOption = Option.EXPRESSION;
@@ -77,11 +77,11 @@ public class XNMain {
 					else if (arg.equals("-s")) lastOption = Option.SECURITY_PROFILE;
 					else if (arg.equals("-h") || arg.equals("-help") || arg.equals("--help")) {
 						somethingOfConsequenceHappened = true;
-						help();
+						help(ui);
 					}
 					else if (arg.equals("-v") || arg.equals("-version") || arg.equals("--version")) {
 						somethingOfConsequenceHappened = true;
-						version();
+						version(ui);
 					}
 					else if (arg.equals("-p")) ui.setFancyPrompts(false);
 					else if (arg.equals("-P")) ui.setFancyPrompts(true);
@@ -99,7 +99,7 @@ public class XNMain {
 							testsTotal++;
 							boolean fail = false;
 							
-							System.out.println("Testing: "+arg+"...");
+							ui.println("Testing: "+arg+"...");
 							ByteArrayOutputStream capture = new ByteArrayOutputStream();
 							PrintStream captureStream = new PrintStream(capture);
 							ctx.setUI(new TestUI(ui, captureStream));
@@ -157,7 +157,7 @@ public class XNMain {
 					case EXPRESSION:
 						somethingOfConsequenceHappened = true;
 						try {
-							System.out.println(interp.evaluateExpressionString(arg).unwrap().toTextString(ctx));
+							ui.println(interp.evaluateExpressionString(arg).unwrap().toTextString(ctx));
 						} catch (XNScriptError se) {
 							System.err.println(se.getMessage());
 							if (stackTrace) se.printStackTrace();
@@ -226,10 +226,10 @@ public class XNMain {
 				}
 			}
 			if (testsTotal > 0) {
-				System.out.println("PASSED: "+testsPassed+"/"+testsTotal+"  FAILED: "+testsFailed+"/"+testsTotal);
+				ui.println("PASSED: "+testsPassed+"/"+testsTotal+"  FAILED: "+testsFailed+"/"+testsTotal);
 			}
 			if (!somethingOfConsequenceHappened) {
-				shell(interp, ctx, stackTrace);
+				shell(ui, interp, ctx, stackTrace);
 			}
 		}
 		writeEnviron(ctx);
@@ -245,16 +245,15 @@ public class XNMain {
 		SECURITY_PROFILE
 	}
 	
-	private static void shell(XNInterpreter interp, XNContext ctx, boolean stackTrace) {
-		Scanner scan = new Scanner(System.in);
+	private static void shell(XNStdInOutUI ui, XNInterpreter interp, XNContext ctx, boolean stackTrace) {
 		while (true) {
-			System.out.print(">");
-			if (scan.hasNextLine()) {
-				String line = scan.nextLine().trim();
+			String line = ui.getCommandLine(false);
+			if (line != null) {
+				line = line.trim();
 				while (line.endsWith("\\")) {
-					System.out.print("-");
-					if (scan.hasNextLine()) {
-						String moreline = scan.nextLine().trim();
+					String moreline = ui.getCommandLine(true);
+					if (moreline != null) {
+						moreline = moreline.trim();
 						if (line.endsWith("\\\\")) {
 							line = line.substring(0, line.length()-2).trim() + "\n" + moreline;
 						} else {
@@ -272,7 +271,7 @@ public class XNMain {
 							interp.executeScriptString(line);
 						} catch (XNScriptError se1) {
 							try {
-								System.out.println(interp.evaluateExpressionString(line).unwrap().toTextString(ctx));
+								ui.println(interp.evaluateExpressionString(line).unwrap().toTextString(ctx));
 							} catch (XNScriptError se3) {
 								if (stackTrace) {
 									System.err.println("Attempted as statement:");
@@ -280,7 +279,7 @@ public class XNMain {
 									System.err.println("Attempted as expression:");
 									se3.printStackTrace();
 								} else {
-									System.out.println(se1.getMessage());
+									ui.println(se1.getMessage());
 								}
 							}
 						}
@@ -292,39 +291,39 @@ public class XNMain {
 		}
 	}
 	
-	private static void help() {
+	private static void help(XNStdInOutUI ui) {
 		// // // // // // //<---10---><---20---><---30---><---40---><---50---><---60---><---70---><---80--->
-		System.out.println("Usage: xion [options] [--] [programfile] [programfile] [...]");
-		System.out.println("  -c statement        execute the specified statements");
-		System.out.println("  -D var=value        set the value of a global variable");
-		System.out.println("  -E encoding         specify the text encoding used to read script files");
-		System.out.println("  -e expression       evaluate and print the specified expression");
-		System.out.println("  -f programfile      execute the specified script file");
-		System.out.println("  -h                  print help screen");
-		System.out.println("  -i                  start an interactive shell");
-		System.out.println("  -m classname        load an XNModule with the specified class name");
-		System.out.println("  -P                  use fancy prompts simulating dialog boxes (default)");
-		System.out.println("  -p                  use simple, more traditional prompts");
-		System.out.println("  -R                  clear runtime state AND unload all modules");
-		System.out.println("  -r                  clear runtime state ONLY");
-		System.out.println("  -S                  print a stack trace for every exception");
-		System.out.println("  -s allow|ask|deny   set security settings to allow|ask|deny every request");
-		System.out.println("  -s key=value        set security setting for one kind of request only");
-		System.out.println("  -s file             read security settings from file as key=value pairs");
-		System.out.println("  -T                  instead of printing output, print file name and");
-		System.out.println("                      diff of output against .out file (testing mode)");
-		System.out.println("                      (-s allow recommended with this option)");
-		System.out.println("  -v                  print OpenXION, Java, and OS version numbers");
-		System.out.println("  --help              print help screen");
-		System.out.println("  --version           print OpenXION, Java, and OS version numbers");
-		System.out.println("  --                  treat remaining arguments as file names");
+		ui.println("Usage: xion [options] [--] [programfile] [programfile] [...]");
+		ui.println("  -c statement        execute the specified statements");
+		ui.println("  -D var=value        set the value of a global variable");
+		ui.println("  -E encoding         specify the text encoding used to read script files");
+		ui.println("  -e expression       evaluate and print the specified expression");
+		ui.println("  -f programfile      execute the specified script file");
+		ui.println("  -h                  print help screen");
+		ui.println("  -i                  start an interactive shell");
+		ui.println("  -m classname        load an XNModule with the specified class name");
+		ui.println("  -P                  use fancy prompts simulating dialog boxes (default)");
+		ui.println("  -p                  use simple, more traditional prompts");
+		ui.println("  -R                  clear runtime state AND unload all modules");
+		ui.println("  -r                  clear runtime state ONLY");
+		ui.println("  -S                  print a stack trace for every exception");
+		ui.println("  -s allow|ask|deny   set security settings to allow|ask|deny every request");
+		ui.println("  -s key=value        set security setting for one kind of request only");
+		ui.println("  -s file             read security settings from file as key=value pairs");
+		ui.println("  -T                  instead of printing output, print file name and");
+		ui.println("                      diff of output against .out file (testing mode)");
+		ui.println("                      (-s allow recommended with this option)");
+		ui.println("  -v                  print OpenXION, Java, and OS version numbers");
+		ui.println("  --help              print help screen");
+		ui.println("  --version           print OpenXION, Java, and OS version numbers");
+		ui.println("  --                  treat remaining arguments as file names");
 	}
 	
-	private static void version() {
-		System.out.println(XION_NAME + " " + XION_VERSION);
-		System.out.println(System.getProperty("java.runtime.name") + " " + System.getProperty("java.runtime.version"));
-		System.out.println(System.getProperty("java.vm.name") + " " + System.getProperty("java.vm.version"));
-		System.out.println(System.getProperty("os.name") + " " + System.getProperty("os.version"));
+	private static void version(XNStdInOutUI ui) {
+		ui.println(XION_NAME + " " + XION_VERSION);
+		ui.println(System.getProperty("java.runtime.name") + " " + System.getProperty("java.runtime.version"));
+		ui.println(System.getProperty("java.vm.name") + " " + System.getProperty("java.vm.version"));
+		ui.println(System.getProperty("os.name") + " " + System.getProperty("os.version"));
 	}
 	
 	private static File getEnvironFile() {
