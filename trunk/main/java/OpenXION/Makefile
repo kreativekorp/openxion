@@ -91,6 +91,9 @@ OpenXION-dist.zip: OpenXION.jar XIONDoc.jar
 	mkdir dist
 	cp OpenXION.jar dist/OpenXION.jar
 	cp XIONDoc.jar dist/XIONDoc.jar
+	cp dep/jline.jar dist/jline.jar
+	cp LICENSE dist/LICENSE
+	cp dep/JLINE-LICENSE dist/JLINE-LICENSE
 	echo "#!/bin/sh" > dist/xe
 	echo "#!/bin/sh" > dist/xion
 	echo "#!/bin/sh" > dist/xiondoc
@@ -103,6 +106,7 @@ OpenXION-dist.zip: OpenXION.jar XIONDoc.jar
 	echo "#!/bin/sh" > dist/install
 	echo 'cp -f OpenXION.jar /usr/lib/OpenXION.jar' >> dist/install
 	echo 'cp -f XIONDoc.jar /usr/lib/XIONDoc.jar' >> dist/install
+	echo 'cp -f jline.jar /usr/lib/jline.jar' >> dist/install
 	echo 'echo "#!/bin/sh" > /usr/bin/xe' >> dist/install
 	echo 'echo "#!/bin/sh" > /usr/bin/xion' >> dist/install
 	echo 'echo "#!/bin/sh" > /usr/bin/xiondoc' >> dist/install
@@ -120,11 +124,13 @@ test: OpenXION.jar
 	java -jar OpenXION.jar -s allow -T XIONStdTestSuite/*.xn
 
 localuninstall:
-	rm xe
-	rm xion
-	rm xiondoc
+	rm -f jline.jar
+	rm -f xe
+	rm -f xion
+	rm -f xiondoc
 
 localinstall: OpenXION.jar XIONDoc.jar
+	cp -f dep/jline.jar jline.jar
 	echo "#!/bin/sh" > xe
 	echo "#!/bin/sh" > xion
 	echo "#!/bin/sh" > xiondoc
@@ -138,6 +144,7 @@ localinstall: OpenXION.jar XIONDoc.jar
 uninstall:
 	rm -f $(INSTJARDIR)/OpenXION.jar
 	rm -f $(INSTJARDIR)/XIONDoc.jar
+	rm -f $(INSTJARDIR)/jline.jar
 	rm -f $(INSTBINDIR)/xe
 	rm -f $(INSTBINDIR)/xion
 	rm -f $(INSTBINDIR)/xiondoc
@@ -145,6 +152,7 @@ uninstall:
 install: OpenXION.jar XIONDoc.jar
 	cp -f OpenXION.jar $(INSTJARDIR)/OpenXION.jar
 	cp -f XIONDoc.jar $(INSTJARDIR)/XIONDoc.jar
+	cp -f dep/jline.jar $(INSTJARDIR)/jline.jar
 	echo "#!/bin/sh" > $(INSTBINDIR)/xe
 	echo "#!/bin/sh" > $(INSTBINDIR)/xion
 	echo "#!/bin/sh" > $(INSTBINDIR)/xiondoc
