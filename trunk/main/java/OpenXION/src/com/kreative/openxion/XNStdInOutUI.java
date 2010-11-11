@@ -73,10 +73,26 @@ public class XNStdInOutUI implements XNUI {
 	}
 	
 	String getCommandLine(boolean continuation) {
-		out.print(continuation ? "-" : ">");
+		out.print(">");
 		out.flush();
-		if (in.hasNextLine()) return in.nextLine();
-		else return null;
+		if (in.hasNextLine()) {
+			String line = in.nextLine().trim();
+			while (line.endsWith("\\")) {
+				if (line.endsWith("\\\\")) {
+					line = line.substring(0, line.length()-2).trim() + "\n";
+				} else {
+					line = line.substring(0, line.length()-1).trim() + " ";
+				}
+				out.print("-");
+				out.flush();
+				if (in.hasNextLine()) {
+					line += in.nextLine().trim();
+				}
+			}
+			return line.trim();
+		} else {
+			return null;
+		}
 	}
 	
 	private String getLine() {

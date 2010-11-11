@@ -249,20 +249,6 @@ public class XNMain {
 		while (true) {
 			String line = ui.getCommandLine(false);
 			if (line != null) {
-				line = line.trim();
-				while (line.endsWith("\\")) {
-					String moreline = ui.getCommandLine(true);
-					if (moreline != null) {
-						moreline = moreline.trim();
-						if (line.endsWith("\\\\")) {
-							line = line.substring(0, line.length()-2).trim() + "\n" + moreline;
-						} else {
-							line = line.substring(0, line.length()-1).trim() + " " + moreline;
-						}
-					} else {
-						break;
-					}
-				}
 				if (line.length() > 0) {
 					if (line.equalsIgnoreCase("exit") || line.equalsIgnoreCase("quit")) {
 						break;
