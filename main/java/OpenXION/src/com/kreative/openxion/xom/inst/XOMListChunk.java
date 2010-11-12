@@ -194,7 +194,6 @@ public class XOMListChunk extends XOMVariant implements XOMListContainer {
 	public XOMVariant getContents(XNContext ctx) {
 		if (singular) {
 			ListChunkInfo ci = getChunkInfo(ctx, false, false);
-			//System.err.println(ci.startElementIndex + " -> " + ci.endElementIndex);
 			if (ci.startElementIndex >= 0 && ci.startElementIndex < ci.parentContent.size() && ci.endElementIndex > 0 && ci.endElementIndex <= ci.parentContent.size()) {
 				return ci.parentContent.get(ci.startElementIndex);
 			} else {

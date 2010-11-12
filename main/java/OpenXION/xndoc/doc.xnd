@@ -3993,6 +3993,27 @@
 		\\
 		will print [[4]] because [[steve]] has 4 elements: the numbers [[1]], [[2]], [[3]], and [[4]].
 	</note>
+	<note>
+		There is a subtle difference between an index, ordinal, or name descriptor
+		and an index range, ordinal range, or mass descriptor for [[dt:element]]s.
+		An index, ordinal, or name descriptor evaluates to an item in the list,
+		while an index range, ordinal range, or mass descriptor evaluates to a sublist.
+		Consider the following:\\
+		\\
+		[[local myList as list]]\\
+		[[put (1,2,(3,4),5) into myList]]\\
+		[[put the number of elements in element 3 of myList]]\\
+		[[put the number of elements in element 3 to 3 of myList]]\\
+		\\
+		The first line of output will be [[2]], since [[element 3 of myList]] is a list
+		containing two values, [[3]] and [[4]]. However, the second line of output will be
+		[[1]], since [[element 3 to 3 of myList]] is a list containing that list.
+	</note>
+	<note>
+		The [[dt:element]] and [[dt:elements]] data types were broken in OpenXION 1.0 and 1.1,
+		and evaluated index, ordinal, and name descriptors as sublists rather than list items.
+		This was fixed in OpenXION 1.2.
+	</note>
 </datatype>
 
 <datatype>
@@ -4021,6 +4042,27 @@
 		[[put the number of elements in steve]]\\
 		\\
 		will print [[4]] because [[steve]] has 4 elements: the numbers [[1]], [[2]], [[3]], and [[4]].
+	</note>
+	<note>
+		There is a subtle difference between an index, ordinal, or name descriptor
+		and an index range, ordinal range, or mass descriptor for [[dt:element]]s.
+		An index, ordinal, or name descriptor evaluates to an item in the list,
+		while an index range, ordinal range, or mass descriptor evaluates to a sublist.
+		Consider the following:\\
+		\\
+		[[local myList as list]]\\
+		[[put (1,2,(3,4),5) into myList]]\\
+		[[put the number of elements in element 3 of myList]]\\
+		[[put the number of elements in element 3 to 3 of myList]]\\
+		\\
+		The first line of output will be [[2]], since [[element 3 of myList]] is a list
+		containing two values, [[3]] and [[4]]. However, the second line of output will be
+		[[1]], since [[element 3 to 3 of myList]] is a list containing that list.
+	</note>
+	<note>
+		The [[dt:element]] and [[dt:elements]] data types were broken in OpenXION 1.0 and 1.1,
+		and evaluated index, ordinal, and name descriptors as sublists rather than list items.
+		This was fixed in OpenXION 1.2.
 	</note>
 </datatype>
 
