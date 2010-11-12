@@ -41,11 +41,20 @@ public class XOMListChunk extends XOMVariant implements XOMListContainer {
 	private XOMVariant parent;
 	private int startIndex;
 	private int endIndex;
+	private boolean singular;
+	
+	public XOMListChunk(XOMVariant parent, int index) {
+		this.parent = parent;
+		this.startIndex = index;
+		this.endIndex = index;
+		this.singular = true;
+	}
 	
 	public XOMListChunk(XOMVariant parent, int startIndex, int endIndex) {
 		this.parent = parent;
 		this.startIndex = startIndex;
 		this.endIndex = endIndex;
+		this.singular = false;
 	}
 	
 	public boolean hasParent() {
@@ -183,7 +192,16 @@ public class XOMListChunk extends XOMVariant implements XOMListContainer {
 	}
 	
 	public XOMVariant getContents(XNContext ctx) {
-		if (parent instanceof XOMListContainer && ((XOMListContainer)parent).canGetList(ctx)) {
+		if (singular) {
+			ListChunkInfo ci = getChunkInfo(ctx, false, false);
+			//System.err.println(ci.startElementIndex + " -> " + ci.endElementIndex);
+			if (ci.startElementIndex >= 0 && ci.startElementIndex < ci.parentContent.size() && ci.endElementIndex > 0 && ci.endElementIndex <= ci.parentContent.size()) {
+				return ci.parentContent.get(ci.startElementIndex);
+			} else {
+				return XOMEmpty.EMPTY;
+			}
+		}
+		else if (parent instanceof XOMListContainer && ((XOMListContainer)parent).canGetList(ctx)) {
 			XOMListContainer p = (XOMListContainer)parent;
 			ListChunkInfo ci = getChunkInfo(ctx, false, false);
 			return p.getList(ctx, ci.startElementIndex, ci.endElementIndex);
@@ -650,7 +668,7 @@ public class XOMListChunk extends XOMVariant implements XOMListContainer {
 		Vector<XOMVariant> v = new Vector<XOMVariant>();
 		if (ci != null) {
 			for (int i = ci.startChunkIndex; i <= ci.endChunkIndex; i++) {
-				v.add(new XOMListChunk(parent, i, i));
+				v.add(new XOMListChunk(parent, i));
 			}
 		}
 		return v;
