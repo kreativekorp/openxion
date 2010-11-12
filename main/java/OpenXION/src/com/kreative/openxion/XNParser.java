@@ -977,6 +977,12 @@ public class XNParser {
 		else if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("me")) return new XNMeExpression(getToken());
 		// super
 		else if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("super")) return new XNSuperExpression(getToken());
+		// line number
+		else if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("__LINE__")) {
+			XNToken tk = getToken();
+			tk.image = Integer.toString(tk.beginLine);
+			return new XNNumberExpression(tk);
+		}
 		// constant, e.g. pi
 		else if (lookConstant(1) != null) return new XNConstantExpression(getConstant());
 		// THE "ALL" PART OF THE SYNTAX TREE
