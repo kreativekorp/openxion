@@ -9262,6 +9262,17 @@
 </function>
 
 <function>
+	<name dialects="xn1,oxn12">llength</name>
+	<syntax>the [[*]] of {factor}</syntax>
+	<syntax>[[*]]({expression})</syntax>
+	<syntax-note>{Factor} and {expression} yield lists.</syntax-note>
+	<description>
+		The [[*]] function returns the number of elements in a list.
+	</description>
+	<see-also>[[fn:number]]</see-also>
+</function>
+
+<function>
 	<name dialects="xn1,oxn1,oxn11,oxn12,hyp">ln</name>
 	<syntax>the ln of {factor}</syntax>
 	<syntax>ln({expression})</syntax>
@@ -9592,12 +9603,12 @@
 		For chunk expressions, the [[*]] function returns the number of chunks in a range.
 	</description>
 	<description>
-		For lists, the [[*]] function returns the number of items in a list.
+		For lists, the [[*]] function returns the number of elements in a list.
 	</description>
 	<description>
 		For objects, the [[*]] function returns the index of an object.
 	</description>
-	<see-also>[[pr:number]]</see-also>
+	<see-also>[[pr:number]], [[fn:llength]]</see-also>
 </function>
 
 <function>
@@ -12179,7 +12190,7 @@
 		.................................
 		[[fn:lconcat]] :: [[fn:lreverse]]
 		.................................
-		[[fn:number]]  ::  
+		[[fn:llength]] :: [[fn:number]]
 		ELBAT::
 		\\\\
 		{{{{Runtime State}}}}

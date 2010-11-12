@@ -463,6 +463,7 @@ public class XNStandardModule extends XNModule {
 		functions.put("left",f_left);
 		functions.put("len",f_len);
 		functions.put("length",f_len);
+		functions.put("llength",f_number);
 		functions.put("ln",f_ln);
 		functions.put("ln\u03B3",f_lngamma);
 		functions.put("ln\u03B2",f_lnbeta);
@@ -4271,7 +4272,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_number = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			if (parameter == null) throw new XNScriptError("Can't understand arguments to number");
+			if (parameter == null) throw new XNScriptError("Can't understand arguments to " + functionName);
 			return new XOMInteger(parameter.toList(ctx).size());
 		}
 	};
