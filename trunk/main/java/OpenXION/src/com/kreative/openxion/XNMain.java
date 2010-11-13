@@ -246,18 +246,155 @@ public class XNMain {
 	}
 	
 	private static void shell(XNStdInOutUI ui, XNInterpreter interp, XNContext ctx, boolean stackTrace) {
+		Vector<String> programMemory = new Vector<String>();
+		boolean programCapture = false;
 		while (true) {
 			String line = ui.getCommandLine();
 			if (line != null) {
 				if (line.length() > 0) {
 					if (line.equalsIgnoreCase("exit") || line.equalsIgnoreCase("quit")) {
 						break;
+					} else if (line.equalsIgnoreCase("help")) {
+						shellHelp(ui);
+					} else if (line.equalsIgnoreCase("version")) {
+						version(ui);
+					} else if (line.startsWith("--")) {
+						String[] cmdAndArgs = line.substring(2).trim().split("\\s+", 2);
+						String cmd = cmdAndArgs[0];
+						String args = (cmdAndArgs.length > 1) ? cmdAndArgs[1] : "";
+						if (cmd.equalsIgnoreCase("exit") || cmd.equalsIgnoreCase("quit")) {
+							break;
+						} else if (cmd.equalsIgnoreCase("help")) {
+							shellHelp(ui);
+						} else if (cmd.equalsIgnoreCase("version")) {
+							version(ui);
+						} else if (cmd.equalsIgnoreCase("start")) {
+							programCapture = true;
+						} else if (cmd.equalsIgnoreCase("stop")) {
+							programCapture = false;
+						} else if (cmd.equalsIgnoreCase("new")) {
+							programMemory.clear();
+						} else if (cmd.equalsIgnoreCase("list")) {
+							if (args.length() > 0) {
+								String[] lns = args.split("(\\s|,)+");
+								for (String lnc : lns) {
+									if (lnc.contains("-")) {
+										String[] lna = lnc.split("-", 2);
+										try {
+											int lni = Integer.parseInt(lna[0])-1;
+											int lne = Integer.parseInt(lna[1])-1;
+											for (int i = Math.max(0, lni); i <= lne && i < programMemory.size(); i++) {
+												String ln = "      " + (i+1) + ": ";
+												ui.println(ln.substring(ln.length()-8) + programMemory.get(i));
+											}
+										} catch (NumberFormatException ignored) {}
+									} else {
+										try {
+											int lni = Integer.parseInt(lnc)-1;
+											if (lni >= 0 && lni < programMemory.size()) {
+												String ln = "      " + (lni+1) + ": ";
+												ui.println(ln.substring(ln.length()-8) + programMemory.get(lni));
+											}
+										} catch (NumberFormatException ignored) {}
+									}
+								}
+							} else {
+								for (int i = 0; i < programMemory.size(); i++) {
+									String ln = "      " + (i+1) + ": ";
+									ui.println(ln.substring(ln.length()-8) + programMemory.get(i));
+								}
+							}
+						} else if (cmd.equalsIgnoreCase("run")) {
+							StringBuffer sb = new StringBuffer();
+							for (String programLine : programMemory) {
+								sb.append(programLine + "\n");
+							}
+							try {
+								interp.executeScriptString(sb.toString());
+							} catch (XNScriptError se1) {
+								if (stackTrace) se1.printStackTrace();
+								else ui.println(se1.getMessage());
+								break;
+							}
+						} else if (cmd.equalsIgnoreCase("load")) {
+							try {
+								File f = new File(args);
+								Scanner fs = new Scanner(f, "UTF-8");
+								programMemory.clear();
+								while (fs.hasNextLine()) {
+									programMemory.add(fs.nextLine().trim());
+								}
+								fs.close();
+							} catch (IOException ioe) {
+								if (stackTrace) ioe.printStackTrace();
+								else ui.println(ioe.getMessage());
+							}
+						} else if (cmd.equalsIgnoreCase("save")) {
+							try {
+								File f = new File(args);
+								PrintWriter fw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(f), "UTF-8"), true);
+								for (String programLine : programMemory) {
+									fw.println(programLine);
+								}
+								fw.close();
+							} catch (IOException ioe) {
+								if (stackTrace) ioe.printStackTrace();
+								else ui.println(ioe.getMessage());
+							}
+						} else if (cmd.equalsIgnoreCase("add")) {
+							programMemory.addAll(Arrays.asList(args.split("\r\n|\r|\n")));
+						} else if (cmd.equalsIgnoreCase("insert")) {
+							try {
+								String[] lnAndSt = args.split("\\s+", 2);
+								int ln = Integer.parseInt(lnAndSt[0])-1;
+								String st = (lnAndSt.length > 1) ? lnAndSt[1] : "";
+								programMemory.addAll(ln, Arrays.asList(st.split("\r\n|\r|\n")));
+							} catch (Exception ignored) {}
+						} else if (cmd.equalsIgnoreCase("remove")) {
+							if (args.length() > 0) {
+								SortedSet<Integer> toRemove = new TreeSet<Integer>();
+								String[] lns = args.split("(\\s|,)+");
+								for (String lnc : lns) {
+									if (lnc.contains("-")) {
+										String[] lna = lnc.split("-", 2);
+										try {
+											int lni = Integer.parseInt(lna[0])-1;
+											int lne = Integer.parseInt(lna[1])-1;
+											for (int i = Math.max(0, lni); i <= lne && i < programMemory.size(); i++) {
+												toRemove.add(i);
+											}
+										} catch (NumberFormatException ignored) {}
+									} else {
+										try {
+											int lni = Integer.parseInt(lnc)-1;
+											if (lni >= 0 && lni < programMemory.size()) {
+												toRemove.add(lni);
+											}
+										} catch (NumberFormatException ignored) {}
+									}
+								}
+								Integer[] ii = toRemove.toArray(new Integer[0]);
+								for (int j = ii.length-1; j >= 0; j--) {
+									programMemory.remove(ii[j].intValue());
+								}
+							}
+						} else if (cmd.equalsIgnoreCase("set")) {
+							try {
+								String[] lnAndSt = args.split("\\s+", 2);
+								int ln = Integer.parseInt(lnAndSt[0])-1;
+								String st = (lnAndSt.length > 1) ? lnAndSt[1] : "";
+								programMemory.remove(ln);
+								programMemory.addAll(ln, Arrays.asList(st.split("\r\n|\r|\n")));
+							} catch (Exception ignored) {}
+						}
 					} else {
 						try {
 							interp.executeScriptString(line);
+							if (programCapture) programMemory.addAll(Arrays.asList(line.split("\r\n|\r|\n")));
 						} catch (XNScriptError se1) {
 							try {
 								ui.println(interp.evaluateExpressionString(line).unwrap().toTextString(ctx));
+								if (programCapture) programMemory.addAll(Arrays.asList(("put "+line).split("\r\n|\r|\n")));
 							} catch (XNScriptError se3) {
 								if (stackTrace) {
 									System.err.println("Attempted as statement:");
@@ -278,14 +415,14 @@ public class XNMain {
 	}
 	
 	private static void help(XNStdInOutUI ui) {
-		// // // // // // //<---10---><---20---><---30---><---40---><---50---><---60---><---70---><---80--->
+		// // // // <---10---><---20---><---30---><---40---><---50---><---60---><---70---><---80--->
 		ui.println("Usage: xion [options] [--] [programfile] [programfile] [...]");
 		ui.println("  -c statement        execute the specified statements");
 		ui.println("  -D var=value        set the value of a global variable");
 		ui.println("  -E encoding         specify the text encoding used to read script files");
 		ui.println("  -e expression       evaluate and print the specified expression");
 		ui.println("  -f programfile      execute the specified script file");
-		ui.println("  -h                  print help screen");
+		ui.println("  -h, --help          print help screen");
 		ui.println("  -i                  start an interactive shell");
 		ui.println("  -m classname        load an XNModule with the specified class name");
 		ui.println("  -P                  use fancy prompts simulating dialog boxes (default)");
@@ -299,10 +436,32 @@ public class XNMain {
 		ui.println("  -T                  instead of printing output, print file name and");
 		ui.println("                      diff of output against .out file (testing mode)");
 		ui.println("                      (-s allow recommended with this option)");
-		ui.println("  -v                  print OpenXION, Java, and OS version numbers");
-		ui.println("  --help              print help screen");
-		ui.println("  --version           print OpenXION, Java, and OS version numbers");
+		ui.println("  -v, --version       print OpenXION, Java, and OS version numbers");
 		ui.println("  --                  treat remaining arguments as file names");
+	}
+	
+	private static void shellHelp(XNStdInOutUI ui) {
+		// // // // <---10---><---20---><---30---><---40---><---50---><---60---><---70---><---80--->
+		ui.println("Enter any XION statement to execute it.");
+		ui.println("Enter any XION expression to evaluate it.");
+		ui.println("Or, enter any of the following meta-commands:");
+		ui.println("  --start             start adding entered statements to the script buffer");
+		ui.println("  --stop              stop adding entered statements to the script buffer");
+		ui.println("  --new               clear the script buffer");
+		ui.println("  --list [linenums]   print the contents of the script buffer");
+		ui.println("  --run               execute the script in the script buffer");
+		ui.println("  --load filename     load the contents of a file into the script buffer");
+		ui.println("  --save filename     save the contents of the script buffer to a file");
+		ui.println("  --add statement     add the specified statements to the script buffer");
+		ui.println("  --insert lnum stmt  insert the specified statements at the specified line");
+		ui.println("  --remove linenums   remove the specified lines from the script buffer");
+		ui.println("  --set lnum stmt     replace the specified line with the specified statements");
+		ui.println("  help, --help        print help screen");
+		ui.println("  version, --version  print OpenXION, Java, and OS version numbers");
+		ui.println("  exit, --exit        quit OpenXION");
+		ui.println("  quit, --quit        quit OpenXION");
+		ui.println("End a line of input with a single backslash to continue the current line.");
+		ui.println("End with a double backslash to insert a line break and input the next line.");
 	}
 	
 	private static void version(XNStdInOutUI ui) {
