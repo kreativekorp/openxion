@@ -3,9 +3,9 @@ INSTBINDIR = /usr/bin
 SRCFILES = src/test/*.java src/com/kreative/*/*.java src/com/kreative/*/*/*.java src/com/kreative/*/*/*/*.java
 PACKAGES = com.kreative.openxion com.kreative.openxion.ast com.kreative.openxion.io com.kreative.openxion.math com.kreative.openxion.util com.kreative.openxion.xom com.kreative.openxion.xom.inst com.kreative.openxion.xom.type com.kreative.xiondoc
 
-all: clean bin doc osxclean OpenXION.jar XIONDoc.jar OpenXION-src.tgz XIONDoc-src.tgz OpenXION-test.tgz OpenXION-xndocs.tgz XION-Language-Module.tgz OpenXION-dist.zip
+all: clean bin doc osxclean OpenXION.jar XIONDoc.jar OpenXION-src.tgz XIONDoc-src.tgz OpenXION-test.tgz OpenXION-xndocs.tgz XION-Language-Module.tgz OpenXION-dist.zip OpenXION-distwin.zip
 
-eclipseall: eclipseclean osxclean OpenXION.jar XIONDoc.jar OpenXION-src.tgz XIONDoc-src.tgz OpenXION-test.tgz OpenXION-xndocs.tgz XION-Language-Module.tgz OpenXION-dist.zip
+eclipseall: eclipseclean osxclean OpenXION.jar XIONDoc.jar OpenXION-src.tgz XIONDoc-src.tgz OpenXION-test.tgz OpenXION-xndocs.tgz XION-Language-Module.tgz OpenXION-dist.zip OpenXION-distwin.zip
 
 clean:
 	rm -rf bin
@@ -88,6 +88,7 @@ XION-Language-Module.tgz:
 	tar -czf XION-Language-Module.tgz -C bbedit XION.plist
 
 OpenXION-dist.zip: OpenXION.jar XIONDoc.jar
+	rm -rf dist
 	mkdir dist
 	cp OpenXION.jar dist/OpenXION.jar
 	cp XIONDoc.jar dist/XIONDoc.jar
@@ -118,6 +119,33 @@ OpenXION-dist.zip: OpenXION.jar XIONDoc.jar
 	echo 'chmod +x /usr/bin/xiondoc' >> dist/install
 	chmod +x dist/install
 	zip -j OpenXION-dist.zip dist/*
+	rm -rf dist
+
+OpenXION-distwin.zip: OpenXION.jar XIONDoc.jar
+	rm -rf dist
+	mkdir dist
+	cp OpenXION.jar dist/OpenXION.jar
+	cp XIONDoc.jar dist/XIONDoc.jar
+	cp dep/jline.jar dist/jline.jar
+	cp LICENSE dist/LICENSE.TXT
+	cp dep/JLINE-LICENSE dist/JLINE-LICENSE.TXT
+	printf '@ECHO OFF\r\n' > dist/xe.bat
+	printf '@ECHO OFF\r\n' > dist/xion.bat
+	printf '@ECHO OFF\r\n' > dist/xiondoc.bat
+	printf 'java -Xmx1024M -jar "%%~dp0\\OpenXION.jar" -e "%%*"\r\n' >> dist/xe.bat
+	printf 'java -Xmx1024M -jar "%%~dp0\\OpenXION.jar" %%*\r\n' >> dist/xion.bat
+	printf 'java -Xmx1024M -jar "%%~dp0\\XIONDoc.jar" %%*\r\n' >> dist/xiondoc.bat
+	printf '@ECHO OFF\r\n' > dist/install.bat
+	printf 'COPY /B "%%~dp0\\OpenXION.jar" "%%SYSTEMROOT%%\\System32\\OpenXION.jar"\r\n' >> dist/install.bat
+	printf 'COPY /B "%%~dp0\\XIONDoc.jar" "%%SYSTEMROOT%%\\System32\\XIONDoc.jar"\r\n' >> dist/install.bat
+	printf 'COPY /B "%%~dp0\\jline.jar" "%%SYSTEMROOT%%\\System32\\jline.jar"\r\n' >> dist/install.bat
+	printf 'echo @ECHO OFF > "%%SYSTEMROOT%%\\System32\\xe.bat"\r\n' >> dist/install.bat
+	printf 'echo @ECHO OFF > "%%SYSTEMROOT%%\\System32\\xion.bat"\r\n' >> dist/install.bat
+	printf 'echo @ECHO OFF > "%%SYSTEMROOT%%\\System32\\xiondoc.bat"\r\n' >> dist/install.bat
+	printf 'echo java -Xmx1024M -jar "%%SYSTEMROOT%%\\System32\\OpenXION.jar" -e "%%%%*" >> "%%SYSTEMROOT%%\\System32\\xe.bat"\r\n' >> dist/install.bat
+	printf 'echo java -Xmx1024M -jar "%%SYSTEMROOT%%\\System32\\OpenXION.jar" %%%%* >> "%%SYSTEMROOT%%\\System32\\xion.bat"\r\n' >> dist/install.bat
+	printf 'echo java -Xmx1024M -jar "%%SYSTEMROOT%%\\System32\\XIONDoc.jar" %%%%* >> "%%SYSTEMROOT%%\\System32\\xiondoc.bat"\r\n' >> dist/install.bat
+	zip -j OpenXION-distwin.zip dist/*
 	rm -rf dist
 
 test: OpenXION.jar
