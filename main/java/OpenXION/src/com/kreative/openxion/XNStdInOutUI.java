@@ -42,8 +42,6 @@ public class XNStdInOutUI implements XNUI {
 	private Class<?> consoleReaderClass;
 	private Object consoleReaderObject;
 	private Method consoleReaderUseHistory;
-	private Method consoleReaderPrint;
-	private Method consoleReaderPrintln;
 	private Method consoleReaderReadlnPrompt;
 	private Method consoleReaderReadlnPwprompt;
 	private Class<?> historyClass;
@@ -60,8 +58,6 @@ public class XNStdInOutUI implements XNUI {
 			consoleReaderClass = Class.forName("jline.ConsoleReader");
 			consoleReaderObject = consoleReaderClass.newInstance();
 			consoleReaderUseHistory = consoleReaderClass.getMethod("setUseHistory", boolean.class);
-			consoleReaderPrint = consoleReaderClass.getMethod("printString", String.class);
-			consoleReaderPrintln = consoleReaderClass.getMethod("printNewline");
 			consoleReaderReadlnPrompt = consoleReaderClass.getMethod("readLine", String.class);
 			consoleReaderReadlnPwprompt = consoleReaderClass.getMethod("readLine", String.class, Character.class);
 			historyClass = Class.forName("jline.History");
@@ -69,25 +65,22 @@ public class XNStdInOutUI implements XNUI {
 			historyAdd = historyClass.getMethod("addToHistory", String.class);
 			consoleReaderUseHistory.invoke(consoleReaderObject, false);
 			in = null;
-			out = null;
 		} catch (Exception e) {
 			terminalClass = null;
 			consoleReaderClass = null;
 			consoleReaderObject = null;
 			consoleReaderUseHistory = null;
-			consoleReaderPrint = null;
-			consoleReaderPrintln = null;
 			consoleReaderReadlnPrompt = null;
 			consoleReaderReadlnPwprompt = null;
 			historyClass = null;
 			historyObject = null;
 			historyAdd = null;
 			in = new Scanner(System.in);
-			try {
-				out = new PrintWriter(new OutputStreamWriter(System.out, "UTF-8"), true);
-			} catch (UnsupportedEncodingException uee) {
-				out = new PrintWriter(new OutputStreamWriter(System.out), true);
-			}
+		}
+		try {
+			out = new PrintWriter(new OutputStreamWriter(System.out, "UTF-8"), true);
+		} catch (UnsupportedEncodingException uee) {
+			out = new PrintWriter(new OutputStreamWriter(System.out), true);
 		}
 		this.fancyPrompts = fancyPrompts;
 	}
@@ -101,25 +94,12 @@ public class XNStdInOutUI implements XNUI {
 	}
 	
 	void print(String s) {
-		if (consoleReaderObject != null && consoleReaderPrint != null) {
-			try {
-				consoleReaderPrint.invoke(consoleReaderObject, s);
-			} catch (Exception e) {}
-		} else if (out != null) {
-			out.print(s);
-			out.flush();
-		}
+		out.print(s);
+		out.flush();
 	}
 	
 	void println(String s) {
-		if (consoleReaderObject != null && consoleReaderPrint != null && consoleReaderPrintln != null) {
-			try {
-				consoleReaderPrint.invoke(consoleReaderObject, s);
-				consoleReaderPrintln.invoke(consoleReaderObject);
-			} catch (Exception e) {}
-		} else if (out != null) {
-			out.println(s);
-		}
+		out.println(s);
 	}
 	
 	String getCommandLine() {
