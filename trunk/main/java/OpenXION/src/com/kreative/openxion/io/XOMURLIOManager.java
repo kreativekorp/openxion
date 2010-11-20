@@ -30,7 +30,6 @@ package com.kreative.openxion.io;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.*;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.XNSecurityKey;
 import com.kreative.openxion.XNScriptError;
@@ -47,46 +46,7 @@ import com.kreative.openxion.xom.type.XOMURLType;
 public class XOMURLIOManager implements XNIOManager {
 	public static final XOMURLIOManager instance = new XOMURLIOManager();
 	
-	private Map<Object, XNIOStream> streams = new HashMap<Object, XNIOStream>();
-	private Map<Object, XNIOMethod> methods = new HashMap<Object, XNIOMethod>();
-	
-	private XNIOStream getStream(XNContext ctx, XOMVariant obj) {
-		if (streams.containsKey(obj)) {
-			return streams.get(obj);
-		}
-		XOMURL xu = XOMURLType.instance.makeInstanceFrom(ctx, obj);
-		if (streams.containsKey(xu)) {
-			return streams.get(xu);
-		}
-		URL u = xu.toURL();
-		if (streams.containsKey(u)) {
-			return streams.get(u);
-		}
-		String p = u.toString();
-		if (streams.containsKey(p)) {
-			return streams.get(p);
-		}
-		return null;
-	}
-	
-	private XNIOMethod getMethod(XNContext ctx, XOMVariant obj) {
-		if (methods.containsKey(obj)) {
-			return methods.get(obj);
-		}
-		XOMURL xu = XOMURLType.instance.makeInstanceFrom(ctx, obj);
-		if (methods.containsKey(xu)) {
-			return methods.get(xu);
-		}
-		URL u = xu.toURL();
-		if (methods.containsKey(u)) {
-			return methods.get(u);
-		}
-		String p = u.toString();
-		if (methods.containsKey(p)) {
-			return methods.get(p);
-		}
-		return null;
-	}
+	private XNIOStreamInfoMap sim = new XNIOStreamInfoMap();
 	
 	public boolean worksWith(XNContext ctx, XOMVariant obj) {
 		return XOMURLType.instance.canMakeInstanceFrom(ctx, obj);
@@ -101,7 +61,7 @@ public class XOMURLIOManager implements XNIOManager {
 			String p = u.toString();
 			BareBonesBrowserLaunch.openURL(p);
 		} catch (Exception e) {
-			throw new XNScriptError(e, "Failed to open");
+			throw new XNScriptError(e, "Can't open that URL");
 		}
 	}
 
@@ -111,186 +71,160 @@ public class XOMURLIOManager implements XNIOManager {
 		try {
 			XOMURL xu = XOMURLType.instance.makeInstanceFrom(ctx, obj);
 			URL u = xu.toURL();
-			URLConnection uc = u.openConnection();
-			XNIOStream stream = new XNURLConnectionIOStream(uc);
-			streams.put(obj, stream);
-			streams.put(xu, stream);
-			streams.put(u, stream);
-			streams.put(u.toString(), stream);
-			methods.put(obj, method);
-			methods.put(xu, method);
-			methods.put(u, method);
-			methods.put(u.toString(), method);
-			method.open(ctx, stream, type);
+			String p = u.toString();
+			if (sim.getURLStreamInfo(ctx, obj) != null) {
+				throw new XNScriptError("URL \""+p+"\" is already open");
+			} else {
+				URLConnection uc = u.openConnection();
+				XNIOStream stream = new XNURLConnectionIOStream(uc);
+				XNIOStreamInfo si = new XNIOStreamInfo(stream, method);
+				sim.setURLStreamInfo(ctx, obj, si);
+				si.open(ctx, type);
+			}
 		} catch (IOException ioe) {
-			throw new XNScriptError(ioe, "Failed to open");
+			throw new XNScriptError(ioe, "Can't open that URL");
 		}
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj) {
 		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from URL");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
-			throw new XNScriptError("File not open");
+		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
+		if (si == null) {
+			throw new XNScriptError("URL not open");
 		} else {
-			return method.read(ctx, stream);
+			return si.read(ctx);
 		}
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, XOMVariant stop) {
 		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from URL");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
-			throw new XNScriptError("File not open");
+		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
+		if (si == null) {
+			throw new XNScriptError("URL not open");
 		} else {
-			return method.read(ctx, stream, stop);
+			return si.read(ctx, stop);
 		}
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, int len) {
 		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from URL");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
-			throw new XNScriptError("File not open");
+		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
+		if (si == null) {
+			throw new XNScriptError("URL not open");
 		} else {
-			return method.read(ctx, stream, len);
+			return si.read(ctx, len);
 		}
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, int len, XOMVariant stop) {
 		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from URL");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
-			throw new XNScriptError("File not open");
+		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
+		if (si == null) {
+			throw new XNScriptError("URL not open");
 		} else {
-			return method.read(ctx, stream, len, stop);
+			return si.read(ctx, len, stop);
 		}
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos) {
 		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from URL");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
-			throw new XNScriptError("File not open");
+		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
+		if (si == null) {
+			throw new XNScriptError("URL not open");
 		} else {
-			return method.read(ctx, stream, pos);
+			return si.read(ctx, pos);
 		}
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos, XOMVariant stop) {
 		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from URL");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
-			throw new XNScriptError("File not open");
+		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
+		if (si == null) {
+			throw new XNScriptError("URL not open");
 		} else {
-			return method.read(ctx, stream, pos, stop);
+			return si.read(ctx, pos, stop);
 		}
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos, int len) {
 		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from URL");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
-			throw new XNScriptError("File not open");
+		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
+		if (si == null) {
+			throw new XNScriptError("URL not open");
 		} else {
-			return method.read(ctx, stream, pos, len);
+			return si.read(ctx, pos, len);
 		}
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos, int len, XOMVariant stop) {
 		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from URL");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
-			throw new XNScriptError("File not open");
+		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
+		if (si == null) {
+			throw new XNScriptError("URL not open");
 		} else {
-			return method.read(ctx, stream, pos, len, stop);
+			return si.read(ctx, pos, len, stop);
 		}
 	}
 
 	public void write(XNContext ctx, XOMVariant obj, XOMVariant data) {
 		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Write", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow write to URL");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
-			throw new XNScriptError("File not open");
+		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
+		if (si == null) {
+			throw new XNScriptError("URL not open");
 		} else {
-			method.write(ctx, stream, data);
+			si.write(ctx, data);
 		}
 	}
 
 	public void write(XNContext ctx, XOMVariant obj, XOMVariant data, long pos) {
 		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Write", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow write to URL");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
-			throw new XNScriptError("File not open");
+		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
+		if (si == null) {
+			throw new XNScriptError("URL not open");
 		} else {
-			method.write(ctx, stream, data, pos);
+			si.write(ctx, data, pos);
 		}
 	}
 
 	public void truncate(XNContext ctx, XOMVariant obj) {
 		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Truncate", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow truncate URL");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
-			throw new XNScriptError("File not open");
+		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
+		if (si == null) {
+			throw new XNScriptError("URL not open");
 		} else {
-			method.truncate(ctx, stream);
+			si.truncate(ctx);
 		}
 	}
 
 	public void truncate(XNContext ctx, XOMVariant obj, long pos) {
 		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Truncate", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow truncate URL");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
-			throw new XNScriptError("File not open");
+		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
+		if (si == null) {
+			throw new XNScriptError("URL not open");
 		} else {
-			method.truncate(ctx, stream, pos);
+			si.truncate(ctx, pos);
 		}
 	}
 
 	public void close(XNContext ctx, XOMVariant obj) {
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
-			throw new XNScriptError("File not open");
+		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
+		if (si == null) {
+			throw new XNScriptError("URL not open");
 		} else {
-			method.close(ctx, stream);
-			List<Object> keys = new Vector<Object>();
-			for (Map.Entry<Object,XNIOStream> e : streams.entrySet()) {
-				if (e.getValue() == stream) {
-					keys.add(e.getKey());
-				}
-			}
-			for (Object o : keys) {
-				streams.remove(o);
-				methods.remove(o);
-			}
-			try {
-				stream.close();
-			} catch (IOException ioe) {}
+			si.close(ctx);
+			sim.removeStreamInfo(si);
 		}
 	}
 }

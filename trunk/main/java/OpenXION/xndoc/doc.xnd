@@ -7184,10 +7184,17 @@
 		offset indicates an offset from the beginning of the file.
 	</description>
 	<note>
-		If you [[cm:open]] a file that already exists and [[cm:write]] some
-		data to it, the file can still contain old data that did not get overwritten.
-		The [[cm:truncate]] command allows you to remove the contents of a file
-		before writing to it.
+		In HyperTalk, in OpenXION 1.2 or later, and according to the XION Scripting
+		Language Standard, if you write to a file without specifying an offset and
+		without having previously read from, written to, or truncated the file, the
+		file will automatically get truncated before the data is written. Otherwise
+		the file will not be automatically truncated and any data that was not
+		overwritten will remain.
+	</note>
+	<note>
+		OpenXION 1.0 and 1.1 did not automatically truncate files, requiring
+		the use of the [[cm:truncate]] command before writing to files. This
+		was a bug, not a feature, and was fixed in OpenXION 1.2.
 	</note>
 	<see-also>
 		[[cm:open]], [[cm:read]], [[cm:truncate]], [[cm:close]],
