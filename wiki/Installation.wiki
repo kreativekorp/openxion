@@ -1,4 +1,6 @@
+#summary How to download, install, and use OpenXION.
 #labels Featured
+
 = Downloading OpenXION =
 
 The most recent release version of OpenXION can be downloaded from [http://code.google.com/p/openxion/downloads/list the Downloads tab].
