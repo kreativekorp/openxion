@@ -28,7 +28,6 @@
 package com.kreative.openxion.io;
 
 import java.io.*;
-import java.util.*;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.XNSecurityKey;
 import com.kreative.openxion.XNScriptError;
@@ -44,46 +43,7 @@ import com.kreative.openxion.xom.type.XOMFileType;
 public class XOMFileIOManager implements XNIOManager {
 	public static final XOMFileIOManager instance = new XOMFileIOManager();
 	
-	private Map<Object, XNIOStream> streams = new HashMap<Object, XNIOStream>();
-	private Map<Object, XNIOMethod> methods = new HashMap<Object, XNIOMethod>();
-	
-	private XNIOStream getStream(XNContext ctx, XOMVariant obj) {
-		if (streams.containsKey(obj)) {
-			return streams.get(obj);
-		}
-		XOMFile xf = XOMFileType.instance.makeInstanceFrom(ctx, obj);
-		if (streams.containsKey(xf)) {
-			return streams.get(xf);
-		}
-		File f = xf.toFile().getAbsoluteFile();
-		if (streams.containsKey(f)) {
-			return streams.get(f);
-		}
-		String p = f.getAbsolutePath();
-		if (streams.containsKey(p)) {
-			return streams.get(p);
-		}
-		return null;
-	}
-	
-	private XNIOMethod getMethod(XNContext ctx, XOMVariant obj) {
-		if (methods.containsKey(obj)) {
-			return methods.get(obj);
-		}
-		XOMFile xf = XOMFileType.instance.makeInstanceFrom(ctx, obj);
-		if (methods.containsKey(xf)) {
-			return methods.get(xf);
-		}
-		File f = xf.toFile().getAbsoluteFile();
-		if (methods.containsKey(f)) {
-			return methods.get(f);
-		}
-		String p = f.getAbsolutePath();
-		if (methods.containsKey(p)) {
-			return methods.get(p);
-		}
-		return null;
-	}
+	private XNIOStreamInfoMap sim = new XNIOStreamInfoMap();
 	
 	public boolean worksWith(XNContext ctx, XOMVariant obj) {
 		return XOMFileType.instance.canMakeInstanceFrom(ctx, obj);
@@ -102,194 +62,168 @@ public class XOMFileIOManager implements XNIOManager {
 			XOMFile xf = XOMFileType.instance.makeInstanceFrom(ctx, obj);
 			File f = xf.toFile().getAbsoluteFile();
 			String p = f.getAbsolutePath();
-			XNIOStream stream;
-			if (write) {
-				try {
-					stream = new XNFileIOStream(f, "rwd");
-				} catch (IOException e) {
+			if (sim.getFileStreamInfo(ctx, obj) != null) {
+				throw new XNScriptError("File \""+p+"\" is already open");
+			} else {
+				XNIOStream stream;
+				if (write) {
+					try {
+						stream = new XNFileIOStream(f, "rwd");
+					} catch (IOException e) {
+						stream = new XNFileIOStream(f, "r");
+					}
+				} else {
 					stream = new XNFileIOStream(f, "r");
 				}
-			} else {
-				stream = new XNFileIOStream(f, "r");
+				XNIOStreamInfo si = new XNIOStreamInfo(stream, method);
+				sim.setFileStreamInfo(ctx, obj, si);
+				si.open(ctx, type);
 			}
-			streams.put(obj, stream);
-			streams.put(xf, stream);
-			streams.put(f, stream);
-			streams.put(p, stream);
-			methods.put(obj, method);
-			methods.put(xf, method);
-			methods.put(f, method);
-			methods.put(p, method);
-			method.open(ctx, stream, type);
 		} catch (IOException ioe) {
-			throw new XNScriptError(ioe, "Failed to open");
+			throw new XNScriptError(ioe, "Can't create that file");
 		}
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from file");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
+		XNIOStreamInfo si = sim.getFileStreamInfo(ctx, obj);
+		if (si == null) {
 			throw new XNScriptError("File not open");
 		} else {
-			return method.read(ctx, stream);
+			return si.read(ctx);
 		}
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, XOMVariant stop) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from file");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
+		XNIOStreamInfo si = sim.getFileStreamInfo(ctx, obj);
+		if (si == null) {
 			throw new XNScriptError("File not open");
 		} else {
-			return method.read(ctx, stream, stop);
+			return si.read(ctx, stop);
 		}
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, int len) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from file");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
+		XNIOStreamInfo si = sim.getFileStreamInfo(ctx, obj);
+		if (si == null) {
 			throw new XNScriptError("File not open");
 		} else {
-			return method.read(ctx, stream, len);
+			return si.read(ctx, len);
 		}
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, int len, XOMVariant stop) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from file");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
+		XNIOStreamInfo si = sim.getFileStreamInfo(ctx, obj);
+		if (si == null) {
 			throw new XNScriptError("File not open");
 		} else {
-			return method.read(ctx, stream, len, stop);
+			return si.read(ctx, len, stop);
 		}
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from file");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
+		XNIOStreamInfo si = sim.getFileStreamInfo(ctx, obj);
+		if (si == null) {
 			throw new XNScriptError("File not open");
 		} else {
-			return method.read(ctx, stream, pos);
+			return si.read(ctx, pos);
 		}
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos, XOMVariant stop) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from file");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
+		XNIOStreamInfo si = sim.getFileStreamInfo(ctx, obj);
+		if (si == null) {
 			throw new XNScriptError("File not open");
 		} else {
-			return method.read(ctx, stream, pos, stop);
+			return si.read(ctx, pos, stop);
 		}
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos, int len) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from file");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
+		XNIOStreamInfo si = sim.getFileStreamInfo(ctx, obj);
+		if (si == null) {
 			throw new XNScriptError("File not open");
 		} else {
-			return method.read(ctx, stream, pos, len);
+			return si.read(ctx, pos, len);
 		}
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos, int len, XOMVariant stop) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "Read", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow read from file");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
+		XNIOStreamInfo si = sim.getFileStreamInfo(ctx, obj);
+		if (si == null) {
 			throw new XNScriptError("File not open");
 		} else {
-			return method.read(ctx, stream, pos, len, stop);
+			return si.read(ctx, pos, len, stop);
 		}
 	}
 
 	public void write(XNContext ctx, XOMVariant obj, XOMVariant data) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE, "Operation", "Write", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow write to file");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
+		XNIOStreamInfo si = sim.getFileStreamInfo(ctx, obj);
+		if (si == null) {
 			throw new XNScriptError("File not open");
 		} else {
-			method.write(ctx, stream, data);
+			if (si.justOpened()) si.truncate(ctx);
+			si.write(ctx, data);
 		}
 	}
 
 	public void write(XNContext ctx, XOMVariant obj, XOMVariant data, long pos) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE, "Operation", "Write", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow write to file");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
+		XNIOStreamInfo si = sim.getFileStreamInfo(ctx, obj);
+		if (si == null) {
 			throw new XNScriptError("File not open");
 		} else {
-			method.write(ctx, stream, data, pos);
+			si.write(ctx, data, pos);
 		}
 	}
 
 	public void truncate(XNContext ctx, XOMVariant obj) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE, "Operation", "Truncate", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow truncate file");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
+		XNIOStreamInfo si = sim.getFileStreamInfo(ctx, obj);
+		if (si == null) {
 			throw new XNScriptError("File not open");
 		} else {
-			method.truncate(ctx, stream);
+			si.truncate(ctx);
 		}
 	}
 
 	public void truncate(XNContext ctx, XOMVariant obj, long pos) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE, "Operation", "Truncate", "Object", obj.toDescriptionString()))
 			throw new XNScriptError("Security settings do not allow truncate file");
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
+		XNIOStreamInfo si = sim.getFileStreamInfo(ctx, obj);
+		if (si == null) {
 			throw new XNScriptError("File not open");
 		} else {
-			method.truncate(ctx, stream, pos);
+			si.truncate(ctx, pos);
 		}
 	}
 
 	public void close(XNContext ctx, XOMVariant obj) {
-		XNIOStream stream = getStream(ctx, obj);
-		XNIOMethod method = getMethod(ctx, obj);
-		if (stream == null || method == null) {
+		XNIOStreamInfo si = sim.getFileStreamInfo(ctx, obj);
+		if (si == null) {
 			throw new XNScriptError("File not open");
 		} else {
-			method.close(ctx, stream);
-			List<Object> keys = new Vector<Object>();
-			for (Map.Entry<Object,XNIOStream> e : streams.entrySet()) {
-				if (e.getValue() == stream) {
-					keys.add(e.getKey());
-				}
-			}
-			for (Object o : keys) {
-				streams.remove(o);
-				methods.remove(o);
-			}
-			try {
-				stream.close();
-			} catch (IOException ioe) {}
+			si.close(ctx);
+			sim.removeStreamInfo(si);
 		}
 	}
 }
