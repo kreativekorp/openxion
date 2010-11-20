@@ -5,7 +5,7 @@
 
 The [http://www.openxion.org/faq.html FAQ page] on [http://www.openxion.org openxion.org] answers many of the questions you may have about OpenXION.
 
-For a brief history of OpenXION, see the [history] wiki page.
+For a brief history of OpenXION, see the [History] wiki page.
 
 Much less interesting questions are answered here.
 
