@@ -1,29 +1,23 @@
-#summary Questions about OpenXION are answered here.
+#summary Much less interesting questions are answered here.
 #labels Featured
 
-= Will OpenXION run on my computer? =
+= Frequently Asked Questions about OpenXION =
 
-As long as you have Java SE 5 or later, yes.
+The [http://www.openxion.org/faq.html FAQ page] on [http://www.openxion.org openxion.org] answers many of the questions you may have about OpenXION.
 
-= How do I download/run/install OpenXION? =
+For a brief history of OpenXION, see the [history] wiki page.
 
-Just follow the [Installation] instructions.
+Much less interesting questions are answered here.
 
-= Will OpenXION run off a USB drive? =
+= What file extension do I use for XION Scripts? =
 
-You may run OpenXION from anywhere, so yes. Installation is optional.
+OpenXION doesn't care, but .xn is the file extension most often used.
 
-= What file extension do I use for XION scripts? =
+= How do I spell/capitalize XION, OpenXION, or XIONDoc? =
 
-OpenXION doesn't care what file extension you use, but .xn is the file extension we use.
+Exactly as seen here. In URLs and file names, they may be all lowercase: xion, openxion, xiondoc.
 
-= How to I spell/capitalize XION/OpenXION/XIONDoc? =
-
-In English text, XION, OpenXION, and XIONDoc are all one word, spelled and capitalized as seen here.
-
-In URLs and file names, they may be all lowercase: xion, openxion, xiondoc
-
-= How do I pronounce XION/OpenXION/XIONDoc? =
+= How do I pronounce XION, OpenXION, or XIONDoc? =
 
 XION is pronounced EK-shun.
 
@@ -31,7 +25,7 @@ OpenXION is pronounced OH-pen-EK-shun.
 
 XIONDoc is pronounced EK-shun-dock.
 
-(Programmers have a history of creating words with ambiguous or counterintuitive pronunciation just to mess with people. Observe GIF, Linux, Mac OS X. In the event of an XION pronunciation holy war, take whatever side you want, but I'm siding with EK-shun.)
+Programmers have a history of creating words with ambiguous or counterintuitive pronunciation just to mess with people. Observe GIF, Linux, Mac OS X. In the event of an XION pronunciation holy war, take whatever side you want, but I'm siding with EK-shun.
 
 = What does XION stand for? =
 
