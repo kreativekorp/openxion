@@ -93,6 +93,7 @@ OpenXION-dist.zip: OpenXION.jar XIONDoc.jar
 	cp OpenXION.jar dist/OpenXION.jar
 	cp XIONDoc.jar dist/XIONDoc.jar
 	cp dep/jline.jar dist/jline.jar
+	cp README dist/README
 	cp LICENSE dist/LICENSE
 	cp dep/JLINE-LICENSE dist/JLINE-LICENSE
 	echo "#!/bin/sh" > dist/xe
@@ -127,6 +128,7 @@ OpenXION-distwin.zip: OpenXION.jar XIONDoc.jar
 	cp OpenXION.jar dist/OpenXION.jar
 	cp XIONDoc.jar dist/XIONDoc.jar
 	cp dep/jline.jar dist/jline.jar
+	cp README dist/README.TXT
 	cp LICENSE dist/LICENSE.TXT
 	cp dep/JLINE-LICENSE dist/JLINE-LICENSE.TXT
 	printf '@ECHO OFF\r\n' > dist/xe.bat
