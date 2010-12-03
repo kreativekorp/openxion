@@ -35,6 +35,8 @@ public class Dialect {
 	private String version;
 	private TreeSet<NameTermPair> allvocab;
 	private Map<Term.Type,TreeSet<NameTermPair>> vocab;
+	private String summary;
+	private List<String> description;
 	private List<Article> articles;
 	
 	public Dialect(String code, String title, String version) {
@@ -46,6 +48,8 @@ public class Dialect {
 		for (Term.Type t : Term.Type.values()) {
 			vocab.put(t, new TreeSet<NameTermPair>());
 		}
+		summary = null;
+		description = new Vector<String>();
 		articles = new Vector<Article>();
 	}
 	
@@ -109,8 +113,28 @@ public class Dialect {
 		}
 	}
 	
-	public void addArticle(String code, String title, String content) {
-		articles.add(new Article(code, title, content));
+	public String getSummary() {
+		return summary;
+	}
+	
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+	
+	public List<String> getDescription() {
+		return this.description;
+	}
+	
+	public void addDescription(String description) {
+		this.description.add(description);
+	}
+	
+	public void removeDescription(String description) {
+		this.description.remove(description);
+	}
+	
+	public void addArticle(String code, String title, String summary, String content) {
+		articles.add(new Article(code, title, summary, content));
 	}
 	
 	public void removeArticle(String code) {

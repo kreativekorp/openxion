@@ -105,3 +105,8 @@ li:hover .expl {
 	color: #555555;
 	visibility: visible;
 }
+
+li .dversion {
+	font-family: Palatino, Times, Times New Roman, serif;
+	font-size: 9pt;
+}

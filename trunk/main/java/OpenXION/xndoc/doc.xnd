@@ -1,71 +1,267 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE xiondoc PUBLIC "-//Kreative//DTD XIONDoc 1.1//EN" "xiondoc-1.1.dtd">
+<!DOCTYPE xiondoc PUBLIC "-//Kreative//DTD XIONDoc 1.2//EN" "xiondoc-1.2.dtd">
 <documentationset>
+
+<summary>
+	This is the official documentation for the XION scripting language
+	and the OpenXION implementation. XION is a modern xTalk language
+	based on the original HyperTalk. It is easy to learn and has the
+	most English-like syntax of any programming language.
+</summary>
+<description>
+	This is the official documentation for the XION scripting language
+	and the OpenXION implementation. XION is a modern xTalk language
+	based on the original HyperTalk. It is easy to learn and has the
+	most English-like syntax of any programming language.
+</description>
+<description>
+	This manual describes every vocabulary term in XION and OpenXION
+	in detail. It is intended to be used as a comprehensive reference
+	for XION programmers. If you are just getting started with XION,
+	the documentation may seem overwhelming at first, but over time
+	you will come to appreciate its breadth. For an introduction to
+	XION programming, the independent site openxion.org has a good
+	tutorial and is available to help you.
+</description>
+<description>
+	A particular implementation of XION is called a dialect. OpenXION is one
+	such dialect. In addition to standard XION features, OpenXION provides
+	expandability through the use of modules. Dialects and modules are
+	listed at the top left. Below that is a list of types of vocabulary
+	terms, which you can use to narrow down the vocabulary you are looking
+	for, as well as some appendices for quick reference.
+</description>
 
 <dialect>
 	<name>xn1</name>
 	<title>XION Scripting Language Standard</title>
 	<vers>1.0</vers>
+	<summary>
+		This is the official documentation for the XION Scripting
+		Language Standard. XION is a modern xTalk language based
+		on the original HyperTalk. It is easy to learn and has the
+		most English-like syntax of any programming language.
+	</summary>
+	<description>
+		This is the official documentation for the XION Scripting
+		Language Standard. XION is a modern xTalk language based
+		on the original HyperTalk. It is easy to learn and has the
+		most English-like syntax of any programming language.
+	</description>
 </dialect>
 
 <dialect>
 	<name>oxnb1</name>
 	<title>OpenXION</title>
 	<vers>1.0</vers>
+	<summary>
+		This is the official documentation for the core functionality
+		of version 1.0 of OpenXION. OpenXION is the reference
+		implementation of the XION Scripting Language Standard.
+		XION is a modern xTalk language based on the original HyperTalk.
+		It is easy to learn and has the most English-like syntax
+		of any programming language.
+	</summary>
+	<description>
+		This is the official documentation for the core functionality
+		of version 1.0 of OpenXION. OpenXION is the reference
+		implementation of the XION Scripting Language Standard.
+		XION is a modern xTalk language based on the original HyperTalk.
+		It is easy to learn and has the most English-like syntax
+		of any programming language.
+	</description>
 </dialect>
 
 <dialect>
 	<name>oxn1</name>
 	<title>OpenXION Standard Module</title>
 	<vers>1.0</vers>
+	<summary>
+		This is the official documentation for the standard functionality
+		of version 1.0 of OpenXION. OpenXION is the reference
+		implementation of the XION Scripting Language Standard.
+		XION is a modern xTalk language based on the original HyperTalk.
+		It is easy to learn and has the most English-like syntax
+		of any programming language.
+	</summary>
+	<description>
+		This is the official documentation for the standard functionality
+		of version 1.0 of OpenXION. OpenXION is the reference
+		implementation of the XION Scripting Language Standard.
+		XION is a modern xTalk language based on the original HyperTalk.
+		It is easy to learn and has the most English-like syntax
+		of any programming language.
+	</description>
 </dialect>
 
 <dialect>
 	<name>oxne1</name>
 	<title>OpenXION Extended Module</title>
 	<vers>1.0</vers>
+	<summary>
+		This is the official documentation for the nonstandard functionality
+		of version 1.0 of OpenXION. OpenXION is the reference
+		implementation of the XION Scripting Language Standard.
+		XION is a modern xTalk language based on the original HyperTalk.
+		It is easy to learn and has the most English-like syntax
+		of any programming language.
+	</summary>
+	<description>
+		This is the official documentation for the nonstandard functionality
+		of version 1.0 of OpenXION. OpenXION is the reference
+		implementation of the XION Scripting Language Standard.
+		XION is a modern xTalk language based on the original HyperTalk.
+		It is easy to learn and has the most English-like syntax
+		of any programming language.
+	</description>
 </dialect>
 
 <dialect>
 	<name>oxnb11</name>
 	<title>OpenXION</title>
 	<vers>1.1</vers>
+	<summary>
+		This is the official documentation for the core functionality
+		of version 1.1 of OpenXION. OpenXION is the reference
+		implementation of the XION Scripting Language Standard.
+		XION is a modern xTalk language based on the original HyperTalk.
+		It is easy to learn and has the most English-like syntax
+		of any programming language.
+	</summary>
+	<description>
+		This is the official documentation for the core functionality
+		of version 1.1 of OpenXION. OpenXION is the reference
+		implementation of the XION Scripting Language Standard.
+		XION is a modern xTalk language based on the original HyperTalk.
+		It is easy to learn and has the most English-like syntax
+		of any programming language.
+	</description>
 </dialect>
 
 <dialect>
 	<name>oxn11</name>
 	<title>OpenXION Standard Module</title>
 	<vers>1.1</vers>
+	<summary>
+		This is the official documentation for the standard functionality
+		of version 1.1 of OpenXION. OpenXION is the reference
+		implementation of the XION Scripting Language Standard.
+		XION is a modern xTalk language based on the original HyperTalk.
+		It is easy to learn and has the most English-like syntax
+		of any programming language.
+	</summary>
+	<description>
+		This is the official documentation for the standard functionality
+		of version 1.1 of OpenXION. OpenXION is the reference
+		implementation of the XION Scripting Language Standard.
+		XION is a modern xTalk language based on the original HyperTalk.
+		It is easy to learn and has the most English-like syntax
+		of any programming language.
+	</description>
 </dialect>
 
 <dialect>
 	<name>oxne11</name>
 	<title>OpenXION Extended Module</title>
 	<vers>1.1</vers>
+	<summary>
+		This is the official documentation for the nonstandard functionality
+		of version 1.1 of OpenXION. OpenXION is the reference
+		implementation of the XION Scripting Language Standard.
+		XION is a modern xTalk language based on the original HyperTalk.
+		It is easy to learn and has the most English-like syntax
+		of any programming language.
+	</summary>
+	<description>
+		This is the official documentation for the nonstandard functionality
+		of version 1.1 of OpenXION. OpenXION is the reference
+		implementation of the XION Scripting Language Standard.
+		XION is a modern xTalk language based on the original HyperTalk.
+		It is easy to learn and has the most English-like syntax
+		of any programming language.
+	</description>
 </dialect>
 
 <dialect>
 	<name>oxnb12</name>
 	<title>OpenXION</title>
 	<vers>1.2</vers>
+	<summary>
+		This is the official documentation for the core functionality
+		of version 1.2 of OpenXION. OpenXION is the reference
+		implementation of the XION Scripting Language Standard.
+		XION is a modern xTalk language based on the original HyperTalk.
+		It is easy to learn and has the most English-like syntax
+		of any programming language.
+	</summary>
+	<description>
+		This is the official documentation for the core functionality
+		of version 1.2 of OpenXION. OpenXION is the reference
+		implementation of the XION Scripting Language Standard.
+		XION is a modern xTalk language based on the original HyperTalk.
+		It is easy to learn and has the most English-like syntax
+		of any programming language.
+	</description>
 </dialect>
 
 <dialect>
 	<name>oxn12</name>
 	<title>OpenXION Standard Module</title>
 	<vers>1.2</vers>
+	<summary>
+		This is the official documentation for the standard functionality
+		of version 1.2 of OpenXION. OpenXION is the reference
+		implementation of the XION Scripting Language Standard.
+		XION is a modern xTalk language based on the original HyperTalk.
+		It is easy to learn and has the most English-like syntax
+		of any programming language.
+	</summary>
+	<description>
+		This is the official documentation for the standard functionality
+		of version 1.2 of OpenXION. OpenXION is the reference
+		implementation of the XION Scripting Language Standard.
+		XION is a modern xTalk language based on the original HyperTalk.
+		It is easy to learn and has the most English-like syntax
+		of any programming language.
+	</description>
 </dialect>
 
 <dialect>
 	<name>oxne12</name>
 	<title>OpenXION Extended Module</title>
 	<vers>1.2</vers>
+	<summary>
+		This is the official documentation for the nonstandard functionality
+		of version 1.2 of OpenXION. OpenXION is the reference
+		implementation of the XION Scripting Language Standard.
+		XION is a modern xTalk language based on the original HyperTalk.
+		It is easy to learn and has the most English-like syntax
+		of any programming language.
+	</summary>
+	<description>
+		This is the official documentation for the nonstandard functionality
+		of version 1.2 of OpenXION. OpenXION is the reference
+		implementation of the XION Scripting Language Standard.
+		XION is a modern xTalk language based on the original HyperTalk.
+		It is easy to learn and has the most English-like syntax
+		of any programming language.
+	</description>
 </dialect>
 
 <dialect>
 	<name>hyp</name>
 	<title>HyperTalk</title>
 	<vers>2.2</vers>
+	<summary>
+		This is the official documentation for the parts of OpenXION
+		that were originally present in HyperTalk. Only vocabulary terms
+		available in both OpenXION and HyperTalk are listed here.
+	</summary>
+	<description>
+		This is the official documentation for the parts of OpenXION
+		that were originally present in HyperTalk. Only vocabulary terms
+		available in both OpenXION and HyperTalk are listed here.
+	</description>
 </dialect>
 
 <operator>
@@ -12001,6 +12197,9 @@
 <article>
 	<name>functions</name>
 	<title>Functions at a Glance</title>
+	<summary>
+		This page provides an at-a-glance view of all the functions available in OpenXION.
+	</summary>
 	<content>
 		{{{{{Mathematical Functions}}}}}
 		\\\\

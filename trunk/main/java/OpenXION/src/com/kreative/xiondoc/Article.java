@@ -30,11 +30,13 @@ package com.kreative.xiondoc;
 public class Article implements Comparable<Article> {
 	private String code;
 	private String title;
+	private String summary;
 	private String content;
 	
-	public Article(String code, String title, String content) {
+	public Article(String code, String title, String summary, String content) {
 		this.code = code;
 		this.title = title;
+		this.summary = summary;
 		this.content = content;
 	}
 	
@@ -44,6 +46,10 @@ public class Article implements Comparable<Article> {
 	
 	public String getTitle() {
 		return title;
+	}
+	
+	public String getSummary() {
+		return summary;
 	}
 	
 	public String getContent() {
