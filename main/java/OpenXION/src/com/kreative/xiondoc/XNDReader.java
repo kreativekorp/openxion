@@ -65,9 +65,12 @@ public class XNDReader implements XIONDocReader {
 							if (it.equalsIgnoreCase("name")) dl.setCode(htmldecode(ic.trim()));
 							else if (it.equalsIgnoreCase("title")) dl.setTitle(htmldecode(ic.trim()));
 							else if (it.equalsIgnoreCase("vers")) dl.setVersion(htmldecode(ic.trim()));
+							else if (it.equalsIgnoreCase("summary")) dl.setSummary(htmldecode(ic.trim()));
+							else if (it.equalsIgnoreCase("description")) dl.addDescription(htmldecode(ic.trim()));
 							else if (it.equalsIgnoreCase("article")) {
 								String name = null;
 								String title = null;
+								String summary = null;
 								String content = null;
 								Matcher am = ELEMENT_PATTERN.matcher(c);
 								while (am.find()) {
@@ -77,17 +80,23 @@ public class XNDReader implements XIONDocReader {
 									String ac = am.group(3);
 									if (at.equalsIgnoreCase("name")) name = htmldecode(ac.trim());
 									else if (at.equalsIgnoreCase("title")) title = htmldecode(ac.trim());
+									else if (at.equalsIgnoreCase("summary")) summary = htmldecode(ac.trim());
 									else if (at.equalsIgnoreCase("content")) content = htmldecode(ac.trim());
 									else System.err.println("Ignoring invalid tag <"+at+"> inside <"+it+">");
 								}
-								dl.addArticle(name, title, content);
+								dl.addArticle(name, title, summary, content);
 							}
 							else System.err.println("Ignoring invalid tag <"+it+"> inside <"+t+">");
 						}
 						d.addDialect(dl);
+					} else if (t.equalsIgnoreCase("summary")) {
+						d.setSummary(htmldecode(c.trim()));
+					} else if (t.equalsIgnoreCase("description")) {
+						d.addDescription(htmldecode(c.trim()));
 					} else if (t.equalsIgnoreCase("article")) {
 						String name = null;
 						String title = null;
+						String summary = null;
 						String content = null;
 						Matcher am = ELEMENT_PATTERN.matcher(c);
 						while (am.find()) {
@@ -97,10 +106,11 @@ public class XNDReader implements XIONDocReader {
 							String ac = am.group(3);
 							if (at.equalsIgnoreCase("name")) name = htmldecode(ac.trim());
 							else if (at.equalsIgnoreCase("title")) title = htmldecode(ac.trim());
+							else if (at.equalsIgnoreCase("summary")) summary = htmldecode(ac.trim());
 							else if (at.equalsIgnoreCase("content")) content = htmldecode(ac.trim());
 							else System.err.println("Ignoring invalid tag <"+at+"> inside <"+t+">");
 						}
-						d.addArticle(name, title, content);
+						d.addArticle(name, title, summary, content);
 					} else {
 						Term.Type vt = Term.Type.forTagName(t);
 						if (vt != null) {

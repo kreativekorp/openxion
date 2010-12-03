@@ -60,7 +60,9 @@ public class HTMLDWriter implements XIONDocWriter {
 			case '\'': out.append("&#39;"); break;
 			case '\u00A0': out.append("&nbsp;"); break;
 			default:
-				if (ch < 32 || ch >= 127) {
+				if (ch < 0x20 || (ch >= 0x7F && ch < 0xA0)) {
+					out.append(" ");
+				} else if (ch >= 0xA0) {
 					out.append("&#"+(int)ch+";");
 				} else {
 					out.append(ch);
@@ -68,7 +70,7 @@ public class HTMLDWriter implements XIONDocWriter {
 				break;
 			}
 		}
-		return out.toString();
+		return out.toString().trim().replaceAll("\\s+", " ");
 	}
 	
 	private static String format(String s, NameTermPair n, boolean inSyntax) {
@@ -135,6 +137,41 @@ public class HTMLDWriter implements XIONDocWriter {
 		return s;
 	}
 	
+	private static class VersionNumber implements Comparable<VersionNumber> {
+		private String vn;
+		private String[][] vc;
+		public VersionNumber(String vn) {
+			this.vn = vn;
+			String[] vc = vn.trim().split("[^0-9.]+");
+			this.vc = new String[vc.length][];
+			for (int i = 0; i < vc.length; i++) {
+				this.vc[i] = vc[i].split("[.]+");
+			}
+		}
+		public boolean equals(Object o) {
+			return vn.equals(o.toString());
+		}
+		public int hashCode() {
+			return vn.hashCode();
+		}
+		public String toString() {
+			return vn;
+		}
+		public int compareTo(VersionNumber other) {
+			for (int i = 0; i < this.vc.length || i < other.vc.length; i++) {
+				if (i >= this.vc.length) return -1;
+				if (i >= other.vc.length) return 1;
+				for (int j = 0; j < this.vc[i].length || j < other.vc[i].length; j++) {
+					if (j >= this.vc[i].length) return 1;
+					if (j >= other.vc[i].length) return -1;
+					int cmp = Integer.parseInt(this.vc[i][j]) - Integer.parseInt(other.vc[i][j]);
+					if (cmp != 0) return -cmp;
+				}
+			}
+			return 0;
+		}
+	}
+	
 	private static void writeDialectIndex(DocumentationSet d, File f) throws IOException {
 		File outf = new File(f, "dialects.html");
 		System.out.println("Creating "+outf.getName()+"...");
@@ -142,6 +179,9 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>XION Dialect Index</title>");
+		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+		out.println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, dialect, dialects, dialect index\">");
+		out.println("<meta name=\"description\" content=\"A list of XION dialects, OpenXION modules, and XION code libraries with documentation available in this documentation set.\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xionnav.css\">");
 		out.println("<script language=\"javascript\" type=\"text/javascript\">");
 		out.println("<!--");
@@ -163,10 +203,37 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<body>");
 		out.println("<ul>");
 		out.println("<li><a href=\"vocabtypes.html\" target=\"xnvocabtypes\" onclick=\"return loadAllDialect();\">All Dialects</a></li>");
+		LinkedHashMap<String,TreeMap<VersionNumber,Dialect>> sortedDialects = new LinkedHashMap<String,TreeMap<VersionNumber,Dialect>>();
 		Iterator<Dialect> i = d.dialectIterator();
 		while (i.hasNext()) {
 			Dialect dl = i.next();
-			out.println("<li><a href=\""+htmlencode(dl.getCode())+"/vocabtypes.html\" target=\"xnvocabtypes\" onclick=\"return loadDialect('"+htmlencode(dl.getCode())+"');\">"+htmlencode(dl.toString())+"</a></li>");
+			String dn = dl.getTitle();
+			VersionNumber dv = new VersionNumber(dl.getVersion());
+			if (sortedDialects.containsKey(dn)) {
+				sortedDialects.get(dn).put(dv, dl);
+			} else {
+				TreeMap<VersionNumber,Dialect> sortedVersions = new TreeMap<VersionNumber,Dialect>();
+				sortedVersions.put(dv, dl);
+				sortedDialects.put(dn, sortedVersions);
+			}
+		}
+		for (TreeMap<VersionNumber,Dialect> df : sortedDialects.values()) {
+			Dialect dl1 = df.get(df.firstKey());
+			out.print("<li><a href=\""+htmlencode(dl1.getCode())+"/vocabtypes.html\" target=\"xnvocabtypes\" onclick=\"return loadDialect('"+htmlencode(dl1.getCode())+"');\">"+htmlencode(dl1.getTitle())+"</a> <span class=\"dversion\">(");
+			if (df.size() > 1) {
+				boolean first = true;
+				for (Dialect dl2 : df.values()) {
+					if (first) {
+						out.print("<a href=\""+htmlencode(dl2.getCode())+"/vocabtypes.html\" target=\"xnvocabtypes\" onclick=\"return loadDialect('"+htmlencode(dl2.getCode())+"');\">"+htmlencode(dl2.getVersion())+"</a>");
+						first = false;
+					} else {
+						out.print(", <a href=\""+htmlencode(dl2.getCode())+"/vocabtypes.html\" target=\"xnvocabtypes\" onclick=\"return loadDialect('"+htmlencode(dl2.getCode())+"');\">"+htmlencode(dl2.getVersion())+"</a>");
+					}
+				}
+			} else {
+				out.print(htmlencode(dl1.getVersion()));
+			}
+			out.println(")</span></li>");
 		}
 		out.println("</ul>");
 		out.println("</body>");
@@ -181,6 +248,9 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>XION Dialect Index</title>");
+		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+		out.println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, dialect, dialects, dialect index\">");
+		out.println("<meta name=\"description\" content=\"A list of XION dialects, OpenXION modules, and XION code libraries with documentation available in this documentation set.\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xionnav.css\">");
 		out.println("<script language=\"javascript\" type=\"text/javascript\">");
 		out.println("<!--");
@@ -196,7 +266,7 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<body>");
 		out.println("<ul>");
 		out.println("<li><a href=\"vocabtypes.html\" target=\"xnvocabtypes\" onclick=\"return loadAllDialect();\">All Dialects</a></li>");
-		out.println("<li><a href=\"vocabtypes.html\" target=\"xnvocabtypes\" onclick=\"return loadAllDialect();\">"+htmlencode(d.toString())+"</a></li>");
+		out.println("<li><a href=\"vocabtypes.html\" target=\"xnvocabtypes\" onclick=\"return loadAllDialect();\">"+htmlencode(d.getTitle())+"</a> <span class=\"dversion\">("+htmlencode(d.getVersion())+")</span></li>");
 		out.println("</ul>");
 		out.println("</body>");
 		out.println("</html>");
@@ -210,6 +280,9 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>XION Vocabulary Type Index</title>");
+		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+		out.println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, vocabulary type, vocabulary type index\">");
+		out.println("<meta name=\"description\" content=\"A list of the types of XION vocabulary terms in all dialects, modules, and libraries in this documentation set.\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xionnav.css\">");
 		out.println("<script language=\"javascript\" type=\"text/javascript\">");
 		out.println("<!--");
@@ -293,6 +366,9 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>"+htmlencode(d.getTitle())+" Vocabulary Type Index</title>");
+		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+		out.println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, "+htmlencode(d.getTitle())+", vocabulary type, vocabulary type index\">");
+		out.println("<meta name=\"description\" content=\"A list of the types of XION vocabulary terms in "+htmlencode(d.getTitle())+".\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xionnav.css\">");
 		out.println("<script language=\"javascript\" type=\"text/javascript\">");
 		out.println("<!--");
@@ -376,6 +452,9 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>XION Vocabulary Index</title>");
+		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+		out.println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, vocabulary, all vocabulary, vocabulary index\">");
+		out.println("<meta name=\"description\" content=\"A list of XION vocabulary terms with documentation available in all dialects, modules, and libraries in this documentation set.\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xionnav.css\">");
 		out.println("</head>");
 		out.println("<body>");
@@ -399,6 +478,9 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>"+htmlencode(d.getTitle())+" Vocabulary Index</title>");
+		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+		out.println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, "+htmlencode(d.getTitle())+", vocabulary, all vocabulary, vocabulary index\">");
+		out.println("<meta name=\"description\" content=\"A list of XION vocabulary terms with documentation available in "+htmlencode(d.getTitle())+".\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xionnav.css\">");
 		out.println("</head>");
 		out.println("<body>");
@@ -422,6 +504,9 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>XION "+htmlencode(vt.getSingularTitleCase())+" Index</title>");
+		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+		out.println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, "+htmlencode(vt.getSingular())+", "+htmlencode(vt.getPlural())+", "+htmlencode(vt.getSingular())+" index\">");
+		out.println("<meta name=\"description\" content=\"A list of XION "+htmlencode(vt.getPlural())+" with documentation available in all dialects, modules, and libraries in this documentation set.\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xionnav.css\">");
 		out.println("</head>");
 		out.println("<body>");
@@ -445,6 +530,9 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>"+htmlencode(d.getTitle())+" "+htmlencode(vt.getSingularTitleCase())+" Index</title>");
+		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+		out.println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, "+htmlencode(d.getTitle())+", "+htmlencode(vt.getSingular())+", "+htmlencode(vt.getPlural())+", "+htmlencode(vt.getSingular())+" index\">");
+		out.println("<meta name=\"description\" content=\"A list of XION "+htmlencode(vt.getPlural())+" with documentation available in "+htmlencode(d.getTitle())+".\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xionnav.css\">");
 		out.println("</head>");
 		out.println("<body>");
@@ -474,6 +562,9 @@ public class HTMLDWriter implements XIONDocWriter {
 			out[i].println("<html>");
 			out[i].println("<head>");
 			out[i].println("<title>XION Vocabulary Index - "+(i == 0 ? "Symbols" : ""+(i-1+'A'))+"</title>");
+			out[i].println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+			out[i].println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, vocabulary, all vocabulary, vocabulary index\">");
+			out[i].println("<meta name=\"description\" content=\"A list of XION vocabulary terms with documentation available in all dialects, modules, and libraries in this documentation set.\">");
 			out[i].println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xiondoc.css\">");
 			out[i].println("</head>");
 			out[i].println("<body>");
@@ -552,6 +643,9 @@ public class HTMLDWriter implements XIONDocWriter {
 			out[i].println("<html>");
 			out[i].println("<head>");
 			out[i].println("<title>"+htmlencode(d.getTitle())+" Vocabulary Index - "+(i == 0 ? "Symbols" : ""+(i-1+'A'))+"</title>");
+			out[i].println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+			out[i].println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, "+htmlencode(d.getTitle())+", vocabulary, all vocabulary, vocabulary index\">");
+			out[i].println("<meta name=\"description\" content=\"A list of XION vocabulary terms with documentation available in "+htmlencode(d.getTitle())+".\">");
 			out[i].println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xiondoc.css\">");
 			out[i].println("</head>");
 			out[i].println("<body>");
@@ -765,6 +859,9 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>"+htmlencode(a.getTitle())+"</title>");
+		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+		out.println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, "+htmlencode(a.getTitle())+"\">");
+		out.println("<meta name=\"description\" content=\""+htmlencode(a.getSummary())+"\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xiondoc.css\">");
 		out.println("</head>");
 		out.println("<body>");
@@ -794,6 +891,9 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>XION "+htmlencode(vt.getPluralTitleCase())+"</title>");
+		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+		out.println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, "+htmlencode(vt.getSingular())+", "+htmlencode(vt.getPlural())+", "+htmlencode(vt.getSingular())+" descriptions\">");
+		out.println("<meta name=\"description\" content=\"This page describes the "+htmlencode(vt.getPlural())+" supported by all XION dialects in this documentation set.\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xiondoc.css\">");
 		out.println("</head>");
 		out.println("<body>");
@@ -816,6 +916,9 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>"+htmlencode(d.getTitle())+" "+htmlencode(vt.getPluralTitleCase())+"</title>");
+		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+		out.println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, "+htmlencode(d.getTitle())+", "+htmlencode(vt.getSingular())+", "+htmlencode(vt.getPlural())+", "+htmlencode(vt.getSingular())+" descriptions\">");
+		out.println("<meta name=\"description\" content=\"This page describes the "+htmlencode(vt.getPlural())+" supported by "+htmlencode(d.getTitle())+".\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xiondoc.css\">");
 		out.println("</head>");
 		out.println("<body>");
@@ -838,6 +941,9 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>XION Synonyms</title>");
+		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+		out.println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, synonym, synonyms\">");
+		out.println("<meta name=\"description\" content=\"This page lists the alternative ways that XION terms can be used.\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xiondoc.css\">");
 		out.println("</head>");
 		out.println("<body>");
@@ -898,6 +1004,9 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>"+htmlencode(d.getTitle())+" Synonyms</title>");
+		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+		out.println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, "+htmlencode(d.getTitle())+", synonym, synonyms\">");
+		out.println("<meta name=\"description\" content=\"This page lists the alternative ways that "+htmlencode(d.getTitle())+" terms can be used.\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xiondoc.css\">");
 		out.println("</head>");
 		out.println("<body>");
@@ -959,6 +1068,9 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>XION Constant Summary</title>");
+		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+		out.println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, constant, constants, built-in constant, built-in constants\">");
+		out.println("<meta name=\"description\" content=\"This page summarizes XION's built-in constants.\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xiondoc.css\">");
 		out.println("</head>");
 		out.println("<body>");
@@ -1072,6 +1184,9 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>"+htmlencode(d.getTitle())+" Constant Summary</title>");
+		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+		out.println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, "+htmlencode(d.getTitle())+", constant, constants, built-in constant, built-in constants\">");
+		out.println("<meta name=\"description\" content=\"This page summarizes "+htmlencode(d.getTitle())+"'s built-in constants.\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xiondoc.css\">");
 		out.println("</head>");
 		out.println("<body>");
@@ -1185,6 +1300,9 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>XION Operator Precedence Table</title>");
+		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+		out.println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, operator, operators, operator precedence, operator precedence chart, operator precedence table\">");
+		out.println("<meta name=\"description\" content=\"This page shows the order of precedence of operators in XION.\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xiondoc.css\">");
 		out.println("</head>");
 		out.println("<body>");
@@ -1232,6 +1350,9 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>"+htmlencode(d.getTitle())+" Operator Precedence Table</title>");
+		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+		out.println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, "+htmlencode(d.getTitle())+", operator, operators, operator precedence, operator precedence chart, operator precedence table\">");
+		out.println("<meta name=\"description\" content=\"This page shows the order of precedence of operators in "+htmlencode(d.getTitle())+".\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xiondoc.css\">");
 		out.println("</head>");
 		out.println("<body>");
@@ -1279,6 +1400,9 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>XION Color Chart</title>");
+		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+		out.println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, color, colors, colour, colours, color constants, colour constants, RGB values\">");
+		out.println("<meta name=\"description\" content=\"This page lists the names, RGB values, and color swatches of each color defined as a constant in XION.\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xiondoc.css\">");
 		out.println("</head>");
 		out.println("<body>");
@@ -1398,6 +1522,9 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>"+htmlencode(d.getTitle())+" Color Chart</title>");
+		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+		out.println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, "+htmlencode(d.getTitle())+", color, colors, colour, colours, color constants, colour constants, RGB values\">");
+		out.println("<meta name=\"description\" content=\"This page lists the names, RGB values, and color swatches of each color defined as a constant in "+htmlencode(d.getTitle())+".\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xiondoc.css\">");
 		out.println("</head>");
 		out.println("<body>");
@@ -1517,20 +1644,18 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>Welcome to XION</title>");
+		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+		out.println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, intro, introduction\">");
+		out.println("<meta name=\"description\" content=\""+(d.getSummary() != null ? htmlencode(d.getSummary()) : "")+"\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xiondoc.css\">");
 		out.println("</head>");
 		out.println("<body>");
 		out.println("<h1>Welcome to XION</h1>");
-		out.println("<p>XION is a kind of scripting language that enables ordinary people" +
-				" to do extraordinary things. You do not need to learn a bunch of cryptic" +
-				" symbols and how to put them in exactly the right places in order to tell" +
-				" your computer what to do. Since XION has been created to resemble natural" +
-				" English, all you need is a basic understanding of the English language.</p>");
-		out.println("<p>A particular variant of XION is called a <i>dialect</i>. This" +
-				" documentation set provides detailed information on the dialects of" +
-				" XION listed to the left. Below the list of dialects is a list of types" +
-				" of vocabulary terms, which you can use to narrow down the vocabulary" +
-				" you are looking for, as well as some appendices for quick reference.</p>");
+		if (d.getDescription() != null && d.getDescription().size() > 0) {
+			for (String p : d.getDescription()) {
+				out.println("<p>"+format(p,null,false)+"</p>");
+			}
+		}
 		out.println("</body>");
 		out.println("</html>");
 		out.close();
@@ -1543,20 +1668,18 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>Welcome to XION</title>");
+		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+		out.println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, intro, introduction\">");
+		out.println("<meta name=\"description\" content=\""+(d.getSummary() != null ? htmlencode(d.getSummary()) : "")+"\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xiondoc.css\">");
 		out.println("</head>");
 		out.println("<body>");
 		out.println("<h1>Welcome to XION</h1>");
-		out.println("<p>XION is a kind of scripting language that enables ordinary people" +
-				" to do extraordinary things. You do not need to learn a bunch of cryptic" +
-				" symbols and how to put them in exactly the right places in order to tell" +
-				" your computer what to do. Since XION has been created to resemble natural" +
-				" English, all you need is a basic understanding of the English language.</p>");
-		out.println("<p>A particular variant of XION is called a <i>dialect</i>. This" +
-				" documentation set provides detailed information on the dialects of" +
-				" XION listed to the left. Below the list of dialects is a list of types" +
-				" of vocabulary terms, which you can use to narrow down the vocabulary" +
-				" you are looking for, as well as some appendices for quick reference.</p>");
+		if (d.getDescription() != null && d.getDescription().size() > 0) {
+			for (String p : d.getDescription()) {
+				out.println("<p>"+format(p,null,false)+"</p>");
+			}
+		}
 		out.println("</body>");
 		out.println("</html>");
 		out.close();
@@ -1618,6 +1741,9 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>XION Documentation</title>");
+		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+		out.println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk\">");
+		out.println("<meta name=\"description\" content=\""+(d.getSummary() != null ? htmlencode(d.getSummary()) : "")+"\">");
 		out.println("</head>");
 		out.println("<frameset cols=\"312,*\">");
 		out.println("<frameset rows=\"120,200,*\">");
@@ -1639,6 +1765,9 @@ public class HTMLDWriter implements XIONDocWriter {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>"+htmlencode(d.toString())+" Documentation</title>");
+		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
+		out.println("<meta name=\"keywords\" content=\"XION, OpenXION, XIONDoc, XIONDocs, XION docs, OpenXION docs, XION documentation, OpenXION documentation, XION manual, OpenXION manual, HyperTalk, xTalk, "+htmlencode(d.toString())+"\">");
+		out.println("<meta name=\"description\" content=\""+(d.getSummary() != null ? htmlencode(d.getSummary()) : "")+"\">");
 		out.println("</head>");
 		out.println("<frameset cols=\"312,*\">");
 		out.println("<frameset rows=\"120,200,*\">");

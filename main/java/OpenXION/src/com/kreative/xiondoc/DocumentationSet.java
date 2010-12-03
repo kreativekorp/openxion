@@ -33,6 +33,8 @@ public class DocumentationSet {
 	private TreeSet<NameTermPair> allvocab;
 	private Map<Term.Type,TreeSet<NameTermPair>> vocab;
 	private List<Dialect> dialects;
+	private String summary;
+	private List<String> description;
 	private List<Article> articles;
 	
 	public DocumentationSet() {
@@ -42,6 +44,8 @@ public class DocumentationSet {
 			vocab.put(t, new TreeSet<NameTermPair>());
 		}
 		dialects = new Vector<Dialect>();
+		summary = null;
+		description = new Vector<String>();
 		articles = new Vector<Article>();
 	}
 	
@@ -64,8 +68,28 @@ public class DocumentationSet {
 		return dialects.iterator();
 	}
 	
-	public void addArticle(String code, String title, String content) {
-		articles.add(new Article(code, title, content));
+	public String getSummary() {
+		return summary;
+	}
+	
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+	
+	public List<String> getDescription() {
+		return this.description;
+	}
+	
+	public void addDescription(String description) {
+		this.description.add(description);
+	}
+	
+	public void removeDescription(String description) {
+		this.description.remove(description);
+	}
+	
+	public void addArticle(String code, String title, String summary, String content) {
+		articles.add(new Article(code, title, summary, content));
 	}
 	
 	public void removeArticle(String code) {
