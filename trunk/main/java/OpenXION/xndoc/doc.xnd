@@ -12009,6 +12009,10 @@
 	<note>
 		This external language is only available when OpenXION is running under Mac OS X.
 	</note>
+	<note>
+		In OpenXION 1.2 and later, the output of the script, if any, can be retrieved
+		using the [[fn:result]] function. (OpenXION 1.0 and 1.1 did not capture any output.)
+	</note>
 	<see-also>[[cs:do]]</see-also>
 </extlang>
 
@@ -12020,6 +12024,10 @@
 	</description>
 	<note>
 		This external language is only available when OpenXION is running under Windows.
+	</note>
+	<note>
+		In OpenXION 1.2 and later, the output of the script, if any, can be retrieved
+		using the [[fn:result]] function. (OpenXION 1.0 and 1.1 did not capture any output.)
 	</note>
 	<see-also>[[cs:do]]</see-also>
 </extlang>
@@ -12033,6 +12041,10 @@
 	<note>
 		This external language is only available when OpenXION is running under a system other than Windows.
 	</note>
+	<note>
+		In OpenXION 1.2 and later, the output of the script, if any, can be retrieved
+		using the [[fn:result]] function. (OpenXION 1.0 and 1.1 did not capture any output.)
+	</note>
 	<see-also>[[cs:do]]</see-also>
 </extlang>
 
@@ -12044,6 +12056,10 @@
 	</description>
 	<note>
 		This external language is only available when OpenXION is running under a system other than Windows.
+	</note>
+	<note>
+		In OpenXION 1.2 and later, the output of the script, if any, can be retrieved
+		using the [[fn:result]] function. (OpenXION 1.0 and 1.1 did not capture any output.)
 	</note>
 	<see-also>[[cs:do]]</see-also>
 </extlang>
@@ -12057,6 +12073,10 @@
 	<note>
 		This external language is only available when OpenXION is running under a system other than Windows.
 	</note>
+	<note>
+		In OpenXION 1.2 and later, the output of the script, if any, can be retrieved
+		using the [[fn:result]] function. (OpenXION 1.0 and 1.1 did not capture any output.)
+	</note>
 	<see-also>[[cs:do]]</see-also>
 </extlang>
 
@@ -12069,6 +12089,10 @@
 	<note>
 		This external language is only available when OpenXION is running under a system other than Windows.
 	</note>
+	<note>
+		In OpenXION 1.2 and later, the output of the script, if any, can be retrieved
+		using the [[fn:result]] function. (OpenXION 1.0 and 1.1 did not capture any output.)
+	</note>
 	<see-also>[[cs:do]]</see-also>
 </extlang>
 
@@ -12080,6 +12104,10 @@
 	</description>
 	<note>
 		This external language is only available when OpenXION is running under a system other than Windows.
+	</note>
+	<note>
+		In OpenXION 1.2 and later, the output of the script, if any, can be retrieved
+		using the [[fn:result]] function. (OpenXION 1.0 and 1.1 did not capture any output.)
 	</note>
 	<see-also>[[cs:do]]</see-also>
 </extlang>
