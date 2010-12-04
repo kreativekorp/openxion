@@ -30,6 +30,9 @@ package com.kreative.openxion.util;
 import java.io.*;
 import java.text.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.XNLexer;
 import com.kreative.openxion.XNParser;
@@ -389,18 +392,62 @@ public class XIONUtil {
 		return theString.toString();
 	}
 	
+	private static String unString = null;
+	private static String ufnString = null;
+	
 	public static String getUserName(XNContext ctx, XNModifier modifier) {
 		if (modifier == XNModifier.SHORT || modifier == XNModifier.ABBREVIATED) {
-			try {
-				return System.getProperty("user.name");
-			} catch (Exception e) {}
+			if (unString != null) {
+				return unString;
+			} else {
+				try {
+					unString = System.getProperty("user.name");
+					return unString;
+				} catch (Exception e) {
+					unString = null;
+					return "";
+				}
+			}
+		} else {
+			if (ufnString != null) {
+				return ufnString;
+			} else if (isWindows()) {
+				try {
+					String s1 = captureProcessOutput("net user "+System.getProperty("user.name"));
+					String s2 = captureProcessOutput("net user "+System.getProperty("user.name")+" /domain");
+					Pattern p = Pattern.compile("[Ff]ull [Nn]ame\\s+(.*)");
+					Matcher m1 = p.matcher(s1);
+					Matcher m2 = p.matcher(s2);
+					if (m1.find()) {
+						ufnString = m1.group(1).trim();
+						return ufnString;
+					} else if (m2.find()) {
+						ufnString = m2.group(1).trim();
+						return ufnString;
+					} else {
+						ufnString = null;
+						return "";
+					}
+				} catch (Exception e) {
+					ufnString = null;
+					return "";
+				}
+			} else {
+				try {
+					String[] s = captureProcessOutput(new String[]{"id", "-P"}).split(":");
+					if (s.length > 7) {
+						ufnString = s[7];
+						return ufnString;
+					} else {
+						ufnString = null;
+						return "";
+					}
+				} catch (Exception e) {
+					ufnString = null;
+					return "";
+				}
+			}
 		}
-		String v = ctx.getUsername();
-		if (v != null) return v;
-		try {
-			return System.getProperty("user.name");
-		} catch (Exception e) {}
-		return "";
 	}
 	
 	private static String osString = null;
@@ -716,6 +763,39 @@ public class XIONUtil {
 		}
 		else {
 			throw new IOException("Inter-process communication not supported");
+		}
+	}
+	
+	public static String captureProcessOutput(String s) {
+		try {
+			return captureProcessOutput(Runtime.getRuntime().exec(s));
+		} catch (Exception e) {
+			return "";
+		}
+	}
+	
+	public static String captureProcessOutput(String[] s) {
+		try {
+			return captureProcessOutput(Runtime.getRuntime().exec(s));
+		} catch (Exception e) {
+			return "";
+		}
+	}
+	
+	public static String captureProcessOutput(Process p) {
+		try {
+			InputStream in = new BufferedInputStream(p.getInputStream());
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			byte[] buff = new byte[1048576];
+			int len;
+			while ((len = in.read(buff)) >= 0) {
+				out.write(buff, 0, len);
+			}
+			in.close();
+			out.close();
+			return new String(out.toByteArray());
+		} catch (Exception e) {
+			return "";
 		}
 	}
 }
