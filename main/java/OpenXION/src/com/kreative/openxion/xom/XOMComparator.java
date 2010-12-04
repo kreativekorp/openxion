@@ -108,9 +108,9 @@ public class XOMComparator implements Comparator<XOMVariant> {
 			return map.get(o);
 		} else {
 			if (filter != null && interp != null) {
-				interp.setVariableScope("each", XNVariableScope.LOCAL);
-				XOMVariable e = interp.getVariable("each");
-				if (e == null) e = interp.createVariable("each", XOMStringType.instance, XOMEmpty.EMPTY);
+				ctx.setVariableScope("each", XNVariableScope.LOCAL);
+				XOMVariable e = ctx.getVariable("each");
+				if (e == null) e = ctx.createVariable("each", XOMStringType.instance, XOMEmpty.EMPTY);
 				e.putIntoContents(ctx, o);
 				o = interp.evaluateExpression(filter);
 			}

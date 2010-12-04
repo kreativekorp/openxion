@@ -1544,7 +1544,7 @@ public class XNStandardModule extends XNModule {
 			XNLexer namelex = new XNLexer(new StringReader(name));
 			try { if (namelex.lookToken(1).kind == XNToken.ID && namelex.lookToken(2).isEOF()) {
 				name = namelex.getToken().image;
-				dest = interp.createVariable(name, XOMStringType.instance, XOMEmpty.EMPTY);
+				dest = ctx.createVariable(name, XOMStringType.instance, XOMEmpty.EMPTY);
 				if (dest.canPutContents(ctx)) {
 					return dest;
 				} else {
@@ -1568,7 +1568,7 @@ public class XNStandardModule extends XNModule {
 			XNLexer namelex = new XNLexer(new StringReader(name));
 			try { if (namelex.lookToken(1).kind == XNToken.ID && namelex.lookToken(2).isEOF()) {
 				name = namelex.getToken().image;
-				dest = interp.createVariable(name, XOMStringType.instance, XOMEmpty.EMPTY);
+				dest = ctx.createVariable(name, XOMStringType.instance, XOMEmpty.EMPTY);
 				if (dest.canPutContents(ctx)) {
 					if (prep.equalsIgnoreCase("before")) dest.putBeforeContents(ctx, what);
 					else if (prep.equalsIgnoreCase("after")) dest.putAfterContents(ctx, what);
@@ -1594,7 +1594,7 @@ public class XNStandardModule extends XNModule {
 			XNLexer namelex = new XNLexer(new StringReader(name));
 			try { if (namelex.lookToken(1).kind == XNToken.ID && namelex.lookToken(2).isEOF()) {
 				name = namelex.getToken().image;
-				dest = interp.createVariable(name, XOMStringType.instance, XOMEmpty.EMPTY);
+				dest = ctx.createVariable(name, XOMStringType.instance, XOMEmpty.EMPTY);
 				if (dest.canPutContents(ctx)) {
 					if (prep.equalsIgnoreCase("before")) dest.putBeforeContents(ctx, what, prep, pval);
 					else if (prep.equalsIgnoreCase("after")) dest.putAfterContents(ctx, what, prep, pval);
@@ -1608,14 +1608,6 @@ public class XNStandardModule extends XNModule {
 				throw new XNScriptError("Expected variable name but found "+name);
 			}
 		}
-	}
-	
-	private static void putIntoIt(XNInterpreter interp, XNContext ctx, XOMDataType<? extends XOMVariant> dt, XOMVariant what) {
-		XOMVariable dest = interp.getVariable("it");
-		if (dest == null) {
-			dest = interp.createVariable("it", dt, what);
-		}
-		dest.putIntoContents(ctx, what);
 	}
 	
 	private static final long MS_PER_DAY = 1000L * 60L * 60L * 24L;
@@ -1725,7 +1717,7 @@ public class XNStandardModule extends XNModule {
 					}
 				}
 				String s = ctx.getUI().answerList(prompt, options.toArray(new String[0]), x, y);
-				putIntoIt(interp, ctx, XOMStringType.instance, new XOMString(s));
+				ctx.setIt(XOMStringType.instance, new XOMString(s));
 			}
 			else if (kind.equalsIgnoreCase("file")) {
 				List<String> options = new Vector<String>();
@@ -1734,30 +1726,30 @@ public class XNStandardModule extends XNModule {
 				}
 				File f = ctx.getUI().answerFile(prompt, options.toArray(new String[0]), x, y);
 				if (f == null) {
-					putIntoIt(interp, ctx, XOMStringType.instance, XOMString.EMPTY_STRING);
+					ctx.setIt(XOMStringType.instance, XOMString.EMPTY_STRING);
 					return new XOMString("Cancel");
 				} else {
-					putIntoIt(interp, ctx, XOMStringType.instance, new XOMString(f.getAbsolutePath()));
+					ctx.setIt(XOMStringType.instance, new XOMString(f.getAbsolutePath()));
 					return new XOMString("OK");
 				}
 			}
 			else if (kind.equalsIgnoreCase("folder") || kind.equalsIgnoreCase("directory")) {
 				File f = ctx.getUI().answerFolder(prompt, x, y);
 				if (f == null) {
-					putIntoIt(interp, ctx, XOMStringType.instance, XOMString.EMPTY_STRING);
+					ctx.setIt(XOMStringType.instance, XOMString.EMPTY_STRING);
 					return new XOMString("Cancel");
 				} else {
-					putIntoIt(interp, ctx, XOMStringType.instance, new XOMString(f.getAbsolutePath()));
+					ctx.setIt(XOMStringType.instance, new XOMString(f.getAbsolutePath()));
 					return new XOMString("OK");
 				}
 			}
 			else if (kind.equalsIgnoreCase("disk") || kind.equalsIgnoreCase("volume")) {
 				File f = ctx.getUI().answerDisk(prompt, x, y);
 				if (f == null) {
-					putIntoIt(interp, ctx, XOMStringType.instance, XOMString.EMPTY_STRING);
+					ctx.setIt(XOMStringType.instance, XOMString.EMPTY_STRING);
 					return new XOMString("Cancel");
 				} else {
-					putIntoIt(interp, ctx, XOMStringType.instance, new XOMString(f.getAbsolutePath()));
+					ctx.setIt(XOMStringType.instance, new XOMString(f.getAbsolutePath()));
 					return new XOMString("OK");
 				}
 			}
@@ -1767,7 +1759,7 @@ public class XNStandardModule extends XNModule {
 					options.add(v.toTextString(ctx));
 				}
 				String s = ctx.getUI().answer(prompt, options.toArray(new String[0]), x, y);
-				putIntoIt(interp, ctx, XOMStringType.instance, new XOMString(s));
+				ctx.setIt(XOMStringType.instance, new XOMString(s));
 			}
 			return null;
 		}
@@ -1823,51 +1815,51 @@ public class XNStandardModule extends XNModule {
 			if (kind.equalsIgnoreCase("password")) {
 				String s = ctx.getUI().askPassword(prompt, text, x, y);
 				if (s == null) {
-					putIntoIt(interp, ctx, XOMStringType.instance, XOMString.EMPTY_STRING);
+					ctx.setIt(XOMStringType.instance, XOMString.EMPTY_STRING);
 					return new XOMString("Cancel");
 				} else {
 					s = Long.toString(AtkinsonHash.hash(s) & 0xFFFFFFFFL);
-					putIntoIt(interp, ctx, XOMStringType.instance, new XOMString(s));
+					ctx.setIt(XOMStringType.instance, new XOMString(s));
 					return new XOMString("OK");
 				}
 			}
 			else if (kind.equalsIgnoreCase("password clear")) {
 				String s = ctx.getUI().askPassword(prompt, text, x, y);
 				if (s == null) {
-					putIntoIt(interp, ctx, XOMStringType.instance, XOMString.EMPTY_STRING);
+					ctx.setIt(XOMStringType.instance, XOMString.EMPTY_STRING);
 					return new XOMString("Cancel");
 				} else {
-					putIntoIt(interp, ctx, XOMStringType.instance, new XOMString(s));
+					ctx.setIt(XOMStringType.instance, new XOMString(s));
 					return new XOMString("OK");
 				}
 			}
 			else if (kind.equalsIgnoreCase("file")) {
 				File f = ctx.getUI().askFile(prompt, text, x, y);
 				if (f == null) {
-					putIntoIt(interp, ctx, XOMStringType.instance, XOMString.EMPTY_STRING);
+					ctx.setIt(XOMStringType.instance, XOMString.EMPTY_STRING);
 					return new XOMString("Cancel");
 				} else {
-					putIntoIt(interp, ctx, XOMStringType.instance, new XOMString(f.getAbsolutePath()));
+					ctx.setIt(XOMStringType.instance, new XOMString(f.getAbsolutePath()));
 					return new XOMString("OK");
 				}
 			}
 			else if (kind.equalsIgnoreCase("folder") || kind.equalsIgnoreCase("directory")) {
 				File f = ctx.getUI().askFolder(prompt, text, x, y);
 				if (f == null) {
-					putIntoIt(interp, ctx, XOMStringType.instance, XOMString.EMPTY_STRING);
+					ctx.setIt(XOMStringType.instance, XOMString.EMPTY_STRING);
 					return new XOMString("Cancel");
 				} else {
-					putIntoIt(interp, ctx, XOMStringType.instance, new XOMString(f.getAbsolutePath()));
+					ctx.setIt(XOMStringType.instance, new XOMString(f.getAbsolutePath()));
 					return new XOMString("OK");
 				}
 			}
 			else {
 				String s = ctx.getUI().ask(prompt, text, x, y);
 				if (s == null) {
-					putIntoIt(interp, ctx, XOMStringType.instance, XOMString.EMPTY_STRING);
+					ctx.setIt(XOMStringType.instance, XOMString.EMPTY_STRING);
 					return new XOMString("Cancel");
 				} else {
-					putIntoIt(interp, ctx, XOMStringType.instance, new XOMString(s));
+					ctx.setIt(XOMStringType.instance, new XOMString(s));
 					return new XOMString("OK");
 				}
 			}
@@ -1892,7 +1884,7 @@ public class XNStandardModule extends XNModule {
 				} else {
 					thing = dataType.createInstance(ctx);
 				}
-				putIntoIt(interp, ctx, dataType, thing);
+				ctx.setIt(dataType, thing);
 				return null;
 			}
 			
@@ -2174,7 +2166,7 @@ public class XNStandardModule extends XNModule {
 	private static final Command c_get = new Command() {
 		public XOMVariant executeCommand(XNInterpreter interp, XNContext ctx, String commandName, List<XNExpression> parameters) {
 			if (parameters == null || parameters.isEmpty()) throw new XNScriptError("Can't understand arguments to get");
-			putIntoIt(interp, ctx, XOMStringType.instance, interp.evaluateExpression(parameters.get(0)).unwrap());
+			ctx.setIt(XOMStringType.instance, interp.evaluateExpression(parameters.get(0)).unwrap());
 			return null;
 		}
 	};
@@ -2453,7 +2445,7 @@ public class XNStandardModule extends XNModule {
 			if (v.canPutContents(ctx)) {
 				put(interp, ctx, new XOMString(output.trim()), "into", v);
 			} else {
-				putIntoIt(interp, ctx, XOMStringType.instance, new XOMString(output.trim()));
+				ctx.setIt(XOMStringType.instance, new XOMString(output.trim()));
 			}
 			return null;
 		}
@@ -2564,7 +2556,7 @@ public class XNStandardModule extends XNModule {
 					}
 				}
 			}
-			putIntoIt(interp, ctx, XOMStringType.instance, data);
+			ctx.setIt(XOMStringType.instance, data);
 			return null;
 		}
 	};
