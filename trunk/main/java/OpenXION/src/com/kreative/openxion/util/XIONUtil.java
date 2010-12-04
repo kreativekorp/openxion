@@ -766,36 +766,24 @@ public class XIONUtil {
 		}
 	}
 	
-	public static String captureProcessOutput(String s) {
-		try {
-			return captureProcessOutput(Runtime.getRuntime().exec(s));
-		} catch (Exception e) {
-			return "";
-		}
+	public static String captureProcessOutput(String s) throws IOException {
+		return captureProcessOutput(Runtime.getRuntime().exec(s));
 	}
 	
-	public static String captureProcessOutput(String[] s) {
-		try {
-			return captureProcessOutput(Runtime.getRuntime().exec(s));
-		} catch (Exception e) {
-			return "";
-		}
+	public static String captureProcessOutput(String[] s) throws IOException {
+		return captureProcessOutput(Runtime.getRuntime().exec(s));
 	}
 	
-	public static String captureProcessOutput(Process p) {
-		try {
-			InputStream in = new BufferedInputStream(p.getInputStream());
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			byte[] buff = new byte[1048576];
-			int len;
-			while ((len = in.read(buff)) >= 0) {
-				out.write(buff, 0, len);
-			}
-			in.close();
-			out.close();
-			return new String(out.toByteArray());
-		} catch (Exception e) {
-			return "";
+	public static String captureProcessOutput(Process p) throws IOException {
+		InputStream in = new BufferedInputStream(p.getInputStream());
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		byte[] buff = new byte[1048576];
+		int len;
+		while ((len = in.read(buff)) >= 0) {
+			out.write(buff, 0, len);
 		}
+		in.close();
+		out.close();
+		return new String(out.toByteArray());
 	}
 }
