@@ -33,6 +33,7 @@ import java.math.RoundingMode;
 import java.util.*;
 import com.kreative.openxion.ast.XNMessageHandler;
 import com.kreative.openxion.ast.XNFunctionHandler;
+import com.kreative.openxion.ast.XNVariableScope;
 import com.kreative.openxion.io.XNIOManager;
 import com.kreative.openxion.io.XNIOMethod;
 import com.kreative.openxion.math.MathProcessor;
@@ -744,5 +745,99 @@ public class XNContext implements Serializable, Cloneable {
 	
 	public void setResult(XOMVariant result) {
 		this.result = result;
+	}
+	
+	/* VARIABLES */
+	
+	public void setVariableScope(String name, XNVariableScope scope) {
+		if (getCurrentStackFrame() != null) {
+			getCurrentStackFrame().setVariableScope(name, scope);
+		}
+	}
+	
+	public XOMVariable createVariable(String name, XOMDataType<? extends XOMVariant> type, XOMVariant initialValue) {
+		XNVariableScope scope = XNVariableScope.GLOBAL;
+		String handlerName = "";
+		if (getCurrentStackFrame() != null) {
+			scope = getCurrentStackFrame().getVariableScope(name);
+			if (scope == null) scope = XNVariableScope.LOCAL;
+			handlerName = getCurrentStackFrame().getHandlerName();
+			if (handlerName == null) handlerName = "";
+		}
+		switch (scope) {
+		case GLOBAL:
+			return createGlobalVariable(name, type, initialValue);
+		case SHARED:
+			if (getCurrentResponder() != null) {
+				return getCurrentResponder().createSharedVariable(this, name, type, initialValue);
+			} else {
+				return createGlobalVariable(name, type, initialValue);
+			}
+		case STATIC:
+			if (getCurrentResponder() != null) {
+				return getCurrentResponder().createStaticVariable(this, handlerName, name, type, initialValue);
+			} else {
+				return createStaticVariable(handlerName, name, type, initialValue);
+			}
+		case LOCAL:
+		default:
+			if (getCurrentStackFrame() != null) {
+				return getCurrentStackFrame().createLocalVariable(this, name, type, initialValue);
+			} else if (getCurrentResponder() != null) {
+				return getCurrentResponder().createSharedVariable(this, name, type, initialValue);
+			} else {
+				return createGlobalVariable(name, type, initialValue);
+			}
+		}
+	}
+	
+	public XOMVariable getVariable(String name) {
+		XNVariableScope scope = XNVariableScope.GLOBAL;
+		String handlerName = "";
+		if (getCurrentStackFrame() != null) {
+			scope = getCurrentStackFrame().getVariableScope(name);
+			if (scope == null) scope = XNVariableScope.LOCAL;
+			handlerName = getCurrentStackFrame().getHandlerName();
+			if (handlerName == null) handlerName = "";
+		}
+		switch (scope) {
+		case GLOBAL:
+			return getGlobalVariable(name);
+		case SHARED:
+			if (getCurrentResponder() != null) {
+				return getCurrentResponder().getSharedVariable(this, name);
+			} else {
+				return getGlobalVariable(name);
+			}
+		case STATIC:
+			if (getCurrentResponder() != null) {
+				return getCurrentResponder().getStaticVariable(this, handlerName, name);
+			} else {
+				return getStaticVariable(handlerName, name);
+			}
+		case LOCAL:
+		default:
+			if (getCurrentStackFrame() != null) {
+				return getCurrentStackFrame().getLocalVariable(this, name);
+			} else if (getCurrentResponder() != null) {
+				return getCurrentResponder().getSharedVariable(this, name);
+			} else {
+				return getGlobalVariable(name);
+			}
+		}
+	}
+	
+	public XOMVariant getIt() {
+		XOMVariable dest = getVariable("it");
+		if (dest == null) return XOMEmpty.EMPTY;
+		return dest.unwrap();
+	}
+	
+	public void setIt(XOMDataType<? extends XOMVariant> dt, XOMVariant it) {
+		XOMVariable dest = getVariable("it");
+		if (dest == null) {
+			dest = createVariable("it", dt, it);
+		}
+		dest.putIntoContents(this, it);
 	}
 }

@@ -50,88 +50,6 @@ public class XNInterpreter {
 		this.context = context;
 	}
 	
-	/* * * * * * *
-	 * VARIABLES *
-	 * * * * * * */
-	
-	public void setVariableScope(String name, XNVariableScope scope) {
-		if (context.getCurrentStackFrame() != null) {
-			context.getCurrentStackFrame().setVariableScope(name, scope);
-		}
-	}
-	
-	public XOMVariable createVariable(String name, XOMDataType<? extends XOMVariant> type, XOMVariant initialValue) {
-		XNVariableScope scope = XNVariableScope.GLOBAL;
-		String handlerName = "";
-		if (context.getCurrentStackFrame() != null) {
-			scope = context.getCurrentStackFrame().getVariableScope(name);
-			if (scope == null) scope = XNVariableScope.LOCAL;
-			handlerName = context.getCurrentStackFrame().getHandlerName();
-			if (handlerName == null) handlerName = "";
-		}
-		switch (scope) {
-		case GLOBAL:
-			return context.createGlobalVariable(name, type, initialValue);
-		case SHARED:
-			if (context.getCurrentResponder() != null) {
-				return context.getCurrentResponder().createSharedVariable(context, name, type, initialValue);
-			} else {
-				return context.createGlobalVariable(name, type, initialValue);
-			}
-		case STATIC:
-			if (context.getCurrentResponder() != null) {
-				return context.getCurrentResponder().createStaticVariable(context, handlerName, name, type, initialValue);
-			} else {
-				return context.createStaticVariable(handlerName, name, type, initialValue);
-			}
-		case LOCAL:
-		default:
-			if (context.getCurrentStackFrame() != null) {
-				return context.getCurrentStackFrame().createLocalVariable(context, name, type, initialValue);
-			} else if (context.getCurrentResponder() != null) {
-				return context.getCurrentResponder().createSharedVariable(context, name, type, initialValue);
-			} else {
-				return context.createGlobalVariable(name, type, initialValue);
-			}
-		}
-	}
-	
-	public XOMVariable getVariable(String name) {
-		XNVariableScope scope = XNVariableScope.GLOBAL;
-		String handlerName = "";
-		if (context.getCurrentStackFrame() != null) {
-			scope = context.getCurrentStackFrame().getVariableScope(name);
-			if (scope == null) scope = XNVariableScope.LOCAL;
-			handlerName = context.getCurrentStackFrame().getHandlerName();
-			if (handlerName == null) handlerName = "";
-		}
-		switch (scope) {
-		case GLOBAL:
-			return context.getGlobalVariable(name);
-		case SHARED:
-			if (context.getCurrentResponder() != null) {
-				return context.getCurrentResponder().getSharedVariable(context, name);
-			} else {
-				return context.getGlobalVariable(name);
-			}
-		case STATIC:
-			if (context.getCurrentResponder() != null) {
-				return context.getCurrentResponder().getStaticVariable(context, handlerName, name);
-			} else {
-				return context.getStaticVariable(handlerName, name);
-			}
-		case LOCAL:
-		default:
-			if (context.getCurrentStackFrame() != null) {
-				return context.getCurrentStackFrame().getLocalVariable(context, name);
-			} else if (context.getCurrentResponder() != null) {
-				return context.getCurrentResponder().getSharedVariable(context, name);
-			} else {
-				return context.getGlobalVariable(name);
-			}
-		}
-	}
-	
 	/* * * * * * * *
 	 * EXPRESSIONS *
 	 * * * * * * * */
@@ -919,7 +837,7 @@ public class XNInterpreter {
 			}
 			else if (expr instanceof XNVariableExpression) {
 				String name = ((XNVariableExpression)expr).varname.image;
-				XOMVariant value = getVariable(name);
+				XOMVariant value = context.getVariable(name);
 				if (value == null) return new XOMString(name);
 				else return value;
 			}
@@ -1601,7 +1519,7 @@ public class XNInterpreter {
 						XNLexer namelex = new XNLexer(new StringReader(name));
 						try { if (namelex.lookToken(1).kind == XNToken.ID && namelex.lookToken(2).isEOF()) {
 							name = namelex.getToken().image;
-							dest = createVariable(name, XOMStringType.instance, XOMEmpty.EMPTY);
+							dest = context.createVariable(name, XOMStringType.instance, XOMEmpty.EMPTY);
 						} else {
 							throw new XNScriptError("Expected variable name but found "+name);
 						} } catch (IOException ioe) {
@@ -1655,9 +1573,9 @@ public class XNInterpreter {
 					String name = ((XNRepeatForEachParameters)rp).identifier;
 					List<XOMVariant> list = evaluateExpression(((XNRepeatForEachParameters)rp).list).unwrap().toList(context);
 					for (XOMVariant item : list) {
-						XOMVariant dest = getVariable(name);
+						XOMVariant dest = context.getVariable(name);
 						if (dest == null) {
-							dest = createVariable(name, XOMStringType.instance, item);
+							dest = context.createVariable(name, XOMStringType.instance, item);
 						} else {
 							dest.putIntoContents(context, item);
 						}
@@ -1763,7 +1681,7 @@ public class XNInterpreter {
 					}
 				} catch (XNScriptError err) {
 					if (((XNTryBlock)stat).catchBlock != null) {
-						XOMVariant dest = createVariable(((XNTryBlock)stat).catchIdentifier, XOMStringType.instance, XOMEmpty.EMPTY);
+						XOMVariant dest = context.createVariable(((XNTryBlock)stat).catchIdentifier, XOMStringType.instance, XOMEmpty.EMPTY);
 						if (dest.canPutContents(context)) dest.putIntoContents(context, new XOMString(err.getMessage()));
 						exit = executeStatements(((XNTryBlock)stat).catchBlock);
 						if (exit.status() == XNHandlerExitStatus.EXITED && "try".equalsIgnoreCase(exit.blockTypeValue())) {
@@ -1820,8 +1738,8 @@ public class XNInterpreter {
 					String name = init.name;
 					XNDataType datatypeObj = init.datatype;
 					XNExpression valueExpr = init.value;
-					setVariableScope(name, scope);
-					if (getVariable(name) == null) {
+					context.setVariableScope(name, scope);
+					if (context.getVariable(name) == null) {
 						XOMDataType<? extends XOMVariant> datatype =
 							(datatypeObj == null) ?
 									XOMStringType.instance :
@@ -1831,7 +1749,7 @@ public class XNInterpreter {
 							(valueExpr == null) ?
 									XOMEmpty.EMPTY :
 										evaluateExpression(valueExpr).unwrap();
-						createVariable(name, datatype, value);
+						context.createVariable(name, datatype, value);
 					}
 				}
 				return XNHandlerExit.ended();
