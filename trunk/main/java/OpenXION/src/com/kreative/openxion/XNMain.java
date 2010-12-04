@@ -494,25 +494,17 @@ public class XNMain {
 	
 	private static void readEnviron(XNContext ctx) {
 		try {
-			StringBuffer u = new StringBuffer();
 			StringBuffer a = new StringBuffer();
 			StringBuffer d = new StringBuffer();
 			StringBuffer i = new StringBuffer();
 			Scanner sc = new Scanner(getEnvironFile(), "UTF-8");
 			while (sc.hasNextLine()) {
 				String s = sc.nextLine();
-				if (s.startsWith("Username=")) u.append(s.substring(9)+"\n");
 				if (s.startsWith("Applications=")) a.append(s.substring(13)+"\n");
 				if (s.startsWith("Documents=")) d.append(s.substring(10)+"\n");
 				if (s.startsWith("Includes=")) i.append(s.substring(9)+"\n");
 			}
 			sc.close();
-			if (u.length() > 0) {
-				if (u.charAt(u.length()-1) == '\n') {
-					u.deleteCharAt(u.length()-1);
-				}
-				ctx.setUsername(u.toString());
-			}
 			if (a.length() > 0) {
 				ctx.setApplicationPaths(a.toString());
 			}
@@ -528,18 +520,9 @@ public class XNMain {
 	private static void writeEnviron(XNContext ctx) {
 		try {
 			PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(getEnvironFile()), "UTF-8"), true);
-			String u = ctx.getUsername();
 			String a = ctx.getApplicationPaths();
 			String d = ctx.getDocumentPaths();
 			String i = ctx.getIncludePaths();
-			if (u != null) {
-				String[] ss = u.split("\r|\n");
-				for (String s : ss) {
-					if (s.length() > 0) {
-						out.println("Username="+s);
-					}
-				}
-			}
 			if (a != null) {
 				String[] ss = a.split("\r|\n");
 				for (String s : ss) {

@@ -5692,25 +5692,26 @@
 	<name dialects="oxn1,oxn11,oxn12">userName</name>
 	<applies-to>Global environment</applies-to>
 	<syntax>set the [[*]] to {string}</syntax>
-	<example>set [[*]] to "Ginny Sae Kwa"</example>
+	<example>answer "Hello," && the long [[*]] & "!"</example>
 	<description>
-		The [[*]] property determines or changes the user's name.
+		The [[*]] property determines the user's login name or full real name.
 		The [[short ]][[*]] or [[abbreviated ]][[*]] is usually the user's login name.
 		The [[long ]][[*]] is usually the user's full real name.
-		Only the [[long ]][[*]] can be changed with this property.
-		(If no modifier is specified, [[long]] is assumed.)
+		If no modifier is specified, [[long]] is assumed.
+	</description>
+	<description>
+		In OpenXION 1.0 and 1.1, the [[long ]][[*]] can be [[cm:set]] but the [[short ]][[*]] is read-only.
+		In OpenXION 1.2 and later, both the [[long ]][[*]] and the [[short ]][[*]] are read-only.
+		(See note.)
 	</description>
 	<note>
 		HyperTalk did not have this property but used a [[Username]] global variable for the same purpose.
 		OpenXION avoids using any XION global variables for special purposes.
 	</note>
 	<note>
-		OpenXION reads the value of this property from a file at startup
-		and writes it back to the file upon exit. This file is located at
-		[[~/Library/Preferences/com.kreative.openxion.conf]] (on Mac OS X),
-		[[~\Application Data\OpenXION\xion.conf]] (on Windows),
-		or [[~/.xion.conf]] (on all other systems).
-		This is a plain text file that can be edited with any text editor.
+		OpenXION 1.0 and 1.1 did not get the user's full real name from the system,
+		but left the [[long ]][[*]] as a property to be [[cm:set]] by the user themselves.
+		OpenXION 1.2 and later will get the user's full real name from the system instead.
 	</note>
 	<note>
 		The [[*]] property is specific to OpenXION; it is not part of the XION Scripting Language Standard.

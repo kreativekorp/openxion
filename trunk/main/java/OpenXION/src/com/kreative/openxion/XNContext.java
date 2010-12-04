@@ -243,7 +243,6 @@ public class XNContext implements Serializable, Cloneable {
 	private Set<String> includedScripts;
 	
 	/* ENVIRONMENT */
-	private String username;
 	private String applicationPaths;
 	private String documentPaths;
 	private String includePaths;
@@ -321,7 +320,6 @@ public class XNContext implements Serializable, Cloneable {
 	/* ENVIRONMENT */
 	
 	private void initEnvironment() {
-		username = null;
 		applicationPaths = null;
 		documentPaths = null;
 		includePaths = null;
@@ -338,7 +336,6 @@ public class XNContext implements Serializable, Cloneable {
 	}
 	
 	private void initEnvironment(XNContext parent) {
-		username = parent.username;
 		applicationPaths = parent.applicationPaths;
 		documentPaths = parent.documentPaths;
 		includePaths = parent.includePaths;
@@ -590,14 +587,6 @@ public class XNContext implements Serializable, Cloneable {
 	}
 	
 	/* ENVIRONMENT */
-	
-	public String getUsername() {
-		return username;
-	}
-	
-	public void setUsername(String s) {
-		username = s;
-	}
 	
 	public String getApplicationPaths() {
 		return applicationPaths;

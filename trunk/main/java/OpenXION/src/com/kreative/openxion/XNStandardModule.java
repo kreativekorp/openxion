@@ -5269,13 +5269,13 @@ public class XNStandardModule extends XNModule {
 			return true;
 		}
 		public boolean canSetProperty(XNContext ctx, String propertyName) {
-			return true;
+			return false;
 		}
 		public XOMVariant getProperty(XNContext ctx, XNModifier modifier, String propertyName) {
 			return new XOMString(XIONUtil.getUserName(ctx, modifier));
 		}
 		public void setProperty(XNContext ctx, String propertyName, XOMVariant value) {
-			ctx.setUsername(value.unwrap().toTextString(ctx));
+			throw new XNScriptError("Can't set that property");
 		}
 	};
 	
