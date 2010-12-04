@@ -668,11 +668,16 @@ public class XNExtendedModule extends XNModule {
 				args[i*2+2] = lines[i];
 			}
 			try {
-				Runtime.getRuntime().exec(args);
+				String result = XIONUtil.captureProcessOutput(args);
+				if (result.endsWith("\r\n")) {
+					result = result.substring(0, result.length()-2);
+				} else if (result.endsWith("\n") || result.endsWith("\r")) {
+					result = result.substring(0, result.length()-1);
+				}
+				return new XOMString(result);
 			} catch (IOException e) {
 				throw new XNScriptError("Error running AppleScript: "+e.getMessage());
 			}
-			return XOMEmpty.EMPTY;
 		}
 	};
 	
@@ -690,11 +695,16 @@ public class XNExtendedModule extends XNModule {
 				PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(tmp), "UTF-8"), true);
 				for (String line : lines) out.println(line);
 				out.close();
-				Runtime.getRuntime().exec(new String[]{"cmd", "/c", "start", "\"X\"", tmp.getAbsolutePath()});
+				String result = XIONUtil.captureProcessOutput(new String[]{"cmd", "/c", "start", "\"X\"", tmp.getAbsolutePath()});
+				if (result.endsWith("\r\n")) {
+					result = result.substring(0, result.length()-2);
+				} else if (result.endsWith("\n") || result.endsWith("\r")) {
+					result = result.substring(0, result.length()-1);
+				}
+				return new XOMString(result);
 			} catch (IOException e) {
 				throw new XNScriptError("Error running Windows Scripting Host: "+e.getMessage());
 			}
-			return XOMEmpty.EMPTY;
 		}
 	};
 	
@@ -724,11 +734,16 @@ public class XNExtendedModule extends XNModule {
 				PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(tmp), "UTF-8"), true);
 				for (String line : lines) out.println(line);
 				out.close();
-				Runtime.getRuntime().exec(new String[]{lang, tmp.getAbsolutePath()});
+				String result = XIONUtil.captureProcessOutput(new String[]{lang, tmp.getAbsolutePath()});
+				if (result.endsWith("\r\n")) {
+					result = result.substring(0, result.length()-2);
+				} else if (result.endsWith("\n") || result.endsWith("\r")) {
+					result = result.substring(0, result.length()-1);
+				}
+				return new XOMString(result);
 			} catch (IOException e) {
 				throw new XNScriptError("Error running "+lang+": "+e.getMessage());
 			}
-			return XOMEmpty.EMPTY;
 		}
 	}
 }
