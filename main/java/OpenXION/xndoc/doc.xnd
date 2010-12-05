@@ -7399,6 +7399,114 @@
 	</see-also>
 </command>
 
+<command>
+	<name dialects="oxne12">sql</name>
+	<syntax>sql connect to {url}</syntax>
+	<syntax>sql connect to {url} with driver {driver}</syntax>
+	<syntax>sql connect to {url} with username {username} with password {password}</syntax>
+	<syntax>sql connect to {url} with driver {driver} with username {username} with password {password}</syntax>
+	<syntax>sql disconnect</syntax>
+	<syntax>sql disconnect from {url}</syntax>
+	<syntax>sql prepare {query}</syntax>
+	<syntax>sql prepare {query} using connection {url}</syntax>
+	<syntax>sql prepare statement {query}</syntax>
+	<syntax>sql prepare statement {query} using connection {url}</syntax>
+	<syntax>sql prepare set {parameter} to {value}</syntax>
+	<syntax>sql prepare set {parameter} to {value} using connection {url}</syntax>
+	<syntax>sql prepare execute</syntax>
+	<syntax>sql prepare execute using connection {url}</syntax>
+	<syntax>sql execute prepared</syntax>
+	<syntax>sql execute prepared using connection {url}</syntax>
+	<syntax>sql execute {query}</syntax>
+	<syntax>sql execute {query} using connection {url}</syntax>
+	<syntax-note>
+		{URL} yields the database's URL as a [[dt:string]].
+		{Driver} yields the JDBC driver's class name as a [[dt:string]].
+		{Username} and {password} yield the login name and password used to connect to the database as [[dt:string]]s.
+		{Query} yields a SQL query as a [[dt:string]].
+		{Parameter} yields the index into the prepared statement's parameters, starting from 1, as an [[dt:integer]].
+		{Value} yields the parameter's value as a [[dt:string]].
+	</syntax-note>
+	<example>sql connect to "mysql://localhost/studentdb" with driver "com.mysql.jdbc.Driver" with username "admin" with password "woot"</example>
+	<example>sql execute "select * from students" using connection "mysql://localhost/studentdb"</example>
+	<example>sql prepare "update students set name=? where id=?" using connection "mysql://localhost/studentdb"</example>
+	<example>sql prepare set 1 to "Little Bobby Tables"</example>
+	<example>sql prepare set 2 to 16777216</example>
+	<example>sql execute prepared</example>
+	<example>sql disconnect from "mysql://localhost/studentdb"</example>
+	<description>
+		The [[*]] command connects to, disconnects from, and submits queries to a database.
+	</description>
+	<description>
+		The [[sql connect]] form opens a connection to a database.
+		If a connection has already been opened, the {driver} cannot be found or loaded,
+		the database {url} is invalid, or the specified {username} and {password} are
+		invalid, a script error is triggered.
+	</description>
+	<description>
+		The [[sql disconnect]] form closes an open connection to a database.
+		If no {url} is specified, the last successfully-used {url} is used.
+		If there is no open connection to the database, a script error is triggered.
+	</description>
+	<description>
+		The [[sql prepare statement]] form creates a prepared statement for the specified database.
+		Parameters in the prepared statement are indicated by question marks in the query string.
+		If no {url} is specified, the last successfully-used {url} is used.
+		If there is no open connection to the database, a script error is triggered.
+	</description>
+	<description>
+		The [[sql prepare set]] form sets the value of a parameter in the last prepared statement
+		created for the specified database. The first parameter in the prepared statement is parameter 1.
+		If no {url} is specified, the last successfully-used {url} is used.
+		If there is no open connection to the database, no prepared statement has been created for
+		the specified database, or the specified parameter index is invalid, a script error is triggered.
+	</description>
+	<description>
+		The [[sql prepare execute]] and [[sql execute prepared]] forms execute the prepared statement.
+		The number of rows affected or returned by the query is put into the [[fn:result]].
+		If any rows are returned, they are put into [[it]]. Rows are delimited by the [[pr:rowDelimiter]]
+		and columns are delimited by the [[pr:columnDelimiter]].
+		If no {url} is specified, the last successfully-used {url} is used.
+		If there is no open connection to the database, the query contains a syntax error,
+		or the query cannot be executed successfully, a script error is triggered.
+	</description>
+	<description>
+		The [[sql execute]] form executes a query immediately, without requiring the creation of a prepared statement.
+		The number of rows affected or returned by the query is put into the [[fn:result]].
+		If any rows are returned, they are put into [[it]]. Rows are delimited by the [[pr:rowDelimiter]]
+		and columns are delimited by the [[pr:columnDelimiter]].
+		If no {url} is specified, the last successfully-used {url} is used.
+		If there is no open connection to the database, the query contains a syntax error,
+		or the query cannot be executed successfully, a script error is triggered.
+	</description>
+	<script>
+		The following scripts demonstrate two possible ways to list the contents of a table:
+	</script>
+	<script>
+		[[sql execute "select * from students"\\
+		repeat foreach x in the rows of it\\
+		  put replaceall(x, the columndelimiter, tab)\\
+		end repeat]]
+	</script>
+	<script>
+		[[set the rowDelimiter to newline\\
+		set the columnDelimiter to tab\\
+		sql execute "select * from students"\\
+		put it]]
+	</script>
+	<note>
+		It is also possible to execute a query without quotes by leaving out the [[execute]] keyword, e.g.:\\
+		\\
+		[[sql select * from students where firstname = "Steve"]]\\
+		\\
+		However, this is prone to error and is not recommended.
+		(If you're curious, among the reasons are:
+		SQL and XION use different lexicographical rules, so it's possible for the query to confuse OpenXION or the database or both;
+		it is impossible to use any XION expressions in such a statement, so you are limited to static queries;
+		and this feature may change in future versions of OpenXION.)
+	</note>
+</command>
+
 <function>
 	<name dialects="xn1,oxn1,oxn11,oxn12,hyp">abs</name>
 	<syntax>the abs of {factor}</syntax>

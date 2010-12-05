@@ -29,11 +29,14 @@ package com.kreative.openxion;
 
 import java.io.*;
 import java.net.*;
+import java.sql.*;
 import java.text.*;
 import java.util.*;
 import java.util.regex.*;
-
+import com.kreative.openxion.ast.XNEmptyExpression;
+import com.kreative.openxion.ast.XNExpression;
 import com.kreative.openxion.ast.XNModifier;
+import com.kreative.openxion.ast.XNStringExpression;
 import com.kreative.openxion.io.XOMURLIOManager;
 import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.xom.XOMVariant;
@@ -73,6 +76,9 @@ public class XNExtendedModule extends XNModule {
 		dataTypes.put("clipboards", XOMClipboardType.listInstance);
 		dataTypes.put("url", XOMURLType.instance);
 		dataTypes.put("urls", XOMURLType.listInstance);
+		
+		commandParsers.put("sql", p_sql);
+		commands.put("sql", c_sql);
 		
 		functions.put("heapspace", f_heapspace);
 		functions.put("htmldecode", f_htmldecode);
@@ -118,6 +124,446 @@ public class XNExtendedModule extends XNModule {
 	public String toString() {
 		return "XNExtendedModule";
 	}
+	
+	private static XNExpression getTokenExpression(XNParser p, String s) {
+		if (p.lookToken(1).image.equalsIgnoreCase(s)) {
+			return new XNStringExpression(p.getToken());
+		} else {
+			throw new XNParseError(s, p.lookToken(1));
+		}
+	}
+	
+	private static XNExpression getTokenExpression(XNParser p, int n) {
+		if (n < 1) {
+			return new XNEmptyExpression(0,0);
+		} else {
+			XNToken t = p.getToken(); n--;
+			while (n > 0) {
+				XNToken u = p.getToken(); n--;
+				XNToken v = new XNToken(t.kind, t.image+" "+u.image, t.beginLine, t.beginColumn, u.endLine, u.endColumn);
+				v.specialToken = t.specialToken;
+				v.next = u.next;
+				t = v;
+			}
+			return new XNStringExpression(t);
+		}
+	}
+	
+	private static XNExpression createTokenExpression(String s) {
+		if (s == null || s.trim().length() == 0) {
+			return new XNEmptyExpression(0, 0);
+		} else {
+			return new XNStringExpression(new XNToken(XNToken.ID, s, 0, 0, 0, 0));
+		}
+	}
+	
+	private static String myDescribeCommand(String commandName, List<XNExpression> parameters) {
+		String s = "";
+		for (XNExpression p : parameters) {
+			if (p instanceof XNEmptyExpression) {
+				XNEmptyExpression ee = (XNEmptyExpression)p;
+				if (ee.getBeginCol() != 0 || ee.getBeginLine() != 0) {
+					s += " "+p.toString();
+				}
+			} else {
+				s += " "+p.toString();
+			}
+		}
+		return s.trim();
+	}
+	
+	private static final CommandParser p_sql = new CommandParser() {
+		public List<XNExpression> parseCommand(String commandName, XNParser p, Collection<String> keywords) {
+			String kind;
+			if (
+					p.lookToken(1).toString().equalsIgnoreCase("connect") ||
+					p.lookToken(1).toString().equalsIgnoreCase("disconnect") ||
+					p.lookToken(1).toString().equalsIgnoreCase("prepare") ||
+					p.lookToken(1).toString().equalsIgnoreCase("execute")
+			) {
+				kind = getTokenExpression(p,1).toString().toLowerCase();
+			} else {
+				kind = "direct";
+			}
+			List<XNExpression> following = new Vector<XNExpression>();
+			following.add(createTokenExpression(kind));
+			if (kind.equalsIgnoreCase("connect")) {
+				HashSet<String> myKeywords = new HashSet<String>();
+				if (keywords != null) myKeywords.addAll(keywords);
+				myKeywords.add("with");
+				following.add(getTokenExpression(p,"to"));
+				following.add(p.getListExpression(myKeywords));
+				while (p.lookToken(1).toString().equalsIgnoreCase("with")) {
+					if (
+							p.lookToken(2).toString().equalsIgnoreCase("driver") ||
+							p.lookToken(2).toString().equalsIgnoreCase("username") ||
+							p.lookToken(2).toString().equalsIgnoreCase("password")
+					) {
+						following.add(getTokenExpression(p,2));
+						following.add(p.getListExpression(myKeywords));
+					} else {
+						break;
+					}
+				}
+			} else if (kind.equalsIgnoreCase("disconnect")) {
+				if (p.lookToken(1).toString().equalsIgnoreCase("from")) {
+					following.add(getTokenExpression(p,"from"));
+					following.add(p.getListExpression(keywords));
+				}
+			} else if (kind.equalsIgnoreCase("prepare")) {
+				if (p.lookToken(1).toString().equalsIgnoreCase("execute")) {
+					following.add(getTokenExpression(p,"execute"));
+				} else if (p.lookToken(1).toString().equalsIgnoreCase("set")) {
+					HashSet<String> myKeywords = new HashSet<String>();
+					if (keywords != null) myKeywords.addAll(keywords);
+					myKeywords.add("to");
+					following.add(getTokenExpression(p,"set"));
+					following.add(p.getListExpression(myKeywords));
+					following.add(getTokenExpression(p,"to"));
+					following.add(p.getListExpression(keywords));
+				} else if (p.lookToken(1).toString().equalsIgnoreCase("statement")) {
+					following.add(getTokenExpression(p,"statement"));
+					following.add(p.getListExpression(keywords));
+				} else {
+					following.add(createTokenExpression("statement"));
+					following.add(p.getListExpression(keywords));
+				}
+				if (p.lookToken(1).toString().equalsIgnoreCase("using") && p.lookToken(2).toString().equalsIgnoreCase("connection")) {
+					following.add(getTokenExpression(p,2));
+					following.add(p.getListExpression(keywords));
+				}
+			} else if (kind.equalsIgnoreCase("execute")) {
+				if (p.lookToken(1).toString().equalsIgnoreCase("prepared")) {
+					following.add(getTokenExpression(p,"prepared"));
+				} else {
+					following.add(p.getListExpression(keywords));
+				}
+				if (p.lookToken(1).toString().equalsIgnoreCase("using") && p.lookToken(2).toString().equalsIgnoreCase("connection")) {
+					following.add(getTokenExpression(p,2));
+					following.add(p.getListExpression(keywords));
+				}
+			} else {
+				StringBuffer sql = new StringBuffer();
+				while (true) {
+					if (p.lookEOL(1) || !p.isNotKeyword(1, keywords)) {
+						following.add(new XNStringExpression(new XNToken(XNToken.QUOTED,XIONUtil.quote(sql.toString().trim()),0,0,0,0)));
+						break;
+					} else if (p.lookToken(1).toString().equalsIgnoreCase("using") && p.lookToken(2).toString().equalsIgnoreCase("connection")) {
+						following.add(new XNStringExpression(new XNToken(XNToken.QUOTED,XIONUtil.quote(sql.toString().trim()),0,0,0,0)));
+						following.add(getTokenExpression(p,2));
+						following.add(p.getListExpression(keywords));
+						break;
+					} else {
+						sql.append(" ");
+						sql.append(p.getToken().toString());
+					}
+				}
+			}
+			return following;
+		}
+		public String describeCommand(String commandName, List<XNExpression> parameters) {
+			return myDescribeCommand(commandName, parameters);
+		}
+	};
+	
+	private static final Command c_sql = new Command() {
+		private Map<String,Connection> connections = new HashMap<String,Connection>();
+		private Map<String,PreparedStatement> prepareds = new HashMap<String,PreparedStatement>();
+		private String lastConnection = null;
+		public XOMVariant executeCommand(XNInterpreter interp, XNContext ctx, String commandName, List<XNExpression> parameters) {
+			if (parameters == null || parameters.size() == 0) {
+				throw new XNScriptError("Can't understand arguments to sql");
+			}
+			String kind = interp.evaluateExpression(parameters.get(0)).unwrap().toTextString(ctx);
+			if (kind.equalsIgnoreCase("connect")) {
+				String to = null;
+				String driver = null;
+				String username = null;
+				String password = null;
+				for (int i = 1; i+1 < parameters.size(); i += 2) {
+					String k = interp.evaluateExpression(parameters.get(i)).unwrap().toTextString(ctx);
+					String v = interp.evaluateExpression(parameters.get(i+1)).unwrap().toTextString(ctx);
+					if (k.equalsIgnoreCase("to")) to = v;
+					else if (k.equalsIgnoreCase("with driver")) driver = v;
+					else if (k.equalsIgnoreCase("with username")) username = v;
+					else if (k.equalsIgnoreCase("with password")) password = v;
+					else throw new XNScriptError("Can't understand arguments to sql: "+k);
+				}
+				if (to == null) {
+					throw new XNScriptError("Can't understand arguments to sql");
+				} else if (connections.containsKey(to)) {
+					throw new XNScriptError("SQL connection \""+to+"\" is already open");
+				} else {
+					if (driver != null) {
+						try {
+							Class.forName(driver);
+						} catch (Exception e) {
+							throw new XNScriptError("SQL driver \""+driver+"\" not found");
+						}
+					}
+					try {
+						Connection conn;
+						if (username == null && password == null) {
+							conn = DriverManager.getConnection("jdbc:" + to);
+						} else {
+							conn = DriverManager.getConnection("jdbc:" + to, ((username == null) ? "" : username), ((password == null) ? "" : password));
+						}
+						connections.put(to, conn);
+						lastConnection = to;
+					} catch (SQLException e) {
+						throw new XNScriptError("SQL error: " + e.getMessage());
+					}
+				}
+			} else if (kind.equalsIgnoreCase("disconnect")) {
+				String from = null;
+				for (int i = 1; i+1 < parameters.size(); i += 2) {
+					String k = interp.evaluateExpression(parameters.get(i)).unwrap().toTextString(ctx);
+					String v = interp.evaluateExpression(parameters.get(i+1)).unwrap().toTextString(ctx);
+					if (k.equalsIgnoreCase("from")) from = v;
+					else throw new XNScriptError("Can't understand arguments to sql");
+				}
+				if (from == null) {
+					from = lastConnection;
+				}
+				if (from == null || !connections.containsKey(from)) {
+					throw new XNScriptError("SQL connection not open");
+				} else {
+					try {
+						if (prepareds.containsKey(from)) {
+							prepareds.get(from).close();
+						}
+						connections.get(from).close();
+					} catch (SQLException e) {
+						// ignored for disconnect statements
+					}
+					if (lastConnection.equals(from)) {
+						lastConnection = null;
+					}
+					prepareds.remove(from);
+					connections.remove(from);
+				}
+			} else if (kind.equalsIgnoreCase("prepare")) {
+				if (parameters.size() > 1) {
+					kind = interp.evaluateExpression(parameters.get(1)).unwrap().toTextString(ctx);
+					if (kind.equalsIgnoreCase("execute")) {
+						String from = null;
+						if (parameters.size() > 3) {
+							from = interp.evaluateExpression(parameters.get(3)).unwrap().toTextString(ctx);
+						}
+						if (from == null) {
+							from = lastConnection;
+						}
+						if (from == null || !connections.containsKey(from)) {
+							throw new XNScriptError("SQL connection not open");
+						} else if (!prepareds.containsKey(from)) {
+							throw new XNScriptError("Can't sql prepare execute until after sql prepare statement");
+						} else {
+							try {
+								PreparedStatement ps = prepareds.get(from);
+								if (ps.execute()) {
+									// resultset
+									ResultSet rs = ps.getResultSet();
+									ResultSetMetaData rsmd = rs.getMetaData();
+									char rd = ctx.getRowDelimiter();
+									char cd = ctx.getColumnDelimiter();
+									StringBuffer it = new StringBuffer();
+									int result = 0;
+									while (rs.next()) {
+										StringBuffer row = new StringBuffer();
+										for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+											row.append(cd);
+											row.append(rs.getString(i).replace(Character.toString(cd), ""));
+										}
+										if (row.length() > 0) {
+											row.deleteCharAt(0);
+										}
+										it.append(rd);
+										it.append(row.toString().replace(Character.toString(rd), ""));
+										result++;
+									}
+									if (it.length() > 0) {
+										it.deleteCharAt(0);
+									}
+									lastConnection = from;
+									ctx.setIt(XOMStringType.instance, new XOMString(it.toString()));
+									return new XOMInteger(result);
+								} else {
+									// updatecount
+									lastConnection = from;
+									return new XOMInteger(ps.getUpdateCount());
+								}
+							} catch (SQLException e) {
+								throw new XNScriptError("SQL error: " + e.getMessage());
+							}
+						}
+					} else if (kind.equalsIgnoreCase("set")) {
+						int param = 0;
+						String value = null;
+						String from = null;
+						if (parameters.size() > 2) {
+							XOMVariant v = interp.evaluateExpression(parameters.get(2)).unwrap();
+							XOMInteger i = XOMIntegerType.instance.makeInstanceFrom(ctx, v);
+							param = i.toInt();
+						}
+						if (parameters.size() > 4) {
+							value = interp.evaluateExpression(parameters.get(4)).unwrap().toTextString(ctx);
+						}
+						if (parameters.size() > 6) {
+							from = interp.evaluateExpression(parameters.get(6)).unwrap().toTextString(ctx);
+						}
+						if (param < 1 || value == null) {
+							throw new XNScriptError("Can't understand arguments to sql");
+						}
+						if (from == null) {
+							from = lastConnection;
+						}
+						if (from == null || !connections.containsKey(from)) {
+							throw new XNScriptError("SQL connection not open");
+						} else if (!prepareds.containsKey(from)) {
+							throw new XNScriptError("Can't sql prepare set until after sql prepare statement");
+						} else {
+							try {
+								prepareds.get(from).setString(param, value);
+								lastConnection = from;
+							} catch (SQLException e) {
+								throw new XNScriptError("SQL error: " + e.getMessage());
+							}
+						}
+					} else {
+						String query = null;
+						String from = null;
+						if (parameters.size() > 2) {
+							query = interp.evaluateExpression(parameters.get(2)).unwrap().toTextString(ctx);
+						}
+						if (parameters.size() > 4) {
+							from = interp.evaluateExpression(parameters.get(4)).unwrap().toTextString(ctx);
+						}
+						if (query == null) {
+							throw new XNScriptError("Can't understand arguments to sql");
+						}
+						if (from == null) {
+							from = lastConnection;
+						}
+						if (from == null || !connections.containsKey(from)) {
+							throw new XNScriptError("SQL connection not open");
+						} else {
+							try {
+								if (prepareds.containsKey(from)) {
+									prepareds.get(from).close();
+									prepareds.remove(from);
+								}
+								Connection conn = connections.get(from);
+								prepareds.put(from, conn.prepareStatement(query));
+								lastConnection = from;
+							} catch (SQLException e) {
+								throw new XNScriptError("SQL error: " + e.getMessage());
+							}
+						}
+					}
+				} else {
+					throw new XNScriptError("Can't understand arguments to sql");
+				}
+			} else {
+				String query = null;
+				String from = null;
+				if (parameters.size() > 1) {
+					query = interp.evaluateExpression(parameters.get(1)).unwrap().toTextString(ctx);
+				}
+				if (parameters.size() > 3) {
+					from = interp.evaluateExpression(parameters.get(3)).unwrap().toTextString(ctx);
+				}
+				if (query == null) {
+					throw new XNScriptError("Can't understand arguments to sql");
+				}
+				if (from == null) {
+					from = lastConnection;
+				}
+				if (from == null || !connections.containsKey(from)) {
+					throw new XNScriptError("SQL connection not open");
+				} else {
+					try {
+						Connection conn = connections.get(from);
+						if (query.trim().equalsIgnoreCase("prepared")) {
+							if (!prepareds.containsKey(from)) {
+								throw new XNScriptError("Can't sql execute prepared until after sql prepare statement");
+							} else {
+								PreparedStatement ps = prepareds.get(from);
+								if (ps.execute()) {
+									// resultset
+									ResultSet rs = ps.getResultSet();
+									ResultSetMetaData rsmd = rs.getMetaData();
+									char rd = ctx.getRowDelimiter();
+									char cd = ctx.getColumnDelimiter();
+									StringBuffer it = new StringBuffer();
+									int result = 0;
+									while (rs.next()) {
+										StringBuffer row = new StringBuffer();
+										for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+											row.append(cd);
+											row.append(rs.getString(i).replace(Character.toString(cd), ""));
+										}
+										if (row.length() > 0) {
+											row.deleteCharAt(0);
+										}
+										it.append(rd);
+										it.append(row.toString().replace(Character.toString(rd), ""));
+										result++;
+									}
+									if (it.length() > 0) {
+										it.deleteCharAt(0);
+									}
+									lastConnection = from;
+									ctx.setIt(XOMStringType.instance, new XOMString(it.toString()));
+									return new XOMInteger(result);
+								} else {
+									// updatecount
+									lastConnection = from;
+									return new XOMInteger(ps.getUpdateCount());
+								}
+							}
+						} else {
+							Statement st = conn.createStatement();
+							if (st.execute(query)) {
+								// resultset
+								ResultSet rs = st.getResultSet();
+								ResultSetMetaData rsmd = rs.getMetaData();
+								char rd = ctx.getRowDelimiter();
+								char cd = ctx.getColumnDelimiter();
+								StringBuffer it = new StringBuffer();
+								int result = 0;
+								while (rs.next()) {
+									StringBuffer row = new StringBuffer();
+									for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+										row.append(cd);
+										row.append(rs.getString(i).replace(Character.toString(cd), ""));
+									}
+									if (row.length() > 0) {
+										row.deleteCharAt(0);
+									}
+									it.append(rd);
+									it.append(row.toString().replace(Character.toString(rd), ""));
+									result++;
+								}
+								if (it.length() > 0) {
+									it.deleteCharAt(0);
+								}
+								lastConnection = from;
+								ctx.setIt(XOMStringType.instance, new XOMString(it.toString()));
+								return new XOMInteger(result);
+							} else {
+								// updatecount
+								lastConnection = from;
+								return new XOMInteger(st.getUpdateCount());
+							}
+						}
+					} catch (SQLException e) {
+						throw new XNScriptError("SQL error: " + e.getMessage());
+					}
+				}
+			}
+			return null;
+		}
+	};
 	
 	private static void assertEmptyParameter(String functionName, XOMVariant parameter) {
 		if (!(parameter == null || parameter instanceof XOMEmpty)) {
