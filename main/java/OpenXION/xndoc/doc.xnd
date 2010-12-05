@@ -12332,10 +12332,152 @@
 </iomethod>
 
 <article>
+	<name>keywords</name>
+	<title>Keywords at a Glance</title>
+	<summary>
+		An at-a-glance view of all the control structures and other keywords available in OpenXION.
+	</summary>
+	<content>
+		{{{{Includes}}}}
+		\\\\
+		::TABLE
+		[[cs:include]] :: [[cs:require]] :: [[cs:use]]
+		ELBAT::
+		\\\\
+		{{{{Declarations}}}}
+		\\\\
+		::TABLE
+		[[cs:global]] :: [[cs:shared]]  :: [[cs:static]] :: [[cs:local]] :: [[cs:const]] :: [[cs:ordinal]]
+		ELBAT::
+		\\\\
+		{{{{Conditionals}}}}
+		\\\\
+		::TABLE
+		[[cs:if]]     :: [[cs:then]] :: [[cs:else]]    :: [[cs:exit]] :: [[cs:end]]  ::  
+		..........................................................................................
+		[[cs:switch]] :: [[cs:case]] :: [[cs:default]] :: [[cs:next]] :: [[cs:exit]] :: [[cs:end]]
+		ELBAT::
+		\\\\
+		{{{{Loops}}}}
+		\\\\
+		::TABLE
+		[[cs:repeat]]       :: [[cs:repeat for]]    :: [[cs:repeat for each]] :: [[cs:repeat foreach]]
+		..............................................................................................
+		[[cs:repeat until]] :: [[cs:repeat while]]  :: [[cs:repeat with]]     ::  
+		..............................................................................................
+		[[cs:next]]         :: [[cs:exit]]          :: [[cs:end]]             ::  
+		ELBAT::
+		\\\\
+		{{{{Exception Handling}}}}
+		\\\\
+		::TABLE
+		[[cs:try]] :: [[cs:throw]] :: [[cs:catch]] :: [[cs:finally]] :: [[cs:exit]] :: [[cs:end]]
+		ELBAT::
+		\\\\
+		{{{{Messages & Handlers}}}}
+		\\\\
+		::TABLE
+		[[cs:on]]   :: [[cs:function]] :: [[cs:return]]
+		...............................................
+		[[cs:pass]] :: [[cs:exit]]     :: [[cs:end]]
+		...............................................
+		[[cs:do]]   :: [[cs:send]]     :: [[cs:tell]]
+		ELBAT::
+		\\\\
+		{{{{User-Defined Objects}}}}
+		\\\\
+		::TABLE
+		[[cs:object type]] :: [[cs:pl]] :: [[cs:aka]] :: [[cs:extends]]
+		ELBAT::::TABLE
+		[[cs:to create]]       :: [[cs:to delete]]
+		................................................
+		[[cs:to get contents]] :: [[cs:to put contents]]
+		................................................
+		[[cs:to get]]          :: [[cs:to set]]
+		................................................
+		[[kw:me]]              :: [[kw:super]]
+		................................................
+		[[cs:exit]]            :: [[cs:end]]
+		ELBAT::
+		\\\\
+		{{{{Adjectives}}}}
+		\\\\
+		::TABLE
+		[[kw:short]]  :: [[kw:med]]         :: [[kw:medium]] :: [[kw:abbr]]
+		......................................................................
+		[[kw:abbrev]] :: [[kw:abbreviated]] :: [[kw:long]]   :: [[kw:English]]
+		ELBAT::
+		\\\\
+		{{{{Prepositions}}}}
+		\\\\
+		::TABLE
+		[[kw:into]] :: [[kw:before]] :: [[kw:after]]
+		ELBAT::
+		\\\\
+		{{{{Other Keywords}}}}
+		\\\\
+		::TABLE
+		[[kw:in]] :: [[kw:of]] :: [[kw:to]] :: [[kw:thru]] :: [[kw:through]] :: [[kw:the]]
+		ELBAT::
+		\\\\
+		{{{{Metakeywords}}}}
+		\\\\
+		::TABLE
+		[[kw:__LINE__]]
+		ELBAT::
+	</content>
+</article>
+
+<article>
+	<name>commands</name>
+	<title>Commands at a Glance</title>
+	<summary>
+		An at-a-glance view of all the commands available in OpenXION.
+	</summary>
+	<content>
+		{{{{Basic Commands}}}}
+		\\\\
+		::TABLE
+		[[cm:get]] :: [[cm:put]] :: [[cm:let]] :: [[cm:set]]
+		ELBAT::
+		\\\\
+		{{{{Arithmetic}}}}
+		\\\\
+		::TABLE
+		[[cm:add]] :: [[cm:subtract]] :: [[cm:multiply]] :: [[cm:divide]] :: [[cm:modulo]]
+		ELBAT::
+		\\\\
+		{{{{Human-Computer Interaction}}}}
+		\\\\
+		::TABLE
+		[[cm:answer]] :: [[cm:ask]] :: [[cm:beep]] :: [[cm:put]]
+		ELBAT::
+		\\\\
+		{{{{File I/O}}}}
+		\\\\
+		::TABLE
+		[[cm:open]] :: [[cm:read]] :: [[cm:write]] :: [[cm:truncate]] :: [[cm:close]]
+		ELBAT::
+		\\\\
+		{{{{Object Manipulation}}}}
+		\\\\
+		::TABLE
+		[[cm:create]] :: [[cm:delete]]
+		ELBAT::
+		\\\\
+		{{{{Miscellaneous Commands}}}}
+		\\\\
+		::TABLE
+		[[cm:convert]] :: [[cm:sort]] :: [[cm:sql]] :: [[cm:wait]]
+		ELBAT::
+	</content>
+</article>
+
+<article>
 	<name>functions</name>
 	<title>Functions at a Glance</title>
 	<summary>
-		This page provides an at-a-glance view of all the functions available in OpenXION.
+		An at-a-glance view of all the functions available in OpenXION.
 	</summary>
 	<content>
 		{{{{{Mathematical Functions}}}}}
