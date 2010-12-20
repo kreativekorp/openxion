@@ -5454,8 +5454,8 @@ public class XNStandardModule extends XNModule {
 		}
 		public XOMVariant getProperty(XNContext ctx, XNModifier modifier, String propertyName) {
 			String s = ctx.getMathProcessor().getClass().getCanonicalName();
-			if (s.startsWith("com.kreative.openxion.util.math.") && s.endsWith("Math")) {
-				return new XOMString(s.substring(32, s.length()-4).toLowerCase());
+			if (s.startsWith("com.kreative.openxion.math.") && s.endsWith("Math")) {
+				return new XOMString(s.substring(27, s.length()-4).toLowerCase());
 			} else {
 				return new XOMString(s);
 			}
@@ -5463,7 +5463,7 @@ public class XNStandardModule extends XNModule {
 		public void setProperty(XNContext ctx, String propertyName, XOMVariant value) {
 			String s = value.toTextString(ctx);
 			if (!s.equals("") && !s.contains(".")) {
-				s = "com.kreative.openxion.util.math."+s.substring(0,1).toUpperCase()+s.substring(1).toLowerCase()+"Math";
+				s = "com.kreative.openxion.math."+s.substring(0,1).toUpperCase()+s.substring(1).toLowerCase()+"Math";
 			}
 			try {
 				MathProcessor mp = (MathProcessor)Class.forName(s).newInstance();
