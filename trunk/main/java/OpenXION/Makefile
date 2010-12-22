@@ -153,6 +153,9 @@ OpenXION-distwin.zip: OpenXION.jar XIONDoc.jar
 test: OpenXION.jar
 	java -jar OpenXION.jar -s allow -T XIONStdTestSuite/*.xn
 
+xndocs: XIONDoc.jar
+	java -jar XIONDoc.jar xndoc/doc.xnd
+
 localuninstall:
 	rm -f jline.jar
 	rm -f xe
@@ -193,4 +196,4 @@ install: OpenXION.jar XIONDoc.jar
 	chmod +x $(INSTBINDIR)/xion
 	chmod +x $(INSTBINDIR)/xiondoc
 
-.PHONY: all eclipseall clean eclipseclean osxclean test localuninstall localinstall uninstall install
+.PHONY: all eclipseall clean eclipseclean osxclean test xndocs localuninstall localinstall uninstall install
