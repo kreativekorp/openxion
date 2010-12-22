@@ -37,6 +37,10 @@ public class XNBinaryExpression extends XNExpression {
 		this.left = l; this.operator = op; this.right = r;
 	}
 	
+	public Object getSource() {
+		return left.getSource();
+	}
+	
 	public int getBeginLine() {
 		return left.getBeginLine();
 	}

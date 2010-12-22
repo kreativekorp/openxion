@@ -2604,6 +2604,27 @@
 </keyword>
 
 <keyword>
+	<name dialects="oxnb12">__FILE__</name>
+	<syntax>__FILE__</syntax>
+	<example>put "I am in" && __FILE__</example>
+	<description>
+		[[kw:__FILE__]] is a special keyword that is replaced with
+		the full path of the file it is in when a script is parsed.
+		If the script did not come from a file, the [[kw:__FILE__]]
+		keyword is replaced with [[cn:empty]].
+	</description>
+	<note>
+		If [[kw:__FILE__]] is used inside a string passed to [[cs:do]] or [[fn:value]],
+		it will be replaced with [[cn:empty]], not the path of the current script file.
+		If you want the latter, put [[kw:__FILE__]] outside the string.
+	</note>
+	<note>
+		[[kw:__FILE__]] is not part of the XION Scripting Language Standard and is
+		not portable. It is not available in OpenXION 1.0 or 1.1.
+	</note>
+</keyword>
+
+<keyword>
 	<name dialects="xn1,oxnb1,oxnb11,oxnb12,hyp">short</name>
 	<applies-to>Functions and properties</applies-to>
 	<syntax>the [[*]] {function-or-property-name}</syntax>
@@ -12423,7 +12444,7 @@
 		{{{{Metakeywords}}}}
 		\\\\
 		::TABLE
-		[[kw:__LINE__]]
+		[[kw:__LINE__]] :: [[kw:__FILE__]]
 		ELBAT::
 	</content>
 </article>

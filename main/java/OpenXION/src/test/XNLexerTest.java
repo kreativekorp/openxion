@@ -8,7 +8,7 @@ public class XNLexerTest {
 	public static void main(String[] args) throws IOException {
 		for (String arg : args) {
 			System.out.println("Lexing: "+new File(arg).getName());
-			XNLexer lex = new XNLexer(new InputStreamReader(new FileInputStream(arg), "UTF-8"));
+			XNLexer lex = new XNLexer(new File(arg), new InputStreamReader(new FileInputStream(arg), "UTF-8"));
 			while (true) {
 				XNToken tok = lex.getToken();
 				if (tok.isEOF()) break;

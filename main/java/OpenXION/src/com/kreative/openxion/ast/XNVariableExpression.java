@@ -37,6 +37,10 @@ public class XNVariableExpression extends XNExpression {
 		this.varname = vn;
 	}
 	
+	public Object getSource() {
+		return varname.source;
+	}
+	
 	public int getBeginLine() {
 		return varname.beginLine;
 	}

@@ -47,17 +47,19 @@ public class XNToken implements Serializable, Cloneable {
 	public static final int WHITESPACE = 7;
 	
 	public int kind;
+	public String image;
+	public Object source;
 	public int beginLine;
 	public int beginColumn;
 	public int endLine;
 	public int endColumn;
-	public String image;
 	public XNToken next;
 	public XNToken specialToken;
 	
-	public XNToken(int kind, String image, int bl, int bc, int el, int ec) {
+	public XNToken(int kind, String image, Object source, int bl, int bc, int el, int ec) {
 		this.kind = kind;
 		this.image = image;
+		this.source = source;
 		this.beginLine = bl;
 		this.beginColumn = bc;
 		this.endLine = el;

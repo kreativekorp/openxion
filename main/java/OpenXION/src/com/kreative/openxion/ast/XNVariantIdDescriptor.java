@@ -35,6 +35,13 @@ public class XNVariantIdDescriptor extends XNVariantDescriptor {
 	public XNToken idToken;
 	public XNExpression id;
 	
+	protected Object internalGetSource() {
+		if (dtTokens != null && dtTokens.length > 0) return dtTokens[0].source;
+		else if (idToken != null) return idToken.source;
+		else if (id != null) return id.getSource();
+		else return null;
+	}
+	
 	protected int internalGetBeginCol() {
 		if (dtTokens != null && dtTokens.length > 0) return dtTokens[0].beginColumn;
 		else if (idToken != null) return idToken.beginColumn;

@@ -48,6 +48,15 @@ public class XNFunctionCallPropertyDescriptor extends XNExpression {
 		return (theToken == null && ofInToken == null);
 	}
 	
+	public Object getSource() {
+		if (theToken != null) return theToken.source;
+		else if (modifierToken != null) return modifierToken.source;
+		else if (idToken != null) return idToken.source;
+		else if (ofInToken != null) return ofInToken.source;
+		else if (argument != null) return argument.getSource();
+		else return null;
+	}
+	
 	public int getBeginCol() {
 		if (theToken != null) return theToken.beginColumn;
 		else if (modifierToken != null) return modifierToken.beginColumn;

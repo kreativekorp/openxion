@@ -40,6 +40,10 @@ public class XNInstanceOfExpression extends XNExpression {
 		this.argument = a; this.operator = op; this.datatype = dt; this.datatypeTokens = dttk;
 	}
 	
+	public Object getSource() {
+		return argument.getSource();
+	}
+	
 	public int getBeginLine() {
 		return argument.getBeginLine();
 	}

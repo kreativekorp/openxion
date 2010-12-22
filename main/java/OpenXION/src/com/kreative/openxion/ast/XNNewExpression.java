@@ -44,6 +44,10 @@ public class XNNewExpression extends XNExpression {
 		this.datatype = dt; this.datatypeTokens = dttk; this.ofInToken = of; this.parentVariant = parent;
 	}
 	
+	public Object getSource() {
+		return datatypeTokens[0].source;
+	}
+	
 	public int getBeginLine() {
 		return datatypeTokens[0].beginLine;
 	}

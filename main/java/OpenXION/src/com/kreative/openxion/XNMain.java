@@ -106,7 +106,7 @@ public class XNMain {
 							
 							try {
 								ctx.reset();
-								XNLexer lex = new XNLexer(new InputStreamReader(new FileInputStream(arg), textEncoding));
+								XNLexer lex = new XNLexer(new File(arg), new InputStreamReader(new FileInputStream(arg), textEncoding));
 								XNParser par = new XNParser(ctx, lex);
 								List<XNStatement> program = par.parse();
 								interp.executeScript(program);
@@ -141,7 +141,7 @@ public class XNMain {
 							else testsPassed++;
 						} else {
 							try {
-								XNLexer lex = new XNLexer(new InputStreamReader(new FileInputStream(arg), textEncoding));
+								XNLexer lex = new XNLexer(new File(arg), new InputStreamReader(new FileInputStream(arg), textEncoding));
 								XNParser par = new XNParser(ctx, lex);
 								List<XNStatement> program = par.parse();
 								interp.executeScript(program);

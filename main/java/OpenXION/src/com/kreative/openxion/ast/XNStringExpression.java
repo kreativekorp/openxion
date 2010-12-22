@@ -37,6 +37,10 @@ public class XNStringExpression extends XNExpression {
 		this.literal = lit;
 	}
 	
+	public Object getSource() {
+		return literal.source;
+	}
+	
 	public int getBeginLine() {
 		return literal.beginLine;
 	}

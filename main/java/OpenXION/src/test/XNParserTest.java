@@ -15,7 +15,7 @@ public class XNParserTest {
 				XNContext ctx = new XNContext(new XNNullUI());
 				ctx.loadModule(XNStandardModule.instance());
 				ctx.loadModule(XNExtendedModule.instance());
-				XNLexer lex = new XNLexer(r);
+				XNLexer lex = new XNLexer(new File(arg), r);
 				XNParser par = new XNParser(ctx, lex);
 				List<XNStatement> scr = par.parse();
 				printObject("", "", scr);

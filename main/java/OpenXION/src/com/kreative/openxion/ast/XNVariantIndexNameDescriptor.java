@@ -36,6 +36,14 @@ public class XNVariantIndexNameDescriptor extends XNVariantDescriptor {
 	public XNToken toToken;
 	public XNExpression end;
 	
+	protected Object internalGetSource() {
+		if (dtTokens != null && dtTokens.length > 0) return dtTokens[0].source;
+		else if (start != null) return start.getSource();
+		else if (toToken != null) return toToken.source;
+		else if (end != null) return end.getSource();
+		else return null;
+	}
+	
 	protected int internalGetBeginCol() {
 		if (dtTokens != null && dtTokens.length > 0) return dtTokens[0].beginColumn;
 		else if (start != null) return start.getBeginCol();

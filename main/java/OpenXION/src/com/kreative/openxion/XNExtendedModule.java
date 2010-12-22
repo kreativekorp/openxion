@@ -135,12 +135,12 @@ public class XNExtendedModule extends XNModule {
 	
 	private static XNExpression getTokenExpression(XNParser p, int n) {
 		if (n < 1) {
-			return new XNEmptyExpression(0,0);
+			return new XNEmptyExpression(p.getSource(), 0, 0);
 		} else {
 			XNToken t = p.getToken(); n--;
 			while (n > 0) {
 				XNToken u = p.getToken(); n--;
-				XNToken v = new XNToken(t.kind, t.image+" "+u.image, t.beginLine, t.beginColumn, u.endLine, u.endColumn);
+				XNToken v = new XNToken(t.kind, t.image+" "+u.image, t.source, t.beginLine, t.beginColumn, u.endLine, u.endColumn);
 				v.specialToken = t.specialToken;
 				v.next = u.next;
 				t = v;
@@ -149,11 +149,11 @@ public class XNExtendedModule extends XNModule {
 		}
 	}
 	
-	private static XNExpression createTokenExpression(String s) {
+	private static XNExpression createTokenExpression(XNParser p, String s) {
 		if (s == null || s.trim().length() == 0) {
-			return new XNEmptyExpression(0, 0);
+			return new XNEmptyExpression(p.getSource(), 0, 0);
 		} else {
-			return new XNStringExpression(new XNToken(XNToken.ID, s, 0, 0, 0, 0));
+			return new XNStringExpression(new XNToken(XNToken.ID, s, p.getSource(), 0, 0, 0, 0));
 		}
 	}
 	
@@ -186,7 +186,7 @@ public class XNExtendedModule extends XNModule {
 				kind = "direct";
 			}
 			List<XNExpression> following = new Vector<XNExpression>();
-			following.add(createTokenExpression(kind));
+			following.add(createTokenExpression(p, kind));
 			if (kind.equalsIgnoreCase("connect")) {
 				HashSet<String> myKeywords = new HashSet<String>();
 				if (keywords != null) myKeywords.addAll(keywords);
@@ -225,7 +225,7 @@ public class XNExtendedModule extends XNModule {
 					following.add(getTokenExpression(p,"statement"));
 					following.add(p.getListExpression(keywords));
 				} else {
-					following.add(createTokenExpression("statement"));
+					following.add(createTokenExpression(p,"statement"));
 					following.add(p.getListExpression(keywords));
 				}
 				if (p.lookToken(1).toString().equalsIgnoreCase("using") && p.lookToken(2).toString().equalsIgnoreCase("connection")) {
@@ -246,10 +246,10 @@ public class XNExtendedModule extends XNModule {
 				StringBuffer sql = new StringBuffer();
 				while (true) {
 					if (p.lookEOL(1) || !p.isNotKeyword(1, keywords)) {
-						following.add(new XNStringExpression(new XNToken(XNToken.QUOTED,XIONUtil.quote(sql.toString().trim()),0,0,0,0)));
+						following.add(new XNStringExpression(new XNToken(XNToken.QUOTED,XIONUtil.quote(sql.toString().trim()),p.getSource(),0,0,0,0)));
 						break;
 					} else if (p.lookToken(1).toString().equalsIgnoreCase("using") && p.lookToken(2).toString().equalsIgnoreCase("connection")) {
-						following.add(new XNStringExpression(new XNToken(XNToken.QUOTED,XIONUtil.quote(sql.toString().trim()),0,0,0,0)));
+						following.add(new XNStringExpression(new XNToken(XNToken.QUOTED,XIONUtil.quote(sql.toString().trim()),p.getSource(),0,0,0,0)));
 						following.add(getTokenExpression(p,2));
 						following.add(p.getListExpression(keywords));
 						break;

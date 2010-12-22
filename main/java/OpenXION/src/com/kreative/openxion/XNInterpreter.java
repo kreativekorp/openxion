@@ -56,7 +56,7 @@ public class XNInterpreter {
 	
 	public XOMVariant evaluateExpressionString(String s) {
 		if (s == null) return XOMEmpty.EMPTY;
-		XNLexer lexer = new XNLexer(new StringReader(s));
+		XNLexer lexer = new XNLexer(s, new StringReader(s));
 		XNParser parser = new XNParser(context, lexer);
 		XNExpression expr = parser.getListExpression(null);
 		if (parser.getToken().isEOF()) {
@@ -68,7 +68,7 @@ public class XNInterpreter {
 	
 	public XOMVariant evaluateExpressionStringOrLiteral(String s) {
 		if (s == null) return XOMEmpty.EMPTY;
-		XNLexer lexer = new XNLexer(new StringReader(s));
+		XNLexer lexer = new XNLexer(s, new StringReader(s));
 		XNParser parser = new XNParser(context, lexer);
 		try {
 			XNExpression expr = parser.getListExpression(null);
@@ -1174,7 +1174,7 @@ public class XNInterpreter {
 	
 	public void executeScriptString(String s) {
 		if (s == null) return;
-		XNLexer lexer = new XNLexer(new StringReader(s));
+		XNLexer lexer = new XNLexer(s, new StringReader(s));
 		XNParser parser = new XNParser(context, lexer);
 		List<XNStatement> stats = parser.parse();
 		try {
@@ -1224,7 +1224,7 @@ public class XNInterpreter {
 		context.setFirstResponder(recip);
 		context.pushResponder(recip);
 		try {
-			XNLexer lexer = new XNLexer(new StringReader(message));
+			XNLexer lexer = new XNLexer(message, new StringReader(message));
 			XNParser parser = new XNParser(context, lexer);
 			List<XNStatement> stats = parser.parse();
 			XNHandlerExit exit = executeStatements(stats);
@@ -1378,7 +1378,7 @@ public class XNInterpreter {
 					if (!(is.once && context.hasIncludedScript(file.getAbsolutePath()))) {
 						context.addIncludedScript(file.getAbsolutePath());
 						try {
-							XNLexer lex = new XNLexer(new InputStreamReader(new FileInputStream(file), context.getTextEncoding()));
+							XNLexer lex = new XNLexer(file, new InputStreamReader(new FileInputStream(file), context.getTextEncoding()));
 							XNParser par = new XNParser(context, lex);
 							List<XNStatement> program = par.parse();
 							executeScript(program);
@@ -1516,7 +1516,7 @@ public class XNInterpreter {
 									XOMNumberType.instance.makeInstanceFrom(context, evaluateExpression(((XNRepeatWithParameters)rp).stepvalue).unwrap());
 					if (!(dest instanceof XOMVariable)) {
 						String name = dest.toTextString(context);
-						XNLexer namelex = new XNLexer(new StringReader(name));
+						XNLexer namelex = new XNLexer(name, new StringReader(name));
 						try { if (namelex.lookToken(1).kind == XNToken.ID && namelex.lookToken(2).isEOF()) {
 							name = namelex.getToken().image;
 							dest = context.createVariable(name, XOMStringType.instance, XOMEmpty.EMPTY);
