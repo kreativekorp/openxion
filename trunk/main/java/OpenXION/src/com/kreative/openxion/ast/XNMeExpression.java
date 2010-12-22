@@ -37,6 +37,10 @@ public class XNMeExpression extends XNExpression {
 		this.meToken = o;
 	}
 	
+	public Object getSource() {
+		return meToken.source;
+	}
+	
 	public int getBeginLine() {
 		return meToken.beginLine;
 	}

@@ -37,11 +37,16 @@ public abstract class XNVariantDescriptor extends XNExpression {
 	public XNToken ofInToken;
 	public XNExpression parentVariant;
 	
+	protected abstract Object internalGetSource();
 	protected abstract int internalGetBeginLine();
 	protected abstract int internalGetBeginCol();
 	protected abstract int internalGetEndLine();
 	protected abstract int internalGetEndCol();
 	protected abstract String internalToString();
+	
+	public final Object getSource() {
+		return internalGetSource();
+	}
 	
 	public final int getBeginLine() {
 		return internalGetBeginLine();

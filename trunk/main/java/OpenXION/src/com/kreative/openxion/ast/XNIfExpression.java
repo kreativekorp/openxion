@@ -41,6 +41,10 @@ public class XNIfExpression extends XNExpression {
 	public XNIfExpression(XNToken it, XNExpression c, XNToken tt, XNExpression tc, XNToken et, XNExpression fc) {
 		this.ifToken = it; this.condition = c; this.thenToken = tt; this.trueCase = tc; this.elseToken = et; this.falseCase = fc;
 	}
+	
+	public Object getSource() {
+		return ifToken.source;
+	}
 
 	public int getBeginCol() {
 		return ifToken.beginColumn;

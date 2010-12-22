@@ -29,11 +29,17 @@ package com.kreative.openxion.ast;
 
 public class XNEmptyExpression extends XNExpression {
 	private static final long serialVersionUID = 1L;
+	private Object source;
 	private int line, col;
 	
-	public XNEmptyExpression(int line, int col) {
+	public XNEmptyExpression(Object source, int line, int col) {
+		this.source = source;
 		this.line = line;
 		this.col = col;
+	}
+	
+	public Object getSource() {
+		return source;
 	}
 
 	public int getBeginCol() {

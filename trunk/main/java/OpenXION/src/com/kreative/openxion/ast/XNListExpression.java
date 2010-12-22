@@ -39,6 +39,10 @@ public class XNListExpression extends XNExpression {
 		exprs.add(e);
 	}
 	
+	public Object getSource() {
+		return exprs.get(0).getSource();
+	}
+	
 	public int getBeginLine() {
 		return exprs.get(0).getBeginLine();
 	}

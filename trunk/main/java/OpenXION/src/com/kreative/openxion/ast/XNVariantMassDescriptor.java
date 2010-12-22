@@ -35,6 +35,13 @@ public class XNVariantMassDescriptor extends XNVariantDescriptor {
 	public XNToken allToken;
 	public XNToken theToken;
 	
+	protected Object internalGetSource() {
+		if (allToken != null) return allToken.source;
+		else if (theToken != null) return theToken.source;
+		else if (dtTokens != null && dtTokens.length > 0) return dtTokens[0].source;
+		else return null;
+	}
+	
 	protected int internalGetBeginCol() {
 		if (allToken != null) return allToken.beginColumn;
 		else if (theToken != null) return theToken.beginColumn;

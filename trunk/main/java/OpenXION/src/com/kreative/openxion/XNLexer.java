@@ -40,11 +40,13 @@ public class XNLexer {
 	// Change this number to adjust how long tokens can be.
 	private static final int LOOKAHEAD_LIMIT = 65536;
 	
+	private Object source;
 	private XNReader reader;
 	private Vector<XNToken> buffer;
 	private XNToken lastToken;
 	
-	public XNLexer(Reader reader) {
+	public XNLexer(Object source, Reader reader) {
+		this.source = source;
 		this.reader = new XNReader(reader);
 		this.buffer = new Vector<XNToken>();
 		this.lastToken = null;
@@ -96,6 +98,7 @@ public class XNLexer {
 		if (isLineTerm(firstChar)) {
 			if (firstChar < 0) {
 				return new XNToken(XNToken.LINE_TERM, "",
+						source,
 						reader.getMarkedLine(), reader.getMarkedCol(),
 						reader.getMarkedLine(), reader.getMarkedCol());
 			} else {
@@ -105,6 +108,7 @@ public class XNLexer {
 				reader.reset();
 				reader.read(cbuf);
 				return new XNToken(XNToken.LINE_TERM, new String(cbuf),
+						source,
 						reader.getMarkedLine(), reader.getMarkedCol(),
 						reader.getLine(), reader.getCol());
 			}
@@ -131,6 +135,7 @@ public class XNLexer {
 			reader.reset();
 			reader.read(cbuf);
 			return new XNToken(XNToken.QUOTED, new String(cbuf),
+					source,
 					reader.getMarkedLine(), reader.getMarkedCol(),
 					reader.getLine(), reader.getCol());
 		}
@@ -141,6 +146,7 @@ public class XNLexer {
 			reader.reset();
 			reader.read(cbuf);
 			return new XNToken(XNToken.NUMBER, new String(cbuf),
+					source,
 					reader.getMarkedLine(), reader.getMarkedCol(),
 					reader.getLine(), reader.getCol());
 		}
@@ -151,6 +157,7 @@ public class XNLexer {
 			reader.reset();
 			reader.read(cbuf);
 			return new XNToken(XNToken.ID, new String(cbuf),
+					source,
 					reader.getMarkedLine(), reader.getMarkedCol(),
 					reader.getLine(), reader.getCol());
 		}
@@ -161,6 +168,7 @@ public class XNLexer {
 			reader.reset();
 			reader.read(cbuf);
 			return new XNToken(XNToken.COMMENT, new String(cbuf),
+					source,
 					reader.getMarkedLine(), reader.getMarkedCol(),
 					reader.getLine(), reader.getCol());
 		}
@@ -172,6 +180,7 @@ public class XNLexer {
 				reader.reset();
 				reader.read(cbuf);
 				return new XNToken(XNToken.COMMENT, new String(cbuf),
+						source,
 						reader.getMarkedLine(), reader.getMarkedCol(),
 						reader.getLine(), reader.getCol());
 			// OR MAYBE SYMBOL TOKEN
@@ -179,6 +188,7 @@ public class XNLexer {
 				reader.reset();
 				reader.read();
 				return new XNToken(XNToken.SYMBOL, new String(Character.toChars(firstChar)),
+						source,
 						reader.getMarkedLine(), reader.getMarkedCol(),
 						reader.getLine(), reader.getCol());
 			}
@@ -204,6 +214,7 @@ public class XNLexer {
 				reader.reset();
 				reader.read(cbuf);
 				return new XNToken(XNToken.COMMENT, new String(cbuf),
+						source,
 						reader.getMarkedLine(), reader.getMarkedCol(),
 						reader.getLine(), reader.getCol());
 			// OR MAYBE SYMBOL TOKEN
@@ -211,6 +222,7 @@ public class XNLexer {
 				reader.reset();
 				reader.read();
 				return new XNToken(XNToken.SYMBOL, new String(Character.toChars(firstChar)),
+						source,
 						reader.getMarkedLine(), reader.getMarkedCol(),
 						reader.getLine(), reader.getCol());
 			}
@@ -225,6 +237,7 @@ public class XNLexer {
 					reader.reset();
 					reader.read(cbuf);
 					return new XNToken(XNToken.CONTINUATOR, new String(cbuf),
+							source,
 							reader.getMarkedLine(), reader.getMarkedCol(),
 							reader.getLine(), reader.getCol());
 				// OR MAYBE SYMBOL TOKEN
@@ -232,6 +245,7 @@ public class XNLexer {
 					reader.reset();
 					reader.read();
 					return new XNToken(XNToken.SYMBOL, new String(Character.toChars(firstChar)),
+							source,
 							reader.getMarkedLine(), reader.getMarkedCol(),
 							reader.getLine(), reader.getCol());
 				}
@@ -240,12 +254,14 @@ public class XNLexer {
 		// WHITESPACE
 		else if (isWhiteSpace(firstChar)) {
 			return new XNToken(XNToken.WHITESPACE, new String(Character.toChars(firstChar)),
+					source,
 					reader.getMarkedLine(), reader.getMarkedCol(),
 					reader.getLine(), reader.getCol());
 		}
 		// SYMBOL TOKEN
 		else {
 			return new XNToken(XNToken.SYMBOL, new String(Character.toChars(firstChar)),
+					source,
 					reader.getMarkedLine(), reader.getMarkedCol(),
 					reader.getLine(), reader.getCol());
 		}
@@ -279,6 +295,10 @@ public class XNLexer {
 			}
 			return buffer.get(pos-1);
 		}
+	}
+	
+	public Object getSource() {
+		return source;
 	}
 	
 	public int getCurrentLine() {

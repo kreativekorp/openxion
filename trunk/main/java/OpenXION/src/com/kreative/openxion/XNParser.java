@@ -58,6 +58,18 @@ public class XNParser {
 		knownAdditionalDataTypes = new HashMap<String, Integer>();
 	}
 	
+	public Object getSource() {
+		return lexer.getSource();
+	}
+	
+	public int getCurrentLine() {
+		return lexer.getCurrentLine();
+	}
+	
+	public int getCurrentCol() {
+		return lexer.getCurrentCol();
+	}
+	
 	/* * * * * * * 
 	 * TOKENIZER *
 	 * * * * * * */
@@ -712,7 +724,7 @@ public class XNParser {
 	public XNExpression getListExpression(Collection<String> keywords) {
 		XNExpression first;
 		if (lookOperator(1, false).precedence() == XNOperatorPrecedence.LIST && isNotKeyword(1, keywords)) {
-			first = new XNEmptyExpression(lookToken(1).beginLine, lookToken(1).beginColumn);
+			first = new XNEmptyExpression(lookToken(1).source, lookToken(1).beginLine, lookToken(1).beginColumn);
 		} else {
 			first = getSingleExpression(keywords);
 		}
@@ -724,7 +736,7 @@ public class XNParser {
 				if (lookSingleExpression(1, keywords)) {
 					next = getSingleExpression(keywords);
 				} else {
-					next = new XNEmptyExpression(lookToken(1).beginLine, lookToken(1).beginColumn);
+					next = new XNEmptyExpression(lookToken(1).source, lookToken(1).beginLine, lookToken(1).beginColumn);
 				}
 				list.exprs.add(next);
 			}
@@ -951,7 +963,7 @@ public class XNParser {
 			consumeTokens(1);
 			if (lookToken(1).kind == XNToken.SYMBOL && lookToken(1).image.equalsIgnoreCase(")")) {
 				consumeTokens(1);
-				return new XNEmptyExpression(lookToken(0).beginLine, lookToken(0).beginColumn);
+				return new XNEmptyExpression(lookToken(0).source, lookToken(0).beginLine, lookToken(0).beginColumn);
 			} else {
 				Collection<String> myKeywords;
 				if (allowingBareSingleMassDescriptors(keywords)) {
@@ -980,8 +992,22 @@ public class XNParser {
 		// line number
 		else if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("__LINE__")) {
 			XNToken tk = getToken();
+			tk.kind = XNToken.NUMBER;
 			tk.image = Integer.toString(tk.beginLine);
 			return new XNNumberExpression(tk);
+		}
+		// file name
+		else if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("__FILE__")) {
+			XNToken tk = getToken();
+			if (tk.source instanceof File) {
+				tk.kind = XNToken.QUOTED;
+				tk.image = XIONUtil.quote(((File)tk.source).getAbsolutePath());
+				return new XNStringExpression(tk);
+			} else {
+				tk.kind = XNToken.ID;
+				tk.image = "empty";
+				return new XNConstantExpression(tk);
+			}
 		}
 		// constant, e.g. pi
 		else if (lookConstant(1) != null) return new XNConstantExpression(getConstant());
@@ -1635,7 +1661,7 @@ public class XNParser {
 					} else if (lookToken(1).image.equalsIgnoreCase("extends") /* || lookToken(1).image.equalsIgnoreCase("implements") */) {
 						break;
 					} else {
-						type = new XNToken(XNToken.ID, "aka", 0,0,0,0);
+						type = new XNToken(XNToken.ID, "aka", lexer.getSource(), 0,0,0,0);
 					}
 				} else if (lookEOL(1)) {
 					break;
@@ -1997,10 +2023,10 @@ public class XNParser {
 			} else {
 				r.stepToken = null;
 				myKeywords.remove("step");
-				r.stepvalue = new XNNumberExpression(new XNToken(XNToken.NUMBER, "1", 0,0,0,0));
+				r.stepvalue = new XNNumberExpression(new XNToken(XNToken.NUMBER, "1", lexer.getSource(), 0,0,0,0));
 			}
 			if (decrement) {
-				XNToken optk = new XNToken(XNToken.SYMBOL, "-", r.stepvalue.getBeginLine(), r.stepvalue.getBeginCol(), r.stepvalue.getEndLine(), r.stepvalue.getEndCol());
+				XNToken optk = new XNToken(XNToken.SYMBOL, "-", r.stepvalue.getSource(), r.stepvalue.getBeginLine(), r.stepvalue.getBeginCol(), r.stepvalue.getEndLine(), r.stepvalue.getEndCol());
 				r.stepvalue = new XNUnaryExpression(optk, XNOperator.UNARY_SUBTRACT, r.stepvalue);
 			}
 			r.endToken = lookToken(0);
@@ -2792,7 +2818,7 @@ public class XNParser {
 	public static final List<XNExpression> defaultParseCommand(String commandName, XNParser p, Collection<String> keywords) {
 		List<XNExpression> params = new Vector<XNExpression>();
 		if (p.lookOperator(1, false).precedence() == XNOperatorPrecedence.LIST && p.isNotKeyword(1, keywords)) {
-			params.add(new XNEmptyExpression(p.lookToken(1).beginLine, p.lookToken(1).beginColumn));
+			params.add(new XNEmptyExpression(p.lookToken(1).source, p.lookToken(1).beginLine, p.lookToken(1).beginColumn));
 		} else if (p.lookSingleExpression(1, keywords)) {
 			params.add(p.getSingleExpression(keywords));
 		} else {
@@ -2803,7 +2829,7 @@ public class XNParser {
 			if (p.lookSingleExpression(1, keywords)) {
 				params.add(p.getSingleExpression(keywords));
 			} else {
-				params.add(new XNEmptyExpression(p.lookToken(1).beginLine, p.lookToken(1).beginColumn));
+				params.add(new XNEmptyExpression(p.lookToken(1).source, p.lookToken(1).beginLine, p.lookToken(1).beginColumn));
 			}
 		}
 		return params;

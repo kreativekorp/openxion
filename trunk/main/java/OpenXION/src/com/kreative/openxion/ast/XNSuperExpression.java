@@ -37,6 +37,10 @@ public class XNSuperExpression extends XNExpression {
 		this.superToken = o;
 	}
 	
+	public Object getSource() {
+		return superToken.source;
+	}
+	
 	public int getBeginLine() {
 		return superToken.beginLine;
 	}

@@ -53,7 +53,7 @@ public class XNStandardModule extends XNModule {
 	public static final String MODULE_NAME = "OpenXION Standard Module";
 	public static final String MODULE_VERSION = "1.2";
 	
-	private static final GregorianCalendar TICKS_REF = new GregorianCalendar(2010,GregorianCalendar.NOVEMBER,8);
+	private static final GregorianCalendar TICKS_REF = new GregorianCalendar(2010,GregorianCalendar.DECEMBER,21);
 	
 	private static XNStandardModule instance = null;
 	public static final synchronized XNStandardModule instance() {
@@ -620,12 +620,12 @@ public class XNStandardModule extends XNModule {
 	
 	private static XNExpression getTokenExpression(XNParser p, int n) {
 		if (n < 1) {
-			return new XNEmptyExpression(0,0);
+			return new XNEmptyExpression(p.getSource(), 0, 0);
 		} else {
 			XNToken t = p.getToken(); n--;
 			while (n > 0) {
 				XNToken u = p.getToken(); n--;
-				XNToken v = new XNToken(t.kind, t.image+" "+u.image, t.beginLine, t.beginColumn, u.endLine, u.endColumn);
+				XNToken v = new XNToken(t.kind, t.image+" "+u.image, t.source, t.beginLine, t.beginColumn, u.endLine, u.endColumn);
 				v.specialToken = t.specialToken;
 				v.next = u.next;
 				t = v;
@@ -634,21 +634,21 @@ public class XNStandardModule extends XNModule {
 		}
 	}
 	
-	private static XNExpression createTokenExpression(String s) {
+	private static XNExpression createTokenExpression(XNParser p, String s) {
 		if (s == null || s.trim().length() == 0) {
-			return new XNEmptyExpression(0, 0);
+			return new XNEmptyExpression(p.getSource(), 0, 0);
 		} else {
-			return new XNStringExpression(new XNToken(XNToken.ID, s, 0, 0, 0, 0));
+			return new XNStringExpression(new XNToken(XNToken.ID, s, p.getSource(), 0, 0, 0, 0));
 		}
 	}
 	
-	private static XNToken getTokenFromTokenExpression(XNExpression e) {
+	private static XNToken getTokenFromTokenExpression(XNParser p, XNExpression e) {
 		if (e instanceof XNStringExpression) {
 			return ((XNStringExpression)e).literal;
 		} else if (e instanceof XNNumberExpression) {
 			return ((XNNumberExpression)e).literal;
 		} else {
-			return new XNToken(XNToken.ID, "", 0,0,0,0);
+			return new XNToken(XNToken.ID, "", p.getSource(), 0,0,0,0);
 		}
 	}
 	
@@ -706,7 +706,7 @@ public class XNStandardModule extends XNModule {
 			myKeywords.add(kind.equals("file") ? "of" : "with");
 			myKeywords.add("at");
 			List<XNExpression> following = new Vector<XNExpression>();
-			following.add(createTokenExpression(kind));
+			following.add(createTokenExpression(p, kind));
 			following.add(p.getListExpression(myKeywords));
 			if (
 					kind.equals("file") ?
@@ -759,7 +759,7 @@ public class XNStandardModule extends XNModule {
 			myKeywords.add("with");
 			myKeywords.add("at");
 			List<XNExpression> following = new Vector<XNExpression>();
-			following.add(createTokenExpression(kind));
+			following.add(createTokenExpression(p, kind));
 			following.add(p.getListExpression(myKeywords));
 			if (p.lookToken(1).toString().equalsIgnoreCase("with")) {
 				myKeywords = new HashSet<String>();
@@ -996,8 +996,8 @@ public class XNStandardModule extends XNModule {
 				if (p.lookToken(1).toString().equalsIgnoreCase("with")) {
 					XNExpression with = getTokenExpression(p,1);
 					XNExpression propertyName = getTokenExpression(p,1);
-					if (getTokenFromTokenExpression(propertyName).kind != XNToken.ID) {
-						throw new XNParseError("property name", getTokenFromTokenExpression(propertyName));
+					if (getTokenFromTokenExpression(p, propertyName).kind != XNToken.ID) {
+						throw new XNParseError("property name", getTokenFromTokenExpression(p, propertyName));
 					}
 					XNExpression propertyValue = p.getListExpression(keywords);
 					return Arrays.asList(new XNExpression[]{
@@ -1056,10 +1056,10 @@ public class XNStandardModule extends XNModule {
 				myKeywords.add("to");
 				obj = p.getListExpression(myKeywords);
 			} else {
-				of = createTokenExpression("of");
+				of = createTokenExpression(p, "of");
 				obj = new XNVariantSingletonDescriptor();
-				((XNVariantSingletonDescriptor)obj).theToken = new XNToken(XNToken.ID, "the", 0,0,0,0);
-				((XNVariantSingletonDescriptor)obj).dtTokens = new XNToken[]{new XNToken(XNToken.ID, "interpreter", 0,0,0,0)};
+				((XNVariantSingletonDescriptor)obj).theToken = new XNToken(XNToken.ID, "the", p.getSource(), 0,0,0,0);
+				((XNVariantSingletonDescriptor)obj).dtTokens = new XNToken[]{new XNToken(XNToken.ID, "interpreter", p.getSource(), 0,0,0,0)};
 				((XNVariantSingletonDescriptor)obj).datatype = new XNDataType(new String[]{"interpreter"}, 0);
 				((XNVariantSingletonDescriptor)obj).ofInToken = null;
 				((XNVariantSingletonDescriptor)obj).parentVariant = null;
@@ -1191,13 +1191,13 @@ public class XNStandardModule extends XNModule {
 						throw new XNParseError("date, time, seconds, or dateitems", p.lookToken(1));
 					}
 				} else {
-					fand = new XNEmptyExpression(0,0);
+					fand = new XNEmptyExpression(p.getSource(), 0, 0);
 					ff2 = "";
 				}
 			} else {
-				from = new XNEmptyExpression(0,0);
+				from = new XNEmptyExpression(p.getSource(), 0, 0);
 				ff1 = "";
-				fand = new XNEmptyExpression(0,0);
+				fand = new XNEmptyExpression(p.getSource(), 0, 0);
 				ff2 = "";
 			}
 			XNExpression to;
@@ -1235,7 +1235,7 @@ public class XNStandardModule extends XNModule {
 						throw new XNParseError("date, time, seconds, or dateitems", p.lookToken(1));
 					}
 				} else {
-					tand = new XNEmptyExpression(0,0);
+					tand = new XNEmptyExpression(p.getSource(), 0, 0);
 					tf2 = "";
 				}
 			} else {
@@ -1244,13 +1244,13 @@ public class XNStandardModule extends XNModule {
 			return Arrays.asList(new XNExpression[]{
 					what,
 					from,
-					createTokenExpression(ff1),
+					createTokenExpression(p, ff1),
 					fand,
-					createTokenExpression(ff2),
+					createTokenExpression(p, ff2),
 					to,
-					createTokenExpression(tf1),
+					createTokenExpression(p, tf1),
 					tand,
-					createTokenExpression(tf2)
+					createTokenExpression(p, tf2)
 			});
 		}
 		public String describeCommand(String commandName, List<XNExpression> parameters) {
@@ -1310,8 +1310,8 @@ public class XNStandardModule extends XNModule {
 				at = getTokenExpression(p,1);
 				pos = p.getListExpression(myKeywords);
 			} else {
-				at = new XNEmptyExpression(0,0);
-				pos = new XNEmptyExpression(0,0);
+				at = new XNEmptyExpression(p.getSource(), 0, 0);
+				pos = new XNEmptyExpression(p.getSource(), 0, 0);
 			}
 			if (p.lookToken(1).toString().equalsIgnoreCase("for")) {
 				myKeywords = new HashSet<String>();
@@ -1320,15 +1320,15 @@ public class XNStandardModule extends XNModule {
 				fr = getTokenExpression(p,1);
 				len = p.getListExpression(myKeywords);
 			} else {
-				fr = new XNEmptyExpression(0,0);
-				len = new XNEmptyExpression(0,0);
+				fr = new XNEmptyExpression(p.getSource(), 0, 0);
+				len = new XNEmptyExpression(p.getSource(), 0, 0);
 			}
 			if (p.lookToken(1).toString().equalsIgnoreCase("until")) {
 				ut = getTokenExpression(p,1);
 				stop = p.getListExpression(keywords);
 			} else {
-				ut = new XNEmptyExpression(0,0);
-				stop = new XNEmptyExpression(0,0);
+				ut = new XNEmptyExpression(p.getSource(), 0, 0);
+				stop = new XNEmptyExpression(p.getSource(), 0, 0);
 			}
 			return Arrays.asList(new XNExpression[]{
 					from,
@@ -1366,7 +1366,7 @@ public class XNStandardModule extends XNModule {
 			) {
 				dir = getTokenExpression(p,1);
 			} else {
-				dir = createTokenExpression("ascending");
+				dir = createTokenExpression(p, "ascending");
 			}
 			XNExpression type;
 			if (
@@ -1377,7 +1377,7 @@ public class XNStandardModule extends XNModule {
 			) {
 				type = getTokenExpression(p,1);
 			} else {
-				type = createTokenExpression("text");
+				type = createTokenExpression(p, "text");
 			}
 			if (p.lookToken(1).toString().equalsIgnoreCase("by")) {
 				XNExpression by = getTokenExpression(p,1);
@@ -1447,9 +1447,9 @@ public class XNStandardModule extends XNModule {
 			} else {
 				XNExpression ft;
 				if (p.lookToken(1).toString().equalsIgnoreCase("for")) {
-					ft = getTokenExpression(p,1);
+					ft = getTokenExpression(p, 1);
 				} else {
-					ft = createTokenExpression("for");
+					ft = createTokenExpression(p, "for");
 				}
 				XNExpression count = p.getListExpression(keywords);
 				XNExpression unit;
@@ -1485,9 +1485,9 @@ public class XNStandardModule extends XNModule {
 					p.lookToken(1).toString().equalsIgnoreCase("hours") |
 					p.lookToken(1).toString().equalsIgnoreCase("hour")
 				) {
-					unit = getTokenExpression(p,1);
+					unit = getTokenExpression(p, 1);
 				} else {
-					unit = createTokenExpression("ticks");
+					unit = createTokenExpression(p, "ticks");
 				}
 				return Arrays.asList(new XNExpression[]{
 						ft,
@@ -1541,7 +1541,7 @@ public class XNStandardModule extends XNModule {
 			return dest;
 		} else {
 			String name = dest.unwrap().toTextString(ctx);
-			XNLexer namelex = new XNLexer(new StringReader(name));
+			XNLexer namelex = new XNLexer(name, new StringReader(name));
 			try { if (namelex.lookToken(1).kind == XNToken.ID && namelex.lookToken(2).isEOF()) {
 				name = namelex.getToken().image;
 				dest = ctx.createVariable(name, XOMStringType.instance, XOMEmpty.EMPTY);
@@ -1565,7 +1565,7 @@ public class XNStandardModule extends XNModule {
 			else dest.putIntoContents(ctx, what);
 		} else {
 			String name = dest.unwrap().toTextString(ctx);
-			XNLexer namelex = new XNLexer(new StringReader(name));
+			XNLexer namelex = new XNLexer(name, new StringReader(name));
 			try { if (namelex.lookToken(1).kind == XNToken.ID && namelex.lookToken(2).isEOF()) {
 				name = namelex.getToken().image;
 				dest = ctx.createVariable(name, XOMStringType.instance, XOMEmpty.EMPTY);
@@ -1591,7 +1591,7 @@ public class XNStandardModule extends XNModule {
 			else dest.putIntoContents(ctx, what, prep, pval);
 		} else {
 			String name = dest.unwrap().toTextString(ctx);
-			XNLexer namelex = new XNLexer(new StringReader(name));
+			XNLexer namelex = new XNLexer(name, new StringReader(name));
 			try { if (namelex.lookToken(1).kind == XNToken.ID && namelex.lookToken(2).isEOF()) {
 				name = namelex.getToken().image;
 				dest = ctx.createVariable(name, XOMStringType.instance, XOMEmpty.EMPTY);
@@ -1889,7 +1889,8 @@ public class XNStandardModule extends XNModule {
 			}
 			
 			if (!(what instanceof XNVariantDescriptor)) {
-				XNLexer lex = new XNLexer(new StringReader(interp.evaluateExpression(what).unwrap().toTextString(ctx)));
+				String s = interp.evaluateExpression(what).unwrap().toTextString(ctx);
+				XNLexer lex = new XNLexer(s, new StringReader(s));
 				XNParser par = new XNParser(ctx, lex);
 				what = par.getListExpression(null);
 				if ((!par.getToken().isEOF()) || (!(what instanceof XNVariantDescriptor))) {

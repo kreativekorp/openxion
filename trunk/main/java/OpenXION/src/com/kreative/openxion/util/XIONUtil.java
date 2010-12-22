@@ -61,7 +61,7 @@ public class XIONUtil {
 	
 	public static XOMVariant parseDescriptor(XNContext ctx, String s) {
 		try {
-			XNLexer lexer = new XNLexer(new StringReader(s));
+			XNLexer lexer = new XNLexer(s, new StringReader(s));
 			XNParser parser = new XNParser(ctx, lexer);
 			if (parser.lookListExpression(1, null)) {
 				XNExpression expr = parser.getListExpression(null);

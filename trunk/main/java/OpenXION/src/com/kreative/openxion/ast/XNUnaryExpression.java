@@ -39,6 +39,10 @@ public class XNUnaryExpression extends XNExpression {
 		this.operatorToken = optk; this.operator = op; this.argument = a;
 	}
 	
+	public Object getSource() {
+		return operatorToken.source;
+	}
+	
 	public int getBeginLine() {
 		return operatorToken.beginLine;
 	}

@@ -42,6 +42,10 @@ public class XNBetweenExpression extends XNExpression {
 		this.left = l; this.operator = op; this.rightStart = r1; this.andToken = a; this.rightEnd = r2; this.options = opt;
 	}
 	
+	public Object getSource() {
+		return left.getSource();
+	}
+	
 	public int getBeginCol() {
 		return left.getBeginCol();
 	}

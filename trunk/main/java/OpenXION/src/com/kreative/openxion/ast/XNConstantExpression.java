@@ -37,6 +37,10 @@ public class XNConstantExpression extends XNExpression {
 		this.constant = o;
 	}
 	
+	public Object getSource() {
+		return constant.source;
+	}
+	
 	public int getBeginLine() {
 		return constant.beginLine;
 	}

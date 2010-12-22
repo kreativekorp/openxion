@@ -37,6 +37,15 @@ public class XNVariantOrdinalDescriptor extends XNVariantDescriptor {
 	public XNToken toToken;
 	public XNToken endOrdinal;
 	
+	protected Object internalGetSource() {
+		if (theToken != null) return theToken.source;
+		else if (startOrdinal != null) return startOrdinal.source;
+		else if (toToken != null) return toToken.source;
+		else if (endOrdinal != null) return endOrdinal.source;
+		else if (dtTokens != null && dtTokens.length > 0) return dtTokens[0].source;
+		else return null;
+	}
+	
 	protected int internalGetBeginCol() {
 		if (theToken != null) return theToken.beginColumn;
 		else if (startOrdinal != null) return startOrdinal.beginColumn;

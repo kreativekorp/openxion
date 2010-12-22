@@ -34,6 +34,12 @@ public class XNVariantSingletonDescriptor extends XNVariantDescriptor {
 	
 	public XNToken theToken;
 	
+	protected Object internalGetSource() {
+		if (theToken != null) return theToken.source;
+		else if (dtTokens != null && dtTokens.length > 0) return dtTokens[0].source;
+		else return null;
+	}
+	
 	protected int internalGetBeginCol() {
 		if (theToken != null) return theToken.beginColumn;
 		else if (dtTokens != null && dtTokens.length > 0) return dtTokens[0].beginColumn;

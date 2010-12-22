@@ -32,6 +32,7 @@ import java.io.Serializable;
 public abstract class XNExpression implements Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
 	
+	public abstract Object getSource();
 	public abstract int getBeginLine();
 	public abstract int getBeginCol();
 	public abstract int getEndLine();
