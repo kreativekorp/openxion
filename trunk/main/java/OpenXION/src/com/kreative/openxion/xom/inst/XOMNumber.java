@@ -48,14 +48,44 @@ public class XOMNumber extends XOMVariant {
 	private BigDecimal theNumber;
 	private boolean undefined;
 	
-	public XOMNumber(double d) {
-		this.theNumber = BigDecimal.valueOf(d);
-		this.undefined = false;
-	}
-	
-	public XOMNumber(BigDecimal bd) {
-		this.theNumber = bd;
-		this.undefined = false;
+	public XOMNumber(Number n) {
+		if (n instanceof BigDecimal) {
+			this.theNumber = (BigDecimal)n;
+			this.undefined = false;
+		} else if (n instanceof BigInteger) {
+			this.theNumber = new BigDecimal((BigInteger)n);
+			this.undefined = false;
+		} else if (n instanceof Double) {
+			double d = n.doubleValue();
+			if (Double.isNaN(d) || Double.isInfinite(d)) {
+				this.theNumber = Double.isNaN(d) ? BigDecimal.ZERO : (d < 0) ? BigDecimal.ONE.negate() : BigDecimal.ONE;
+				this.undefined = true;
+			} else {
+				this.theNumber = BigDecimal.valueOf(d);
+				this.undefined = false;
+			}
+		} else if (n instanceof Float) {
+			float f = n.floatValue();
+			if (Float.isNaN(f) || Float.isInfinite(f)) {
+				this.theNumber = Double.isNaN(f) ? BigDecimal.ZERO : (f < 0) ? BigDecimal.ONE.negate() : BigDecimal.ONE;
+				this.undefined = true;
+			} else {
+				this.theNumber = new BigDecimal(Float.toString(f));
+				this.undefined = false;
+			}
+		} else if (n instanceof Long || n instanceof Integer || n instanceof Short || n instanceof Byte) {
+			this.theNumber = BigDecimal.valueOf(n.longValue());
+			this.undefined = false;
+		} else {
+			double d = n.doubleValue();
+			if (Double.isNaN(d) || Double.isInfinite(d)) {
+				this.theNumber = Double.isNaN(d) ? BigDecimal.ZERO : (d < 0) ? BigDecimal.ONE.negate() : BigDecimal.ONE;
+				this.undefined = true;
+			} else {
+				this.theNumber = BigDecimal.valueOf(d);
+				this.undefined = false;
+			}
+		}
 	}
 	
 	private XOMNumber(boolean nan, boolean neg) {
@@ -185,6 +215,17 @@ public class XOMNumber extends XOMVariant {
 	public XOMNumber frac() {
 		if (theNumber == null || undefined) return NaN;
 		else return new XOMNumber(theNumber.subtract(theNumber.divide(BigDecimal.ONE, 0, RoundingMode.DOWN)));
+	}
+	
+	public Number toNumber() {
+		if (theNumber == null) return Double.NaN;
+		else if (undefined) {
+			int cmp = theNumber.compareTo(BigDecimal.ZERO);
+			if (cmp < 0) return Double.NEGATIVE_INFINITY;
+			else if (cmp > 0) return Double.POSITIVE_INFINITY;
+			else return Double.NaN;
+		}
+		else return theNumber;
 	}
 	
 	public BigDecimal toBigDecimal() {

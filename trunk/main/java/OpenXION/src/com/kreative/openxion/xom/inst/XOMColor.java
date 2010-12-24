@@ -48,11 +48,22 @@ public class XOMColor extends XOMVariant {
 		this.hsb = null;
 	}
 	
+	public XOMColor(float[] rgba) {
+		this.red = (int)(rgba[0] * 65535.0f);
+		this.green = (int)(rgba[1] * 65535.0f);
+		this.blue = (int)(rgba[2] * 65535.0f);
+		this.hsb = null;
+	}
+	
 	public XOMColor(Color c) {
 		this.red = c.getRed() * 0x0101;
 		this.green = c.getGreen() * 0x0101;
 		this.blue = c.getBlue() * 0x0101;
 		this.hsb = null;
+	}
+	
+	public float[] toRGBAFloatArray() {
+		return new float[]{ red/65535.0f, green/65535.0f, blue/65535.0f, 1.0f };
 	}
 	
 	public Color toColor() {
