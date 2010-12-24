@@ -380,21 +380,21 @@ public class ColorFormat {
 					values[cos.indexOf('I')],
 					values[cos.indexOf('Q')]
 			);
-			return new float[]{ (float)rgb5[0], (float)rgb5[1], (float)rgb5[2] };
+			return new float[]{ (float)rgb5[0], (float)rgb5[1], (float)rgb5[2], 1.0f };
 		case YUV: case YVU: case UYV: case UVY: case VYU: case VUY:
 			double[] rgb6 = YUVtoRGB(
 					values[cos.indexOf('Y')],
 					values[cos.indexOf('U')],
 					values[cos.indexOf('V')]
 			);
-			return new float[]{ (float)rgb6[0], (float)rgb6[1], (float)rgb6[2] };
+			return new float[]{ (float)rgb6[0], (float)rgb6[1], (float)rgb6[2], 1.0f };
 		case XYZ: case XZY: case YXZ: case YZX: case ZXY: case ZYX:
 			double[] rgb8 = XYZtosRGB(
 					values[cos.indexOf('X')],
 					values[cos.indexOf('Y')],
 					values[cos.indexOf('Z')]
 			);
-			return new float[]{ (float)rgb8[0], (float)rgb8[1], (float)rgb8[2] };
+			return new float[]{ (float)rgb8[0], (float)rgb8[1], (float)rgb8[2], 1.0f };
 		default:
 			throw new IllegalArgumentException("Invalid channel order");
 		}
@@ -447,7 +447,7 @@ public class ColorFormat {
 			values[cos.indexOf('H')] = hsv1[0];
 			values[cos.indexOf('S')] = hsv1[1];
 			values[cos.indexOf('V')] = hsv1[2];
-			values[cos.indexOf('A')] = hsv1[3];
+			values[cos.indexOf('A')] = rgb[3];
 			return values;
 		case HSV: case HVS: case SHV: case SVH: case VHS: case VSH:
 			values = new float[3];

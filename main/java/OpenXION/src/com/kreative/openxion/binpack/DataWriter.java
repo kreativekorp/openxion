@@ -149,19 +149,29 @@ public class DataWriter {
 			else out.writeInteger(df.size(), bv ? BigInteger.ONE : BigInteger.ZERO);
 			break;
 		case ENUM:
+			String esv = (o == null ? "" : o.toString());
 			for (Map.Entry<?,?> e : ((Map<?,?>)df.elaboration()).entrySet()) {
-				if (e.getValue().toString().equalsIgnoreCase(o == null ? "" : o.toString())) {
+				if (e.getValue().toString().equalsIgnoreCase(esv)) {
 					BigInteger ev = (BigInteger)e.getKey();
 					if (df.littleEndian()) out.writeIntegerLE(df.size(), ev);
 					else out.writeInteger(df.size(), ev);
 					return;
 				}
 			}
-			out.writeInteger(df.size(), BigInteger.ZERO);
+			BigInteger eiv;
+			if (o instanceof BigInteger) eiv = (BigInteger)o;
+			else if (o instanceof BigDecimal) eiv = ((BigDecimal)o).toBigInteger();
+			else if (o instanceof Number) eiv = BigInteger.valueOf(((Number)o).longValue());
+			else if (o != null) eiv = new BigInteger(o.toString());
+			else eiv = BigInteger.ZERO;
+			if (df.littleEndian()) out.writeIntegerLE(df.size(), eiv);
+			else out.writeInteger(df.size(), eiv);
 			break;
 		case BITFIELD:
 			BitSet bfv = new BitSet();
-			Collection<?> bfl = (o instanceof Collection) ? ((Collection<?>)o) : new ArrayList<Object>();
+			Collection<?> bfl;
+			if (o instanceof Collection) bfl = ((Collection<?>)o);
+			else { List<Object> l = new ArrayList<Object>(); l.add(o); bfl = l; }
 			Map<?,?> bfm = (Map<?,?>)df.elaboration();
 			for (int i = 0; i < df.size(); i++) {
 				BigInteger bi = BigInteger.valueOf(i);
@@ -194,7 +204,7 @@ public class DataWriter {
 			BigInteger uiv;
 			if (o instanceof BigInteger) uiv = (BigInteger)o;
 			else if (o instanceof BigDecimal) uiv = ((BigDecimal)o).toBigInteger();
-			else if (o instanceof Number) uiv = BigInteger.valueOf(((Number)o).intValue());
+			else if (o instanceof Number) uiv = BigInteger.valueOf(((Number)o).longValue());
 			else if (o != null) uiv = new BigInteger(o.toString());
 			else uiv = BigInteger.ZERO;
 			if (df.littleEndian()) out.writeIntegerLE(df.size(), uiv);
@@ -251,9 +261,16 @@ public class DataWriter {
 		case CHAR:
 			if ((df.size() & 7) != 0) throw new IOException("Character values must be of a byte-multiple width");
 			int chwidth = (df.size() >> 3);
-			byte[] chb = (o == null ? new byte[0] : o.toString().getBytes(df.elaboration().toString()));
+			byte[] chb1 = (o == null ? new byte[0] : o.toString().getBytes(df.elaboration().toString()));
 			byte[] chb2 = new byte[chwidth];
-			for (int i = 0; i < chb.length && i < chb2.length; i++) chb2[i] = chb[i];
+			for (int i = 0; i < chb1.length && i < chb2.length; i++) chb2[i] = chb1[i];
+			if (df.littleEndian()) {
+				for (int i = 0, j = chb2.length-1; i < chb2.length/2; i++, j--) {
+					byte k = chb2[i];
+					chb2[i] = chb2[j];
+					chb2[j] = k;
+				}
+			}
 			out.write(chb2);
 			break;
 		case PSTRING:

@@ -120,11 +120,10 @@ public class DataReader {
 		case BOOLEAN:
 			return !in.readBits(df.size()).isEmpty();
 		case ENUM:
-			if (df.littleEndian()) {
-				return ((Map<?,?>)df.elaboration()).get(in.readUnsignedIntegerLE(df.size()));
-			} else {
-				return ((Map<?,?>)df.elaboration()).get(in.readUnsignedInteger(df.size()));
-			}
+			BigInteger ev = df.littleEndian() ? in.readUnsignedIntegerLE(df.size()) : in.readUnsignedInteger(df.size());
+			Map<?,?> em = (Map<?,?>)df.elaboration();
+			if (em.containsKey(ev)) return em.get(ev);
+			else return ev;
 		case BITFIELD:
 			BitSet bfv = df.littleEndian() ? in.readBitsLE(df.size()) : in.readBits(df.size());
 			List<Object> bfl = new ArrayList<Object>();
