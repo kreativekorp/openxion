@@ -45,14 +45,34 @@ public class XOMInteger extends XOMVariant {
 	private BigInteger theInteger;
 	private boolean undefined;
 	
-	public XOMInteger(long l) {
-		this.theInteger = BigInteger.valueOf(l);
-		this.undefined = false;
-	}
-	
-	public XOMInteger(BigInteger bi) {
-		this.theInteger = bi;
-		this.undefined = false;
+	public XOMInteger(Number n) {
+		if (n instanceof BigInteger) {
+			this.theInteger = (BigInteger)n;
+			this.undefined = false;
+		} else if (n instanceof BigDecimal) {
+			this.theInteger = ((BigDecimal)n).toBigInteger();
+			this.undefined = false;
+		} else if (n instanceof Double) {
+			double d = n.doubleValue();
+			if (Double.isNaN(d) || Double.isInfinite(d)) {
+				this.theInteger = Double.isNaN(d) ? BigInteger.ZERO : (d < 0) ? BigInteger.ONE.negate() : BigInteger.ONE;
+				this.undefined = true;
+			} else {
+				this.theInteger = BigDecimal.valueOf(d).toBigInteger();
+				this.undefined = false;
+			}
+		} else if (n instanceof Float) {
+			float f = n.floatValue();
+			if (Float.isNaN(f) || Float.isInfinite(f)) {
+				this.theInteger = Double.isNaN(f) ? BigInteger.ZERO : (f < 0) ? BigInteger.ONE.negate() : BigInteger.ONE;
+				this.undefined = true;
+			} else {
+				this.theInteger = new BigDecimal(Float.toString(f)).toBigInteger();
+				this.undefined = false;
+			}
+		} else {
+			this.theInteger = BigInteger.valueOf(n.longValue());
+		}
 	}
 	
 	private XOMInteger(boolean nan, boolean neg) {
@@ -148,6 +168,17 @@ public class XOMInteger extends XOMVariant {
 			else if (cmp < 0) return ONE.negate();
 			else return ZERO;
 		}
+	}
+	
+	public Number toNumber() {
+		if (theInteger == null) return Double.NaN;
+		else if (undefined) {
+			int cmp = theInteger.compareTo(BigInteger.ZERO);
+			if (cmp < 0) return Double.NEGATIVE_INFINITY;
+			else if (cmp > 0) return Double.POSITIVE_INFINITY;
+			else return Double.NaN;
+		}
+		else return theInteger;
 	}
 	
 	public BigInteger toBigInteger() {

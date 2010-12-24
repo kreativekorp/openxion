@@ -37,6 +37,7 @@ import com.kreative.openxion.ast.XNEmptyExpression;
 import com.kreative.openxion.ast.XNExpression;
 import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.ast.XNStringExpression;
+import com.kreative.openxion.binpack.*;
 import com.kreative.openxion.io.XOMURLIOManager;
 import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.xom.XOMVariant;
@@ -85,6 +86,7 @@ public class XNExtendedModule extends XNModule {
 		functions.put("htmlencode", f_htmlencode);
 		functions.put("javaname", f_javaname);
 		functions.put("javaversion", f_javaversion);
+		functions.put("pack", f_pack);
 		functions.put("regcountfields", f_regcountfields);
 		functions.put("regexplode", f_regexplode);
 		functions.put("reginstr", f_reginstr);
@@ -94,6 +96,7 @@ public class XNExtendedModule extends XNModule {
 		functions.put("regreplace", f_regreplace);
 		functions.put("regreplaceall", f_regreplaceall);
 		functions.put("regrinstr", f_regrinstr);
+		functions.put("unpack", f_unpack);
 		functions.put("urldecode", f_urldecode);
 		functions.put("urlencode", f_urlencode);
 		functions.put("vmname", f_vmname);
@@ -955,6 +958,77 @@ public class XNExtendedModule extends XNModule {
 		}
 	};
 	
+	private static final Function f_pack = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<XOMVariant> l = (parameter == null) ? new Vector<XOMVariant>() : parameter.toList(ctx);
+			if (l.size() < 1) throw new XNScriptError("Can't understand arguments to "+functionName);
+			List<DataField> format;
+			try {
+				format = new DataFormatParser(new StringReader(l.get(0).toTextString(ctx))).parseAuto();
+			} catch (Exception e) {
+				throw new XNScriptError("Invalid format string: " + e.getMessage());
+			}
+			List<Object> things = XOMtoNative(format, l.subList(1, l.size()), ctx);
+			byte[] res;
+			try {
+				res = new DataWriter(format).pack(things);
+			} catch (NumberFormatException e) {
+				throw new XNScriptError("Expected number here");
+			} catch (Exception e) {
+				throw new XNScriptError(e.getMessage());
+			}
+			return new XOMBinary(res);
+		}
+		private List<Object> XOMtoNative(List<DataField> format, List<XOMVariant> l, XNContext ctx) {
+			List<Object> things = new ArrayList<Object>();
+			Iterator<XOMVariant> li = l.iterator();
+			for (DataField df : format) {
+				if (df.type().returns()) {
+					XOMVariant xo = li.hasNext() ? li.next() : XOMEmpty.EMPTY;
+					things.add(XOMtoNativeWithCount(df, xo, ctx));
+				}
+			}
+			return things;
+		}
+		private Object XOMtoNativeWithCount(DataField df, XOMVariant xo, XNContext ctx) {
+			if (df.count() == null || df.type().usesCustomCount()) {
+				return XOMtoNativeWithoutCount(df, xo, ctx);
+			} else {
+				List<XOMVariant> l = xo.toList(ctx);
+				List<Object> things = new ArrayList<Object>();
+				for (XOMVariant xoi : l) things.add(XOMtoNativeWithoutCount(df, xoi, ctx));
+				return things;
+			}
+		}
+		private Object XOMtoNativeWithoutCount(DataField df, XOMVariant xo, XNContext ctx) {
+			switch (df.type()) {
+			case BOOLEAN: return XOMBooleanType.instance.makeInstanceFrom(ctx, xo).toBoolean();
+			case ENUM: return xo.toTextString(ctx);
+			case BITFIELD: return Arrays.asList(xo.toTextString(ctx).split("\\s*,\\s*"));
+			case BINT: return xo.toTextString(ctx);
+			case OINT: return xo.toTextString(ctx);
+			case HINT: return xo.toTextString(ctx);
+			case UINT: return XOMIntegerType.instance.makeInstanceFrom(ctx, xo).toBigInteger();
+			case SINT: return XOMIntegerType.instance.makeInstanceFrom(ctx, xo).toBigInteger();
+			case UFIXED: return XOMNumberType.instance.makeInstanceFrom(ctx, xo).toBigDecimal();
+			case SFIXED: return XOMNumberType.instance.makeInstanceFrom(ctx, xo).toBigDecimal();
+			case FLOAT: return XOMNumberType.instance.makeInstanceFrom(ctx, xo).toNumber();
+			case COMPLEX: return XOMComplexType.instance.makeInstanceFrom(ctx, xo).toNumbers();
+			case CHAR: return xo.toTextString(ctx);
+			case PSTRING: return xo.toTextString(ctx);
+			case CSTRING: return xo.toTextString(ctx);
+			case DATE: return XOMDateType.instance.makeInstanceFrom(ctx, xo).toCalendar();
+			case COLOR: return XOMColorType.instance.makeInstanceFrom(ctx, xo).toRGBAFloatArray();
+			case BINARY: return XOMBinaryType.instance.makeInstanceFrom(ctx, xo).toByteArray();
+			case STRUCT:
+				@SuppressWarnings("unchecked")
+				List<DataField> sfmt = (List<DataField>)df.elaboration();
+				return XOMtoNative(sfmt, xo.toList(ctx), ctx);
+			default: throw new XNScriptError("Unknown data type: " + df.type().toString());
+			}
+		}
+	};
+	
 	private static final Function f_regcountfields = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
@@ -1059,6 +1133,93 @@ public class XNExtendedModule extends XNModule {
 			int i = 0;
 			while (m.find()) i = m.start()+1;
 			return new XOMInteger(i);
+		}
+	};
+	
+	private static final Function f_unpack = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<DataField> format;
+			try {
+				format = new DataFormatParser(new StringReader(l.get(0).toTextString(ctx))).parseAuto();
+			} catch (Exception e) {
+				throw new XNScriptError("Invalid format string: " + e.getMessage());
+			}
+			byte[] data = XOMBinaryType.instance.makeInstanceFrom(ctx, l.get(1)).toByteArray();
+			List<Object> things;
+			try {
+				things = new DataReader(format).unpack(data);
+			} catch (NumberFormatException e) {
+				throw new XNScriptError("Expected number here");
+			} catch (EOFException e) {
+				throw new XNScriptError("Not enough data to unpack");
+			} catch (Exception e) {
+				throw new XNScriptError(e.getMessage());
+			}
+			return new XOMList(nativeToXOM(format, things, ctx));
+		}
+		private List<XOMVariant> nativeToXOM(List<DataField> format, List<Object> things, XNContext ctx) {
+			List<XOMVariant> l = new ArrayList<XOMVariant>();
+			Iterator<Object> ti = things.iterator();
+			for (DataField df : format) {
+				if (df.type().returns()) {
+					Object o = ti.hasNext() ? ti.next() : null;
+					l.add(nativeToXOMwithCount(df, o, ctx));
+				}
+			}
+			return l;
+		}
+		private XOMVariant nativeToXOMwithCount(DataField df, Object o, XNContext ctx) {
+			if (df.count() == null || df.type().usesCustomCount()) {
+				return nativeToXOMwithoutCount(df, o, ctx);
+			} else {
+				List<?> things;
+				if (o instanceof List) things = (List<?>)o;
+				else { ArrayList<Object> tmp = new ArrayList<Object>(); tmp.add(o); things = tmp; }
+				List<XOMVariant> l = new ArrayList<XOMVariant>();
+				for (Object oi : things) l.add(nativeToXOMwithoutCount(df, oi, ctx));
+				return new XOMList(l);
+			}
+		}
+		@SuppressWarnings("unchecked")
+		private XOMVariant nativeToXOMwithoutCount(DataField df, Object o, XNContext ctx) {
+			switch (df.type()) {
+			case BOOLEAN: return ((Boolean)o).booleanValue() ? XOMBoolean.TRUE : XOMBoolean.FALSE;
+			case ENUM: return new XOMString(o.toString());
+			case BITFIELD:
+				List<Object> bfl = (List<Object>)o;
+				StringBuffer bfs = new StringBuffer();
+				for (Object oi : bfl) {
+					bfs.append(oi.toString());
+					bfs.append(',');
+				}
+				if (bfs.length() > 0 && bfs.charAt(bfs.length()-1) == ',') {
+					bfs.deleteCharAt(bfs.length()-1);
+				}
+				return new XOMString(bfs.toString());
+			case BINT: return new XOMString(o.toString());
+			case OINT: return new XOMString(o.toString());
+			case HINT: return new XOMString(o.toString());
+			case UINT: return new XOMInteger((Number)o);
+			case SINT: return new XOMInteger((Number)o);
+			case UFIXED: return new XOMNumber((Number)o);
+			case SFIXED: return new XOMNumber((Number)o);
+			case FLOAT: return new XOMNumber((Number)o);
+			case COMPLEX: return new XOMComplex(((Number[])o)[0], ((Number[])o)[1]);
+			case CHAR: return new XOMString(o.toString());
+			case PSTRING: return new XOMString(o.toString());
+			case CSTRING: return new XOMString(o.toString());
+			case DATE: return new XOMDate((GregorianCalendar)o);
+			case COLOR: return new XOMColor((float[])o);
+			case BINARY: return new XOMBinary((byte[])o);
+			case STRUCT:
+				List<DataField> sfmt = (List<DataField>)df.elaboration();
+				List<Object> things;
+				if (o instanceof List) things = (List<Object>)o;
+				else { ArrayList<Object> tmp = new ArrayList<Object>(); tmp.add(o); things = tmp; }
+				return new XOMList(nativeToXOM(sfmt, things, ctx));
+			default: throw new XNScriptError("Unknown data type: " + df.type().toString());
+			}
 		}
 	};
 	

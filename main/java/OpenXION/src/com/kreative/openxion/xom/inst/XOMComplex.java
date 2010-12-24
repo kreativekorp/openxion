@@ -35,31 +35,23 @@ import com.kreative.openxion.xom.XOMVariant;
 public class XOMComplex extends XOMVariant {
 	private static final long serialVersionUID = 1L;
 
-	public static final XOMComplex ZERO = new XOMComplex(BigDecimal.ZERO, BigDecimal.ZERO);
-	public static final XOMComplex ONE = new XOMComplex(BigDecimal.ONE, BigDecimal.ZERO);
-	public static final XOMComplex TEN = new XOMComplex(BigDecimal.TEN, BigDecimal.ZERO);
+	public static final XOMComplex ZERO = new XOMComplex(XOMNumber.ZERO, XOMNumber.ZERO);
+	public static final XOMComplex ONE = new XOMComplex(XOMNumber.ONE, XOMNumber.ZERO);
+	public static final XOMComplex TEN = new XOMComplex(XOMNumber.TEN, XOMNumber.ZERO);
 	public static final XOMComplex POSITIVE_INFINITY = new XOMComplex(false, 1.0, 0.0);
 	public static final XOMComplex NEGATIVE_INFINITY = new XOMComplex(false, -1.0, 0.0);
 	public static final XOMComplex NaN = new XOMComplex(true, 0.0, 0.0);
-	public static final XOMComplex PI = new XOMComplex(Math.PI, 0.0);
-	public static final XOMComplex E = new XOMComplex(Math.E, 0.0);
-	public static final XOMComplex PHI = new XOMComplex((1.0 + Math.sqrt(5.0))/2.0, 0.0);
-	public static final XOMComplex I = new XOMComplex(BigDecimal.ZERO, BigDecimal.ONE);
+	public static final XOMComplex PI = new XOMComplex(XOMNumber.PI, XOMNumber.ZERO);
+	public static final XOMComplex E = new XOMComplex(XOMNumber.E, XOMNumber.ZERO);
+	public static final XOMComplex PHI = new XOMComplex(XOMNumber.PHI, XOMNumber.ZERO);
+	public static final XOMComplex I = new XOMComplex(XOMNumber.ZERO, XOMNumber.ONE);
 	
 	private BigDecimal realPart;
 	private BigDecimal imaginaryPart;
 	private boolean undefined;
 	
-	public XOMComplex(double real, double imaginary) {
-		this.realPart = BigDecimal.valueOf(real);
-		this.imaginaryPart = BigDecimal.valueOf(imaginary);
-		this.undefined = false;
-	}
-	
-	public XOMComplex(BigDecimal real, BigDecimal imaginary) {
-		this.realPart = real;
-		this.imaginaryPart = imaginary;
-		this.undefined = false;
+	public XOMComplex(Number real, Number imaginary) {
+		this(new XOMNumber(real), new XOMNumber(imaginary));
 	}
 	
 	public XOMComplex(XOMNumber real, XOMNumber imaginary) {
@@ -246,6 +238,17 @@ public class XOMComplex extends XOMVariant {
 	public BigDecimal imaginaryPart() {
 		if (realPart == null || imaginaryPart == null || undefined) return null;
 		else return imaginaryPart;
+	}
+	
+	public Number[] toNumbers() {
+		if (realPart == null || imaginaryPart == null) return new Double[]{Double.NaN, Double.NaN};
+		else if (undefined) {
+			int rc = realPart.compareTo(BigDecimal.ZERO);
+			int ic = imaginaryPart.compareTo(BigDecimal.ZERO);
+			if (rc == 0 && ic == 0) return new Double[]{Double.NaN, Double.NaN};
+			else return new Double[]{((rc < 0) ? Double.NEGATIVE_INFINITY : (rc > 0) ? Double.POSITIVE_INFINITY : 0.0), ((ic < 0) ? Double.NEGATIVE_INFINITY : (ic > 0) ? Double.POSITIVE_INFINITY : 0.0)};
+		}
+		else return new BigDecimal[]{realPart,imaginaryPart};
 	}
 	
 	public BigDecimal[] toBigDecimals() {
