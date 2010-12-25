@@ -39,12 +39,22 @@ public class XOMColor extends XOMVariant {
 	private int red;
 	private int green;
 	private int blue;
+	private int alpha;
 	private float[] hsb;
 	
 	public XOMColor(int r, int g, int b) {
 		this.red = r;
 		this.green = g;
 		this.blue = b;
+		this.alpha = 65535;
+		this.hsb = null;
+	}
+	
+	public XOMColor(int r, int g, int b, int a) {
+		this.red = r;
+		this.green = g;
+		this.blue = b;
+		this.alpha = a;
 		this.hsb = null;
 	}
 	
@@ -52,6 +62,7 @@ public class XOMColor extends XOMVariant {
 		this.red = (int)(rgba[0] * 65535.0f);
 		this.green = (int)(rgba[1] * 65535.0f);
 		this.blue = (int)(rgba[2] * 65535.0f);
+		this.alpha = (rgba.length > 3) ? (int)(rgba[3] * 65535.0f) : 65535;
 		this.hsb = null;
 	}
 	
@@ -59,19 +70,28 @@ public class XOMColor extends XOMVariant {
 		this.red = c.getRed() * 0x0101;
 		this.green = c.getGreen() * 0x0101;
 		this.blue = c.getBlue() * 0x0101;
+		this.alpha = c.getAlpha() * 0x0101;
 		this.hsb = null;
 	}
 	
 	public float[] toRGBAFloatArray() {
-		return new float[]{ red/65535.0f, green/65535.0f, blue/65535.0f, 1.0f };
+		return new float[]{ red/65535.0f, green/65535.0f, blue/65535.0f, alpha/65535.0f };
 	}
 	
 	public Color toColor() {
-		return new Color(red/65535.0f, green/65535.0f, blue/65535.0f);
+		return new Color(red/65535.0f, green/65535.0f, blue/65535.0f, alpha/65535.0f);
 	}
 	
 	public boolean canGetProperty(XNContext ctx, String property) {
-		return (property.equalsIgnoreCase("red") || property.equalsIgnoreCase("green") || property.equalsIgnoreCase("blue") || property.equalsIgnoreCase("hue") || property.equalsIgnoreCase("saturation") || property.equalsIgnoreCase("brightness"));
+		return (
+				property.equalsIgnoreCase("red") ||
+				property.equalsIgnoreCase("green") ||
+				property.equalsIgnoreCase("blue") ||
+				property.equalsIgnoreCase("alpha") ||
+				property.equalsIgnoreCase("hue") ||
+				property.equalsIgnoreCase("saturation") ||
+				property.equalsIgnoreCase("brightness")
+		);
 	}
 	public XOMVariant getProperty(XNContext ctx, XNModifier modifier, String property) {
 		if (property.equalsIgnoreCase("red")) {
@@ -80,6 +100,8 @@ public class XOMColor extends XOMVariant {
 			return new XOMInteger(green);
 		} else if (property.equalsIgnoreCase("blue")) {
 			return new XOMInteger(blue);
+		} else if (property.equalsIgnoreCase("alpha")) {
+			return new XOMInteger(alpha);
 		} else if (property.equalsIgnoreCase("hue")) {
 			if (hsb == null) hsb = Color.RGBtoHSB(red/0x0101, green/0x0101, blue/0x0101, null);
 			return new XOMNumber(hsb[0]);
@@ -97,19 +119,25 @@ public class XOMColor extends XOMVariant {
 	protected boolean equalsImpl(Object o) {
 		if (o instanceof XOMColor) {
 			XOMColor other = (XOMColor)o;
-			return this.red == other.red && this.green == other.green && this.blue == other.blue;
+			return this.red == other.red && this.green == other.green && this.blue == other.blue && this.alpha == other.alpha;
 		} else {
 			return false;
 		}
 	}
 	public int hashCode() {
-		return red ^ (green << 16) ^ (blue << 8);
+		return red ^ (green << 16) ^ blue ^ (alpha << 16);
 	}
 	public String toDescriptionString() {
-		return red+","+green+","+blue;
+		if (alpha == 65535)
+			return red+","+green+","+blue;
+		else
+			return red+","+green+","+blue+","+alpha;
 	}
 	public String toTextString(XNContext ctx) {
-		return red+","+green+","+blue;
+		if (alpha == 65535)
+			return red+","+green+","+blue;
+		else
+			return red+","+green+","+blue+","+alpha;
 	}
 	public List<XOMVariant> toList(XNContext ctx) {
 		Vector<XOMVariant> v = new Vector<XOMVariant>();
