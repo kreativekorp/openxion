@@ -101,7 +101,7 @@ public class HTMLDWriter implements XIONDocWriter {
 				tableCode.append("</tr>");
 			}
 			tableCode.append("</table>");
-			mt.appendReplacement(st, tableCode.toString());
+			mt.appendReplacement(st, Matcher.quoteReplacement(tableCode.toString()));
 		}
 		mt.appendTail(st);
 		s = st.toString();
