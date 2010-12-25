@@ -11782,6 +11782,280 @@
 </function>
 
 <function>
+	<name dialects="oxne12">pack</name>
+	<syntax>the pack of ({format}, {value}, {value}, {...})</syntax>
+	<syntax>pack({format}, {value}, {value}, {...})</syntax>
+	<syntax-note>
+		{Format} yields a [[dt:string]] describing a binary data structure.
+		{Value} yields an appropriate [[dt:variant]] for the corresponding field.
+	</syntax-note>
+	<description>
+		The [[*]] function packs the given {value}s into a [[dt:binary]] according
+		to the binary data structure specified by {format}. It is inspired by the
+		[[pack]] functions in Perl and PHP, but has a much more powerful syntax.
+	</description>
+	<description>
+		The {format} string can be specified in one of two ways.
+		Using the short format, each field in the binary data structure is specified
+		using the following syntax:
+		\\\\
+		{type} {size} {elaboration} {count} {name} {description}
+		\\\\
+		Only {type} is required. The {type} is a single character from the table below.
+		Uppercase indicates big-endian values, and lowercase indicates little-endian values.
+		The {size} is the number of bits. The {elaboration} is a type-specific string that must
+		be enclosed in braces; for further details, see the table below. If a {count} is specified,
+		the unpacked {value} is a [[dt:list]], and the {count} must be a number enclosed in brackets
+		indicating the number of elements in the list; otherwise, the unpacked {value} is a
+		single value. (Except for the [[ * ]] and [[ @ ]] types, where the {count} is the number of
+		bytes and the offset, respectively.) The {name} is a string enclosed in backticks ([[`]]).
+		The {description} is a string enclosed in quotes. The {name} and {description} have no effect
+		on the packing or unpacking of the data. Whitespace in the format string is ignored
+		except for inside quotes and as a token separator.
+	</description>
+	<description>
+		Using the long format, each field in the binary data structure is specified
+		using the following syntax:
+		\\\\
+		{type} {size} {endianness} {elaboration} {count} {name} {description} [[;]]
+		\\\\
+		Only {type} is required. The {type} is a type name from the table below. The {size}
+		is the number of bits. The {endianness} is [[be]] for big-endian or [[le]] for little-endian;
+		if {endianness} is not specified, big-endian is assumed. The {elaboration} is a type-specific
+		string that must be enclosed in braces; for further details, see the table below. If a {count}
+		is specified, the unpacked {value} is a [[dt:list]], and the {count} must be a number
+		enclosed in brackets indicating the number of elements in the list; otherwise, the unpacked
+		{value} is a single value. (Except for the [[binary]] and [[offset]] types, where the {count} is
+		the number of bytes and the offset, respectively.) The {name} is either a sequence of alphanumeric
+		characters, or a string enclosed in backticks ([[`]]). The {description} is a string enclosed in
+		quotes, or any sequence of characters following the name and preceding the terminating semicolon.
+		The {name} and {description} have no effect on the packing or unpacking of the data.
+		Whitespace in the format string is ignored except for inside quotes and as a token separator.
+	</description>
+	<description>
+		The possible field {type}s are:
+		\\\\
+		::TABLE
+		[[T]], [[t]] :: [[bool]], [[boolean]] ::
+		A boolean value ([[T]] for "truth value"). The unpacked {value} is [[cn:false]] for a packed value of zero
+		or [[cn:true]] for a packed value of one (or any other value when unpacking).
+		........
+		[[E]], [[e]] :: [[enum]] ::
+		An enumeration. The {elaboration} is a list of key-value pairs, delimited by semicolons, with the key and value separated by an equals sign.
+		Each key is an integer representing a possible packed value and each value is a string. The unpacked {value} is one of those strings.
+		........
+		[[J]], [[j]] :: [[bitfield]] ::
+		A bit field ([[J]] for "jumper"). The {elaboration} is a list of key-value pairs, delimited by semicolons, with the key and value separated by an equals sign.
+		Each key is an integer representing a bit in the packed value (from 0 for the least-significant bit to {size-1} for the most-significant bit)
+		and each value is a string. The unpacked {value} is a comma-delimited list of such strings.
+		........
+		[[B]], [[b]] :: [[bint]] ::
+		An unsigned integer in binary. The unpacked {value} is a [[dt:string]] of binary digits.
+		........
+		[[O]], [[o]] :: [[oint]] ::
+		An unsigned integer in octal. The unpacked {value} is a [[dt:string]] of octal digits.
+		........
+		[[H]], [[h]] :: [[hint]] ::
+		An unsigned integer in hexadecimal. The unpacked {value} is a [[dt:string]] of hexadecimal digits.
+		........
+		[[U]], [[u]] :: [[uint]] ::
+		An unsigned integer. The unpacked {value} is an [[dt:integer]].
+		........
+		[[I]], [[i]] :: [[int]], [[sint]] ::
+		A signed integer. The unpacked {value} is an [[dt:integer]].
+		........
+		[[R]], [[r]] :: [[ufixed]] ::
+		An unsigned fixed-point number ([[R]] for "ratio"). The radix point is fixed in the center of the packed value (e.g., at bit 8 if the {size} is 16).
+		The unpacked {value} is a [[dt:number]].
+		........
+		[[Q]], [[q]] :: [[fixed]], [[sfixed]] ::
+		A signed fixed-point number ([[Q]] for "quotient"). The radix point is fixed in the center of the packed value (e.g., at bit 8 if the {size} is 16).
+		The unpacked {value} is a [[dt:number]].
+		........
+		[[F]], [[f]] :: [[float]] ::
+		A floating-point number. The {elaboration} is the number of sign bits, the number of exponent bits, the number of mantissa bits,
+		and the exponent bias, separated by periods. If the {elaboration} is not specified, a best guess is made at the appropriate number
+		of bits and the appropriate bias based on the {size}. For {size}s of 16, 32, 64, and 128 bits, this "best guess" is guaranteed to be
+		[[1.5.10.15]], [[1.8.23.127]], [[1.11.52.1023]], and [[1.15.112.16383]], respectively, corresponding to IEEE half-, single-, double-,
+		and quad-precision floating-point numbers. The unpacked {value} is a [[dt:number]].
+		........
+		[[K]], [[k]] :: [[complex]] ::
+		A complex number, composed of two floating-point numbers (the real part followed by the imaginary part). The {size} is the number
+		of bits per part, rather than total. The {elaboration} is the same as for [[float]] above. The unpacked {value} is a [[dt:complex]].
+		........
+		[[C]], [[c]] :: [[char]], [[character]] ::
+		A character constant. The {size} must be a multiple of 8.
+		The {elaboration} is the name of a text encoding. If the {elaboration} is unspecified, [[ISO-8859-1]] is assumed.
+		The unpacked {value} is a [[dt:string]].
+		........
+		[[P]], [[p]] :: [[pstring]] ::
+		A Pascal-style string. The {size} is the number of bits in the count preceding the actual string data.
+		The {elaboration} is the name of a text encoding. If the {elaboration} is unspecified, [[ISO-8859-1]] is assumed.
+		The unpacked {value} is a [[dt:string]].
+		........
+		[[S]], [[s]] :: [[string]], [[cstring]] ::
+		A C-style string. The {size} is the number of zero bits following the actual string data and must be a multiple of 8.
+		The {elaboration} is the name of a text encoding. If the {elaboration} is unspecified, [[ISO-8859-1]] is assumed.
+		The unpacked {value} is a [[dt:string]].
+		........
+		[[D]], [[d]] :: [[date]], [[time]], [[datetime]] ::
+		A date. The {elaboration} is the year, month, day, hour, minute, and second of the epoch, and the scale (0 for seconds,
+		-3 for milliseconds, -6 for microseconds, etc.), each delimited by commas. If the {elaboration} is unspecified,
+		[[1970,1,1,0,0,0,0]] is assumed, corresponding to the number of seconds since January 1, 1970 (the Unix epoch).
+		To use the Macintosh epoch, use [[1904,1,1,0,0,0,0]]. For milliseconds, replace the last number with -3.
+		The unpacked {value} is a [[dt:date]].
+		........
+		[[X]], [[x]] :: [[color]], [[colour]] ::
+		A color ([[X]] for Greek {χρώμα}, {chroma}, meaning "color"). The {elaboration} is a string determining the color model
+		and the order and width of the color channels. The default is true color with alpha in ARGB order with {size/4} bits per channel.
+		For a {size} of 32 bits, this would be equivalent to an {elaboration} of [[a8r8g8b8]]. 
+		The unpacked {value} is a [[dt:color]].
+		........
+		[[Z]], [[z]] :: [[filler]] ::
+		A series of {size} filler bits ([[Z]] for "zero"). When packing, {size} bits are filled with zero.
+		When unpacking, {size} bits are skipped and ignored. There is no unpacked {value} for this data type.
+		........
+		[[M]], [[m]] :: [[magic]] ::
+		The {elaboration} is a magic number. When packing, the resulting packed value is the magic number.
+		When unpacking, the packed value is checked against the magic number; if they don't match, a script error is triggered.
+		There is no unpacked {value} for this data type.
+		........
+		[[A]], [[a]] :: [[align]] ::
+		Alignment to a multiple of {size} bits. There is no unpacked {value} for this data type.
+		........
+		[[ * ]] :: [[blob]], [[binary]] ::
+		The {size}, {endianness}, and {elaboration} are ignored. The {count} is the number of bytes to pack or unpack.
+		If the {count} is unspecified when unpacking, zero bytes are unpacked. If the {count} is unspecified when packing,
+		however many bytes are in the unpacked {value} are packed. The unpacked {value} is a [[dt:binary]].
+		........
+		[[ $ ]] :: [[struct]] ::
+		A substructure. The {elaboration} is a format string describing the binary data substructure.
+		The unpacked {value} is a [[dt:list]] of unpacked {value}s from the specified substructure.
+		........
+		[[ @ ]] :: [[offset]] ::
+		The {size}, {endianness}, and {elaboration} are ignored. The {count} is an offset from the beginning of the
+		packed [[dt:binary]] where future values are packed to or unpacked from. When unpacking, the offset may be
+		anywhere in the [[dt:binary]]. When packing, the offset must be greater than or equal to the number of bytes
+		already packed.
+		ELBAT::
+	</description>
+	<description>
+		In addition to the type names listed above, the following special type names are allowed in a long-format {format} string.
+		These special type names specify a size and, for some, an endianness and an {elaboration} in addition to a data type.
+		\\\\
+		::TABLE
+		[[bbyte]]     :: alias for [[bint8]]
+		........
+		[[obyte]]     :: alias for [[oint8]]
+		........
+		[[hbyte]]     :: alias for [[hint8]]
+		........
+		[[ubyte]]     :: alias for [[uint8]]
+		........
+		[[sbyte]]     :: alias for [[sint8]]
+		........
+		[[byte]]      :: alias for [[int8]]
+		........
+		[[bshort]]    :: alias for [[bint16]]
+		........
+		[[oshort]]    :: alias for [[oint16]]
+		........
+		[[hshort]]    :: alias for [[hint16]]
+		........
+		[[ushort]]    :: alias for [[uint16]]
+		........
+		[[sshort]]    :: alias for [[sint16]]
+		........
+		[[short]]     :: alias for [[int16]]
+		........
+		[[blong]]     :: alias for [[bint64]]
+		........
+		[[olong]]     :: alias for [[oint64]]
+		........
+		[[hlong]]     :: alias for [[hint64]]
+		........
+		[[ulong]]     :: alias for [[uint64]]
+		........
+		[[slong]]     :: alias for [[sint64]]
+		........
+		[[long]]      :: alias for [[int64]]
+		........
+		[[half]]      :: alias for [[float16]]
+		........
+		[[single]]    :: alias for [[float32]]
+		........
+		[[real]]      :: alias for [[float32]]
+		........
+		[[double]]    :: alias for [[float64]]
+		........
+		[[quad]]      :: alias for [[float128]]
+		........
+		[[onecc]]     :: alias for [[char8]]
+		........
+		[[occ]]       :: alias for [[char8]]
+		........
+		[[twocc]]     :: alias for [[char16]]
+		........
+		[[tcc]]       :: alias for [[char16]]
+		........
+		[[fourcc]]    :: alias for [[char32]]
+		........
+		[[fcc]]       :: alias for [[char32]]
+		........
+		[[eightcc]]   :: alias for [[char64]]
+		........
+		[[ecc]]       :: alias for [[char64]]
+		........
+		[[wstring]]   :: alias for [[pstring16]]
+		........
+		[[lstring]]   :: alias for [[pstring32]]
+		........
+		[[wchar]]     :: alias for [[char16be&#123;UTF-16&#125;]]
+		........
+		[[wcharbe]]   :: alias for [[char16be&#123;UTF-16&#125;]]
+		........
+		[[wcharle]]   :: alias for [[char16le&#123;UTF-16&#125;]]
+		........
+		[[ostype]]    :: alias for [[char32be&#123;MacRoman&#125;]]
+		........
+		[[symbol]]    :: alias for [[char64be&#123;ISO-8859-1&#125;]]
+		........
+		[[point]]     :: alias for [[struct&#123;sint16be y; sint16be x;&#125;]]
+		........
+		[[rect]]      :: alias for [[struct&#123;sint16be top; sint16be left; sint16be bottom; sint16be right;&#125;]]
+		........
+		[[rectangle]] :: alias for [[struct&#123;sint16be top; sint16be left; sint16be bottom; sint16be right;&#125;]]
+		........
+		[[rgbcolor]]  :: alias for [[struct&#123;uint16be red; uint16be green; uint16be blue;&#125;]]
+		........
+		[[rgbcolour]] :: alias for [[struct&#123;uint16be red; uint16be green; uint16be blue;&#125;]]
+		ELBAT::
+	</description>
+	<note>
+		If the {format} string is not properly formed, a script error is triggered.
+	</note>
+	<note>
+		If any {value} is not of an appropriate type for its corresponding field, a script error is triggered.
+	</note>
+	<note>
+		If there are fewer {value}s passed to the function than are specified by the {format}, the missing
+		{value}s are assumed to be [[cn:empty]]. If the corresponding fields are, e.g., [[char]] or [[string]],
+		this will have no ill effect, but if the corresponding fields are, e.g., [[boolean]] or [[date]],
+		this will trigger a script error.
+	</note>
+	<note>
+		If there are more {value}s passed to the function than are specified by the format, the extra {value}s are ignored.
+	</note>
+	<note>
+		The {value}s to be packed must be passed directly as parameters to the [[*]] function.
+		If you already have the {value}s you need in a [[dt:list]], either [[cm:put]] the format string [[kw:before]]
+		the [[dt:list]] then pass the [[dt:list]] to the [[*]] function, or pass the [[dt:list]] as the {value} for a [[struct]]
+		whose {elaboration} is the original format string.
+	</note>
+	<see-also>[[fn:unpack]]</see-also>
+</function>
+
+<function>
 	<name dialects="oxne1,oxne11,oxne12">regCountFields</name>
 	<syntax>the regCountFields of ({string}, {delimiter})</syntax>
 	<syntax>regCountFields({string}, {delimiter})</syntax>
@@ -11970,6 +12244,266 @@
 		[[fn:instr]], [[fn:csInstr]], [[fn:regInstr]],
 		[[fn:offset]], [[fn:csOffset]], [[fn:regOffset]]
 	</see-also>
+</function>
+
+<function>
+	<name dialects="oxne12">unpack</name>
+	<syntax>the unpack of ({format}, {data})</syntax>
+	<syntax>unpack({format}, {data})</syntax>
+	<syntax-note>
+		{Format} yields a [[dt:string]] describing a binary data structure.
+		{Data} yields a [[dt:binary]].
+	</syntax-note>
+	<description>
+		The [[*]] function unpacks values from a [[dt:binary]] according
+		to the binary data structure specified by {format}. It is inspired by the
+		[[unpack]] functions in Perl and PHP, but has a much more powerful syntax.
+	</description>
+	<description>
+		The {format} string can be specified in one of two ways.
+		Using the short format, each field in the binary data structure is specified
+		using the following syntax:
+		\\\\
+		{type} {size} {elaboration} {count} {name} {description}
+		\\\\
+		Only {type} is required. The {type} is a single character from the table below.
+		Uppercase indicates big-endian values, and lowercase indicates little-endian values.
+		The {size} is the number of bits. The {elaboration} is a type-specific string that must
+		be enclosed in braces; for further details, see the table below. If a {count} is specified,
+		the unpacked value is a [[dt:list]], and the {count} must be a number enclosed in brackets
+		indicating the number of elements in the list; otherwise, the unpacked value is a
+		single value. (Except for the [[ * ]] and [[ @ ]] types, where the {count} is the number of
+		bytes and the offset, respectively.) The {name} is a string enclosed in backticks ([[`]]).
+		The {description} is a string enclosed in quotes. The {name} and {description} have no effect
+		on the packing or unpacking of the data. Whitespace in the format string is ignored
+		except for inside quotes and as a token separator.
+	</description>
+	<description>
+		Using the long format, each field in the binary data structure is specified
+		using the following syntax:
+		\\\\
+		{type} {size} {endianness} {elaboration} {count} {name} {description} [[;]]
+		\\\\
+		Only {type} is required. The {type} is a type name from the table below. The {size}
+		is the number of bits. The {endianness} is [[be]] for big-endian or [[le]] for little-endian;
+		if {endianness} is not specified, big-endian is assumed. The {elaboration} is a type-specific
+		string that must be enclosed in braces; for further details, see the table below. If a {count}
+		is specified, the unpacked value is a [[dt:list]], and the {count} must be a number
+		enclosed in brackets indicating the number of elements in the list; otherwise, the unpacked
+		value is a single value. (Except for the [[binary]] and [[offset]] types, where the {count} is
+		the number of bytes and the offset, respectively.) The {name} is either a sequence of alphanumeric
+		characters, or a string enclosed in backticks ([[`]]). The {description} is a string enclosed in
+		quotes, or any sequence of characters following the name and preceding the terminating semicolon.
+		The {name} and {description} have no effect on the packing or unpacking of the data.
+		Whitespace in the format string is ignored except for inside quotes and as a token separator.
+	</description>
+	<description>
+		The possible field {type}s are:
+		\\\\
+		::TABLE
+		[[T]], [[t]] :: [[bool]], [[boolean]] ::
+		A boolean value ([[T]] for "truth value"). The unpacked value is [[cn:false]] for a packed value of zero
+		or [[cn:true]] for a packed value of one (or any other value when unpacking).
+		........
+		[[E]], [[e]] :: [[enum]] ::
+		An enumeration. The {elaboration} is a list of key-value pairs, delimited by semicolons, with the key and value separated by an equals sign.
+		Each key is an integer representing a possible packed value and each value is a string. The unpacked value is one of those strings.
+		........
+		[[J]], [[j]] :: [[bitfield]] ::
+		A bit field ([[J]] for "jumper"). The {elaboration} is a list of key-value pairs, delimited by semicolons, with the key and value separated by an equals sign.
+		Each key is an integer representing a bit in the packed value (from 0 for the least-significant bit to {size-1} for the most-significant bit)
+		and each value is a string. The unpacked value is a comma-delimited list of such strings.
+		........
+		[[B]], [[b]] :: [[bint]] ::
+		An unsigned integer in binary. The unpacked value is a [[dt:string]] of binary digits.
+		........
+		[[O]], [[o]] :: [[oint]] ::
+		An unsigned integer in octal. The unpacked value is a [[dt:string]] of octal digits.
+		........
+		[[H]], [[h]] :: [[hint]] ::
+		An unsigned integer in hexadecimal. The unpacked value is a [[dt:string]] of hexadecimal digits.
+		........
+		[[U]], [[u]] :: [[uint]] ::
+		An unsigned integer. The unpacked value is an [[dt:integer]].
+		........
+		[[I]], [[i]] :: [[int]], [[sint]] ::
+		A signed integer. The unpacked value is an [[dt:integer]].
+		........
+		[[R]], [[r]] :: [[ufixed]] ::
+		An unsigned fixed-point number ([[R]] for "ratio"). The radix point is fixed in the center of the packed value (e.g., at bit 8 if the {size} is 16).
+		The unpacked value is a [[dt:number]].
+		........
+		[[Q]], [[q]] :: [[fixed]], [[sfixed]] ::
+		A signed fixed-point number ([[Q]] for "quotient"). The radix point is fixed in the center of the packed value (e.g., at bit 8 if the {size} is 16).
+		The unpacked value is a [[dt:number]].
+		........
+		[[F]], [[f]] :: [[float]] ::
+		A floating-point number. The {elaboration} is the number of sign bits, the number of exponent bits, the number of mantissa bits,
+		and the exponent bias, separated by periods. If the {elaboration} is not specified, a best guess is made at the appropriate number
+		of bits and the appropriate bias based on the {size}. For {size}s of 16, 32, 64, and 128 bits, this "best guess" is guaranteed to be
+		[[1.5.10.15]], [[1.8.23.127]], [[1.11.52.1023]], and [[1.15.112.16383]], respectively, corresponding to IEEE half-, single-, double-,
+		and quad-precision floating-point numbers. The unpacked value is a [[dt:number]].
+		........
+		[[K]], [[k]] :: [[complex]] ::
+		A complex number, composed of two floating-point numbers (the real part followed by the imaginary part). The {size} is the number
+		of bits per part, rather than total. The {elaboration} is the same as for [[float]] above. The unpacked value is a [[dt:complex]].
+		........
+		[[C]], [[c]] :: [[char]], [[character]] ::
+		A character constant. The {size} must be a multiple of 8.
+		The {elaboration} is the name of a text encoding. If the {elaboration} is unspecified, [[ISO-8859-1]] is assumed.
+		The unpacked value is a [[dt:string]].
+		........
+		[[P]], [[p]] :: [[pstring]] ::
+		A Pascal-style string. The {size} is the number of bits in the count preceding the actual string data.
+		The {elaboration} is the name of a text encoding. If the {elaboration} is unspecified, [[ISO-8859-1]] is assumed.
+		The unpacked value is a [[dt:string]].
+		........
+		[[S]], [[s]] :: [[string]], [[cstring]] ::
+		A C-style string. The {size} is the number of zero bits following the actual string data and must be a multiple of 8.
+		The {elaboration} is the name of a text encoding. If the {elaboration} is unspecified, [[ISO-8859-1]] is assumed.
+		The unpacked value is a [[dt:string]].
+		........
+		[[D]], [[d]] :: [[date]], [[time]], [[datetime]] ::
+		A date. The {elaboration} is the year, month, day, hour, minute, and second of the epoch, and the scale (0 for seconds,
+		-3 for milliseconds, -6 for microseconds, etc.), each delimited by commas. If the {elaboration} is unspecified,
+		[[1970,1,1,0,0,0,0]] is assumed, corresponding to the number of seconds since January 1, 1970 (the Unix epoch).
+		To use the Macintosh epoch, use [[1904,1,1,0,0,0,0]]. For milliseconds, replace the last number with -3.
+		The unpacked value is a [[dt:date]].
+		........
+		[[X]], [[x]] :: [[color]], [[colour]] ::
+		A color ([[X]] for Greek {χρώμα}, {chroma}, meaning "color"). The {elaboration} is a string determining the color model
+		and the order and width of the color channels. The default is true color with alpha in ARGB order with {size/4} bits per channel.
+		For a {size} of 32 bits, this would be equivalent to an {elaboration} of [[a8r8g8b8]]. 
+		The unpacked value is a [[dt:color]].
+		........
+		[[Z]], [[z]] :: [[filler]] ::
+		A series of {size} filler bits ([[Z]] for "zero"). When packing, {size} bits are filled with zero.
+		When unpacking, {size} bits are skipped and ignored. There is no unpacked value for this data type.
+		........
+		[[M]], [[m]] :: [[magic]] ::
+		The {elaboration} is a magic number. When packing, the resulting packed value is the magic number.
+		When unpacking, the packed value is checked against the magic number; if they don't match, a script error is triggered.
+		There is no unpacked value for this data type.
+		........
+		[[A]], [[a]] :: [[align]] ::
+		Alignment to a multiple of {size} bits. There is no unpacked value for this data type.
+		........
+		[[ * ]] :: [[blob]], [[binary]] ::
+		The {size}, {endianness}, and {elaboration} are ignored. The {count} is the number of bytes to pack or unpack.
+		If the {count} is unspecified when unpacking, zero bytes are unpacked. If the {count} is unspecified when packing,
+		however many bytes are in the unpacked value are packed. The unpacked value is a [[dt:binary]].
+		........
+		[[ $ ]] :: [[struct]] ::
+		A substructure. The {elaboration} is a format string describing the binary data substructure.
+		The unpacked value is a [[dt:list]] of unpacked values from the specified substructure.
+		........
+		[[ @ ]] :: [[offset]] ::
+		The {size}, {endianness}, and {elaboration} are ignored. The {count} is an offset from the beginning of the
+		packed [[dt:binary]] where future values are packed to or unpacked from. When unpacking, the offset may be
+		anywhere in the [[dt:binary]]. When packing, the offset must be greater than or equal to the number of bytes
+		already packed.
+		ELBAT::
+	</description>
+	<description>
+		In addition to the type names listed above, the following special type names are allowed in a long-format {format} string.
+		These special type names specify a size and, for some, an endianness and an {elaboration} in addition to a data type.
+		\\\\
+		::TABLE
+		[[bbyte]]     :: alias for [[bint8]]
+		........
+		[[obyte]]     :: alias for [[oint8]]
+		........
+		[[hbyte]]     :: alias for [[hint8]]
+		........
+		[[ubyte]]     :: alias for [[uint8]]
+		........
+		[[sbyte]]     :: alias for [[sint8]]
+		........
+		[[byte]]      :: alias for [[int8]]
+		........
+		[[bshort]]    :: alias for [[bint16]]
+		........
+		[[oshort]]    :: alias for [[oint16]]
+		........
+		[[hshort]]    :: alias for [[hint16]]
+		........
+		[[ushort]]    :: alias for [[uint16]]
+		........
+		[[sshort]]    :: alias for [[sint16]]
+		........
+		[[short]]     :: alias for [[int16]]
+		........
+		[[blong]]     :: alias for [[bint64]]
+		........
+		[[olong]]     :: alias for [[oint64]]
+		........
+		[[hlong]]     :: alias for [[hint64]]
+		........
+		[[ulong]]     :: alias for [[uint64]]
+		........
+		[[slong]]     :: alias for [[sint64]]
+		........
+		[[long]]      :: alias for [[int64]]
+		........
+		[[half]]      :: alias for [[float16]]
+		........
+		[[single]]    :: alias for [[float32]]
+		........
+		[[real]]      :: alias for [[float32]]
+		........
+		[[double]]    :: alias for [[float64]]
+		........
+		[[quad]]      :: alias for [[float128]]
+		........
+		[[onecc]]     :: alias for [[char8]]
+		........
+		[[occ]]       :: alias for [[char8]]
+		........
+		[[twocc]]     :: alias for [[char16]]
+		........
+		[[tcc]]       :: alias for [[char16]]
+		........
+		[[fourcc]]    :: alias for [[char32]]
+		........
+		[[fcc]]       :: alias for [[char32]]
+		........
+		[[eightcc]]   :: alias for [[char64]]
+		........
+		[[ecc]]       :: alias for [[char64]]
+		........
+		[[wstring]]   :: alias for [[pstring16]]
+		........
+		[[lstring]]   :: alias for [[pstring32]]
+		........
+		[[wchar]]     :: alias for [[char16be&#123;UTF-16&#125;]]
+		........
+		[[wcharbe]]   :: alias for [[char16be&#123;UTF-16&#125;]]
+		........
+		[[wcharle]]   :: alias for [[char16le&#123;UTF-16&#125;]]
+		........
+		[[ostype]]    :: alias for [[char32be&#123;MacRoman&#125;]]
+		........
+		[[symbol]]    :: alias for [[char64be&#123;ISO-8859-1&#125;]]
+		........
+		[[point]]     :: alias for [[struct&#123;sint16be y; sint16be x;&#125;]]
+		........
+		[[rect]]      :: alias for [[struct&#123;sint16be top; sint16be left; sint16be bottom; sint16be right;&#125;]]
+		........
+		[[rectangle]] :: alias for [[struct&#123;sint16be top; sint16be left; sint16be bottom; sint16be right;&#125;]]
+		........
+		[[rgbcolor]]  :: alias for [[struct&#123;uint16be red; uint16be green; uint16be blue;&#125;]]
+		........
+		[[rgbcolour]] :: alias for [[struct&#123;uint16be red; uint16be green; uint16be blue;&#125;]]
+		ELBAT::
+	</description>
+	<note>
+		If the {format} string is not properly formed, a script error is triggered.
+	</note>
+	<note>
+		If the {data} are shorter than required by the {format}, the missing bytes are assumed to be zero.
+		If the {data} are longer than required by the {format}, the extra bytes are ignored.
+	</note>
+	<see-also>[[fn:pack]]</see-also>
 </function>
 
 <function>
@@ -12697,6 +13231,12 @@
 		[[fn:lconcat]] :: [[fn:lreverse]]
 		.................................
 		[[fn:llength]] :: [[fn:number]]
+		ELBAT::
+		\\\\
+		{{{{Binary Data}}}}
+		\\\\
+		::TABLE
+		[[fn:pack]] :: [[fn:unpack]]
 		ELBAT::
 		\\\\
 		{{{{Runtime State}}}}
