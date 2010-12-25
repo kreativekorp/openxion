@@ -153,9 +153,9 @@ public class DataReader {
 			}
 		case HINT:
 			if (df.littleEndian()) {
-				return in.readUnsignedIntegerLE(df.size()).toString(16);
+				return in.readUnsignedIntegerLE(df.size()).toString(16).toUpperCase();
 			} else {
-				return in.readUnsignedInteger(df.size()).toString(16);
+				return in.readUnsignedInteger(df.size()).toString(16).toUpperCase();
 			}
 		case UINT:
 			if (df.littleEndian()) {
