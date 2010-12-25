@@ -39,6 +39,7 @@ import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.ast.XNStringExpression;
 import com.kreative.openxion.binpack.*;
 import com.kreative.openxion.io.XOMURLIOManager;
+import com.kreative.openxion.util.EndlessInputStream;
 import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.inst.*;
@@ -973,7 +974,7 @@ public class XNExtendedModule extends XNModule {
 			try {
 				res = new DataWriter(format).pack(things);
 			} catch (NumberFormatException e) {
-				throw new XNScriptError("Expected number here");
+				throw new XNScriptError("Expected numeric value here");
 			} catch (Exception e) {
 				throw new XNScriptError(e.getMessage());
 			}
@@ -1148,7 +1149,7 @@ public class XNExtendedModule extends XNModule {
 			byte[] data = XOMBinaryType.instance.makeInstanceFrom(ctx, l.get(1)).toByteArray();
 			List<Object> things;
 			try {
-				things = new DataReader(format).unpack(data);
+				things = new DataReader(format).unpack(new EndlessInputStream(new ByteArrayInputStream(data)), data.length);
 			} catch (NumberFormatException e) {
 				throw new XNScriptError("Expected number here");
 			} catch (EOFException e) {
