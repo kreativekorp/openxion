@@ -62,15 +62,28 @@ public class XOMColorType extends XOMDataType<XOMColor> {
 		else {
 			String s = instance.toTextString(ctx);
 			String[] ss = s.split(",");
-			if (ss.length != 3) {
-				return false;
-			} else try {
-				int r = Integer.parseInt(ss[0]);
-				int g = Integer.parseInt(ss[1]);
-				int b = Integer.parseInt(ss[2]);
-				if (r < 0 || g < 0 || b < 0 || r >= 65536 || g >= 65536 || b >= 65536) return false;
-				return true;
-			} catch (Exception e) {
+			if (ss.length == 3) {
+				try {
+					int r = Integer.parseInt(ss[0]);
+					int g = Integer.parseInt(ss[1]);
+					int b = Integer.parseInt(ss[2]);
+					if (r < 0 || g < 0 || b < 0 || r >= 65536 || g >= 65536 || b >= 65536) return false;
+					return true;
+				} catch (Exception e) {
+					return false;
+				}
+			} else if (ss.length == 4) {
+				try {
+					int r = Integer.parseInt(ss[0]);
+					int g = Integer.parseInt(ss[1]);
+					int b = Integer.parseInt(ss[2]);
+					int a = Integer.parseInt(ss[3]);
+					if (r < 0 || g < 0 || b < 0 || a < 0 || r >= 65536 || g >= 65536 || b >= 65536 || a >= 65536) return false;
+					return true;
+				} catch (Exception e) {
+					return false;
+				}
+			} else {
 				return false;
 			}
 		}
@@ -85,15 +98,28 @@ public class XOMColorType extends XOMDataType<XOMColor> {
 		else {
 			String s = left.toTextString(ctx) + right.toTextString(ctx);
 			String[] ss = s.split(",");
-			if (ss.length != 3) {
-				return false;
-			} else try {
-				int r = Integer.parseInt(ss[0]);
-				int g = Integer.parseInt(ss[1]);
-				int b = Integer.parseInt(ss[2]);
-				if (r < 0 || g < 0 || b < 0 || r >= 65536 || g >= 65536 || b >= 65536) return false;
-				return true;
-			} catch (Exception e) {
+			if (ss.length == 3) {
+				try {
+					int r = Integer.parseInt(ss[0]);
+					int g = Integer.parseInt(ss[1]);
+					int b = Integer.parseInt(ss[2]);
+					if (r < 0 || g < 0 || b < 0 || r >= 65536 || g >= 65536 || b >= 65536) return false;
+					return true;
+				} catch (Exception e) {
+					return false;
+				}
+			} else if (ss.length == 4) {
+				try {
+					int r = Integer.parseInt(ss[0]);
+					int g = Integer.parseInt(ss[1]);
+					int b = Integer.parseInt(ss[2]);
+					int a = Integer.parseInt(ss[3]);
+					if (r < 0 || g < 0 || b < 0 || a < 0 || r >= 65536 || g >= 65536 || b >= 65536 || a >= 65536) return false;
+					return true;
+				} catch (Exception e) {
+					return false;
+				}
+			} else {
 				return false;
 			}
 		}
@@ -108,15 +134,30 @@ public class XOMColorType extends XOMDataType<XOMColor> {
 		else {
 			String s = instance.toTextString(ctx);
 			String[] ss = s.split(",");
-			if (ss.length != 3) {
-				throw new XOMMorphError(typeName);
-			} else try {
-				int r = Integer.parseInt(ss[0]);
-				int g = Integer.parseInt(ss[1]);
-				int b = Integer.parseInt(ss[2]);
-				if (r < 0 || g < 0 || b < 0 || r >= 65536 || g >= 65536 || b >= 65536) throw new XOMMorphError(typeName);
-				return new XOMColor(r,g,b);
-			} catch (Exception e) {
+			if (ss.length == 3) {
+				try {
+					int r = Integer.parseInt(ss[0]);
+					int g = Integer.parseInt(ss[1]);
+					int b = Integer.parseInt(ss[2]);
+					if (r < 0 || g < 0 || b < 0 || r >= 65536 || g >= 65536 || b >= 65536)
+						throw new XOMMorphError(typeName);
+					return new XOMColor(r,g,b);
+				} catch (Exception e) {
+					throw new XOMMorphError(typeName);
+				}
+			} else if (ss.length == 4) {
+				try {
+					int r = Integer.parseInt(ss[0]);
+					int g = Integer.parseInt(ss[1]);
+					int b = Integer.parseInt(ss[2]);
+					int a = Integer.parseInt(ss[3]);
+					if (r < 0 || g < 0 || b < 0 || a < 0 || r >= 65536 || g >= 65536 || b >= 65536 || a >= 65536)
+						throw new XOMMorphError(typeName);
+					return new XOMColor(r,g,b,a);
+				} catch (Exception e) {
+					throw new XOMMorphError(typeName);
+				}
+			} else {
 				throw new XOMMorphError(typeName);
 			}
 		}
@@ -131,15 +172,30 @@ public class XOMColorType extends XOMDataType<XOMColor> {
 		else {
 			String s = left.toTextString(ctx) + right.toTextString(ctx);
 			String[] ss = s.split(",");
-			if (ss.length != 3) {
-				throw new XOMMorphError(typeName);
-			} else try {
-				int r = Integer.parseInt(ss[0]);
-				int g = Integer.parseInt(ss[1]);
-				int b = Integer.parseInt(ss[2]);
-				if (r < 0 || g < 0 || b < 0 || r >= 65536 || g >= 65536 || b >= 65536) throw new XOMMorphError(typeName);
-				return new XOMColor(r,g,b);
-			} catch (Exception e) {
+			if (ss.length == 3) {
+				try {
+					int r = Integer.parseInt(ss[0]);
+					int g = Integer.parseInt(ss[1]);
+					int b = Integer.parseInt(ss[2]);
+					if (r < 0 || g < 0 || b < 0 || r >= 65536 || g >= 65536 || b >= 65536)
+						throw new XOMMorphError(typeName);
+					return new XOMColor(r,g,b);
+				} catch (Exception e) {
+					throw new XOMMorphError(typeName);
+				}
+			} else if (ss.length == 4) {
+				try {
+					int r = Integer.parseInt(ss[0]);
+					int g = Integer.parseInt(ss[1]);
+					int b = Integer.parseInt(ss[2]);
+					int a = Integer.parseInt(ss[3]);
+					if (r < 0 || g < 0 || b < 0 || a < 0 || r >= 65536 || g >= 65536 || b >= 65536 || a >= 65536)
+						throw new XOMMorphError(typeName);
+					return new XOMColor(r,g,b,a);
+				} catch (Exception e) {
+					throw new XOMMorphError(typeName);
+				}
+			} else {
 				throw new XOMMorphError(typeName);
 			}
 		}
