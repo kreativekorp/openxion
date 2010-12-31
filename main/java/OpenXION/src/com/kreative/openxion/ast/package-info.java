@@ -2,7 +2,7 @@
  * Classes representing the abstract syntax tree output from XNParser.
  * Main classes of concern in this package are XNExpression and XNStatement.
  * <p>
- * Copyright &copy; 2009-2010 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2009-2011 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in

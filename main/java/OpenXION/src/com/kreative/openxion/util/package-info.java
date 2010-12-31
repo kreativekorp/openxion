@@ -1,7 +1,7 @@
 /**
  * Utility classes and methods used throughout OpenXION.
  * <p>
- * Copyright &copy; 2009-2010 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2009-2011 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
