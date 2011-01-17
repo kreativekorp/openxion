@@ -1,6 +1,9 @@
 /**
  * Contains classes for the pack() and unpack() functions.
  * <p>
+ * This is the same as the <code>com.kreative.binpack</code> package
+ * and should be kept in sync with that package.
+ * <p>
  * Copyright &copy; 2010-2011 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
