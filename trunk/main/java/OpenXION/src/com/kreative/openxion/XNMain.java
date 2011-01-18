@@ -49,6 +49,7 @@ public class XNMain {
 		readEnviron(ctx);
 		ctx.loadModule(XNStandardModule.instance());
 		ctx.loadModule(XNExtendedModule.instance());
+		ctx.loadModule(XNAudioModule.instance());
 		final XNInterpreter interp = new XNInterpreter(ctx);
 		if (args.length == 0) {
 			shell(ui, interp, ctx, false);
@@ -233,6 +234,7 @@ public class XNMain {
 			}
 		}
 		writeEnviron(ctx);
+		System.exit(0);
 	}
 	
 	private static enum Option {

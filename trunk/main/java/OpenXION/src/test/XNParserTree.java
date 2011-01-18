@@ -18,6 +18,7 @@ public class XNParserTree {
 				XNContext ctx = new XNContext(new XNNullUI());
 				ctx.loadModule(XNStandardModule.instance());
 				ctx.loadModule(XNExtendedModule.instance());
+				ctx.loadModule(XNAudioModule.instance());
 				XNLexer lex = new XNLexer(new File(arg), r);
 				XNParser par = new XNParser(ctx, lex);
 				List<XNStatement> scr = par.parse();
