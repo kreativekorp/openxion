@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 Created-By: 1.2 (Kreative Software)
 Main-Class: com.kreative.openxion.XNMain
-Class-Path: jline.jar
+Class-Path: jline.jar jsapi.jar RXTXcomm.jar comm.jar
