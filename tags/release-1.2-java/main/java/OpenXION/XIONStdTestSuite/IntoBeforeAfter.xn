@@ -1,9 +1,0 @@
-put "There's also been some rumors about us canceling HyperCard, which is total bullshit. Thank you." into steve
-put " not " into char 69 of steve
-put steve
-put "There's also been some rumors about us canceling HyperCard, which is total bullshit. Thank you." into steve
-put "not " before word 12 of steve
-put steve
-put "There's also been some rumors about us canceling HyperCard, which is total bullshit. Thank you." into steve
-put " not" after word 11 of steve
-put steve
