@@ -6565,6 +6565,10 @@
 	<note>
 		In HyperTalk, this property existed but was undocumented.
 	</note>
+	<security>
+		To use the [[*]] property, OpenXION's security settings must allow the [[TELEPHONY]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 	<see-also>[[cm:dial]], [[fn:serialPorts]]</see-also>
 </property>
 
@@ -7706,6 +7710,10 @@
 		If neither package is available, [[*]] will do nothing but set the [[fn:result]]
 		to an error message.
 	</note>
+	<security>
+		To use the [[with modem]] keyword, OpenXION's security settings must allow the [[TELEPHONY]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 	<see-also>[[pr:dialingVolume]], [[pr:dialingTime]], [[pr:dialingPort]], [[fn:serialPorts]]</see-also>
 </command>
 
@@ -13002,6 +13010,10 @@
 	<note>
 		In HyperTalk, this function existed but was undocumented.
 	</note>
+	<security>
+		To use the [[*]] function, OpenXION's security settings must allow the [[SYSTEM_INFO]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
 	<see-also>[[cm:dial]], [[pr:dialingPort]]</see-also>
 </function>
 
