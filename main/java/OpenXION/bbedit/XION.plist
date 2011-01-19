@@ -53,6 +53,7 @@
 		<string>default</string>
 		<string>delete</string>
 		<string>descending</string>
+		<string>dial</string>
 		<string>div</string>
 		<string>divide</string>
 		<string>do</string>
@@ -141,6 +142,7 @@
 		<string>ordinal</string>
 		<string>pass</string>
 		<string>pl</string>
+		<string>play</string>
 		<string>precisely</string>
 		<string>put</string>
 		<string>quot</string>
@@ -164,11 +166,15 @@
 		<string>single</string>
 		<string>smaller</string>
 		<string>sort</string>
+		<string>speak</string>
+		<string>sql</string>
 		<string>start</string>
 		<string>static</string>
 		<string>step</string>
+		<string>stop</string>
 		<string>subtract</string>
 		<string>switch</string>
+		<string>tempo</string>
 		<string>tell</string>
 		<string>text</string>
 		<string>than</string>
@@ -184,6 +190,7 @@
 		<string>time</string>
 		<string>times</string>
 		<string>to</string>
+		<string>tone</string>
 		<string>toward</string>
 		<string>towards</string>
 		<string>truncate</string>
