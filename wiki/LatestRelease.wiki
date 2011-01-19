@@ -1,0 +1,25 @@
+#summary Information about the latest release version of OpenXION.
+
+= OpenXION 1.2 is out! =
+
+OpenXION 1.2 is the latest release version of OpenXION, the reference implementation of XION, the open scripting language based on !HyperTalk. Version 1.2 is packed full of exciting new features. Here are just some of them.
+
+= Make History =
+
+Install JLine alongside OpenXION, and now you can get complete line editing and command history functionality! Also, you can record the statements you enter and save them to a script file for later.
+
+= Connect to Databases =
+
+Use the new sql command to connect to and query databases. Congratulations, OpenXION, you're now capable of running e-commerce and social networking applications!
+
+= Time to Play! =
+
+OpenXION now includes the dial, play, and speak commands familiar to !HyperTalk users, as well as a brand-new tone command and several related functions and properties. The speak command will work with either the built-in Mac OS speech synthesizer or JSAPI. The dial with modem command will work with either RXTX or the Java Communications API.
+
+= Binary Distributions for Windows =
+
+Version 1.2 is the first to provide a complete binary distribution package for Windows. Now you can use and install XION from your command prompt right out of the box. In addition, all distribution archives now include detailed instructions on how to use and install OpenXION.
+
+= The Show Must Go On =
+
+Version 1.2 fixes several major bugs, including show-stopping issues with list representation that prevented mathematical functions and nested lists from working.
