@@ -249,6 +249,28 @@
 </dialect>
 
 <dialect>
+	<name>oxna12</name>
+	<title>OpenXION Audio Module</title>
+	<vers>1.2</vers>
+	<summary>
+		This is the official documentation for the nonstandard audio-related
+		functionality of version 1.2 of OpenXION. OpenXION is the reference
+		implementation of the XION Scripting Language Standard.
+		XION is a modern xTalk language based on the original HyperTalk.
+		It is easy to learn and has the most English-like syntax
+		of any programming language.
+	</summary>
+	<description>
+		This is the official documentation for the nonstandard audio-related
+		functionality of version 1.2 of OpenXION. OpenXION is the reference
+		implementation of the XION Scripting Language Standard.
+		XION is a modern xTalk language based on the original HyperTalk.
+		It is easy to learn and has the most English-like syntax
+		of any programming language.
+	</description>
+</dialect>
+
+<dialect>
 	<name>hyp</name>
 	<title>HyperTalk</title>
 	<vers>2.2</vers>
@@ -4648,19 +4670,25 @@
 	<name dialects="xn1,oxn1,oxn11,oxn12">color</name>
 	<name dialects="xn1,oxn1,oxn11,oxn12">colour</name>
 	<description>
-		The [[*]] data type represents an opaque color in the sRGB color space.
+		The [[*]] data type represents a color in the sRGB color space.
 		Each color channel is specified by an integer from 0 to 65535.
+		An alpha channel may or may not be specified; if not, it is
+		assumed to be 65535 (opaque).
 	</description>
-	<properties>red, green, blue, hue, saturation, brightness</properties>
+	<properties>red, green, blue, alpha, hue, saturation, brightness</properties>
 	<note>
-		The [[pr:red]], [[pr:green]], and [[pr:blue]] properties are [[dt:integer]]s
-		from 0 to 65535. The [[pr:hue]], [[pr:saturation]], and [[pr:brightness]]
-		properties are [[dt:number]]s from 0 to 1.
+		The [[pr:red]], [[pr:green]], [[pr:blue]], and [[pr:alpha]] properties
+		are [[dt:integer]]s from 0 to 65535. The [[pr:hue]], [[pr:saturation]],
+		and [[pr:brightness]] properties are [[dt:number]]s from 0 to 1.
 	</note>
 	<note>
 		The [[dt:string]] representation of a [[*]] is the [[dt:string]]
-		representations of the red, green, and blue components, in order,
-		delimited by commas.
+		representations of the red, green, blue, and alpha components, in order,
+		delimited by commas. If the color is opaque (the alpha component is 65535),
+		only the red, green, and blue components appear in the [[dt:string]] representation.
+	</note>
+	<note>
+		OpenXION 1.0 and 1.1 did not support an alpha channel.
 	</note>
 </datatype>
 
@@ -6383,6 +6411,18 @@
 </property>
 
 <property>
+	<name dialects="xn1,oxn12">alpha</name>
+	<applies-to>[[dt:Color]]s</applies-to>
+	<syntax>the [[*]] of {color}</syntax>
+	<syntax-note>{Color} yields a [[dt:color]].</syntax-note>
+	<example>get the [[*]] of purple</example>
+	<description>
+		The [[*]] property determines the alpha channel of a color.
+		The alpha is specified as an [[dt:integer]] between zero (transparent) and 65535 (opaque), inclusive.
+	</description>
+</property>
+
+<property>
 	<name dialects="xn1,oxn1,oxn11,oxn12">hue</name>
 	<applies-to>[[dt:Color]]s</applies-to>
 	<syntax>the [[*]] of {color}</syntax>
@@ -6509,6 +6549,108 @@
 	<description>
 		The [[*]] property determines the size in bytes of a file system object.
 	</description>
+</property>
+
+<property>
+	<name dialects="oxna12,hyp">dialingPort</name>
+	<applies-to>Global environment</applies-to>
+	<syntax>set the [[*]] to {string}</syntax>
+	<syntax-note>{String} yields the name of a communications port.</syntax-note>
+	<description>
+		The [[*]] property determines which communications port is used
+		by the [[cm:dial]] command to dial a phone number using a modem.
+		A list of possible values for this property is returned by the
+		[[fn:serialPorts]] function.
+	</description>
+	<note>
+		In HyperTalk, this property existed but was undocumented.
+	</note>
+	<see-also>[[cm:dial]], [[fn:serialPorts]]</see-also>
+</property>
+
+<property>
+	<name dialects="oxna12,hyp">dialingTime</name>
+	<applies-to>Global environment</applies-to>
+	<syntax>set the [[*]] to {duration}</syntax>
+	<syntax-note>{Duration} yields a [[dt:number]].</syntax-note>
+	<description>
+		The [[*]] property determines the amount of time the [[cm:dial]]
+		command waits before closing the communications port after issuing
+		the modem command to dial a phone number. The amount of time
+		is specified in ticks, or sixtieths of a second. The default
+		value is 180 ticks, or 3 seconds.
+	</description>
+	<see-also>[[cm:dial]]</see-also>
+</property>
+
+<property>
+	<name dialects="oxna12,hyp">dialingVolume</name>
+	<applies-to>Global environment</applies-to>
+	<syntax>set the [[*]] to {volume}</syntax>
+	<syntax-note>{Volume} yields a [[dt:number]] between 0 and 7, inclusive.</syntax-note>
+	<description>
+		The [[*]] property determines the volume of the dial tones
+		produced by the [[cm:dial]] command. The default value is 7.
+	</description>
+	<note>
+		In HyperTalk, as in old versions of Mac OS Classic, the volume was
+		restricted to an [[dt:integer]] between 0 and 7. OpenXION uses the
+		same range for compatibility, but allows any [[dt:number]] in order
+		to give finer control over volume.
+	</note>
+	<see-also>[[cm:dial]], [[pr:toneVolume]]</see-also>
+</property>
+
+<property>
+	<name dialects="oxna12,hyp">soundChannel</name>
+	<applies-to>Global environment</applies-to>
+	<syntax>set the [[*]] to {channel}</syntax>
+	<syntax-note>{Channel} yields an [[dt:integer]] between 1 and 8, inclusive.</syntax-note>
+	<description>
+		The [[*]] property determines which channel music produced by the [[cm:play]] command
+		is played on. Only one sequence can be played on a single channel at any one time,
+		but multiple sequences can be played simultaneously on different channels. Both HyperTalk
+		and OpenXION support 8 channels.
+	</description>
+	<see-also>[[cm:play]], [[fn:sound]], [[pr:toneChannel]]</see-also>
+</property>
+
+<property>
+	<name dialects="oxna12">toneChannel</name>
+	<applies-to>Global environment</applies-to>
+	<syntax>set the [[*]] to {channel}</syntax>
+	<syntax-note>{Channel} yields an [[dt:integer]] between 1 and 8, inclusive.</syntax-note>
+	<description>
+		The [[*]] property determines which channel tones produced by the [[cm:tone]] command
+		is played on. Only one tone can be played on a single channel at any one time,
+		but multiple tones can be played simultaneously on different channels. OpenXION
+		supports 8 channels.
+	</description>
+	<note>
+		Music played with the [[cm:play]] command and tones produced by
+		the [[cm:tone]] command are always played on separate channels,
+		despite the similarities between the [[pr:soundChannel]] and
+		[[pr:toneChannel]] properties.
+	</note>
+	<see-also>[[cm:tone]], [[fn:tone]], [[pr:soundChannel]]</see-also>
+</property>
+
+<property>
+	<name dialects="oxna12">toneVolume</name>
+	<applies-to>Global environment</applies-to>
+	<syntax>set the [[*]] to {volume}</syntax>
+	<syntax-note>{Volume} yields a [[dt:number]] between 0 and 7, inclusive.</syntax-note>
+	<description>
+		The [[*]] property determines the volume of the tones
+		produced by the [[cm:tone]] command. The default value is 7.
+	</description>
+	<note>
+		In HyperTalk, as in old versions of Mac OS Classic, the volume was
+		restricted to an [[dt:integer]] between 0 and 7. OpenXION uses the
+		same range for compatibility, but allows any [[dt:number]] in order
+		to give finer control over volume.
+	</note>
+	<see-also>[[cm:tone]], [[pr:dialingVolume]]</see-also>
 </property>
 
 <command>
@@ -7526,6 +7668,271 @@
 		it is impossible to use any XION expressions in such a statement, so you are limited to static queries;
 		and this feature may change in future versions of OpenXION.)
 	</note>
+</command>
+
+<command>
+	<name dialects="oxna12,hyp">dial</name>
+	<syntax>dial {number}</syntax>
+	<syntax>dial {number} with modem</syntax>
+	<syntax>dial {number} with modem {command}</syntax>
+	<syntax-note>{Number} and {command} yield [[dt:string]]s.</syntax-note>
+	<example>dial steve -- steve is a variable containing a phone number</example>
+	<example>dial "555-1212"</example>
+	<example>dial "555-1212" with modem</example>
+	<example>dial "555-1212" with modem "ATS0=0S7=1DT"</example>
+	<description>
+		Without the [[with modem]] keyword, the [[*]] command plays the dial tones
+		for the given phone {number}. With some land-line telephones, you can hold
+		the handset against your computer's speaker while the [[*]] command is executing
+		to dial the given phone {number}. The volume of the generated tones is controlled
+		by the [[pr:dialingVolume]] property.
+	</description>
+	<description>
+		With the [[with modem]] keyword, the [[*]] command will dial the given phone {number}
+		using a modem attached to a communications port. If no modem {command} is specified,
+		the default is [["ATDT"]]. The communications port used is determined by the
+		[[pr:dialingPort]] property. There is a one-second delay between opening the
+		communications port and issuing the {command}, and a delay between issuing the
+		{command} and closing the port determined by the [[pr:dialingTime]] property.
+	</description>
+	<note>
+		The [[*]] command is synchronous: it will not return until it has finished dialing.
+		(This is different from the [[cm:play]], [[cm:speak]], and [[cm:tone]] commands,
+		which are asynchronous.)
+	</note>
+	<note>
+		OpenXION will use RXTX ([[gnu.io]] package) or the Java Communications API
+		([[javax.comm]] package) to communicate with the modem, whichever is available.
+		If neither package is available, [[*]] will do nothing but set the [[fn:result]]
+		to an error message.
+	</note>
+	<see-also>[[pr:dialingVolume]], [[pr:dialingTime]], [[pr:dialingPort]], [[fn:serialPorts]]</see-also>
+</command>
+
+<command>
+	<name dialects="oxna12,hyp">play</name>
+	<syntax>play {instrument}</syntax>
+	<syntax>play {instrument} {notes}</syntax>
+	<syntax>play {instrument} tempo {tempo} {notes}</syntax>
+	<syntax>play stop</syntax>
+	<syntax-note>{Instrument} and {notes} yield [[dt:string]]s. {Tempo} yields a [[dt:number]].</syntax-note>
+	<example>play "harpsichord" "ch d e f g a b c5w"</example>
+	<example>play "music box" "c4e c dq c f eh"</example>
+	<example>play "harpsichord" "c4 a3 f c4 a3 f c4 d c c c"</example>
+	<description>
+		The [[*]] command plays the specified sequence of {notes} with the specified
+		{instrument} using a MIDI synthesizer (in OpenXION) or sampled sounds (in HyperTalk).
+		The {tempo} parameter specifies the number of quarter notes per minute;
+		the default value is 120.
+	</description>
+	<description>
+		The [[*]] command in OpenXION uses an extended version of the scripted
+		music notation originally found in HyperTalk. A sequence of notes is
+		represented as a [[dt:string]] with notes delimited by whitespace.
+		Each note has the following format for a regular note:\\
+		\\
+		{noteName} {octave} {duration} {velocity} {effect}\\
+		\\
+		or the following format for a rest:\\
+		\\
+		{duration} [[r]]
+	</description>
+	<description>
+		{NoteName} is a letter between [[A]] and [[G]], which may or may not be followed
+		by any number of [[#]] symbols, each of which raises the pitch a half step,
+		or any number of [[b]] symbols, each of which lowers the pitch a half step.
+		In OpenXION, {noteName} can also be one of the letters [[M]], [[N]], or [[P]]
+		followed by the MIDI dollar value, for which 60 is middle C. {NoteName}
+		is the only required value in a note string.
+	</description>
+	<description>
+		{Octave} is an integer specifying which octave the note belongs to.
+		If the {octave} is not specified, the last {octave} specified is used.
+		The default is 4, the octave starting with middle C.
+	</description>
+	<description>
+		Middle C corresponds to the note string [[C4]] or [[B#3]].
+		The note one half step below middle C is [[B3]] or [[Cb4]].
+		440 Hz corresponds to the note string [[A4]].
+	</description>
+	<description>
+		{Duration} is one of the following letters:
+		\\\\
+		::TABLE
+		[[w]] :: whole note
+		.....
+		[[h]] :: half note
+		.....
+		[[q]] :: quarter note
+		.....
+		[[e]] :: eighth note
+		.....
+		[[s]] :: 16th note
+		.....
+		[[t]] :: 32nd note
+		.....
+		[[x]] :: 64th note
+		.....
+		[[o]] :: 128th note
+		ELBAT::
+		which may or may not be followed by any number of [[.]] symbols, each of
+		which multiplies the duration by 1.5 to create a dotted note, or any number
+		of [[3]] symbols, each of which divides the duration by 3 to create a triplet
+		note. (In OpenXION, you can use any digit 2 through 9 to divide the
+		duration by that value.) Also in OpenXION, {duration} can be the letter [[d]]
+		followed by the duration in MIDI ticks. OpenXION uses 64 ticks per quarter note.
+		If the {duration} is not specified, the last {duration} specified is used.
+		The default is [[q]].
+	</description>
+	<description>
+		{Velocity} is another extension provided by OpenXION not found in HyperTalk.
+		It may be any of the following strings:
+		\\\\
+		::TABLE
+		[[fff]] :: triple forte (velocity 127)
+		.....
+		[[ff]] :: fortissimo (velocity 112)
+		.....
+		[[f]] :: forte (velocity 96)
+		.....
+		[[mff]] :: (velocity 88)
+		.....
+		[[mf]] :: mezzo forte (velocity 80)
+		.....
+		[[m]] :: (velocity 72)
+		.....
+		[[mp]] :: mezzo piano (velocity 64)
+		.....
+		[[mpp]] :: (velocity 56)
+		.....
+		[[p]] :: piano (velocity 48)
+		.....
+		[[pp]] :: pianissimo (velocity 32)
+		....
+		[[ppp]] :: triple piano (velocity 16)
+		ELBAT::
+		{Velocity} can also be the letter [[v]] followed by the velocity of the note
+		from 0 to 127. If the {velocity} is not specified, the last {velocity} specified
+		is used. The default is [[fff]] or 127.
+	</description>
+	<description>
+		{Effect} is the final extension provided by OpenXION not found in HyperTalk.
+		It is one or more of the following characters:
+		\\\\
+		::TABLE
+		[[ , ]] :: The note is stopped a few MIDI ticks before it normally would be, creating a stoccato effect.
+		.....
+		[[ * ]] :: The note keeps playing after its duration has passed. This can be used to start a fermata.
+		(This overrides the effect of any [[ , ]] or any preceding [[ ! ]].)
+		.....
+		[[ ! ]] :: Stops a note previously started by [[ * ]] after the duration has passed. This can be used to end a fermata.
+		If the note is not already playing, this is equivalent to a rest. (This overrides the effect of any preceding [[ * ]].)
+		.....
+		[[ + ]] :: Starts the next note at the same time as this note, creating a chord.
+		ELBAT::
+		If {effect} is not specified, no effects are applied.
+	</description>
+	<description>
+		If the note string contains an [[r]], it is a rest and only the duration can be specified.
+	</description>
+	<note>
+		The [[*]] command is asynchronous: it will return immediately while the
+		sound keeps playing in the background. If there is already sound playing
+		on the current [[pr:soundChannel]], the next sound to be played will be
+		added to a queue. The [[play stop]] form of the [[*]] command will stop
+		playing any sound on the current [[pr:soundChannel]]. The [[stop sound]]
+		command will stop all currently-playing and pending sounds on all [[pr:soundChannel]]s.
+	</note>
+	<note>
+		Early versions of HyperTalk limited the length of the note string to 254 characters.
+		OpenXION and later versions of HyperTalk do not limit the length of the note string.
+	</note>
+	<note>
+		In HyperTalk, the [[*]] command accepted note strings that were left unquoted,
+		and this was often done. For example:\\
+		\\
+		[[play harpsichord c4 a3 f c4 a3 f c4 d c c c]]\\
+		\\
+		OpenXION will also accept unquoted note strings, but this is highly discouraged.
+		You cannot use any special symbols (such as [[#]], [[.]], or [[+]]) in an unquoted note string,
+		and if one of the notes in an unquoted note string turns out to also be the name of a constant or variable,
+		the value of the constant or the contents of the variable will be played instead of the intended note.
+	</note>
+	<see-also>[[cm:stop]], [[fn:sound]], [[fn:sounds]], [[pr:soundChannel]]</see-also>
+</command>
+
+<command>
+	<name dialects="oxna12,hyp">speak</name>
+	<syntax>speak {phrase}</syntax>
+	<syntax>speak {phrase} with {gender} voice</syntax>
+	<syntax>speak {phrase} with voice {voice}</syntax>
+	<syntax-note>{Phrase} and {voice} yield [[dt:string]]s. {Gender} is [[male]], [[female]], or [[neuter]].</syntax-note>
+	<description>
+		The [[*]] command speaks the specified {phrase} using a text-to-speech synthesizer.
+		If the {voice} is specified, the {phrase} will be read using the specified {voice}.
+		Otherwise, the default voice is used.
+	</description>
+	<note>
+		The [[*]] command is asynchronous: it will return immediately while the
+		speech keeps playing in the background. If there is already text being spoken,
+		the next text to be spoken will be added to a queue. The [[stop speech]]
+		command will stop all current and pending speech.
+	</note>
+	<note>
+		HyperTalk and OpenXION running under Mac OS use the speech synthesizer built in to Mac OS.
+		OpenXION running under other platforms will use JSAPI (Java Speech API), if available.
+		If JSAPI is not available, [[*]] will do nothing but set the [[fn:result]] to an error message.
+	</note>
+	<see-also>[[cm:stop]], [[fn:speech]], [[fn:voice]], [[fn:voices]]</see-also>
+</command>
+
+<command>
+	<name dialects="oxna12,hyp">stop</name>
+	<syntax>stop sound</syntax>
+	<syntax>stop speech</syntax>
+	<syntax>stop tone</syntax>
+	<description>
+		The [[stop sound]] command immediately stops all current and pending sound
+		started or queued by the [[cm:play]] command on all [[pr:soundChannel]]s.
+		To stop sound on the current [[pr:soundChannel]] only, use the [[play stop]]
+		form of [[cm:play]].
+	</description>
+	<description>
+		The [[stop speech]] command immediately stops all current and pending speech
+		started or queued by the [[cm:speak]] command.
+	</description>
+	<description>
+		The [[stop tone]] command immediately stops all current and pending tones
+		started or queued by the [[cm:tone]] command on all [[pr:toneChannel]]s.
+		(HyperTalk does not have a [[cm:tone]] or [[stop tone]] command.)
+	</description>
+	<see-also>[[cm:play]], [[cm:speak]], [[cm:tone]]</see-also>
+</command>
+
+<command>
+	<name dialects="oxna12">tone</name>
+	<syntax>tone {frequency}</syntax>
+	<syntax>tone {frequency} for {duration}</syntax>
+	<syntax>tone {frequency} for {duration} {unit}</syntax>
+	<syntax-note>
+		{Frequency} and {duration} yield [[dt:number]]s.
+		{Unit} is [[hour]], [[hours]], [[min]], [[mins]], [[minute]], [[minutes]],
+		[[sec]], [[secs]], [[second]], [[seconds]], [[tick]], [[ticks]],
+		[[milli]], [[millis]], [[millisecond]], or [[milliseconds]].
+	</syntax-note>
+	<description>
+		The [[*]] command plays a tone of a single {frequency} (in Hz) for a specified {duration}.
+		Unless specified, the default {unit} for the {duration} is [[ticks]], or sixtieths of a second.
+		The volume of the generated tone is determined by the [[pr:toneVolume]] property.
+	</description>
+	<note>
+		The [[*]] command is asynchronous: it will return immediately while the tone
+		keeps playing in the background. If there is already a tone playing on the current
+		[[pr:toneChannel]], the next tone to be played will be added to a queue.
+		The [[stop tone]] command will stop all currently-playing and pending tones
+		on all [[pr:toneChannel]]s.
+	</note>
+	<see-also>[[cm:stop]], [[fn:tone]], [[pr:toneVolume]], [[pr:toneChannel]]</see-also>
 </command>
 
 <function>
@@ -12582,6 +12989,119 @@
 	</security>
 </function>
 
+<function>
+	<name dialects="oxna12,hyp">serialPorts</name>
+	<syntax>the [[*]]</syntax>
+	<syntax>[[*]]()</syntax>
+	<example>put the [[*]]</example>
+	<description>
+		The [[*]] function returns a [[pr:lineEnding]]-delimited list of communications ports.
+		These are the possible values of the [[pr:dialingPort]] property, which determines the
+		port used to dial phone numbers with a modem.
+	</description>
+	<note>
+		In HyperTalk, this function existed but was undocumented.
+	</note>
+	<see-also>[[cm:dial]], [[pr:dialingPort]]</see-also>
+</function>
+
+<function>
+	<name dialects="oxna12,hyp">sound</name>
+	<syntax>the [[*]]</syntax>
+	<syntax>[[*]]()</syntax>
+	<example>put the [[*]]</example>
+	<example>wait until the [[*]] is "done"</example>
+	<description>
+		The [[*]] function returns the name of the instrument currently playing on the current
+		[[pr:soundChannel]], or the string [["done"]] if no instrument is currently playing.
+	</description>
+	<note>
+		The [["done"]] string is a literal; it is not a constant like [[cn:zero]] or [[cn:true]].
+		In HyperTalk code, the [["done"]] literal is often left unquoted, but in XION this is
+		highly discouraged.
+	</note>
+	<see-also>[[cm:play]], [[fn:sounds]]</see-also>
+</function>
+
+<function>
+	<name dialects="oxna12">sounds</name>
+	<syntax>the [[*]]</syntax>
+	<syntax>[[*]]()</syntax>
+	<example>put the [[*]]</example>
+	<description>
+		The [[*]] function returns a [[pr:lineEnding]]-delimited list of instrument names
+		currently available for use with the [[cm:play]] command.
+	</description>
+	<see-also>[[cm:play]], [[fn:sound]]</see-also>
+</function>
+
+<function>
+	<name dialects="oxna12,hyp">speech</name>
+	<syntax>the [[*]]</syntax>
+	<syntax>[[*]]()</syntax>
+	<example>put the [[*]]</example>
+	<example>wait until the [[*]] is "done"</example>
+	<description>
+		The [[*]] function returns the currently generated speech text,
+		or the string [["done"]] if no speech is currently being generated.
+	</description>
+	<note>
+		The [["done"]] string is a literal; it is not a constant like [[cn:zero]] or [[cn:true]].
+		In HyperTalk code, the [["done"]] literal is often left unquoted, but in XION this is
+		highly discouraged.
+	</note>
+	<see-also>[[cm:speak]], [[fn:voice]]</see-also>
+</function>
+
+<function>
+	<name dialects="oxna12">tone</name>
+	<syntax>the [[*]]</syntax>
+	<syntax>[[*]]()</syntax>
+	<example>put the [[*]]</example>
+	<example>wait until the [[*]] is "done"</example>
+	<description>
+		The [[*]] function returns the frequency of the tone currently being
+		generated by the [[cm:tone]] command, or the string [["done"]] if no
+		tone is currently playing.
+	</description>
+	<note>
+		The [["done"]] string is a literal; it is not a constant like [[cn:zero]] or [[cn:true]].
+		In HyperTalk code, the [["done"]] literal is often left unquoted, but in XION this is
+		highly discouraged.
+	</note>
+	<see-also>[[cm:tone]]</see-also>
+</function>
+
+<function>
+	<name dialects="oxna12">voice</name>
+	<syntax>the [[*]]</syntax>
+	<syntax>[[*]]()</syntax>
+	<example>put the [[*]]</example>
+	<example>wait until the [[*]] is "done"</example>
+	<description>
+		The [[*]] function returns the name of the voice currently speaking,
+		or the string [["done"]] if no speech is currently being generated.
+	</description>
+	<note>
+		The [["done"]] string is a literal; it is not a constant like [[cn:zero]] or [[cn:true]].
+		In HyperTalk code, the [["done"]] literal is often left unquoted, but in XION this is
+		highly discouraged.
+	</note>
+	<see-also>[[cm:speak]], [[fn:speech]], [[fn:voices]]</see-also>
+</function>
+
+<function>
+	<name dialects="oxna12,hyp">voices</name>
+	<syntax>the [[*]]</syntax>
+	<syntax>[[*]]()</syntax>
+	<example>put the [[*]]</example>
+	<description>
+		The [[*]] function returns a [[pr:lineEnding]]-delimited list of voices
+		currently available for use with the [[cm:speak]] command.
+	</description>
+	<see-also>[[cm:speak]], [[fn:voice]]</see-also>
+</function>
+
 <version>
 	<name dialects="oxn1,oxn11,oxn12">standardModule</name>
 	<syntax>the version of "standardModule"</syntax>
@@ -12644,6 +13164,15 @@
 		The version number of the Java Virtual Machine.
 	</description>
 	<see-also>[[vr:java]], [[fn:vmName]], [[fn:vmVersion]]</see-also>
+</version>
+
+<version>
+	<name dialects="oxna12">audioModule</name>
+	<syntax>the version of "audioModule"</syntax>
+	<syntax>version("audioModule")</syntax>
+	<description>
+		The version number of the OpenXION Audio Module.
+	</description>
 </version>
 
 <extlang>
