@@ -465,6 +465,8 @@ public class XNAudioModule extends XNModule {
 	private final Function f_serialPorts = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			assertEmptyParameter(functionName, parameter);
+			if (!ctx.allow(XNSecurityKey.SYSTEM_INFO, "Function", functionName))
+				throw new XNScriptError("Security settings do not allow serialPorts");
 			if (mgr.supportsModemDial()) {
 				StringBuffer s = new StringBuffer();
 				String[] ports = mgr.getModemDialer().getSerialPorts();
@@ -632,6 +634,8 @@ public class XNAudioModule extends XNModule {
 			return true;
 		}
 		public XOMVariant getProperty(XNContext ctx, XNModifier modifier, String propertyName) {
+			if (!ctx.allow(XNSecurityKey.TELEPHONY, "Property", propertyName))
+				throw new XNScriptError("Security settings do not allow dialingPort");
 			if (mgr.supportsModemDial()) {
 				return new XOMString(dialingPort);
 			} else {
@@ -639,6 +643,8 @@ public class XNAudioModule extends XNModule {
 			}
 		}
 		public void setProperty(XNContext ctx, String propertyName, XOMVariant value) {
+			if (!ctx.allow(XNSecurityKey.TELEPHONY, "Property", propertyName))
+				throw new XNScriptError("Security settings do not allow dialingPort");
 			if (mgr.supportsModemDial()) {
 				dialingPort = value.toTextString(ctx);
 			}
