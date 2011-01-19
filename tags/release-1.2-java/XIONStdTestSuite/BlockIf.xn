@@ -1,0 +1,42 @@
+global q
+
+-- if-then-else
+
+if 2+2=4 then put 1 else put 2
+
+if 2+2=4
+then put 1 else put 2
+
+if 2+2=4
+then put 1
+else put 2
+
+if 2+2=4 then
+	put 1
+else put 2
+
+if 2+2=4 then
+	put 1
+else
+	put 2
+end if
+
+-- if-then
+
+if 2+2=4 then put 1
+
+if 2+2=4
+then put 1
+
+if 2+2=4 then
+	put 1
+end if
+
+-- empty
+
+if 2+2=4 then
+end if
+
+-- hypertalk crazyness
+
+if false then if false then put "a" else put "b" else put "c"

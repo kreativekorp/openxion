@@ -1,0 +1,43 @@
+on switchTest x
+	put "***"&&x
+	switch x
+	case 1
+		put 1
+	case 2
+		put 2
+	case 3
+		put 3
+	case 5
+		put 5
+		next case
+		put 5
+	case 6
+		put 6
+	case 8
+		put 8
+	case 9
+		put 9
+		exit switch
+		put 9
+	case 10
+		put 10
+	default
+		put "d"
+		next case
+	case 12
+		put 12
+	end switch
+end switchTest
+
+switchTest 1
+switchTest 2
+switchTest 3
+switchTest 4
+switchTest 5
+switchTest 6
+switchTest 7
+switchTest 8
+switchTest 9
+switchTest 10
+switchTest 11
+switchTest 12

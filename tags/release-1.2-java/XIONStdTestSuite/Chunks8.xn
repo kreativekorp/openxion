@@ -1,0 +1,119 @@
+local sh as string is "hello"
+local std as string is "Hello, my name is Rebecca. But you can call me Beckie."
+local lt1 as string is "red\ngreen\nblue\ncyan\nmagenta\nyellow"
+local lt2 as string is "\nred\n\ngreen\n\nblue\n\ncyan\n\nmagenta\n\n\n\nyellow\n\n"
+local it1 as string is "George Lopez,Constance Marie,Luis Armand Garcia,Masiela Lusha,Belita Moreno"
+local it2 as string is "George Lopez,Constance Marie,Luis Armand Garcia,Masiela Lusha,Belita Moreno,"
+local tmp as string
+put sh
+put std
+put lt1
+put lt2
+put it1
+put it2
+put "---PUT"
+put chars 5 to 1 of sh
+put chars 4 to 2 of sh
+put chars -1 to -5 of sh
+put chars -2 to -4 of sh
+put words 11 to 1 of std
+put words 10 to 2 of std
+put words -1 to -11 of std
+put words -2 to -10 of std
+put sentences 2 to 1 of std
+put sentences -1 to -2 of std
+put lines 6 to 1 of lt1
+put lines 5 to 2 of lt1
+put lines -1 to -6 of lt1
+put lines -2 to -5 of lt1
+put paragraphs 6 to 1 of lt2
+put paragraphs 5 to 2 of lt2
+put paragraphs -1 to -6 of lt2
+put paragraphs -2 to -5 of lt2
+put items 5 to 1 of it1
+put items 4 to 2 of it1
+put items -1 to -5 of it1
+put items -2 to -4 of it1
+put items 5 to 1 of it2
+put items 4 to 2 of it2
+put items -1 to -5 of it2
+put items -2 to -4 of it2
+put "---DEL"
+put sh into tmp
+delete chars 5 to 1 of tmp
+put tmp
+put sh into tmp
+delete chars 4 to 2 of tmp
+put tmp
+put sh into tmp
+delete chars -1 to -5 of tmp
+put tmp
+put sh into tmp
+delete chars -2 to -4 of tmp
+put tmp
+put std into tmp
+delete words 11 to 1 of tmp
+put tmp
+put std into tmp
+delete words 10 to 2 of tmp
+put tmp
+put std into tmp
+delete words -1 to -11 of tmp
+put tmp
+put std into tmp
+delete words -2 to -10 of tmp
+put tmp
+put std into tmp
+delete sentences 2 to 1 of tmp
+put tmp
+put std into tmp
+delete sentences -1 to -2 of tmp
+put tmp
+put lt1 into tmp
+delete lines 6 to 1 of tmp
+put tmp
+put lt1 into tmp
+delete lines 5 to 2 of tmp
+put tmp
+put lt1 into tmp
+delete lines -1 to -6 of tmp
+put tmp
+put lt1 into tmp
+delete lines -2 to -5 of tmp
+put tmp
+put lt2 into tmp
+delete paragraphs 6 to 1 of tmp
+put tmp
+put lt2 into tmp
+delete paragraphs 5 to 2 of tmp
+put tmp
+put lt2 into tmp
+delete paragraphs -1 to -6 of tmp
+put tmp
+put lt2 into tmp
+delete paragraphs -2 to -5 of tmp
+put tmp
+put it1 into tmp
+delete items 5 to 1 of tmp
+put tmp
+put it1 into tmp
+delete items 4 to 2 of tmp
+put tmp
+put it1 into tmp
+delete items -1 to -5 of tmp
+put tmp
+put it1 into tmp
+delete items -2 to -4 of tmp
+put tmp
+put it2 into tmp
+delete items 5 to 1 of tmp
+put tmp
+put it2 into tmp
+delete items 4 to 2 of tmp
+put tmp
+put it2 into tmp
+delete items -1 to -5 of tmp
+put tmp
+put it2 into tmp
+delete items -2 to -4 of tmp
+put tmp

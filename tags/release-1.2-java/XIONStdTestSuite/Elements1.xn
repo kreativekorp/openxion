@@ -1,0 +1,90 @@
+local ll as list is ("hello",zero,one,true)
+local tmp as list
+
+put the number of elements in ll
+
+put 0 & element 0 of ll
+put 1 & element 1 of ll
+put 2 & element 2 of ll
+put 3 & element 3 of ll
+put 4 & element 4 of ll
+put 5 & element 5 of ll
+put 6 & element 6 of ll
+put 7 & element 7 of ll
+put 0 & element 0 of ll
+put -1 & element -1 of ll
+put -2 & element -2 of ll
+put -3 & element -3 of ll
+put -4 & element -4 of ll
+put -5 & element -5 of ll
+put -6 & element -6 of ll
+put -7 & element -7 of ll
+put elements -10 to -6 of ll
+put elements -7 to -3 of ll
+put elements 3 to 20 of ll
+put elements 15 to 30 of ll
+put elements of ll
+
+put ll into tmp
+delete element 0 of tmp
+put tmp
+put ll into tmp
+delete element 1 of tmp
+put tmp
+put ll into tmp
+delete element 2 of tmp
+put tmp
+put ll into tmp
+delete element 3 of tmp
+put tmp
+put ll into tmp
+delete element 4 of tmp
+put tmp
+put ll into tmp
+delete element 5 of tmp
+put tmp
+put ll into tmp
+delete element 6 of tmp
+put tmp
+put ll into tmp
+delete element 7 of tmp
+put tmp
+
+put ll into tmp
+delete element 0 of tmp
+put tmp
+put ll into tmp
+delete element -1 of tmp
+put tmp
+put ll into tmp
+delete element -2 of tmp
+put tmp
+put ll into tmp
+delete element -3 of tmp
+put tmp
+put ll into tmp
+delete element -4 of tmp
+put tmp
+put ll into tmp
+delete element -5 of tmp
+put tmp
+put ll into tmp
+delete element -6 of tmp
+put tmp
+put ll into tmp
+delete element -7 of tmp
+put tmp
+
+put ll into tmp
+delete element -17 to -10 of tmp
+put tmp
+put ll into tmp
+delete element -7 to -2 of tmp
+put tmp
+put ll into tmp
+delete element 3 to 13 of tmp
+put tmp
+put ll into tmp
+delete element 8 to 21 of tmp
+put tmp
+

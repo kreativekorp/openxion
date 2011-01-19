@@ -1,0 +1,11 @@
+global a,b,c
+tell interpreter to put "Hello"
+
+tell interpreter
+	put "Hello"
+	put 1
+end tell
+
+tell interpreter
+end tell
+
