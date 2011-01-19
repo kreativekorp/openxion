@@ -1,0 +1,45 @@
+put the lineEnding into saveLineEnding
+
+put "Unix\nMacOS\rMSDOS\r\nUnicode\u2028Paragraph\u2029Break" into x
+set the lineEnding to newline
+put the number of lines in x
+put line 1 of x
+put line 2 of x
+put line 3 of x
+put line 4 of x
+put line 5 of x
+put line 6 of x
+set the lineEnding to return&newline
+put the number of lines in x
+put line 1 of x
+put line 2 of x
+put line 3 of x
+put line 4 of x
+put line 5 of x
+put line 6 of x
+set the lineEnding to return
+put the number of lines in x
+put line 1 of x
+put line 2 of x
+put line 3 of x
+put line 4 of x
+put line 5 of x
+put line 6 of x
+set the lineEnding to linesep
+put the number of lines in x
+put line 1 of x
+put line 2 of x
+put line 3 of x
+put line 4 of x
+put line 5 of x
+put line 6 of x
+set the lineEnding to parasep
+put the number of lines in x
+put line 1 of x
+put line 2 of x
+put line 3 of x
+put line 4 of x
+put line 5 of x
+put line 6 of x
+
+set the lineEnding to saveLineEnding

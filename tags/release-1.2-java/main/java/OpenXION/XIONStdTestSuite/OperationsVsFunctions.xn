@@ -1,0 +1,3 @@
+put and(true, true, false) and and(false, true, true)
+put false into x
+if if true then true else false then if true then put if x then 3 else 4 else put if x then 5 else 6 else put 9

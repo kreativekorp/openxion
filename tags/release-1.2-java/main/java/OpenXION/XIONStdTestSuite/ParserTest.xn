@@ -1,0 +1,35 @@
+#!/usr/bin/java com.kreative.openxion.XNParser
+put "This is a parser test. It does not test the interpreter."
+exit to interpreter
+on mouseup
+	ask "Who needs this kind of grief?" with "Not Me"
+	get the number of items in file 3+8*9 - (3 && 7) -- test symbols
+	add 15 to it
+	multiply it by 5.678910
+	divide it by .33 -- same as multiply it by 3?
+	subtract 04.7'5-4 from it
+	put "hi into oopsForgotToComplete
+	put "hi\\\" into oopsForgotToComplete
+	create file "Blah"
+	-- this file will be pointless
+	put "Bleh" into file "Blah" ¬
+		with menuMsg "send mouseup to cd btn 1"
+	put 2.into bkwdCompatTest
+	put "oh welcome oh welcome to our little play\nwe're ever so glad that you joined us today"into fwdCompatTest
+	put "hi\\\\" into backslashTest1
+	put "hi\\\"there" into backslashTest2 # new style comment
+	put "hi\\" into backslashTest3
+	put "hi\"there" into backslashTest4 // new style comment
+	can't understand.argu.ments of _s_et
+	let x = 4 + 5 - 6 / 7 * 8 - 9 / 0
+	let y = 4+5-6/7*8-9/0 — here's an em dash comment
+	∞∞ a c d ¬ f 5 6 % \ [ ] . , / ? ∞∞
+	split \
+		line 2
+	more /// comment tests
+	more --- comment tests
+	more ——— comment tests
+	more ### comment testz
+	put "one" && "two" into file "three"
+end mouseup
+

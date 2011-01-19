@@ -1,0 +1,45 @@
+put "This is a parser test. It does not test the interpreter."
+exit to interpreter
+
+return long longwindowtitles of the interpreter
+return long sin of 34
+return long sin (34)
+return first char of "Hello"
+return first through fifth char of "Hello"
+return first thru fifth char of "Hello"
+return first to fifth char of "Hello"
+return last word in "Hello"
+return first through fifth chars of "Hello"
+return first thru fifth chars of "Hello"
+return first to fifth chars of "Hello"
+return characters of "Hello"
+return the number of characters in "Hello"
+return number of characters in "Hello"
+return sin(34)
+return sin of 34
+return abs-4
+return abs of -4
+return abs(-4)
+return characters 1 through 9 of "HelloWorld"
+return chars 2+2 to 3+3 of "HelloWorld"
+return the interpreter
+return interpreter
+return interpreter of interpreter
+return char 1 to 4 of "Hello"
+return char 2+2 to 3+3 of "HelloWorld"
+return word 4 of "Hello my name is Rebecca"
+return last word of "Hello my name is Rebecca"
+return word -1 of "Hello my name is Rebecca"
+return word -3 to -1 of "Hello my name is Rebecca"
+return char x to y of z
+return char x of z
+return char char to word of word char of char
+return the and of (true,true,false)
+return and(true,true,false)
+return the mid char of "Hello"
+return the mid of ("Hello",2,3)
+return mid("Hello",2,3)
+if true then repeat with (2+2=4) = char char to word of word char of char to ¬
+		word char to char of char word of word
+	return "HyperTalk is a bitch to parse
+end repeat else beep

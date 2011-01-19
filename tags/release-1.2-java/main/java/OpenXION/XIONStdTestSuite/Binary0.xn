@@ -1,0 +1,268 @@
+put the numberFormat into oldNumberFormat
+local test as binary is "0123456789ABCDEF"
+put the number of bytes in test
+put the bytes of test
+set the littleEndian to false
+set the unsigned to true
+put byte 0 of test
+put byte 1 of test
+put byte 2 of test
+put byte 3 of test
+put byte 4 of test
+put byte 5 of test
+put byte 6 of test
+put byte 7 of test
+put byte -8 of test
+put byte -7 of test
+put byte -6 of test
+put byte -5 of test
+put byte -4 of test
+put byte -3 of test
+put byte -2 of test
+put byte -1 of test
+put middle byte of test
+put bytes 0 to 7 of test
+put bytes 1 to 6 of test
+put bytes 0 to -1 of test
+put bytes 1 to -2 of test
+put bytes -8 to -1 of test
+put bytes -7 to -2 of test
+put zeroth to middle byte of test
+put middle to seventh byte of test
+put byte 7 to 0 of test
+put byte 6 to 1 of test
+put middle to first byte of test
+put tinyInt 0 of test
+put tinyInt 1 of test
+put tinyInt 2 of test
+put tinyInt 3 of test
+put tinyInt 4 of test
+put tinyInt 5 of test
+put tinyInt -2 of test
+put tinyInt -1 of test
+put shortInt 0 of test
+put shortInt 1 of test
+put shortInt 2 of test
+put shortInt 3 of test
+put shortInt 4 of test
+put shortInt 5 of test
+put shortInt 6 of test
+put medInt 0 of test
+put medInt 1 of test
+put mediumInt 2 of test
+put MediumInt 3 of test
+put MediumInt 4 of test
+put longInt 0 of test
+set the numberFormat to "0.############E0<-10>10"
+put halfFloat 0 of test
+put halfFloat 1 of test
+put halfFloat 2 of test
+put halfFloat 3 of test
+put halfFloat 4 of test
+put halfFloat 5 of test
+put halfFloat 6 of test
+put SingleFloat 0 of test
+put SingleFloat 1 of test
+put SingleFloat 2 of test
+put SingleFloat 3 of test
+put SingleFloat 4 of test
+put doubleFLOAT 0 of TEST
+set the numberFormat to oldNumberFormat
+set the littleEndian to true
+set the unsigned to true
+put byte 0 of test
+put byte 1 of test
+put byte 2 of test
+put byte 3 of test
+put byte 4 of test
+put byte 5 of test
+put byte 6 of test
+put byte 7 of test
+put byte -8 of test
+put byte -7 of test
+put byte -6 of test
+put byte -5 of test
+put byte -4 of test
+put byte -3 of test
+put byte -2 of test
+put byte -1 of test
+put middle byte of test
+put bytes 0 to 7 of test
+put bytes 1 to 6 of test
+put bytes 0 to -1 of test
+put bytes 1 to -2 of test
+put bytes -8 to -1 of test
+put bytes -7 to -2 of test
+put zeroth to middle byte of test
+put middle to seventh byte of test
+put byte 7 to 0 of test
+put byte 6 to 1 of test
+put middle to first byte of test
+put tinyInt 0 of test
+put tinyInt 1 of test
+put tinyInt 2 of test
+put tinyInt 3 of test
+put tinyInt 4 of test
+put tinyInt 5 of test
+put tinyInt -2 of test
+put tinyInt -1 of test
+put shortInt 0 of test
+put shortInt 1 of test
+put shortInt 2 of test
+put shortInt 3 of test
+put shortInt 4 of test
+put shortInt 5 of test
+put shortInt 6 of test
+put medInt 0 of test
+put medInt 1 of test
+put mediumInt 2 of test
+put MediumInt 3 of test
+put MediumInt 4 of test
+put longInt 0 of test
+set the numberFormat to "0.############E0<-10>10"
+put halfFloat 0 of test
+put halfFloat 1 of test
+put halfFloat 2 of test
+put halfFloat 3 of test
+put halfFloat 4 of test
+put halfFloat 5 of test
+put halfFloat 6 of test
+put SingleFloat 0 of test
+put SingleFloat 1 of test
+put SingleFloat 2 of test
+put SingleFloat 3 of test
+put SingleFloat 4 of test
+put doubleFLOAT 0 of TEST
+set the numberFormat to oldNumberFormat
+set the littleEndian to false
+set the unsigned to false
+put byte 0 of test
+put byte 1 of test
+put byte 2 of test
+put byte 3 of test
+put byte 4 of test
+put byte 5 of test
+put byte 6 of test
+put byte 7 of test
+put byte -8 of test
+put byte -7 of test
+put byte -6 of test
+put byte -5 of test
+put byte -4 of test
+put byte -3 of test
+put byte -2 of test
+put byte -1 of test
+put middle byte of test
+put bytes 0 to 7 of test
+put bytes 1 to 6 of test
+put bytes 0 to -1 of test
+put bytes 1 to -2 of test
+put bytes -8 to -1 of test
+put bytes -7 to -2 of test
+put zeroth to middle byte of test
+put middle to seventh byte of test
+put byte 7 to 0 of test
+put byte 6 to 1 of test
+put middle to first byte of test
+put tinyInt 0 of test
+put tinyInt 1 of test
+put tinyInt 2 of test
+put tinyInt 3 of test
+put tinyInt 4 of test
+put tinyInt 5 of test
+put tinyInt -2 of test
+put tinyInt -1 of test
+put shortInt 0 of test
+put shortInt 1 of test
+put shortInt 2 of test
+put shortInt 3 of test
+put shortInt 4 of test
+put shortInt 5 of test
+put shortInt 6 of test
+put medInt 0 of test
+put medInt 1 of test
+put mediumInt 2 of test
+put MediumInt 3 of test
+put MediumInt 4 of test
+put longInt 0 of test
+set the numberFormat to "0.############E0<-10>10"
+put halfFloat 0 of test
+put halfFloat 1 of test
+put halfFloat 2 of test
+put halfFloat 3 of test
+put halfFloat 4 of test
+put halfFloat 5 of test
+put halfFloat 6 of test
+put SingleFloat 0 of test
+put SingleFloat 1 of test
+put SingleFloat 2 of test
+put SingleFloat 3 of test
+put SingleFloat 4 of test
+put doubleFLOAT 0 of TEST
+set the numberFormat to oldNumberFormat
+set the littleEndian to true
+set the unsigned to false
+put byte 0 of test
+put byte 1 of test
+put byte 2 of test
+put byte 3 of test
+put byte 4 of test
+put byte 5 of test
+put byte 6 of test
+put byte 7 of test
+put byte -8 of test
+put byte -7 of test
+put byte -6 of test
+put byte -5 of test
+put byte -4 of test
+put byte -3 of test
+put byte -2 of test
+put byte -1 of test
+put middle byte of test
+put bytes 0 to 7 of test
+put bytes 1 to 6 of test
+put bytes 0 to -1 of test
+put bytes 1 to -2 of test
+put bytes -8 to -1 of test
+put bytes -7 to -2 of test
+put zeroth to middle byte of test
+put middle to seventh byte of test
+put byte 7 to 0 of test
+put byte 6 to 1 of test
+put middle to first byte of test
+put tinyInt 0 of test
+put tinyInt 1 of test
+put tinyInt 2 of test
+put tinyInt 3 of test
+put tinyInt 4 of test
+put tinyInt 5 of test
+put tinyInt -2 of test
+put tinyInt -1 of test
+put shortInt 0 of test
+put shortInt 1 of test
+put shortInt 2 of test
+put shortInt 3 of test
+put shortInt 4 of test
+put shortInt 5 of test
+put shortInt 6 of test
+put medInt 0 of test
+put medInt 1 of test
+put mediumInt 2 of test
+put MediumInt 3 of test
+put MediumInt 4 of test
+put longInt 0 of test
+set the numberFormat to "0.############E0<-10>10"
+put halfFloat 0 of test
+put halfFloat 1 of test
+put halfFloat 2 of test
+put halfFloat 3 of test
+put halfFloat 4 of test
+put halfFloat 5 of test
+put halfFloat 6 of test
+put SingleFloat 0 of test
+put SingleFloat 1 of test
+put SingleFloat 2 of test
+put SingleFloat 3 of test
+put SingleFloat 4 of test
+put doubleFLOAT 0 of TEST
+set the numberFormat to oldNumberFormat

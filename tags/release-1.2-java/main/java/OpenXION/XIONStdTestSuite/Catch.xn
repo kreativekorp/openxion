@@ -1,0 +1,7 @@
+try
+	srdhfglsdjflskdfjlsdkfj
+catch e
+	put "*** CATCH ***"
+	put e
+	put "*** CAUGHT ***"
+end try

@@ -1,0 +1,9 @@
+function sixpoints x
+	return round(x * 1000000) / 1000000
+end sixpoints
+
+repeat with a=-1 to 5
+	repeat with b=-5 to 5
+		put a&tab&b&tab&sixpoints(annuity(a,b))&tab&sixpoints(compound(a,b))
+	end repeat
+end repeat
