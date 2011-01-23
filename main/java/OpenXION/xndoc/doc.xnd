@@ -13543,6 +13543,12 @@
 		[[cm:add]] :: [[cm:subtract]] :: [[cm:multiply]] :: [[cm:divide]] :: [[cm:modulo]]
 		ELBAT::
 		\\\\
+		{{{{Object Manipulation}}}}
+		\\\\
+		::TABLE
+		[[cm:create]] :: [[cm:delete]]
+		ELBAT::
+		\\\\
 		{{{{Human-Computer Interaction}}}}
 		\\\\
 		::TABLE
@@ -13555,10 +13561,10 @@
 		[[cm:open]] :: [[cm:read]] :: [[cm:write]] :: [[cm:truncate]] :: [[cm:close]]
 		ELBAT::
 		\\\\
-		{{{{Object Manipulation}}}}
+		{{{{Sound}}}}
 		\\\\
 		::TABLE
-		[[cm:create]] :: [[cm:delete]]
+		[[cm:beep]] :: [[cm:dial]] :: [[cm:play]] :: [[cm:speak]] :: [[cm:stop]] :: [[cm:tone]]
 		ELBAT::
 		\\\\
 		{{{{Miscellaneous Commands}}}}
@@ -13780,6 +13786,14 @@
 		[[fn:pack]] :: [[fn:unpack]]
 		ELBAT::
 		\\\\
+		{{{{Sound}}}}
+		\\\\
+		::TABLE
+		[[fn:sound]]  :: [[fn:speech]] :: [[fn:voice]]
+		...............................................
+		[[fn:sounds]] :: [[fn:tone]]   :: [[fn:voices]]
+		ELBAT::
+		\\\\
 		{{{{Runtime State}}}}
 		\\\\
 		::TABLE
@@ -13799,7 +13813,9 @@
 		...........................................
 		[[fn:xionName]]    :: [[fn:xionVersion]]
 		...........................................
-		[[fn:version]]     :: [[fn:heapSpace]]
+		[[fn:version]]     ::  
+		ELBAT::::TABLE
+		[[fn:heapSpace]] :: [[fn:serialPorts]]
 		ELBAT::
 		\\\\
 		{{{{File System}}}}
