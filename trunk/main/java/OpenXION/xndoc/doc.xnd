@@ -2076,8 +2076,6 @@
 	<syntax>[[repeat forever]]\\[[  ]]{statementList}\\[[end repeat]]</syntax>
 	<syntax>[[repeat ]]{number}\\[[  ]]{statementList}\\[[end repeat]]</syntax>
 	<syntax>[[repeat ]]{number}[[ times]]\\[[  ]]{statementList}\\[[end repeat]]</syntax>
-	<syntax>[[repeat]]\\[[  ]]{statementList}\\[[lastly]]\\[[  ]]{statementList}\\[[end repeat]]</syntax>
-	<syntax>[[repeat forever]]\\[[  ]]{statementList}\\[[lastly]]\\[[  ]]{statementList}\\[[end repeat]]</syntax>
 	<syntax>[[repeat ]]{number}\\[[  ]]{statementList}\\[[lastly]]\\[[  ]]{statementList}\\[[end repeat]]</syntax>
 	<syntax>[[repeat ]]{number}[[ times]]\\[[  ]]{statementList}\\[[lastly]]\\[[  ]]{statementList}\\[[end repeat]]</syntax>
 	<syntax-note>{Number} yields a non-negative [[dt:integer]] specifying how many times the loop is executed.</syntax-note>
