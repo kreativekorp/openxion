@@ -1442,6 +1442,7 @@ public class XNInterpreter {
 			} else if (stat instanceof XNRepeatBlock) {
 				XNRepeatParameters rp = ((XNRepeatBlock)stat).params;
 				List<XNStatement> body = ((XNRepeatBlock)stat).body;
+				List<XNStatement> lastlyBody = ((XNRepeatBlock)stat).lastlyBody;
 				if (rp instanceof XNRepeatForParameters) {
 					XNExpression countExpr = ((XNRepeatForParameters)rp).count;
 					XOMVariant countVar = (countExpr == null) ? null : evaluateExpression(countExpr).unwrap();
@@ -1476,7 +1477,8 @@ public class XNInterpreter {
 							return exit;
 						}
 					}
-					return XNHandlerExit.ended();
+					if (lastlyBody != null) return executeStatements(lastlyBody);
+					else return XNHandlerExit.ended();
 				}
 				else if (rp instanceof XNRepeatWhileParameters) {
 					XNExpression condition = ((XNRepeatWhileParameters)rp).condition;
@@ -1490,7 +1492,8 @@ public class XNInterpreter {
 							return exit;
 						}
 					}
-					return XNHandlerExit.ended();
+					if (lastlyBody != null) return executeStatements(lastlyBody);
+					else return XNHandlerExit.ended();
 				}
 				else if (rp instanceof XNRepeatUntilParameters) {
 					XNExpression condition = ((XNRepeatUntilParameters)rp).condition;
@@ -1504,7 +1507,8 @@ public class XNInterpreter {
 							return exit;
 						}
 					} while (!XOMBooleanType.instance.makeInstanceFrom(context, evaluateExpression(condition).unwrap()).toBoolean());
-					return XNHandlerExit.ended();
+					if (lastlyBody != null) return executeStatements(lastlyBody);
+					else return XNHandlerExit.ended();
 				}
 				else if (rp instanceof XNRepeatWithParameters) {
 					XOMVariant dest = evaluateExpression(((XNRepeatWithParameters)rp).identifier);
@@ -1567,7 +1571,8 @@ public class XNInterpreter {
 							throw new XOMMorphError("number");
 						}
 					}
-					return XNHandlerExit.ended();
+					if (lastlyBody != null) return executeStatements(lastlyBody);
+					else return XNHandlerExit.ended();
 				}
 				else if (rp instanceof XNRepeatForEachParameters) {
 					String name = ((XNRepeatForEachParameters)rp).identifier;
@@ -1588,7 +1593,8 @@ public class XNInterpreter {
 							return exit;
 						}
 					}
-					return XNHandlerExit.ended();
+					if (lastlyBody != null) return executeStatements(lastlyBody);
+					else return XNHandlerExit.ended();
 				}
 				else {
 					throw new XNScriptError("Can't understand this");

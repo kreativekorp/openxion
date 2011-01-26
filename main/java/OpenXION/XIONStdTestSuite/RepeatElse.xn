@@ -1,0 +1,75 @@
+repeat with x = 1 to 10
+	if x is 5
+	then put "hi"
+	else put "hey"
+	repeat 10
+		if x is 9 then
+			put 4 into y
+			repeat while y > 0
+				subtract one from y
+				put y
+			else
+				if x is 9 then
+					put "hola"
+				else
+					put "bye"
+				end if
+			end repeat
+		else
+			put "@"
+		end if
+	else
+		put "why hello there"
+	end repeat
+	if x is 1
+	then put "lola"
+end repeat
+
+on findAThing l as list, v as variant
+	repeat for each i in elements of l
+		if i is v then
+			put "See it."
+			exit repeat
+		end if
+	else
+		put "DON'T SEE IT!"
+	end repeat
+end findathing
+
+function FindAthing l as list, v as variant
+	repeat for each i in elements of l
+		if i is v then
+			return "See it."
+		end if
+	else
+		return "DON'T SEE IT!"
+	end repeat
+end FINDaTHING
+
+findaThing (6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), 7
+fIndaThing (6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), 13
+fiNdaThing (6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), 0
+finDaThing (6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), 55
+findAThing (6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), 56
+findathing (6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), -16
+findaTHing (6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), 99
+findaThIng (6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), -2
+findaThiNg (6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), -9
+findaThinG (6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), -1
+FINdaThing (6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), 777
+finDAthing (6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), 5
+findaTHINg (6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), -17
+
+put findaThing((6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), 7)
+put fIndaThing((6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), 13)
+put fiNdaThing((6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), 0)
+put finDaThing((6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), 55)
+put findAThing((6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), 56)
+put findathing((6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), -16)
+put findaTHing((6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), 99)
+put findaThIng((6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), -2)
+put findaThiNg((6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), -9)
+put findaThinG((6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), -1)
+put FINdaThing((6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), 777)
+put finDAthing((6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), 5)
+put findaTHINg((6, 12, -2, 7, -9, 1, 0, 13, -24, 99, 36), -17)

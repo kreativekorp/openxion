@@ -96,6 +96,7 @@
 		<string>isa</string>
 		<string>isn&apos;t</string>
 		<string>just</string>
+		<string>lastly</string>
 		<string>le</string>
 		<string>left</string>
 		<string>leftinclusive</string>
@@ -174,8 +175,8 @@
 		<string>stop</string>
 		<string>subtract</string>
 		<string>switch</string>
-		<string>tempo</string>
 		<string>tell</string>
+		<string>tempo</string>
 		<string>text</string>
 		<string>than</string>
 		<string>the</string>
