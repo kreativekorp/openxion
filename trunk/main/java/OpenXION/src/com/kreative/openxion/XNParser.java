@@ -2057,6 +2057,8 @@ public class XNParser {
 			block.repeatToken = getToken();
 			block.params = getRepeatParameters();
 			block.body = new Vector<XNStatement>();
+			block.lastlyToken = null;
+			block.lastlyBody = new Vector<XNStatement>();
 			block.endRepeatToken = null;
 			if (lookEOL(1)) {
 				getEOL();
@@ -2064,6 +2066,25 @@ public class XNParser {
 					if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("end") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("repeat")) {
 						block.endRepeatToken = getToken();
 						getToken();
+						break;
+					} else if (lookToken(1).kind == XNToken.ID && (lookToken(1).image.equalsIgnoreCase("lastly") || lookToken(1).image.equalsIgnoreCase("then") || lookToken(1).image.equalsIgnoreCase("else"))) {
+						block.lastlyToken = getToken();
+						if (lookEOL(1)) {
+							getEOL();
+							while (true) {
+								if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("end") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("repeat")) {
+									block.endRepeatToken = getToken();
+									getToken();
+									break;
+								} else if (lookToken(1).isEOF()) {
+									throw new XNBlockParseError("end repeat", block.repeatToken);
+								} else {
+									block.lastlyBody.add(getStatement(null, true));
+								}
+							}
+						} else {
+							throw new XNParseError("end of line", lookToken(1));
+						}
 						break;
 					} else if (lookToken(1).isEOF()) {
 						throw new XNBlockParseError("end repeat", block.repeatToken);
@@ -2075,6 +2096,7 @@ public class XNParser {
 				throw new XNParseError("end of line", lookToken(1));
 			}
 			if (block.body.isEmpty()) block.body = null;
+			if (block.lastlyBody.isEmpty()) block.lastlyBody = null;
 			return block;
 		} else {
 			throw new XNParseError("repeat", lookToken(1));

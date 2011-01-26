@@ -35,10 +35,14 @@ public class XNRepeatBlock extends XNStatement {
 	public XNToken repeatToken;
 	public XNRepeatParameters params;
 	public List<XNStatement> body;
+	public XNToken lastlyToken;
+	public List<XNStatement> lastlyBody;
 	public XNToken endRepeatToken;
 	
 	public int getRepeatLine() { if (repeatToken == null) return 0; else return repeatToken.beginLine; }
 	public int getRepeatCol() { if (repeatToken == null) return 0; else return repeatToken.beginColumn; }
+	public int getLastlyLine() { if (lastlyToken == null) return 0; else return lastlyToken.beginLine; }
+	public int getLastlyCol() { if (lastlyToken == null) return 0; else return lastlyToken.beginColumn; }
 	public int getEndRepeatLine() { if (endRepeatToken == null) return 0; else return endRepeatToken.beginLine; }
 	public int getEndRepeatCol() { if (endRepeatToken == null) return 0; else return endRepeatToken.beginColumn; }
 	
@@ -46,6 +50,12 @@ public class XNRepeatBlock extends XNStatement {
 		String s = indent+"repeat "+params.toString();
 		for (XNStatement st : body) {
 			s += "\n" + st.toString(indent+"\t");
+		}
+		if (lastlyBody != null) {
+			s += "\n" + indent + "lastly";
+			for (XNStatement st : lastlyBody) {
+				s += "\n" + st.toString(indent+"\t");
+			}
 		}
 		s += "\n"+indent+"end repeat";
 		return s;
