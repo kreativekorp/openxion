@@ -1,0 +1,59 @@
+put x
+put y
+put z
+put 1 into x
+put 2 into y
+put 3 into z
+put x
+put y
+put z
+
+put a
+put b
+put c
+put 1 into line 1 of a
+put 2 into line 1 of b
+put 3 into line 1 of c
+put a
+put b
+put c
+
+put i
+put j
+put k
+add 1 to i
+add 2 to j
+add 3 to k
+put i
+put j
+put k
+
+put p
+put q
+put r
+put 1 into char 1 of line 1 of p
+put 2 into char 1 of line 1 of q
+put 3 into char 1 of line 1 of r
+put p
+put q
+put r
+
+put d
+put e
+put f
+put 1 into line 2 of d
+put 2 into line 2 of e
+put 3 into line 2 of f
+put d
+put e
+put f
+
+put u
+put v
+put w
+put 1 into char 1 of line 2 of u
+put 2 into char 1 of line 2 of v
+put 3 into char 1 of line 2 of w
+put u
+put v
+put w
