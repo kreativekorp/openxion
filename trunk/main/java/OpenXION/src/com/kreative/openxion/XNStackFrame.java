@@ -33,9 +33,8 @@ import com.kreative.openxion.ast.XNVariableScope;
 import com.kreative.openxion.ast.XNMessageHandler;
 import com.kreative.openxion.ast.XNFunctionHandler;
 import com.kreative.openxion.util.XIONUtil;
+import com.kreative.openxion.xom.XOMVariableMap;
 import com.kreative.openxion.xom.XOMVariant;
-import com.kreative.openxion.xom.XOMDataType;
-import com.kreative.openxion.xom.XOMVariable;
 
 /**
  * XNStackFrame represents the local state of the invocation of a handler.
@@ -48,7 +47,7 @@ public class XNStackFrame implements Serializable, Cloneable {
 	private String handlerName;
 	private List<XOMVariant> parameters;
 	private Map<String, XNVariableScope> variableScopes;
-	private Map<String, XOMVariable> localVariables;
+	private XOMVariableMap localVariables;
 	private Map<String, XNMessageHandler> localUserCommands;
 	private Map<String, XNFunctionHandler> localUserFunctions;
 	
@@ -56,7 +55,7 @@ public class XNStackFrame implements Serializable, Cloneable {
 		this.handlerName = handlerName;
 		this.parameters = parameters;
 		this.variableScopes = new HashMap<String, XNVariableScope>();
-		this.localVariables = new HashMap<String, XOMVariable>();
+		this.localVariables = new XOMVariableMap();
 		this.localUserCommands = new HashMap<String, XNMessageHandler>();
 		this.localUserFunctions = new HashMap<String, XNFunctionHandler>();
 	}
@@ -82,24 +81,8 @@ public class XNStackFrame implements Serializable, Cloneable {
 		variableScopes.put(name, scope);
 	}
 	
-	public XOMVariable createLocalVariable(XNContext ctx, String name, XOMDataType<? extends XOMVariant> type, XOMVariant initialvalue) {
-		name = XIONUtil.normalizeVarName(name);
-		if (!localVariables.containsKey(name)) {
-			XOMVariable v = new XOMVariable(ctx, type, initialvalue);
-			localVariables.put(name, v);
-			return v;
-		} else {
-			return localVariables.get(name);
-		}
-	}
-	
-	public XOMVariable getLocalVariable(XNContext ctx, String name) {
-		name = XIONUtil.normalizeVarName(name);
-		if (!localVariables.containsKey(name)) {
-			return null;
-		} else {
-			return localVariables.get(name);
-		}
+	public XOMVariableMap localVariables() {
+		return localVariables;
 	}
 	
 	public void defineLocalUserCommand(String name, XNMessageHandler handler) {

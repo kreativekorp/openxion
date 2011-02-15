@@ -316,10 +316,10 @@ public class XNAudioModule extends XNModule {
 				if (!mgr.supportsModemDial()) {
 					return new XOMString("Dial not supported on this system");
 				}
-				String number = interp.evaluateExpression(parameters.get(0)).unwrap().toTextString(ctx);
+				String number = interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx);
 				String command;
 				if (parameters.size() > 2) {
-					command = interp.evaluateExpression(parameters.get(2)).unwrap().toTextString(ctx);
+					command = interp.evaluateExpression(parameters.get(2)).unwrap(ctx).toTextString(ctx);
 				} else {
 					command = "ATDT";
 				}
@@ -332,7 +332,7 @@ public class XNAudioModule extends XNModule {
 				if (!mgr.supportsAudioDial()) {
 					return new XOMString("Dial not supported on this system");
 				}
-				String number = interp.evaluateExpression(parameters.get(0)).unwrap().toTextString(ctx);
+				String number = interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx);
 				mgr.getAudioDialer().dial(number, 250, dialingVolume);
 				mgr.getAudioDialer().finishDialing();
 			}
@@ -348,19 +348,19 @@ public class XNAudioModule extends XNModule {
 				return new XOMString("Play not supported on this system");
 			}
 			if (parameters.size() == 1) {
-				String inst = interp.evaluateExpression(parameters.get(0)).unwrap().toTextString(ctx);
+				String inst = interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx);
 				if (inst.equalsIgnoreCase("stop")) {
 					mgr.getPlayer().stopPlaying();
 				} else {
 					mgr.getPlayer().play(inst);
 				}
 			} else {
-				String inst = interp.evaluateExpression(parameters.get(0)).unwrap().toTextString(ctx);
-				float tempo = (float)XOMNumberType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(parameters.get(2)).unwrap()).toDouble();
+				String inst = interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx);
+				float tempo = (float)XOMNumberType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(parameters.get(2)).unwrap(ctx)).toDouble();
 				StringBuffer notes = new StringBuffer();
 				for (int i = 3; i < parameters.size(); i++) {
 					notes.append(" ");
-					notes.append(interp.evaluateExpression(parameters.get(i)).unwrap().toTextString(ctx).trim());
+					notes.append(interp.evaluateExpression(parameters.get(i)).unwrap(ctx).toTextString(ctx).trim());
 				}
 				mgr.getPlayer().play(inst, tempo, new NoteParser().parseNotes(notes.toString()));
 			}
@@ -375,12 +375,12 @@ public class XNAudioModule extends XNModule {
 			} else if (!mgr.supportsSpeak()) {
 				return new XOMString("Speak not supported on this system");
 			}
-			String phrase = interp.evaluateExpression(parameters.get(0)).unwrap().toTextString(ctx);
+			String phrase = interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx);
 			String voice;
 			if (parameters.size() == 3) {
-				voice = interp.evaluateExpression(parameters.get(2)).unwrap().toTextString(ctx);
+				voice = interp.evaluateExpression(parameters.get(2)).unwrap(ctx).toTextString(ctx);
 			} else if (parameters.size() == 4) {
-				voice = interp.evaluateExpression(parameters.get(2)).unwrap().toTextString(ctx);
+				voice = interp.evaluateExpression(parameters.get(2)).unwrap(ctx).toTextString(ctx);
 				if (voice.equalsIgnoreCase("male")) voice = mgr.getSpeaker().getMaleVoice();
 				else if (voice.equalsIgnoreCase("female")) voice = mgr.getSpeaker().getFemaleVoice();
 				else if (voice.equalsIgnoreCase("neuter")) voice = mgr.getSpeaker().getNeuterVoice();
@@ -398,7 +398,7 @@ public class XNAudioModule extends XNModule {
 			if (parameters == null || parameters.size() != 1) {
 				throw new XNScriptError("Can't understand arguments to stop");
 			}
-			String what = interp.evaluateExpression(parameters.get(0)).unwrap().toTextString(ctx);
+			String what = interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx);
 			if (what.equalsIgnoreCase("sound")) {
 				if (mgr.supportsPlay()) {
 					for (int i = 0; i < mgr.getPlayerChannels(); i++) {
@@ -432,7 +432,7 @@ public class XNAudioModule extends XNModule {
 			if (parameters == null || parameters.size() == 0 || parameters.size() > 4) {
 				throw new XNScriptError("Can't understand arguments to tone");
 			}
-			float f = (float)XOMNumberType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(parameters.get(0)).unwrap()).toDouble();
+			float f = (float)XOMNumberType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(parameters.get(0)).unwrap(ctx)).toDouble();
 			if (parameters.size() > 2) {
 				double d = XOMNumberType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(parameters.get(2))).toDouble();
 				String type = (parameters.size() > 3) ? interp.evaluateExpression(parameters.get(3)).toTextString(ctx) : "ticks";

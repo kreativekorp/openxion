@@ -38,7 +38,6 @@ import com.kreative.openxion.XNContext;
 import com.kreative.openxion.ast.XNExpression;
 import com.kreative.openxion.ast.XNVariableScope;
 import com.kreative.openxion.xom.inst.XOMNumber;
-import com.kreative.openxion.xom.inst.XOMEmpty;
 import com.kreative.openxion.xom.type.XOMStringType;
 import com.kreative.openxion.xom.type.XOMNumberType;
 import com.kreative.openxion.xom.type.XOMDateType;
@@ -109,9 +108,7 @@ public class XOMComparator implements Comparator<XOMVariant> {
 		} else {
 			if (filter != null && interp != null) {
 				ctx.setVariableScope("each", XNVariableScope.LOCAL);
-				XOMVariable e = ctx.getVariable("each");
-				if (e == null) e = ctx.createVariable("each", XOMStringType.instance, XOMEmpty.EMPTY);
-				e.putIntoContents(ctx, o);
+				ctx.getVariableMap("each").declareVariable(ctx, "each", XOMStringType.instance, o);
 				o = interp.evaluateExpression(filter);
 			}
 			switch (type) {

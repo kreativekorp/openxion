@@ -41,7 +41,7 @@ import com.kreative.openxion.ast.XNModifier;
 public abstract class XOMVariant implements Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
 	
-	public XOMVariant unwrap() {
+	public XOMVariant unwrap(XNContext ctx) {
 		return this;
 	}
 	
@@ -72,7 +72,7 @@ public abstract class XOMVariant implements Serializable, Cloneable {
 	public void setProperty(XNContext ctx, String property, XOMVariant value) { throw new XNScriptError("Can't set that property"); }
 	
 	public final boolean equals(Object o) {
-		return equalsImpl((o instanceof XOMVariant) ? ((XOMVariant)o).unwrap() : o);
+		return equalsImpl(o);
 	}
 	protected abstract boolean equalsImpl(Object o);
 	public abstract int hashCode();

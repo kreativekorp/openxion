@@ -1540,16 +1540,13 @@ public class XNStandardModule extends XNModule {
 		if (dest.canPutContents(ctx)) {
 			return dest;
 		} else {
-			String name = dest.unwrap().toTextString(ctx);
+			String name = dest.unwrap(ctx).toTextString(ctx);
 			XNLexer namelex = new XNLexer(name, new StringReader(name));
 			try { if (namelex.lookToken(1).kind == XNToken.ID && namelex.lookToken(2).isEOF()) {
 				name = namelex.getToken().image;
-				dest = ctx.createVariable(name, XOMStringType.instance, XOMEmpty.EMPTY);
-				if (dest.canPutContents(ctx)) {
-					return dest;
-				} else {
-					throw new XNScriptError("Expected variable name but found "+name);
-				}
+				if (ctx.getVariableMap(name).getVariable(ctx, name) == null)
+					ctx.getVariableMap(name).declareVariable(ctx, name, XOMStringType.instance, XOMEmpty.EMPTY);
+				return new XOMVariable(name);
 			} else {
 				throw new XNScriptError("Expected variable name but found "+name);
 			} } catch (IOException ioe) {
@@ -1564,18 +1561,14 @@ public class XNStandardModule extends XNModule {
 			else if (prep.equalsIgnoreCase("after")) dest.putAfterContents(ctx, what);
 			else dest.putIntoContents(ctx, what);
 		} else {
-			String name = dest.unwrap().toTextString(ctx);
+			String name = dest.unwrap(ctx).toTextString(ctx);
 			XNLexer namelex = new XNLexer(name, new StringReader(name));
 			try { if (namelex.lookToken(1).kind == XNToken.ID && namelex.lookToken(2).isEOF()) {
 				name = namelex.getToken().image;
-				dest = ctx.createVariable(name, XOMStringType.instance, XOMEmpty.EMPTY);
-				if (dest.canPutContents(ctx)) {
-					if (prep.equalsIgnoreCase("before")) dest.putBeforeContents(ctx, what);
-					else if (prep.equalsIgnoreCase("after")) dest.putAfterContents(ctx, what);
-					else dest.putIntoContents(ctx, what);
-				} else {
-					throw new XNScriptError("Expected variable name but found "+name);
-				}
+				dest = new XOMVariable(name);
+				if (prep.equalsIgnoreCase("before")) dest.putBeforeContents(ctx, what);
+				else if (prep.equalsIgnoreCase("after")) dest.putAfterContents(ctx, what);
+				else dest.putIntoContents(ctx, what);
 			} else {
 				throw new XNScriptError("Expected variable name but found "+name);
 			} } catch (IOException ioe) {
@@ -1590,18 +1583,14 @@ public class XNStandardModule extends XNModule {
 			else if (prep.equalsIgnoreCase("after")) dest.putAfterContents(ctx, what, prep, pval);
 			else dest.putIntoContents(ctx, what, prep, pval);
 		} else {
-			String name = dest.unwrap().toTextString(ctx);
+			String name = dest.unwrap(ctx).toTextString(ctx);
 			XNLexer namelex = new XNLexer(name, new StringReader(name));
 			try { if (namelex.lookToken(1).kind == XNToken.ID && namelex.lookToken(2).isEOF()) {
 				name = namelex.getToken().image;
-				dest = ctx.createVariable(name, XOMStringType.instance, XOMEmpty.EMPTY);
-				if (dest.canPutContents(ctx)) {
-					if (prep.equalsIgnoreCase("before")) dest.putBeforeContents(ctx, what, prep, pval);
-					else if (prep.equalsIgnoreCase("after")) dest.putAfterContents(ctx, what, prep, pval);
-					else dest.putIntoContents(ctx, what, prep, pval);
-				} else {
-					throw new XNScriptError("Expected variable name but found "+name);
-				}
+				dest = new XOMVariable(name);
+				if (prep.equalsIgnoreCase("before")) dest.putBeforeContents(ctx, what, prep, pval);
+				else if (prep.equalsIgnoreCase("after")) dest.putAfterContents(ctx, what, prep, pval);
+				else dest.putIntoContents(ctx, what, prep, pval);
 			} else {
 				throw new XNScriptError("Expected variable name but found "+name);
 			} } catch (IOException ioe) {
@@ -1633,7 +1622,7 @@ public class XNStandardModule extends XNModule {
 			}
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
-			XOMVariant bv = interp.evaluateExpression(parameters.get(0)).unwrap();
+			XOMVariant bv = interp.evaluateExpression(parameters.get(0)).unwrap(ctx);
 			XOMVariant av = makeDest(interp, ctx, interp.evaluateExpression(parameters.get(2)));
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av);
@@ -1680,22 +1669,22 @@ public class XNStandardModule extends XNModule {
 			}
 			else if (parameters.size() == 1) {
 				kind = "normal";
-				prompt = interp.evaluateExpression(parameters.get(0)).unwrap().toTextString(ctx);
+				prompt = interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx);
 				voptions = new Vector<XOMVariant>();
 				x = 0; y = 0;
 			}
 			else if (parameters.size() == 2) {
-				kind = interp.evaluateExpression(parameters.get(0)).unwrap().toTextString(ctx);
-				prompt = interp.evaluateExpression(parameters.get(1)).unwrap().toTextString(ctx);
+				kind = interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx);
+				prompt = interp.evaluateExpression(parameters.get(1)).unwrap(ctx).toTextString(ctx);
 				voptions = new Vector<XOMVariant>();
 				x = 0; y = 0;
 			}
 			else {
-				kind = interp.evaluateExpression(parameters.get(0)).unwrap().toTextString(ctx);
-				prompt = interp.evaluateExpression(parameters.get(1)).unwrap().toTextString(ctx);
+				kind = interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx);
+				prompt = interp.evaluateExpression(parameters.get(1)).unwrap(ctx).toTextString(ctx);
 				voptions = new Vector<XOMVariant>();
 				for (int i = 2; i < parameters.size(); i++) {
-					voptions.add(interp.evaluateExpression(parameters.get(i)).unwrap());
+					voptions.add(interp.evaluateExpression(parameters.get(i)).unwrap(ctx));
 				}
 				if (voptions.get(0).toTextString(ctx).equalsIgnoreCase("with")) {
 					voptions.remove(0);
@@ -1717,7 +1706,7 @@ public class XNStandardModule extends XNModule {
 					}
 				}
 				String s = ctx.getUI().answerList(prompt, options.toArray(new String[0]), x, y);
-				ctx.setIt(XOMStringType.instance, new XOMString(s));
+				ctx.getVariableMap("it").setVariable(ctx, "it", new XOMString(s));
 			}
 			else if (kind.equalsIgnoreCase("file")) {
 				List<String> options = new Vector<String>();
@@ -1726,30 +1715,30 @@ public class XNStandardModule extends XNModule {
 				}
 				File f = ctx.getUI().answerFile(prompt, options.toArray(new String[0]), x, y);
 				if (f == null) {
-					ctx.setIt(XOMStringType.instance, XOMString.EMPTY_STRING);
+					ctx.getVariableMap("it").setVariable(ctx, "it", XOMString.EMPTY_STRING);
 					return new XOMString("Cancel");
 				} else {
-					ctx.setIt(XOMStringType.instance, new XOMString(f.getAbsolutePath()));
+					ctx.getVariableMap("it").setVariable(ctx, "it", new XOMString(f.getAbsolutePath()));
 					return new XOMString("OK");
 				}
 			}
 			else if (kind.equalsIgnoreCase("folder") || kind.equalsIgnoreCase("directory")) {
 				File f = ctx.getUI().answerFolder(prompt, x, y);
 				if (f == null) {
-					ctx.setIt(XOMStringType.instance, XOMString.EMPTY_STRING);
+					ctx.getVariableMap("it").setVariable(ctx, "it", XOMString.EMPTY_STRING);
 					return new XOMString("Cancel");
 				} else {
-					ctx.setIt(XOMStringType.instance, new XOMString(f.getAbsolutePath()));
+					ctx.getVariableMap("it").setVariable(ctx, "it", new XOMString(f.getAbsolutePath()));
 					return new XOMString("OK");
 				}
 			}
 			else if (kind.equalsIgnoreCase("disk") || kind.equalsIgnoreCase("volume")) {
 				File f = ctx.getUI().answerDisk(prompt, x, y);
 				if (f == null) {
-					ctx.setIt(XOMStringType.instance, XOMString.EMPTY_STRING);
+					ctx.getVariableMap("it").setVariable(ctx, "it", XOMString.EMPTY_STRING);
 					return new XOMString("Cancel");
 				} else {
-					ctx.setIt(XOMStringType.instance, new XOMString(f.getAbsolutePath()));
+					ctx.getVariableMap("it").setVariable(ctx, "it", new XOMString(f.getAbsolutePath()));
 					return new XOMString("OK");
 				}
 			}
@@ -1759,7 +1748,7 @@ public class XNStandardModule extends XNModule {
 					options.add(v.toTextString(ctx));
 				}
 				String s = ctx.getUI().answer(prompt, options.toArray(new String[0]), x, y);
-				ctx.setIt(XOMStringType.instance, new XOMString(s));
+				ctx.getVariableMap("it").setVariable(ctx, "it", new XOMString(s));
 			}
 			return null;
 		}
@@ -1779,22 +1768,22 @@ public class XNStandardModule extends XNModule {
 			}
 			else if (parameters.size() == 1) {
 				kind = "normal";
-				prompt = interp.evaluateExpression(parameters.get(0)).unwrap().toTextString(ctx);
+				prompt = interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx);
 				text = "";
 				x = 0; y = 0;
 			}
 			else if (parameters.size() == 2) {
-				kind = interp.evaluateExpression(parameters.get(0)).unwrap().toTextString(ctx);
-				prompt = interp.evaluateExpression(parameters.get(1)).unwrap().toTextString(ctx);
+				kind = interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx);
+				prompt = interp.evaluateExpression(parameters.get(1)).unwrap(ctx).toTextString(ctx);
 				text = "";
 				x = 0; y = 0;
 			}
 			else {
-				kind = interp.evaluateExpression(parameters.get(0)).unwrap().toTextString(ctx);
-				prompt = interp.evaluateExpression(parameters.get(1)).unwrap().toTextString(ctx);
+				kind = interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx);
+				prompt = interp.evaluateExpression(parameters.get(1)).unwrap(ctx).toTextString(ctx);
 				List<XOMVariant> tmp = new Vector<XOMVariant>();
 				for (int i = 2; i < parameters.size(); i++) {
-					tmp.add(interp.evaluateExpression(parameters.get(i)).unwrap());
+					tmp.add(interp.evaluateExpression(parameters.get(i)).unwrap(ctx));
 				}
 				if (tmp.size() >= 2 && tmp.get(0).toTextString(ctx).equalsIgnoreCase("with")) {
 					text = tmp.remove(1).toTextString(ctx);
@@ -1815,51 +1804,51 @@ public class XNStandardModule extends XNModule {
 			if (kind.equalsIgnoreCase("password")) {
 				String s = ctx.getUI().askPassword(prompt, text, x, y);
 				if (s == null) {
-					ctx.setIt(XOMStringType.instance, XOMString.EMPTY_STRING);
+					ctx.getVariableMap("it").setVariable(ctx, "it", XOMString.EMPTY_STRING);
 					return new XOMString("Cancel");
 				} else {
 					s = Long.toString(AtkinsonHash.hash(s) & 0xFFFFFFFFL);
-					ctx.setIt(XOMStringType.instance, new XOMString(s));
+					ctx.getVariableMap("it").setVariable(ctx, "it", new XOMString(s));
 					return new XOMString("OK");
 				}
 			}
 			else if (kind.equalsIgnoreCase("password clear")) {
 				String s = ctx.getUI().askPassword(prompt, text, x, y);
 				if (s == null) {
-					ctx.setIt(XOMStringType.instance, XOMString.EMPTY_STRING);
+					ctx.getVariableMap("it").setVariable(ctx, "it", XOMString.EMPTY_STRING);
 					return new XOMString("Cancel");
 				} else {
-					ctx.setIt(XOMStringType.instance, new XOMString(s));
+					ctx.getVariableMap("it").setVariable(ctx, "it", new XOMString(s));
 					return new XOMString("OK");
 				}
 			}
 			else if (kind.equalsIgnoreCase("file")) {
 				File f = ctx.getUI().askFile(prompt, text, x, y);
 				if (f == null) {
-					ctx.setIt(XOMStringType.instance, XOMString.EMPTY_STRING);
+					ctx.getVariableMap("it").setVariable(ctx, "it", XOMString.EMPTY_STRING);
 					return new XOMString("Cancel");
 				} else {
-					ctx.setIt(XOMStringType.instance, new XOMString(f.getAbsolutePath()));
+					ctx.getVariableMap("it").setVariable(ctx, "it", new XOMString(f.getAbsolutePath()));
 					return new XOMString("OK");
 				}
 			}
 			else if (kind.equalsIgnoreCase("folder") || kind.equalsIgnoreCase("directory")) {
 				File f = ctx.getUI().askFolder(prompt, text, x, y);
 				if (f == null) {
-					ctx.setIt(XOMStringType.instance, XOMString.EMPTY_STRING);
+					ctx.getVariableMap("it").setVariable(ctx, "it", XOMString.EMPTY_STRING);
 					return new XOMString("Cancel");
 				} else {
-					ctx.setIt(XOMStringType.instance, new XOMString(f.getAbsolutePath()));
+					ctx.getVariableMap("it").setVariable(ctx, "it", new XOMString(f.getAbsolutePath()));
 					return new XOMString("OK");
 				}
 			}
 			else {
 				String s = ctx.getUI().ask(prompt, text, x, y);
 				if (s == null) {
-					ctx.setIt(XOMStringType.instance, XOMString.EMPTY_STRING);
+					ctx.getVariableMap("it").setVariable(ctx, "it", XOMString.EMPTY_STRING);
 					return new XOMString("Cancel");
 				} else {
-					ctx.setIt(XOMStringType.instance, new XOMString(s));
+					ctx.getVariableMap("it").setVariable(ctx, "it", new XOMString(s));
 					return new XOMString("OK");
 				}
 			}
@@ -1884,12 +1873,15 @@ public class XNStandardModule extends XNModule {
 				} else {
 					thing = dataType.createInstance(ctx);
 				}
-				ctx.setIt(dataType, thing);
+				if (ctx.getVariableMap("it").getVariable(ctx, "it") == null)
+					ctx.getVariableMap("it").declareVariable(ctx, "it", dataType, thing);
+				else
+					ctx.getVariableMap("it").setVariable(ctx, "it", thing);
 				return null;
 			}
 			
 			if (!(what instanceof XNVariantDescriptor)) {
-				String s = interp.evaluateExpression(what).unwrap().toTextString(ctx);
+				String s = interp.evaluateExpression(what).unwrap(ctx).toTextString(ctx);
 				XNLexer lex = new XNLexer(s, new StringReader(s));
 				XNParser par = new XNParser(ctx, lex);
 				what = par.getListExpression(null);
@@ -1908,7 +1900,7 @@ public class XNStandardModule extends XNModule {
 			if (parameters.size() < 3) {
 				if (expr instanceof XNVariantIdDescriptor) {
 					XNExpression idExpression = ((XNVariantIdDescriptor)expr).id;
-					XOMVariant idVar = interp.evaluateExpression(idExpression).unwrap();
+					XOMVariant idVar = interp.evaluateExpression(idExpression).unwrap(ctx);
 					XOMInteger idInt = XOMIntegerType.instance.makeInstanceFrom(ctx, idVar);
 					if (parent != null) {
 						dataType.createChildVariantByID(ctx, parent, idInt.toInt());
@@ -1919,15 +1911,15 @@ public class XNStandardModule extends XNModule {
 					XNExpression startExpr = ((XNVariantIndexNameDescriptor)expr).start;
 					XNExpression endExpr = ((XNVariantIndexNameDescriptor)expr).end;
 					if (startExpr != null && endExpr != null) {
-						int start = XOMIntegerType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(startExpr).unwrap()).toInt();
-						int end = XOMIntegerType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(endExpr).unwrap()).toInt();
+						int start = XOMIntegerType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(startExpr).unwrap(ctx)).toInt();
+						int end = XOMIntegerType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(endExpr).unwrap(ctx)).toInt();
 						if (parent != null) {
 							dataType.createChildVariantByIndex(ctx, parent, start, end);
 						} else {
 							dataType.createInstanceByIndex(ctx, start, end);
 						}
 					} else if (startExpr != null) {
-						XOMVariant idxNameVar = interp.evaluateExpression(startExpr).unwrap();
+						XOMVariant idxNameVar = interp.evaluateExpression(startExpr).unwrap(ctx);
 						if (!idxNameVar.toString().equals("") && XOMIntegerType.instance.canMakeInstanceFrom(ctx, idxNameVar)) {
 							int index = XOMIntegerType.instance.makeInstanceFrom(ctx, idxNameVar).toInt();
 							if (parent != null) {
@@ -1944,7 +1936,7 @@ public class XNStandardModule extends XNModule {
 							}
 						}
 					} else if (endExpr != null) {
-						XOMVariant idxNameVar = interp.evaluateExpression(endExpr).unwrap();
+						XOMVariant idxNameVar = interp.evaluateExpression(endExpr).unwrap(ctx);
 						if (!idxNameVar.toString().equals("") && XOMIntegerType.instance.canMakeInstanceFrom(ctx, idxNameVar)) {
 							int index = XOMIntegerType.instance.makeInstanceFrom(ctx, idxNameVar).toInt();
 							if (parent != null) {
@@ -1998,7 +1990,7 @@ public class XNStandardModule extends XNModule {
 				XOMVariant content = interp.evaluateExpression(parameters.get(2));
 				if (expr instanceof XNVariantIdDescriptor) {
 					XNExpression idExpression = ((XNVariantIdDescriptor)expr).id;
-					XOMVariant idVar = interp.evaluateExpression(idExpression).unwrap();
+					XOMVariant idVar = interp.evaluateExpression(idExpression).unwrap(ctx);
 					XOMInteger idInt = XOMIntegerType.instance.makeInstanceFrom(ctx, idVar);
 					if (parent != null) {
 						dataType.createChildVariantByIDWith(ctx, parent, idInt.toInt(), content);
@@ -2009,15 +2001,15 @@ public class XNStandardModule extends XNModule {
 					XNExpression startExpr = ((XNVariantIndexNameDescriptor)expr).start;
 					XNExpression endExpr = ((XNVariantIndexNameDescriptor)expr).end;
 					if (startExpr != null && endExpr != null) {
-						int start = XOMIntegerType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(startExpr).unwrap()).toInt();
-						int end = XOMIntegerType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(endExpr).unwrap()).toInt();
+						int start = XOMIntegerType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(startExpr).unwrap(ctx)).toInt();
+						int end = XOMIntegerType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(endExpr).unwrap(ctx)).toInt();
 						if (parent != null) {
 							dataType.createChildVariantByIndexWith(ctx, parent, start, end, content);
 						} else {
 							dataType.createInstanceByIndexWith(ctx, start, end, content);
 						}
 					} else if (startExpr != null) {
-						XOMVariant idxNameVar = interp.evaluateExpression(startExpr).unwrap();
+						XOMVariant idxNameVar = interp.evaluateExpression(startExpr).unwrap(ctx);
 						if (!idxNameVar.toString().equals("") && XOMIntegerType.instance.canMakeInstanceFrom(ctx, idxNameVar)) {
 							int index = XOMIntegerType.instance.makeInstanceFrom(ctx, idxNameVar).toInt();
 							if (parent != null) {
@@ -2034,7 +2026,7 @@ public class XNStandardModule extends XNModule {
 							}
 						}
 					} else if (endExpr != null) {
-						XOMVariant idxNameVar = interp.evaluateExpression(endExpr).unwrap();
+						XOMVariant idxNameVar = interp.evaluateExpression(endExpr).unwrap(ctx);
 						if (!idxNameVar.toString().equals("") && XOMIntegerType.instance.canMakeInstanceFrom(ctx, idxNameVar)) {
 							int index = XOMIntegerType.instance.makeInstanceFrom(ctx, idxNameVar).toInt();
 							if (parent != null) {
@@ -2092,10 +2084,10 @@ public class XNStandardModule extends XNModule {
 	private static final Command c_delete = new Command() {
 		public XOMVariant executeCommand(XNInterpreter interp, XNContext ctx, String commandName, List<XNExpression> parameters) {
 			if (parameters == null || parameters.isEmpty()) throw new XNScriptError("Can't understand arguments to delete");
-			XOMVariant v = interp.evaluateExpression(parameters.get(0)).unwrap();
+			XOMVariant v = interp.evaluateExpression(parameters.get(0)).unwrap(ctx);
 			if (v.canDelete(ctx)) v.delete(ctx);
 			else {
-				v = interp.evaluateExpressionString(v.toTextString(ctx)).unwrap();
+				v = interp.evaluateExpressionString(v.toTextString(ctx)).unwrap(ctx);
 				if (v.canDelete(ctx)) v.delete(ctx);
 				else {
 					throw new XNScriptError("Can't delete this");
@@ -2128,7 +2120,7 @@ public class XNStandardModule extends XNModule {
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			XOMVariant av = makeDest(interp, ctx, interp.evaluateExpression(parameters.get(0)));
-			XOMVariant bv = interp.evaluateExpression(parameters.get(2)).unwrap();
+			XOMVariant bv = interp.evaluateExpression(parameters.get(2)).unwrap(ctx);
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv);
@@ -2167,7 +2159,7 @@ public class XNStandardModule extends XNModule {
 	private static final Command c_get = new Command() {
 		public XOMVariant executeCommand(XNInterpreter interp, XNContext ctx, String commandName, List<XNExpression> parameters) {
 			if (parameters == null || parameters.isEmpty()) throw new XNScriptError("Can't understand arguments to get");
-			ctx.setIt(XOMStringType.instance, interp.evaluateExpression(parameters.get(0)).unwrap());
+			ctx.getVariableMap("it").setVariable(ctx, "it", interp.evaluateExpression(parameters.get(0)).unwrap(ctx));
 			return null;
 		}
 	};
@@ -2176,7 +2168,7 @@ public class XNStandardModule extends XNModule {
 		public XOMVariant executeCommand(XNInterpreter interp, XNContext ctx, String commandName, List<XNExpression> parameters) {
 			if (parameters == null || parameters.size() < 3) throw new XNScriptError("Can't understand arguments to let");
 			XOMVariant dest = interp.evaluateExpression(parameters.get(0));
-			XOMVariant what = interp.evaluateExpression(parameters.get(2)).unwrap();
+			XOMVariant what = interp.evaluateExpression(parameters.get(2)).unwrap(ctx);
 			put(interp, ctx, what, "into", dest);
 			return null;
 		}
@@ -2205,7 +2197,7 @@ public class XNStandardModule extends XNModule {
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			XOMVariant av = makeDest(interp, ctx, interp.evaluateExpression(parameters.get(0)));
-			XOMVariant bv = interp.evaluateExpression(parameters.get(2)).unwrap();
+			XOMVariant bv = interp.evaluateExpression(parameters.get(2)).unwrap(ctx);
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv);
@@ -2245,7 +2237,7 @@ public class XNStandardModule extends XNModule {
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			XOMVariant av = makeDest(interp, ctx, interp.evaluateExpression(parameters.get(0)));
-			XOMVariant bv = interp.evaluateExpression(parameters.get(2)).unwrap();
+			XOMVariant bv = interp.evaluateExpression(parameters.get(2)).unwrap(ctx);
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv);
@@ -2281,18 +2273,18 @@ public class XNStandardModule extends XNModule {
 		public XOMVariant executeCommand(XNInterpreter interp, XNContext ctx, String commandName, List<XNExpression> parameters) {
 			if (parameters == null || parameters.isEmpty()) throw new XNScriptError("Can't understand arguments to put");
 			if (parameters.size() < 3) {
-				ctx.getUI().put(interp.evaluateExpression(parameters.get(0)).unwrap().toTextString(ctx));
+				ctx.getUI().put(interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx));
 			} else if (parameters.size() < 6) {
-				XOMVariant what = interp.evaluateExpression(parameters.get(0)).unwrap();
-				String prep = interp.evaluateExpression(parameters.get(1)).unwrap().toTextString(ctx);
+				XOMVariant what = interp.evaluateExpression(parameters.get(0)).unwrap(ctx);
+				String prep = interp.evaluateExpression(parameters.get(1)).unwrap(ctx).toTextString(ctx);
 				XOMVariant dest = interp.evaluateExpression(parameters.get(2));
 				put(interp, ctx, what, prep, dest);
 			} else {
-				XOMVariant what = interp.evaluateExpression(parameters.get(0)).unwrap();
-				String prep = interp.evaluateExpression(parameters.get(1)).unwrap().toTextString(ctx);
+				XOMVariant what = interp.evaluateExpression(parameters.get(0)).unwrap(ctx);
+				String prep = interp.evaluateExpression(parameters.get(1)).unwrap(ctx).toTextString(ctx);
 				XOMVariant dest = interp.evaluateExpression(parameters.get(2));
-				String prop = interp.evaluateExpression(parameters.get(4)).unwrap().toTextString(ctx);
-				XOMVariant pval = interp.evaluateExpression(parameters.get(5)).unwrap();
+				String prop = interp.evaluateExpression(parameters.get(4)).unwrap(ctx).toTextString(ctx);
+				XOMVariant pval = interp.evaluateExpression(parameters.get(5)).unwrap(ctx);
 				put(interp, ctx, what, prep, dest, prop, pval);
 			}
 			return null;
@@ -2302,9 +2294,9 @@ public class XNStandardModule extends XNModule {
 	private static final Command c_set = new Command() {
 		public XOMVariant executeCommand(XNInterpreter interp, XNContext ctx, String commandName, List<XNExpression> parameters) {
 			if (parameters == null || parameters.size() < 5) throw new XNScriptError("Can't understand arguments to set");
-			String property = interp.evaluateExpression(parameters.get(0)).unwrap().toTextString(ctx);
-			XOMVariant object = interp.evaluateExpression(parameters.get(2)).unwrap();
-			XOMVariant value = interp.evaluateExpression(parameters.get(4)).unwrap();
+			String property = interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx);
+			XOMVariant object = interp.evaluateExpression(parameters.get(2)).unwrap(ctx);
+			XOMVariant value = interp.evaluateExpression(parameters.get(4)).unwrap(ctx);
 			if (object != null && object.canSetProperty(ctx, property)) {
 				object.setProperty(ctx, property, value);
 			} else if (
@@ -2327,7 +2319,7 @@ public class XNStandardModule extends XNModule {
 			}
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
-			XOMVariant bv = interp.evaluateExpression(parameters.get(0)).unwrap();
+			XOMVariant bv = interp.evaluateExpression(parameters.get(0)).unwrap(ctx);
 			XOMVariant av = makeDest(interp, ctx, interp.evaluateExpression(parameters.get(2)));
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av);
@@ -2365,7 +2357,7 @@ public class XNStandardModule extends XNModule {
 			if (parameters == null || parameters.isEmpty()) {
 				ctx.getUI().beep();
 			} else {
-				int i = XOMIntegerType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(parameters.get(0)).unwrap()).toInt();
+				int i = XOMIntegerType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(parameters.get(0)).unwrap(ctx)).toInt();
 				while (i-- > 0) {
 					ctx.getUI().beep();
 				}
@@ -2379,8 +2371,8 @@ public class XNStandardModule extends XNModule {
 			if (parameters == null || parameters.isEmpty()) {
 				throw new XNScriptError("Can't understand arguments to close");
 			}
-			XOMVariant object = interp.evaluateExpression(parameters.get(0)).unwrap();
-			XOMVariant opener = (parameters.size() > 2) ? interp.evaluateExpression(parameters.get(2)).unwrap() : null;
+			XOMVariant object = interp.evaluateExpression(parameters.get(0)).unwrap(ctx);
+			XOMVariant opener = (parameters.size() > 2) ? interp.evaluateExpression(parameters.get(2)).unwrap(ctx) : null;
 			if (opener != null) {
 				if (!ctx.allow(XNSecurityKey.FILE_LAUNCH, "Operation", "Close", "Object", object.toDescriptionString(), "Opener", opener.toDescriptionString()))
 					throw new XNScriptError("Security settings do not allow close");
@@ -2446,7 +2438,7 @@ public class XNStandardModule extends XNModule {
 			if (v.canPutContents(ctx)) {
 				put(interp, ctx, new XOMString(output.trim()), "into", v);
 			} else {
-				ctx.setIt(XOMStringType.instance, new XOMString(output.trim()));
+				ctx.getVariableMap("it").setVariable(ctx, "it", new XOMString(output.trim()));
 			}
 			return null;
 		}
@@ -2457,9 +2449,9 @@ public class XNStandardModule extends XNModule {
 			if (parameters == null || parameters.isEmpty()) {
 				throw new XNScriptError("Can't understand arguments to open");
 			}
-			XOMVariant object = interp.evaluateExpression(parameters.get(0)).unwrap();
+			XOMVariant object = interp.evaluateExpression(parameters.get(0)).unwrap(ctx);
 			boolean as = (parameters.size() > 1 && interp.evaluateExpression(parameters.get(1)).toTextString(ctx).equalsIgnoreCase("as"));
-			XOMVariant opener = (parameters.size() > 2) ? interp.evaluateExpression(parameters.get(2)).unwrap() : null;
+			XOMVariant opener = (parameters.size() > 2) ? interp.evaluateExpression(parameters.get(2)).unwrap(ctx) : null;
 			if (as && opener != null) {
 				String type = opener.toTextString(ctx);
 				if (ctx.hasIOManager(object)) {
@@ -2516,7 +2508,7 @@ public class XNStandardModule extends XNModule {
 			if (parameters == null || parameters.size() < 8) {
 				throw new XNScriptError("Can't understand arguments to write");
 			}
-			XOMVariant obj = interp.evaluateExpression(parameters.get(1)).unwrap();
+			XOMVariant obj = interp.evaluateExpression(parameters.get(1)).unwrap(ctx);
 			XNIOManager io = ctx.getIOManager(obj);
 			if (io == null) {
 				throw new XNScriptError("Can't read from this");
@@ -2557,7 +2549,7 @@ public class XNStandardModule extends XNModule {
 					}
 				}
 			}
-			ctx.setIt(XOMStringType.instance, data);
+			ctx.getVariableMap("it").setVariable(ctx, "it", data);
 			return null;
 		}
 	};
@@ -2568,12 +2560,12 @@ public class XNStandardModule extends XNModule {
 				throw new XNScriptError("Can't understand arguments to wait");
 			}
 			XOMVariant what = interp.evaluateExpression(parameters.get(0));
-			String dir = interp.evaluateExpression(parameters.get(1)).unwrap().toTextString(ctx);
+			String dir = interp.evaluateExpression(parameters.get(1)).unwrap(ctx).toTextString(ctx);
 			int dirint = (
 					dir.equalsIgnoreCase("ascending") ? XOMComparator.ORDER_ASCENDING :
 					dir.equalsIgnoreCase("descending") ? XOMComparator.ORDER_DESCENDING :
 					XOMComparator.ORDER_ASCENDING);
-			String type = interp.evaluateExpression(parameters.get(2)).unwrap().toTextString(ctx);
+			String type = interp.evaluateExpression(parameters.get(2)).unwrap(ctx).toTextString(ctx);
 			int typeint = (
 					type.equalsIgnoreCase("text") ? XOMComparator.TYPE_TEXT :
 					type.equalsIgnoreCase("international") ? XOMComparator.TYPE_INTERNATIONAL :
@@ -2592,7 +2584,7 @@ public class XNStandardModule extends XNModule {
 			if (parameters == null || parameters.isEmpty()) {
 				throw new XNScriptError("Can't understand arguments to truncate");
 			}
-			XOMVariant obj = interp.evaluateExpression(parameters.get(0)).unwrap();
+			XOMVariant obj = interp.evaluateExpression(parameters.get(0)).unwrap(ctx);
 			XNIOManager io = ctx.getIOManager(obj);
 			if (io == null) {
 				throw new XNScriptError("Can't truncate this");
@@ -2614,11 +2606,11 @@ public class XNStandardModule extends XNModule {
 			String type = interp.evaluateExpression(parameters.get(0)).toTextString(ctx);
 			if (type.equalsIgnoreCase("while")) {
 				XNExpression condition = parameters.get(1);
-				while (XOMBooleanType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(condition).unwrap()).toBoolean());
+				while (XOMBooleanType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(condition).unwrap(ctx)).toBoolean());
 			}
 			else if (type.equalsIgnoreCase("until")) {
 				XNExpression condition = parameters.get(1);
-				while (!XOMBooleanType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(condition).unwrap()).toBoolean());
+				while (!XOMBooleanType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(condition).unwrap(ctx)).toBoolean());
 			}
 			else {
 				double d = XOMNumberType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(parameters.get(1))).toDouble();
@@ -2656,8 +2648,8 @@ public class XNStandardModule extends XNModule {
 			if (parameters == null || parameters.size() < 3) {
 				throw new XNScriptError("Can't understand arguments to write");
 			}
-			XOMVariant content = interp.evaluateExpression(parameters.get(0)).unwrap();
-			XOMVariant obj = interp.evaluateExpression(parameters.get(2)).unwrap();
+			XOMVariant content = interp.evaluateExpression(parameters.get(0)).unwrap(ctx);
+			XOMVariant obj = interp.evaluateExpression(parameters.get(2)).unwrap(ctx);
 			XNIOManager io = ctx.getIOManager(obj);
 			if (io == null) {
 				throw new XNScriptError("Can't write to this");
@@ -5285,7 +5277,7 @@ public class XNStandardModule extends XNModule {
 		public void setProperty(XNContext ctx, String propertyName, XOMVariant value) {
 			if (!ctx.allow(XNSecurityKey.SEARCH_PATHS, "Operation", "SetProperty", "Property", propertyName, "Value", value.toTextString(ctx)))
 				throw new XNScriptError("Security settings do not allow set the applicationPaths");
-			ctx.setApplicationPaths(value.unwrap().toTextString(ctx));
+			ctx.setApplicationPaths(value.unwrap(ctx).toTextString(ctx));
 		}
 	};
 	
@@ -5302,7 +5294,7 @@ public class XNStandardModule extends XNModule {
 		public void setProperty(XNContext ctx, String propertyName, XOMVariant value) {
 			if (!ctx.allow(XNSecurityKey.SEARCH_PATHS, "Operation", "SetProperty", "Property", propertyName, "Value", value.toTextString(ctx)))
 				throw new XNScriptError("Security settings do not allow set the documentPaths");
-			ctx.setDocumentPaths(value.unwrap().toTextString(ctx));
+			ctx.setDocumentPaths(value.unwrap(ctx).toTextString(ctx));
 		}
 	};
 	
@@ -5319,7 +5311,7 @@ public class XNStandardModule extends XNModule {
 		public void setProperty(XNContext ctx, String propertyName, XOMVariant value) {
 			if (!ctx.allow(XNSecurityKey.SEARCH_PATHS, "Operation", "SetProperty", "Property", propertyName, "Value", value.toTextString(ctx)))
 				throw new XNScriptError("Security settings do not allow set the includePaths");
-			ctx.setIncludePaths(value.unwrap().toTextString(ctx));
+			ctx.setIncludePaths(value.unwrap(ctx).toTextString(ctx));
 		}
 	};
 	

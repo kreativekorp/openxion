@@ -30,7 +30,6 @@ package com.kreative.openxion;
 import java.io.*;
 import java.util.*;
 import com.kreative.openxion.ast.XNStatement;
-import com.kreative.openxion.xom.XOMVariable;
 import com.kreative.openxion.xom.inst.XOMString;
 import com.kreative.openxion.xom.type.XOMStringType;
 
@@ -158,7 +157,7 @@ public class XNMain {
 					case EXPRESSION:
 						somethingOfConsequenceHappened = true;
 						try {
-							ui.println(interp.evaluateExpressionString(arg).unwrap().toTextString(ctx));
+							ui.println(interp.evaluateExpressionString(arg).unwrap(ctx).toTextString(ctx));
 						} catch (XNScriptError se) {
 							System.err.println(se.getMessage());
 							if (stackTrace) se.printStackTrace();
@@ -190,9 +189,7 @@ public class XNMain {
 					case VARIABLE:
 						String[] ss = arg.split("=", 2);
 						if (ss.length == 2) {
-							XOMVariable v = ctx.getGlobalVariable(ss[0]);
-							if (v == null) ctx.createGlobalVariable(ss[0], XOMStringType.instance, new XOMString(ss[1]));
-							else v.putIntoContents(ctx, new XOMString(ss[1]));
+							ctx.globalVariables().declareVariable(ctx, ss[0], XOMStringType.instance, new XOMString(ss[1]));
 						} else {
 							System.err.println("Can't understand -D option: "+arg);
 						}
@@ -395,7 +392,7 @@ public class XNMain {
 							if (programCapture) programMemory.addAll(Arrays.asList(line.split("\r\n|\r|\n")));
 						} catch (XNScriptError se1) {
 							try {
-								ui.println(interp.evaluateExpressionString(line).unwrap().toTextString(ctx));
+								ui.println(interp.evaluateExpressionString(line).unwrap(ctx).toTextString(ctx));
 								if (programCapture) programMemory.addAll(Arrays.asList(("put "+line).split("\r\n|\r|\n")));
 							} catch (XNScriptError se3) {
 								if (stackTrace) {

@@ -199,16 +199,16 @@ public abstract class XOMDataType<IT extends XOMVariant> implements Serializable
 	 */
 	
 	public final boolean canMakeInstanceFrom(XNContext ctx, XOMVariant instance) {
-		return canMakeInstanceFromImpl(ctx, instance.unwrap());
+		return canMakeInstanceFromImpl(ctx, instance.unwrap(ctx));
 	}
 	public final boolean canMakeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
-		return canMakeInstanceFromImpl(ctx, left.unwrap(), right.unwrap());
+		return canMakeInstanceFromImpl(ctx, left.unwrap(ctx), right.unwrap(ctx));
 	}
 	public final IT makeInstanceFrom(XNContext ctx, XOMVariant instance) {
-		return makeInstanceFromImpl(ctx, instance.unwrap());
+		return makeInstanceFromImpl(ctx, instance.unwrap(ctx));
 	}
 	public final IT makeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
-		return makeInstanceFromImpl(ctx, left.unwrap(), right.unwrap());
+		return makeInstanceFromImpl(ctx, left.unwrap(ctx), right.unwrap(ctx));
 	}
 	protected abstract boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance);
 	protected abstract boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right);

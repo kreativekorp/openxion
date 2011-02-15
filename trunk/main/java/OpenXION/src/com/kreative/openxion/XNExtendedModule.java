@@ -278,15 +278,15 @@ public class XNExtendedModule extends XNModule {
 			if (parameters == null || parameters.size() == 0) {
 				throw new XNScriptError("Can't understand arguments to sql");
 			}
-			String kind = interp.evaluateExpression(parameters.get(0)).unwrap().toTextString(ctx);
+			String kind = interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx);
 			if (kind.equalsIgnoreCase("connect")) {
 				String to = null;
 				String driver = null;
 				String username = null;
 				String password = null;
 				for (int i = 1; i+1 < parameters.size(); i += 2) {
-					String k = interp.evaluateExpression(parameters.get(i)).unwrap().toTextString(ctx);
-					String v = interp.evaluateExpression(parameters.get(i+1)).unwrap().toTextString(ctx);
+					String k = interp.evaluateExpression(parameters.get(i)).unwrap(ctx).toTextString(ctx);
+					String v = interp.evaluateExpression(parameters.get(i+1)).unwrap(ctx).toTextString(ctx);
 					if (k.equalsIgnoreCase("to")) to = v;
 					else if (k.equalsIgnoreCase("with driver")) driver = v;
 					else if (k.equalsIgnoreCase("with username")) username = v;
@@ -321,8 +321,8 @@ public class XNExtendedModule extends XNModule {
 			} else if (kind.equalsIgnoreCase("disconnect")) {
 				String from = null;
 				for (int i = 1; i+1 < parameters.size(); i += 2) {
-					String k = interp.evaluateExpression(parameters.get(i)).unwrap().toTextString(ctx);
-					String v = interp.evaluateExpression(parameters.get(i+1)).unwrap().toTextString(ctx);
+					String k = interp.evaluateExpression(parameters.get(i)).unwrap(ctx).toTextString(ctx);
+					String v = interp.evaluateExpression(parameters.get(i+1)).unwrap(ctx).toTextString(ctx);
 					if (k.equalsIgnoreCase("from")) from = v;
 					else throw new XNScriptError("Can't understand arguments to sql");
 				}
@@ -348,11 +348,11 @@ public class XNExtendedModule extends XNModule {
 				}
 			} else if (kind.equalsIgnoreCase("prepare")) {
 				if (parameters.size() > 1) {
-					kind = interp.evaluateExpression(parameters.get(1)).unwrap().toTextString(ctx);
+					kind = interp.evaluateExpression(parameters.get(1)).unwrap(ctx).toTextString(ctx);
 					if (kind.equalsIgnoreCase("execute")) {
 						String from = null;
 						if (parameters.size() > 3) {
-							from = interp.evaluateExpression(parameters.get(3)).unwrap().toTextString(ctx);
+							from = interp.evaluateExpression(parameters.get(3)).unwrap(ctx).toTextString(ctx);
 						}
 						if (from == null) {
 							from = lastConnection;
@@ -389,7 +389,7 @@ public class XNExtendedModule extends XNModule {
 										it.deleteCharAt(0);
 									}
 									lastConnection = from;
-									ctx.setIt(XOMStringType.instance, new XOMString(it.toString()));
+									ctx.getVariableMap("it").setVariable(ctx, "it", new XOMString(it.toString()));
 									return new XOMInteger(result);
 								} else {
 									// updatecount
@@ -405,15 +405,15 @@ public class XNExtendedModule extends XNModule {
 						String value = null;
 						String from = null;
 						if (parameters.size() > 2) {
-							XOMVariant v = interp.evaluateExpression(parameters.get(2)).unwrap();
+							XOMVariant v = interp.evaluateExpression(parameters.get(2)).unwrap(ctx);
 							XOMInteger i = XOMIntegerType.instance.makeInstanceFrom(ctx, v);
 							param = i.toInt();
 						}
 						if (parameters.size() > 4) {
-							value = interp.evaluateExpression(parameters.get(4)).unwrap().toTextString(ctx);
+							value = interp.evaluateExpression(parameters.get(4)).unwrap(ctx).toTextString(ctx);
 						}
 						if (parameters.size() > 6) {
-							from = interp.evaluateExpression(parameters.get(6)).unwrap().toTextString(ctx);
+							from = interp.evaluateExpression(parameters.get(6)).unwrap(ctx).toTextString(ctx);
 						}
 						if (param < 1 || value == null) {
 							throw new XNScriptError("Can't understand arguments to sql");
@@ -437,10 +437,10 @@ public class XNExtendedModule extends XNModule {
 						String query = null;
 						String from = null;
 						if (parameters.size() > 2) {
-							query = interp.evaluateExpression(parameters.get(2)).unwrap().toTextString(ctx);
+							query = interp.evaluateExpression(parameters.get(2)).unwrap(ctx).toTextString(ctx);
 						}
 						if (parameters.size() > 4) {
-							from = interp.evaluateExpression(parameters.get(4)).unwrap().toTextString(ctx);
+							from = interp.evaluateExpression(parameters.get(4)).unwrap(ctx).toTextString(ctx);
 						}
 						if (query == null) {
 							throw new XNScriptError("Can't understand arguments to sql");
@@ -471,10 +471,10 @@ public class XNExtendedModule extends XNModule {
 				String query = null;
 				String from = null;
 				if (parameters.size() > 1) {
-					query = interp.evaluateExpression(parameters.get(1)).unwrap().toTextString(ctx);
+					query = interp.evaluateExpression(parameters.get(1)).unwrap(ctx).toTextString(ctx);
 				}
 				if (parameters.size() > 3) {
-					from = interp.evaluateExpression(parameters.get(3)).unwrap().toTextString(ctx);
+					from = interp.evaluateExpression(parameters.get(3)).unwrap(ctx).toTextString(ctx);
 				}
 				if (query == null) {
 					throw new XNScriptError("Can't understand arguments to sql");
@@ -517,7 +517,7 @@ public class XNExtendedModule extends XNModule {
 										it.deleteCharAt(0);
 									}
 									lastConnection = from;
-									ctx.setIt(XOMStringType.instance, new XOMString(it.toString()));
+									ctx.getVariableMap("it").setVariable(ctx, "it", new XOMString(it.toString()));
 									return new XOMInteger(result);
 								} else {
 									// updatecount
@@ -552,7 +552,7 @@ public class XNExtendedModule extends XNModule {
 									it.deleteCharAt(0);
 								}
 								lastConnection = from;
-								ctx.setIt(XOMStringType.instance, new XOMString(it.toString()));
+								ctx.getVariableMap("it").setVariable(ctx, "it", new XOMString(it.toString()));
 								return new XOMInteger(result);
 							} else {
 								// updatecount
