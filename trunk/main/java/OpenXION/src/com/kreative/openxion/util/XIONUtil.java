@@ -55,6 +55,10 @@ import com.kreative.openxion.xom.XOMVariant;
 public class XIONUtil {
 	private XIONUtil() {}
 	
+	/* * * * * *
+	 * PARSING *
+	 * * * * * */
+	
 	public static String normalizeVarName(String s) {
 		return (s == null) ? "" : s.toLowerCase().trim().replaceAll(" +", " ");
 	}
@@ -80,67 +84,6 @@ public class XIONUtil {
 		} catch (Exception e) {
 			return null;
 		}
-	}
-	
-	public static final int INDEX_ANY = Integer.MIN_VALUE;
-	public static final int INDEX_MIDDLE = Integer.MIN_VALUE + 1;
-	public static final int INDEX_PREVIOUS = Integer.MIN_VALUE + 2;
-	public static final int INDEX_CURRENT = Integer.MIN_VALUE + 3;
-	public static final int INDEX_NEXT = Integer.MIN_VALUE + 4;
-	public static final int INDEX_RECENT = Integer.MIN_VALUE + 5;
-	
-	private static final Random indexRand = new Random();
-	
-	public static int[] index(int min, int max, int current, int recent, int start, int end) {
-		int randomIndex = ((max-min+1) > 0) ? (min + indexRand.nextInt(max-min+1)) : min;
-		int middleIndex = min + (max-min+1)/2;
-		if (start < 0) {
-			switch (start) {
-			case INDEX_ANY: start = randomIndex; break;
-			case INDEX_MIDDLE: start = middleIndex; break;
-			case INDEX_PREVIOUS: start = current-1; if (start < min) start = max; break;
-			case INDEX_CURRENT: start = current; break;
-			case INDEX_NEXT: start = current+1; if (start > max) start = min; break;
-			case INDEX_RECENT: start = recent; break;
-			default: start += max+1; break;
-			}
-		}
-		if (end < 0) {
-			switch (end) {
-			case INDEX_ANY: end = randomIndex; break;
-			case INDEX_MIDDLE: end = middleIndex; break;
-			case INDEX_PREVIOUS: end = current-1; if (end < min) end = max; break;
-			case INDEX_CURRENT: end = current; break;
-			case INDEX_NEXT: end = current+1; if (end > max) end = min; break;
-			case INDEX_RECENT: end = recent; break;
-			default: end += max+1; break;
-			}
-		}
-		return new int[]{start,end};
-	}
-	
-	public static int[] index(int min, int max, int start, int end) {
-		int randomIndex = ((max-min+1) > 0) ? (min + indexRand.nextInt(max-min+1)) : min;
-		int middleIndex = min + (max-min+1)/2;
-		if (start < 0) {
-			switch (start) {
-			case INDEX_ANY: start = randomIndex; break;
-			case INDEX_MIDDLE: start = middleIndex; break;
-			default: start += max+1; break;
-			}
-		}
-		if (end < 0) {
-			switch (end) {
-			case INDEX_ANY: end = randomIndex; break;
-			case INDEX_MIDDLE: end = middleIndex; break;
-			default: end += max+1; break;
-			}
-		}
-		return new int[]{start,end};
-	}
-	
-	public static Random getRandom() {
-		return indexRand;
 	}
 	
 	public static String quote(String s) {
@@ -284,6 +227,75 @@ public class XIONUtil {
 		return unquoted.toString();
 	}
 	
+	/* * * * * * 
+	 * INDEXES *
+	 * * * * * */
+	
+	public static final int INDEX_ANY = Integer.MIN_VALUE;
+	public static final int INDEX_MIDDLE = Integer.MIN_VALUE + 1;
+	public static final int INDEX_PREVIOUS = Integer.MIN_VALUE + 2;
+	public static final int INDEX_CURRENT = Integer.MIN_VALUE + 3;
+	public static final int INDEX_NEXT = Integer.MIN_VALUE + 4;
+	public static final int INDEX_RECENT = Integer.MIN_VALUE + 5;
+	
+	private static final Random indexRand = new Random();
+	
+	public static int[] index(int min, int max, int current, int recent, int start, int end) {
+		int randomIndex = ((max-min+1) > 0) ? (min + indexRand.nextInt(max-min+1)) : min;
+		int middleIndex = min + (max-min+1)/2;
+		if (start < 0) {
+			switch (start) {
+			case INDEX_ANY: start = randomIndex; break;
+			case INDEX_MIDDLE: start = middleIndex; break;
+			case INDEX_PREVIOUS: start = current-1; if (start < min) start = max; break;
+			case INDEX_CURRENT: start = current; break;
+			case INDEX_NEXT: start = current+1; if (start > max) start = min; break;
+			case INDEX_RECENT: start = recent; break;
+			default: start += max+1; break;
+			}
+		}
+		if (end < 0) {
+			switch (end) {
+			case INDEX_ANY: end = randomIndex; break;
+			case INDEX_MIDDLE: end = middleIndex; break;
+			case INDEX_PREVIOUS: end = current-1; if (end < min) end = max; break;
+			case INDEX_CURRENT: end = current; break;
+			case INDEX_NEXT: end = current+1; if (end > max) end = min; break;
+			case INDEX_RECENT: end = recent; break;
+			default: end += max+1; break;
+			}
+		}
+		return new int[]{start,end};
+	}
+	
+	public static int[] index(int min, int max, int start, int end) {
+		int randomIndex = ((max-min+1) > 0) ? (min + indexRand.nextInt(max-min+1)) : min;
+		int middleIndex = min + (max-min+1)/2;
+		if (start < 0) {
+			switch (start) {
+			case INDEX_ANY: start = randomIndex; break;
+			case INDEX_MIDDLE: start = middleIndex; break;
+			default: start += max+1; break;
+			}
+		}
+		if (end < 0) {
+			switch (end) {
+			case INDEX_ANY: end = randomIndex; break;
+			case INDEX_MIDDLE: end = middleIndex; break;
+			default: end += max+1; break;
+			}
+		}
+		return new int[]{start,end};
+	}
+	
+	public static Random getRandom() {
+		return indexRand;
+	}
+	
+	/* * * * * * * * * * * *
+	 * REGULAR EXPRESSIONS *
+	 * * * * * * * * * * * */
+	
 	private static final String REGEX_MATCH_CHARS = "\\.()[]{}*+?^$|";
 	private static final String REGEX_REPLACE_CHARS = "\\$";
 	
@@ -310,6 +322,10 @@ public class XIONUtil {
 		}
 		return s.toString();
 	}
+	
+	/* * * * * * * *
+	 * BINARY DATA *
+	 * * * * * * * */
 	
 	public static byte[] binarySubstring(byte[] b, int start) {
 		try {
@@ -392,6 +408,38 @@ public class XIONUtil {
 		return theString.toString();
 	}
 	
+	/* * * * * * * * * * * * * * * *
+	 * PLATFORM-DEPENDENT BEHAVIOR *
+	 * * * * * * * * * * * * * * * */
+	
+	private static String osString = null;
+	
+	public static boolean isMacOS() {
+		if (osString == null) {
+			try {
+				osString = System.getProperty("os.name").toUpperCase();
+			} catch (Exception e) {
+				osString = "";
+			}
+		}
+		return osString.contains("MAC OS");
+	}
+	
+	public static boolean isWindows() {
+		if (osString == null) {
+			try {
+				osString = System.getProperty("os.name").toUpperCase();
+			} catch (Exception e) {
+				osString = "";
+			}
+		}
+		return osString.contains("WINDOWS");
+	}
+	
+	/* * * * * * *
+	 * USER NAME *
+	 * * * * * * */
+	
 	private static String unString = null;
 	private static String ufnString = null;
 	
@@ -450,29 +498,9 @@ public class XIONUtil {
 		}
 	}
 	
-	private static String osString = null;
-	
-	public static boolean isMacOS() {
-		if (osString == null) {
-			try {
-				osString = System.getProperty("os.name").toUpperCase();
-			} catch (Exception e) {
-				osString = "";
-			}
-		}
-		return osString.contains("MAC OS");
-	}
-	
-	public static boolean isWindows() {
-		if (osString == null) {
-			try {
-				osString = System.getProperty("os.name").toUpperCase();
-			} catch (Exception e) {
-				osString = "";
-			}
-		}
-		return osString.contains("WINDOWS");
-	}
+	/* * * * * * * *
+	 * SEARCHPATHS *
+	 * * * * * * * */
 	
 	public static String getApplicationPaths(XNContext ctx) {
 		String v = ctx.getApplicationPaths();
@@ -695,6 +723,10 @@ public class XIONUtil {
 		}
 		return null;
 	}
+	
+	/* * * * * * * * * * * * * * * *
+	 * INTER-PROCESS COMMUNICATION *
+	 * * * * * * * * * * * * * * * */
 	
 	public static void launch(File f) throws IOException {
 		if (osString == null) {
