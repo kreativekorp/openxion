@@ -1,0 +1,347 @@
+hello
+Hello, my name is Rebecca. But you can call me Beckie.
+red
+green
+blue
+cyan
+magenta
+yellow
+
+red
+
+green
+
+blue
+
+cyan
+
+magenta
+
+
+
+yellow
+
+
+George Lopez,Constance Marie,Luis Armand Garcia,Masiela Lusha,Belita Moreno
+George Lopez,Constance Marie,Luis Armand Garcia,Masiela Lusha,Belita Moreno,
+---INTO
+hellxo
+helxlo
+hellxo
+helxlo
+Hello, my name is Rebecca. But you can call me xBeckie.
+Hello, my name is Rebecca. But you can call xme Beckie.
+Hello, my name is Rebecca. But you can call me xBeckie.
+Hello, my name is Rebecca. But you can call xme Beckie.
+Hello, my name is Rebecca. xBut you can call me Beckie.
+Hello, my name is Rebecca. xBut you can call me Beckie.
+red
+green
+blue
+cyan
+magenta
+xyellow
+red
+green
+blue
+cyan
+xmagenta
+yellow
+red
+green
+blue
+cyan
+magenta
+xyellow
+red
+green
+blue
+cyan
+xmagenta
+yellow
+
+red
+
+green
+
+blue
+
+cyan
+
+magenta
+
+
+
+xyellow
+
+
+
+red
+
+green
+
+blue
+
+cyan
+
+xmagenta
+
+
+
+yellow
+
+
+
+red
+
+green
+
+blue
+
+cyan
+
+magenta
+
+
+
+xyellow
+
+
+
+red
+
+green
+
+blue
+
+cyan
+
+xmagenta
+
+
+
+yellow
+
+
+George Lopez,Constance Marie,Luis Armand Garcia,Masiela Lusha,xBelita Moreno
+George Lopez,Constance Marie,Luis Armand Garcia,xMasiela Lusha,Belita Moreno
+George Lopez,Constance Marie,Luis Armand Garcia,Masiela Lusha,xBelita Moreno
+George Lopez,Constance Marie,Luis Armand Garcia,xMasiela Lusha,Belita Moreno
+George Lopez,Constance Marie,Luis Armand Garcia,Masiela Lusha,xBelita Moreno,
+George Lopez,Constance Marie,Luis Armand Garcia,xMasiela Lusha,Belita Moreno,
+George Lopez,Constance Marie,Luis Armand Garcia,Masiela Lusha,xBelita Moreno,
+George Lopez,Constance Marie,Luis Armand Garcia,xMasiela Lusha,Belita Moreno,
+---BEFORE
+hellxo
+helxlo
+hellxo
+helxlo
+Hello, my name is Rebecca. But you can call me xBeckie.
+Hello, my name is Rebecca. But you can call xme Beckie.
+Hello, my name is Rebecca. But you can call me xBeckie.
+Hello, my name is Rebecca. But you can call xme Beckie.
+Hello, my name is Rebecca. xBut you can call me Beckie.
+Hello, my name is Rebecca. xBut you can call me Beckie.
+red
+green
+blue
+cyan
+magenta
+xyellow
+red
+green
+blue
+cyan
+xmagenta
+yellow
+red
+green
+blue
+cyan
+magenta
+xyellow
+red
+green
+blue
+cyan
+xmagenta
+yellow
+
+red
+
+green
+
+blue
+
+cyan
+
+magenta
+
+
+
+xyellow
+
+
+
+red
+
+green
+
+blue
+
+cyan
+
+xmagenta
+
+
+
+yellow
+
+
+
+red
+
+green
+
+blue
+
+cyan
+
+magenta
+
+
+
+xyellow
+
+
+
+red
+
+green
+
+blue
+
+cyan
+
+xmagenta
+
+
+
+yellow
+
+
+George Lopez,Constance Marie,Luis Armand Garcia,Masiela Lusha,xBelita Moreno
+George Lopez,Constance Marie,Luis Armand Garcia,xMasiela Lusha,Belita Moreno
+George Lopez,Constance Marie,Luis Armand Garcia,Masiela Lusha,xBelita Moreno
+George Lopez,Constance Marie,Luis Armand Garcia,xMasiela Lusha,Belita Moreno
+George Lopez,Constance Marie,Luis Armand Garcia,Masiela Lusha,xBelita Moreno,
+George Lopez,Constance Marie,Luis Armand Garcia,xMasiela Lusha,Belita Moreno,
+George Lopez,Constance Marie,Luis Armand Garcia,Masiela Lusha,xBelita Moreno,
+George Lopez,Constance Marie,Luis Armand Garcia,xMasiela Lusha,Belita Moreno,
+---AFTER
+hellxo
+helxlo
+hellxo
+helxlo
+Hello, my name is Rebecca. But you can call me xBeckie.
+Hello, my name is Rebecca. But you can call xme Beckie.
+Hello, my name is Rebecca. But you can call me xBeckie.
+Hello, my name is Rebecca. But you can call xme Beckie.
+Hello, my name is Rebecca. xBut you can call me Beckie.
+Hello, my name is Rebecca. xBut you can call me Beckie.
+red
+green
+blue
+cyan
+magenta
+xyellow
+red
+green
+blue
+cyan
+xmagenta
+yellow
+red
+green
+blue
+cyan
+magenta
+xyellow
+red
+green
+blue
+cyan
+xmagenta
+yellow
+
+red
+
+green
+
+blue
+
+cyan
+
+magenta
+
+
+
+xyellow
+
+
+
+red
+
+green
+
+blue
+
+cyan
+
+xmagenta
+
+
+
+yellow
+
+
+
+red
+
+green
+
+blue
+
+cyan
+
+magenta
+
+
+
+xyellow
+
+
+
+red
+
+green
+
+blue
+
+cyan
+
+xmagenta
+
+
+
+yellow
+
+
+George Lopez,Constance Marie,Luis Armand Garcia,Masiela Lusha,xBelita Moreno
+George Lopez,Constance Marie,Luis Armand Garcia,xMasiela Lusha,Belita Moreno
+George Lopez,Constance Marie,Luis Armand Garcia,Masiela Lusha,xBelita Moreno
+George Lopez,Constance Marie,Luis Armand Garcia,xMasiela Lusha,Belita Moreno
+George Lopez,Constance Marie,Luis Armand Garcia,Masiela Lusha,xBelita Moreno,
+George Lopez,Constance Marie,Luis Armand Garcia,xMasiela Lusha,Belita Moreno,
+George Lopez,Constance Marie,Luis Armand Garcia,Masiela Lusha,xBelita Moreno,
+George Lopez,Constance Marie,Luis Armand Garcia,xMasiela Lusha,Belita Moreno,

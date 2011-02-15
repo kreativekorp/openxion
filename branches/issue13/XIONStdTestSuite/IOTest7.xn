@@ -1,0 +1,111 @@
+open file "iotest7.tmp"
+write "ABCDEFGHIJKLMNOPQRSTUVWXYZ" to file "iotest7.tmp"
+close file "iotest7.tmp"
+open file "iotest7.tmp"
+write "Hello" to file "iotest7.tmp" at 0
+truncate file "iotest7.tmp"
+close file "iotest7.tmp"
+open file "iotest7.tmp"
+read from file "iotest7.tmp"
+put it
+close file "iotest7.tmp"
+delete file "iotest7.tmp"
+
+open file "iotest7.tmp"
+write "ABCDEFGHIJKLMNOPQRSTUVWXYZ" to file "iotest7.tmp"
+close file "iotest7.tmp"
+open file "iotest7.tmp"
+write "Hello" to file "iotest7.tmp" at 1
+truncate file "iotest7.tmp"
+close file "iotest7.tmp"
+open file "iotest7.tmp"
+read from file "iotest7.tmp"
+put it
+close file "iotest7.tmp"
+delete file "iotest7.tmp"
+
+open file "iotest7.tmp"
+write "ABCDEFGHIJKLMNOPQRSTUVWXYZ" to file "iotest7.tmp"
+close file "iotest7.tmp"
+open file "iotest7.tmp"
+write "Hello" to file "iotest7.tmp" at -0
+truncate file "iotest7.tmp"
+close file "iotest7.tmp"
+open file "iotest7.tmp"
+read from file "iotest7.tmp"
+put it
+close file "iotest7.tmp"
+delete file "iotest7.tmp"
+
+open file "iotest7.tmp"
+write "ABCDEFGHIJKLMNOPQRSTUVWXYZ" to file "iotest7.tmp"
+close file "iotest7.tmp"
+open file "iotest7.tmp"
+write "Hello" to file "iotest7.tmp" at -1
+truncate file "iotest7.tmp"
+close file "iotest7.tmp"
+open file "iotest7.tmp"
+read from file "iotest7.tmp"
+put it
+close file "iotest7.tmp"
+delete file "iotest7.tmp"
+
+open file "iotest7.tmp"
+write "ABCDEFGHIJKLMNOPQRSTUVWXYZ" to file "iotest7.tmp"
+close file "iotest7.tmp"
+open file "iotest7.tmp"
+truncate file "iotest7.tmp" at 0
+close file "iotest7.tmp"
+open file "iotest7.tmp"
+read from file "iotest7.tmp"
+put it
+close file "iotest7.tmp"
+delete file "iotest7.tmp"
+
+open file "iotest7.tmp"
+write "ABCDEFGHIJKLMNOPQRSTUVWXYZ" to file "iotest7.tmp"
+close file "iotest7.tmp"
+open file "iotest7.tmp"
+truncate file "iotest7.tmp" at 1
+close file "iotest7.tmp"
+open file "iotest7.tmp"
+read from file "iotest7.tmp"
+put it
+close file "iotest7.tmp"
+delete file "iotest7.tmp"
+
+open file "iotest7.tmp"
+write "ABCDEFGHIJKLMNOPQRSTUVWXYZ" to file "iotest7.tmp"
+close file "iotest7.tmp"
+open file "iotest7.tmp"
+truncate file "iotest7.tmp" at -0
+close file "iotest7.tmp"
+open file "iotest7.tmp"
+read from file "iotest7.tmp"
+put it
+close file "iotest7.tmp"
+delete file "iotest7.tmp"
+
+open file "iotest7.tmp"
+write "ABCDEFGHIJKLMNOPQRSTUVWXYZ" to file "iotest7.tmp"
+close file "iotest7.tmp"
+open file "iotest7.tmp"
+truncate file "iotest7.tmp" at -1
+close file "iotest7.tmp"
+open file "iotest7.tmp"
+read from file "iotest7.tmp"
+put it
+close file "iotest7.tmp"
+delete file "iotest7.tmp"
+
+open file "iotest7.tmp"
+write "ABCDEFGHIJKLMNOPQRSTUVWXYZ" to file "iotest7.tmp"
+close file "iotest7.tmp"
+open file "iotest7.tmp"
+truncate file "iotest7.tmp" at 18
+close file "iotest7.tmp"
+open file "iotest7.tmp"
+read from file "iotest7.tmp"
+put it
+close file "iotest7.tmp"
+delete file "iotest7.tmp"

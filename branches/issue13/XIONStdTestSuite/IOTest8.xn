@@ -1,0 +1,111 @@
+open file "iotest8.tmp" as "binary"
+write "0123456789ABCDEF" to file "iotest8.tmp"
+close file "iotest8.tmp"
+open file "iotest8.tmp" as "binary"
+write "FFFF" to file "iotest8.tmp" at 0
+truncate file "iotest8.tmp"
+close file "iotest8.tmp"
+open file "iotest8.tmp" as "binary"
+read from file "iotest8.tmp"
+put it
+close file "iotest8.tmp"
+delete file "iotest8.tmp"
+
+open file "iotest8.tmp" as "binary"
+write "0123456789ABCDEF" to file "iotest8.tmp"
+close file "iotest8.tmp"
+open file "iotest8.tmp" as "binary"
+write "FFFF" to file "iotest8.tmp" at 1
+truncate file "iotest8.tmp"
+close file "iotest8.tmp"
+open file "iotest8.tmp" as "binary"
+read from file "iotest8.tmp"
+put it
+close file "iotest8.tmp"
+delete file "iotest8.tmp"
+
+open file "iotest8.tmp" as "binary"
+write "0123456789ABCDEF" to file "iotest8.tmp"
+close file "iotest8.tmp"
+open file "iotest8.tmp" as "binary"
+write "FFFF" to file "iotest8.tmp" at -0
+truncate file "iotest8.tmp"
+close file "iotest8.tmp"
+open file "iotest8.tmp" as "binary"
+read from file "iotest8.tmp"
+put it
+close file "iotest8.tmp"
+delete file "iotest8.tmp"
+
+open file "iotest8.tmp" as "binary"
+write "0123456789ABCDEF" to file "iotest8.tmp"
+close file "iotest8.tmp"
+open file "iotest8.tmp" as "binary"
+write "FFFF" to file "iotest8.tmp" at -1
+truncate file "iotest8.tmp"
+close file "iotest8.tmp"
+open file "iotest8.tmp" as "binary"
+read from file "iotest8.tmp"
+put it
+close file "iotest8.tmp"
+delete file "iotest8.tmp"
+
+open file "iotest8.tmp" as "binary"
+write "0123456789ABCDEF" to file "iotest8.tmp"
+close file "iotest8.tmp"
+open file "iotest8.tmp" as "binary"
+truncate file "iotest8.tmp" at 0
+close file "iotest8.tmp"
+open file "iotest8.tmp" as "binary"
+read from file "iotest8.tmp"
+put it
+close file "iotest8.tmp"
+delete file "iotest8.tmp"
+
+open file "iotest8.tmp" as "binary"
+write "0123456789ABCDEF" to file "iotest8.tmp"
+close file "iotest8.tmp"
+open file "iotest8.tmp" as "binary"
+truncate file "iotest8.tmp" at 1
+close file "iotest8.tmp"
+open file "iotest8.tmp" as "binary"
+read from file "iotest8.tmp"
+put it
+close file "iotest8.tmp"
+delete file "iotest8.tmp"
+
+open file "iotest8.tmp" as "binary"
+write "0123456789ABCDEF" to file "iotest8.tmp"
+close file "iotest8.tmp"
+open file "iotest8.tmp" as "binary"
+truncate file "iotest8.tmp" at -0
+close file "iotest8.tmp"
+open file "iotest8.tmp" as "binary"
+read from file "iotest8.tmp"
+put it
+close file "iotest8.tmp"
+delete file "iotest8.tmp"
+
+open file "iotest8.tmp" as "binary"
+write "0123456789ABCDEF" to file "iotest8.tmp"
+close file "iotest8.tmp"
+open file "iotest8.tmp" as "binary"
+truncate file "iotest8.tmp" at -1
+close file "iotest8.tmp"
+open file "iotest8.tmp" as "binary"
+read from file "iotest8.tmp"
+put it
+close file "iotest8.tmp"
+delete file "iotest8.tmp"
+
+open file "iotest8.tmp" as "binary"
+write "0123456789ABCDEF" to file "iotest8.tmp"
+close file "iotest8.tmp"
+open file "iotest8.tmp" as "binary"
+truncate file "iotest8.tmp" at 5
+close file "iotest8.tmp"
+open file "iotest8.tmp" as "binary"
+read from file "iotest8.tmp"
+put it
+close file "iotest8.tmp"
+delete file "iotest8.tmp"

@@ -1,0 +1,4 @@
+put char 4 to 2 of "Hello"
+put "HelloWorld" into x
+put "x" into char 8 to 1 of x
+put x

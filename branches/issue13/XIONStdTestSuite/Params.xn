@@ -1,0 +1,20 @@
+on printParameters
+	put paramCount()
+	put param(0)
+	put param(1)
+	put param(2)
+	put param(3)
+	put params()
+end printParameters
+
+function printParameters2
+	put paramCount()
+	put param(0)
+	put param(1)
+	put param(2)
+	put param(3)
+	put params()
+end printParameters2
+
+printParameters five, six, seven
+get printParameters2(nine, twelve, fifteen)

@@ -1,0 +1,107 @@
+put the numberformat into oldnumfmt
+local thing1 as number is 2.21012
+local thing2 as number is pi
+set the numberformat to "0.######"
+put the numberFormat
+put thing1
+put thing2
+put 9
+put 12
+put 1.23'12
+put 1.23''12
+set the numberformat to "00.##"
+put the numberFormat
+put thing1
+put thing2
+put 9
+put 12
+put 1.23'12
+put 1.23''12
+set the numberformat to "0"
+put the numberFormat
+put thing1
+put thing2
+put 9
+put 12
+put 1.23'12
+put 1.23''12
+set the numberformat to "0.0"
+put the numberFormat
+put thing1
+put thing2
+put 9
+put 12
+put 1.23'12
+put 1.23''12
+set the numberformat to "0.####E0"
+put the numberFormat
+put thing1
+put thing2
+put 9
+put 12
+put 1.23'12
+put 1.23''12
+set the numberformat to "0.###E0"
+put the numberFormat
+put thing1
+put thing2
+put 9
+put 12
+put 1.23'12
+put 1.23''12
+set the numberformat to "0.0E00"
+put the numberFormat
+put thing1
+put thing2
+put 9
+put 12
+put 1.23'12
+put 1.23''12
+set the numberformat to "0.####'0"
+put the numberFormat
+put thing1
+put thing2
+put 9
+put 12
+put 1.23'12
+put 1.23''12
+set the numberformat to "0.###'0"
+put the numberFormat
+put thing1
+put thing2
+put 9
+put 12
+put 1.23'12
+put 1.23''12
+set the numberformat to "0.0'00"
+put the numberFormat
+put thing1
+put thing2
+put 9
+put 12
+put 1.23'12
+put 1.23''12
+set the numberformat to "0.############E0<-8>8"
+put the NumberFORMAT
+put zero
+put 1.00''6
+put 9.99''6
+put 1.00''7
+put 9.99''7
+put 1.00''8
+put 9.99''8
+put 1.00''9
+put 9.99''9
+put 1.00''10
+put 9.99''10
+put 1.00'6
+put 9.99'6
+put 1.00'7
+put 9.99'7
+put 1.00'8
+put 9.99'8
+put 1.00'9
+put 9.99'9
+put 1.00'10
+put 9.99'10
+set the numberformat to oldnumfmt
