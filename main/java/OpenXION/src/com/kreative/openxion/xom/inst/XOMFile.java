@@ -70,7 +70,7 @@ public class XOMFile extends XOMVariant {
 		return theFile;
 	}
 	
-	public boolean hasParent(XNContext ctx) {
+	public boolean canGetParent(XNContext ctx) {
 		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetParent") && !(theFile == null || theFile.getParentFile() == null);
 	}
 	public XOMVariant getParent(XNContext ctx) {

@@ -51,7 +51,7 @@ public class XOMBinaryNumericChunk extends XOMVariant {
 		this.index = index;
 	}
 	
-	public boolean hasParent(XNContext ctx) {
+	public boolean canGetParent(XNContext ctx) {
 		return true;
 	}
 	

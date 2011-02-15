@@ -59,8 +59,8 @@ public class XOMVariable extends XOMVariant {
 		return getContents(ctx);
 	}
 	
-	public final boolean hasParent(XNContext ctx) {
-		return getContents(ctx).hasParent(ctx);
+	public final boolean canGetParent(XNContext ctx) {
+		return getContents(ctx).canGetParent(ctx);
 	}
 	public final XOMVariant getParent(XNContext ctx) {
 		return getContents(ctx).getParent(ctx);

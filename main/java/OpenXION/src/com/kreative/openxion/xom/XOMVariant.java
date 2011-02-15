@@ -45,7 +45,7 @@ public abstract class XOMVariant implements Serializable, Cloneable {
 		return this;
 	}
 	
-	public boolean hasParent(XNContext ctx) { return false; }
+	public boolean canGetParent(XNContext ctx) { return false; }
 	public XOMVariant getParent(XNContext ctx) { throw new XNScriptError("Can't understand this"); }
 
 	public boolean canDelete(XNContext ctx) { return false; }

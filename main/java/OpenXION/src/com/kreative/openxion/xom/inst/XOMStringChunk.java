@@ -52,7 +52,7 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 		this.endIndex = endIndex;
 	}
 	
-	public boolean hasParent(XNContext ctx) {
+	public boolean canGetParent(XNContext ctx) {
 		return true;
 	}
 	
