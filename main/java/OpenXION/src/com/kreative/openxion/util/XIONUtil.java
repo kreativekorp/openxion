@@ -32,14 +32,15 @@ import java.text.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.XNLexer;
 import com.kreative.openxion.XNParser;
 import com.kreative.openxion.XNInterpreter;
+import com.kreative.openxion.XNToken;
 import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.ast.XNExpression;
 import com.kreative.openxion.ast.XNVariantDescriptor;
+import com.kreative.openxion.xom.XOMVariable;
 import com.kreative.openxion.xom.XOMVariant;
 
 /**
@@ -78,6 +79,21 @@ public class XIONUtil {
 				} else {
 					return null;
 				}
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	public static XOMVariable parseVariableName(XNContext ctx, String s) {
+		try {
+			XNLexer lexer = new XNLexer(s, new StringReader(s));
+			XNToken tk1 = lexer.getToken();
+			XNToken tk2 = lexer.getToken();
+			if (tk1.kind == XNToken.ID && tk2.isEOF()) {
+				return new XOMVariable(tk1.image);
 			} else {
 				return null;
 			}
