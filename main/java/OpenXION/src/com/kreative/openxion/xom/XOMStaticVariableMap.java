@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2009-2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2011 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -21,29 +21,55 @@
  * other provisions required by the LGPL License. If you do not delete
  * the provisions above, a recipient may use your version of this file
  * under either the MPL or the LGPL License.
- * @since OpenXION 0.9
+ * @since OpenXION 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  */
 
-package com.kreative.openxion;
+package com.kreative.openxion.xom;
 
-import java.util.List;
-import com.kreative.openxion.ast.XNExpression;
-import com.kreative.openxion.ast.XNModifier;
-import com.kreative.openxion.xom.XOMStaticVariableMap;
-import com.kreative.openxion.xom.XOMVariableMap;
-import com.kreative.openxion.xom.XOMVariant;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
- * An XNResponder is anything that can execute XION commands
- * or evaluate XION functions.
- * @since OpenXION 0.9
+ * XOMStaticVariableMap keeps a map of variable maps for static variables.
+ * @since OpenXION 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  */
-public interface XNResponder {
-	public XNResponder nextResponder();
-	public XOMVariableMap sharedVariables();
-	public XOMStaticVariableMap staticVariables();
-	public XNHandlerExit executeCommand(XNContext ctx, String commandName, List<XNExpression> parameters);
-	public XNHandlerExit evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter);
+public class XOMStaticVariableMap {
+	private static final class CIString {
+		private String s;
+		public CIString(String s) {
+			this.s = s;
+		}
+		public String toString() {
+			return s;
+		}
+		public int hashCode() {
+			return s.toLowerCase().hashCode();
+		}
+		public boolean equals(Object o) {
+			return s.equalsIgnoreCase(o.toString());
+		}
+	}
+	
+	private Map<CIString, XOMVariableMap> maps;
+	
+	public XOMStaticVariableMap() {
+		maps = new LinkedHashMap<CIString, XOMVariableMap>();
+	}
+	
+	public XOMVariableMap forHandler(String handlerName) {
+		CIString ciname = new CIString(handlerName);
+		if (maps.containsKey(ciname)) {
+			return maps.get(ciname);
+		} else {
+			XOMVariableMap newmap = new XOMVariableMap();
+			maps.put(ciname, newmap);
+			return newmap;
+		}
+	}
+	
+	public void merge(XOMStaticVariableMap vm) {
+		maps.putAll(vm.maps);
+	}
 }

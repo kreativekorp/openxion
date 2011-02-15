@@ -489,7 +489,7 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 			if (stat instanceof XNMessageHandler && ((XNMessageHandler)stat).name.equalsIgnoreCase(commandName)) {
 				List<XOMVariant> paramValues = new Vector<XOMVariant>();
 				for (XNExpression param : parameters) {
-					paramValues.add(new XNInterpreter(ctx).evaluateExpression(param).unwrap());
+					paramValues.add(new XNInterpreter(ctx).evaluateExpression(param).unwrap(ctx));
 				}
 				return executeCommandHandler(new XNInterpreter(ctx), ctx, instance, (XNMessageHandler)stat, paramValues);
 			}
@@ -509,7 +509,7 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 	
 	public String toTextString(XNContext ctx, XOMUserObject instance) {
 		if (canGetContents(ctx, instance)) {
-			return getContents(ctx, instance).unwrap().toTextString(ctx);
+			return getContents(ctx, instance).unwrap(ctx).toTextString(ctx);
 		} else {
 			return toDescriptionString(instance);
 		}
@@ -622,8 +622,8 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 			for (Map.Entry<String, XOMVariant> e : parameters.entrySet()) {
 				String paramName = e.getKey();
 				f.setVariableScope(paramName, XNVariableScope.LOCAL);
-				XOMVariant paramValue = e.getValue().unwrap();
-				f.createLocalVariable(ctx, paramName, XOMVariantType.instance, paramValue);
+				XOMVariant paramValue = e.getValue().unwrap(ctx);
+				f.localVariables().declareVariable(ctx, paramName, XOMVariantType.instance, paramValue);
 			}
 		}
 		ctx.pushStackFrame(f);
@@ -667,8 +667,8 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 			for (Map.Entry<String, XOMVariant> e : parameters.entrySet()) {
 				String paramName = e.getKey();
 				f.setVariableScope(paramName, XNVariableScope.LOCAL);
-				XOMVariant paramValue = e.getValue().unwrap();
-				f.createLocalVariable(ctx, paramName, XOMVariantType.instance, paramValue);
+				XOMVariant paramValue = e.getValue().unwrap(ctx);
+				f.localVariables().declareVariable(ctx, paramName, XOMVariantType.instance, paramValue);
 			}
 		}
 		ctx.pushStackFrame(f);
@@ -724,8 +724,8 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 							parameters.get(i) :
 								(paramValueExpr == null) ?
 										XOMEmpty.EMPTY :
-											interp.evaluateExpression(paramValueExpr).unwrap();
-				f.createLocalVariable(ctx, paramName, paramDatatype, paramValue);
+											interp.evaluateExpression(paramValueExpr).unwrap(ctx);
+				f.localVariables().declareVariable(ctx, paramName, paramDatatype, paramValue);
 			}
 		}
 		ctx.pushStackFrame(f);
@@ -780,8 +780,8 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 							parameters.get(i) :
 								(paramValueExpr == null) ?
 										XOMEmpty.EMPTY :
-											interp.evaluateExpression(paramValueExpr).unwrap();
-				f.createLocalVariable(ctx, paramName, paramDatatype, paramValue);
+											interp.evaluateExpression(paramValueExpr).unwrap(ctx);
+				f.localVariables().declareVariable(ctx, paramName, paramDatatype, paramValue);
 			}
 		}
 		ctx.pushStackFrame(f);

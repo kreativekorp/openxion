@@ -41,8 +41,9 @@ import com.kreative.openxion.math.FastMath;
 import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.util.XNNumberFormat;
 import com.kreative.openxion.xom.XOMDataType;
+import com.kreative.openxion.xom.XOMStaticVariableMap;
+import com.kreative.openxion.xom.XOMVariableMap;
 import com.kreative.openxion.xom.XOMVariant;
-import com.kreative.openxion.xom.XOMVariable;
 import com.kreative.openxion.xom.inst.XOMEmpty;
 
 /**
@@ -238,7 +239,8 @@ public class XNContext implements Serializable, Cloneable {
 	private Map<String, XOMVariant> userConstants;
 	private Map<String, Integer> userOrdinals;
 	private Map<String, XOMDataType<? extends XOMVariant>> userDataTypes;
-	private Map<String, XOMVariable> globalVariables;
+	private XOMVariableMap globalVariables;
+	private XOMStaticVariableMap staticVariables;
 	private Map<String, XNMessageHandler> globalUserCommands;
 	private Map<String, XNFunctionHandler> globalUserFunctions;
 	private Set<String> includedScripts;
@@ -301,7 +303,8 @@ public class XNContext implements Serializable, Cloneable {
 		userConstants = new HashMap<String, XOMVariant>();
 		userOrdinals = new HashMap<String, Integer>();
 		userDataTypes = new HashMap<String, XOMDataType<? extends XOMVariant>>();
-		globalVariables = new HashMap<String, XOMVariable>();
+		globalVariables = new XOMVariableMap();
+		staticVariables = new XOMStaticVariableMap();
 		globalUserCommands = new HashMap<String, XNMessageHandler>();
 		globalUserFunctions = new HashMap<String, XNFunctionHandler>();
 		includedScripts = new HashSet<String>();
@@ -312,7 +315,8 @@ public class XNContext implements Serializable, Cloneable {
 		userConstants.putAll(parent.userConstants);
 		userOrdinals.putAll(parent.userOrdinals);
 		userDataTypes.putAll(parent.userDataTypes);
-		globalVariables.putAll(parent.globalVariables);
+		globalVariables.merge(parent.globalVariables);
+		staticVariables.merge(parent.staticVariables);
 		globalUserCommands.putAll(parent.globalUserCommands);
 		globalUserFunctions.putAll(parent.globalUserFunctions);
 		includedScripts.addAll(parent.includedScripts);
@@ -531,32 +535,12 @@ public class XNContext implements Serializable, Cloneable {
 		userDataTypes.put(XIONUtil.normalizeVarName(name), type);
 	}
 	
-	public XOMVariable createGlobalVariable(String name, XOMDataType<? extends XOMVariant> type, XOMVariant initialvalue) {
-		name = XIONUtil.normalizeVarName(name);
-		if (!globalVariables.containsKey(name)) {
-			XOMVariable v = new XOMVariable(this, type, initialvalue);
-			globalVariables.put(name, v);
-			return v;
-		} else {
-			return globalVariables.get(name);
-		}
+	public XOMVariableMap globalVariables() {
+		return globalVariables;
 	}
 	
-	public XOMVariable getGlobalVariable(String name) {
-		name = XIONUtil.normalizeVarName(name);
-		if (!globalVariables.containsKey(name)) {
-			return null;
-		} else {
-			return globalVariables.get(name);
-		}
-	}
-	
-	public XOMVariable createStaticVariable(String handlerName, String variableName, XOMDataType<? extends XOMVariant> type, XOMVariant initialvalue) {
-		return createGlobalVariable(handlerName + " " + variableName, type, initialvalue);
-	}
-	
-	public XOMVariable getStaticVariable(String handlerName, String variableName) {
-		return getGlobalVariable(handlerName + " " + variableName);
+	public XOMStaticVariableMap staticVariables() {
+		return staticVariables;
 	}
 	
 	public void defineGlobalUserCommand(String name, XNMessageHandler handler) {
@@ -755,7 +739,7 @@ public class XNContext implements Serializable, Cloneable {
 		}
 	}
 	
-	public XOMVariable createVariable(String name, XOMDataType<? extends XOMVariant> type, XOMVariant initialValue) {
+	public XOMVariableMap getVariableMap(String name) {
 		XNVariableScope scope = XNVariableScope.GLOBAL;
 		String handlerName = "";
 		if (getCurrentStackFrame() != null) {
@@ -766,78 +750,25 @@ public class XNContext implements Serializable, Cloneable {
 		}
 		switch (scope) {
 		case GLOBAL:
-			return createGlobalVariable(name, type, initialValue);
+			return globalVariables();
 		case SHARED:
-			if (getCurrentResponder() != null) {
-				return getCurrentResponder().createSharedVariable(this, name, type, initialValue);
-			} else {
-				return createGlobalVariable(name, type, initialValue);
-			}
+			if (getCurrentResponder() != null)
+				return getCurrentResponder().sharedVariables();
+			else
+				return globalVariables();
 		case STATIC:
-			if (getCurrentResponder() != null) {
-				return getCurrentResponder().createStaticVariable(this, handlerName, name, type, initialValue);
-			} else {
-				return createStaticVariable(handlerName, name, type, initialValue);
-			}
+			if (getCurrentResponder() != null)
+				return getCurrentResponder().staticVariables().forHandler(handlerName);
+			else
+				return staticVariables().forHandler(handlerName);
 		case LOCAL:
 		default:
-			if (getCurrentStackFrame() != null) {
-				return getCurrentStackFrame().createLocalVariable(this, name, type, initialValue);
-			} else if (getCurrentResponder() != null) {
-				return getCurrentResponder().createSharedVariable(this, name, type, initialValue);
-			} else {
-				return createGlobalVariable(name, type, initialValue);
-			}
+			if (getCurrentStackFrame() != null)
+				return getCurrentStackFrame().localVariables();
+			else if (getCurrentResponder() != null)
+				return getCurrentResponder().sharedVariables();
+			else
+				return globalVariables();
 		}
-	}
-	
-	public XOMVariable getVariable(String name) {
-		XNVariableScope scope = XNVariableScope.GLOBAL;
-		String handlerName = "";
-		if (getCurrentStackFrame() != null) {
-			scope = getCurrentStackFrame().getVariableScope(name);
-			if (scope == null) scope = XNVariableScope.LOCAL;
-			handlerName = getCurrentStackFrame().getHandlerName();
-			if (handlerName == null) handlerName = "";
-		}
-		switch (scope) {
-		case GLOBAL:
-			return getGlobalVariable(name);
-		case SHARED:
-			if (getCurrentResponder() != null) {
-				return getCurrentResponder().getSharedVariable(this, name);
-			} else {
-				return getGlobalVariable(name);
-			}
-		case STATIC:
-			if (getCurrentResponder() != null) {
-				return getCurrentResponder().getStaticVariable(this, handlerName, name);
-			} else {
-				return getStaticVariable(handlerName, name);
-			}
-		case LOCAL:
-		default:
-			if (getCurrentStackFrame() != null) {
-				return getCurrentStackFrame().getLocalVariable(this, name);
-			} else if (getCurrentResponder() != null) {
-				return getCurrentResponder().getSharedVariable(this, name);
-			} else {
-				return getGlobalVariable(name);
-			}
-		}
-	}
-	
-	public XOMVariant getIt() {
-		XOMVariable dest = getVariable("it");
-		if (dest == null) return XOMEmpty.EMPTY;
-		return dest.unwrap();
-	}
-	
-	public void setIt(XOMDataType<? extends XOMVariant> dt, XOMVariant it) {
-		XOMVariable dest = getVariable("it");
-		if (dest == null) {
-			dest = createVariable("it", dt, it);
-		}
-		dest.putIntoContents(this, it);
 	}
 }

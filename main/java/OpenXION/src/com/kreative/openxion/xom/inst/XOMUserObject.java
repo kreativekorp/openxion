@@ -34,10 +34,9 @@ import com.kreative.openxion.XNHandlerExit;
 import com.kreative.openxion.XNScriptError;
 import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.ast.XNExpression;
-import com.kreative.openxion.util.XIONUtil;
+import com.kreative.openxion.xom.XOMStaticVariableMap;
+import com.kreative.openxion.xom.XOMVariableMap;
 import com.kreative.openxion.xom.XOMVariant;
-import com.kreative.openxion.xom.XOMDataType;
-import com.kreative.openxion.xom.XOMVariable;
 import com.kreative.openxion.xom.type.XOMUserObjectType;
 
 public class XOMUserObject extends XOMVariant implements XNResponder {
@@ -49,30 +48,34 @@ public class XOMUserObject extends XOMVariant implements XNResponder {
 	 * You may assume these are either both null, or both defined
 	 */
 	private XOMUserObjectType type;
-	private Map<String, XOMVariable> sharedVariables;
+	private XOMVariableMap sharedVariables;
+	private XOMStaticVariableMap staticVariables;
 	private int id;
 	
 	private XOMUserObject() {
 		this.type = null;
 		this.sharedVariables = null;
+		this.staticVariables = null;
 		this.id = 0;
 	}
 	
-	private XOMUserObject(XOMUserObjectType type, Map<String, XOMVariable> vars, int id) {
+	private XOMUserObject(XOMUserObjectType type, XOMVariableMap shvars, XOMStaticVariableMap statvars, int id) {
 		this.type = type;
-		this.sharedVariables = vars;
+		this.sharedVariables = shvars;
+		this.staticVariables = statvars;
 		this.id = id;
 	}
 	
 	public XOMUserObject(XOMUserObjectType type, int id) {
 		this.type = (type == null) ? null : type;
-		this.sharedVariables = (type == null) ? null : new HashMap<String, XOMVariable>();
+		this.sharedVariables = (type == null) ? null : new XOMVariableMap();
+		this.staticVariables = (type == null) ? null : new XOMStaticVariableMap();
 		this.id = (type == null) ? 0 : id;
 	}
 	
 	public XOMVariant asSuper() {
 		if (type != null && type.superType() != null) {
-			return new XOMUserObject(type.superType(), sharedVariables, id);
+			return new XOMUserObject(type.superType(), sharedVariables, staticVariables, id);
 		} else {
 			return this;
 		}
@@ -90,34 +93,14 @@ public class XOMUserObject extends XOMVariant implements XNResponder {
 		}
 	}
 	
-	public XOMVariable createSharedVariable(XNContext ctx, String name, XOMDataType<? extends XOMVariant> type, XOMVariant initialvalue) {
+	public XOMVariableMap sharedVariables() {
 		if (sharedVariables == null) throw new XNScriptError("Can't access a null object");
-		name = XIONUtil.normalizeVarName(name);
-		if (!sharedVariables.containsKey(name)) {
-			XOMVariable v = new XOMVariable(ctx, type, initialvalue);
-			sharedVariables.put(name, v);
-			return v;
-		} else {
-			return sharedVariables.get(name);
-		}
+		return sharedVariables;
 	}
 	
-	public XOMVariable getSharedVariable(XNContext ctx, String name) {
-		if (sharedVariables == null) throw new XNScriptError("Can't access a null object");
-		name = XIONUtil.normalizeVarName(name);
-		if (!sharedVariables.containsKey(name)) {
-			return null;
-		} else {
-			return sharedVariables.get(name);
-		}
-	}
-	
-	public XOMVariable createStaticVariable(XNContext ctx, String handlerName, String variableName, XOMDataType<? extends XOMVariant> type, XOMVariant initialvalue) {
-		return createSharedVariable(ctx, handlerName + " " + variableName, type, initialvalue);
-	}
-	
-	public XOMVariable getStaticVariable(XNContext ctx, String handlerName, String variableName) {
-		return getSharedVariable(ctx, handlerName + " " + variableName);
+	public XOMStaticVariableMap staticVariables() {
+		if (staticVariables == null) throw new XNScriptError("Can't access a null object");
+		return staticVariables;
 	}
 
 	public boolean canDelete(XNContext ctx) {
@@ -197,7 +180,7 @@ public class XOMUserObject extends XOMVariant implements XNResponder {
 
 	public XNResponder nextResponder() {
 		if (type != null && type.superType() != null) {
-			return new XOMUserObject(type.superType(), sharedVariables, id);
+			return new XOMUserObject(type.superType(), sharedVariables, staticVariables, id);
 		} else {
 			return null;
 		}
@@ -205,7 +188,7 @@ public class XOMUserObject extends XOMVariant implements XNResponder {
 	
 	protected boolean equalsImpl(Object o) {
 		if (o instanceof XOMVariant) {
-			XOMVariant v = ((XOMVariant)o).unwrap();
+			XOMVariant v = ((XOMVariant)o);
 			if (v instanceof XOMUserObject) {
 				XOMUserObject u = (XOMUserObject)v;
 				return this == u;
