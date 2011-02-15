@@ -28,15 +28,12 @@
 package com.kreative.openxion.xom.type;
 
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.xom.XOMDataType;
+import com.kreative.openxion.xom.XOMValueDataType;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMMorphError;
 import com.kreative.openxion.xom.inst.XOMBoolean;
-import com.kreative.openxion.xom.inst.XOMEmpty;
-import com.kreative.openxion.xom.inst.XOMList;
-import com.kreative.openxion.xom.inst.XOMListChunk;
 
-public class XOMBooleanType extends XOMDataType<XOMBoolean> {
+public class XOMBooleanType extends XOMValueDataType<XOMBoolean> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMBooleanType instance = new XOMBooleanType();
@@ -46,62 +43,24 @@ public class XOMBooleanType extends XOMDataType<XOMBoolean> {
 		super("boolean", DESCRIBABILITY_OF_PRIMITIVES, XOMBoolean.class);
 	}
 	
-	/*
-	 * Polymorphism - The data type of an object is determined through these methods.
-	 * Unlike in Java, where an object's type is determined by the class hierarchy,
-	 * objects in XION can be of any mix of data types (hence the term variant for XION objects).
-	 */
-	
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		if (instance instanceof XOMBoolean) {
-			return true;
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMBoolean) {
-			return true;
-		}
-		else {
-			String s = instance.toTextString(ctx);
-			return (s.equalsIgnoreCase("true") || s.equalsIgnoreCase("false"));
-		}
+	protected boolean canMakeInstanceFromImpl(XNContext ctx) {
+		return false;
 	}
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (left instanceof XOMEmpty) {
-			return canMakeInstanceFromImpl(ctx, right);
-		}
-		else if (right instanceof XOMEmpty) {
-			return canMakeInstanceFromImpl(ctx, left);
-		}
-		else {
-			String s = left.toTextString(ctx) + right.toTextString(ctx);
-			return (s.equalsIgnoreCase("true") || s.equalsIgnoreCase("false"));
-		}
+	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
+		return false;
+	}
+	protected boolean canMakeInstanceFromImpl(XNContext ctx, String s) {
+		return (s.equalsIgnoreCase("true") || s.equalsIgnoreCase("false"));
+	}
+	protected XOMBoolean makeInstanceFromImpl(XNContext ctx) {
+		throw new XOMMorphError(typeName);
 	}
 	protected XOMBoolean makeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		if (instance instanceof XOMBoolean) {
-			return (XOMBoolean)instance;
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMBoolean) {
-			return (XOMBoolean)instance.toList(ctx).get(0);
-		}
-		else {
-			String s = instance.toTextString(ctx);
-			if (s.equalsIgnoreCase("true")) return XOMBoolean.TRUE;
-			else if (s.equalsIgnoreCase("false")) return XOMBoolean.FALSE;
-			else throw new XOMMorphError(typeName);
-		}
+		throw new XOMMorphError(typeName);
 	}
-	protected XOMBoolean makeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (left instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, right);
-		}
-		else if (right instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, left);
-		}
-		else {
-			String s = left.toTextString(ctx) + right.toTextString(ctx);
-			if (s.equalsIgnoreCase("true")) return XOMBoolean.TRUE;
-			else if (s.equalsIgnoreCase("false")) return XOMBoolean.FALSE;
-			else throw new XOMMorphError(typeName);
-		}
+	protected XOMBoolean makeInstanceFromImpl(XNContext ctx, String s) {
+		if (s.equalsIgnoreCase("true")) return XOMBoolean.TRUE;
+		else if (s.equalsIgnoreCase("false")) return XOMBoolean.FALSE;
+		else throw new XOMMorphError(typeName);
 	}
 }

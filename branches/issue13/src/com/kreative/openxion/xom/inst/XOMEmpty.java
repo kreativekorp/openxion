@@ -27,11 +27,11 @@
 
 package com.kreative.openxion.xom.inst;
 
-import java.util.*;
 import com.kreative.openxion.XNContext;
+import com.kreative.openxion.xom.XOMPrimitiveValue;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMEmpty extends XOMVariant {
+public class XOMEmpty extends XOMPrimitiveValue {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMEmpty EMPTY = new XOMEmpty();
@@ -40,19 +40,16 @@ public class XOMEmpty extends XOMVariant {
 		// nothing
 	}
 	
-	protected boolean equalsImpl(Object o) {
-		return (o instanceof XOMEmpty);
+	protected String toLanguageStringImpl() {
+		return "empty";
 	}
-	public int hashCode() {
+	protected String toTextStringImpl(XNContext ctx) {
+		return "";
+	}
+	protected int hashCodeImpl() {
 		return 0;
 	}
-	public String toDescriptionString() {
-		return "";
-	}
-	public String toTextString(XNContext ctx) {
-		return "";
-	}
-	public List<XOMVariant> toList(XNContext ctx) {
-		return new Vector<XOMVariant>();
+	protected boolean equalsImpl(XOMVariant o) {
+		return (o instanceof XOMEmpty);
 	}
 }

@@ -28,30 +28,38 @@
 package com.kreative.openxion.xom.inst;
 
 import java.math.*;
-import java.util.*;
 import com.kreative.openxion.XNContext;
+import com.kreative.openxion.xom.XOMPrimitiveValue;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMComplex extends XOMVariant {
+public class XOMComplex extends XOMPrimitiveValue {
 	private static final long serialVersionUID = 1L;
 
-	public static final XOMComplex ZERO = new XOMComplex(XOMNumber.ZERO, XOMNumber.ZERO);
-	public static final XOMComplex ONE = new XOMComplex(XOMNumber.ONE, XOMNumber.ZERO);
-	public static final XOMComplex TEN = new XOMComplex(XOMNumber.TEN, XOMNumber.ZERO);
+	public static final XOMComplex ZERO = new XOMComplex(BigDecimal.ZERO, BigDecimal.ZERO);
+	public static final XOMComplex ONE = new XOMComplex(BigDecimal.ONE, BigDecimal.ZERO);
+	public static final XOMComplex TEN = new XOMComplex(BigDecimal.TEN, BigDecimal.ZERO);
+	public static final XOMComplex PI = new XOMComplex(XOMNumber.BIGDECIMAL_PI, BigDecimal.ZERO);
+	public static final XOMComplex E = new XOMComplex(XOMNumber.BIGDECIMAL_E, BigDecimal.ZERO);
+	public static final XOMComplex PHI = new XOMComplex(XOMNumber.BIGDECIMAL_PHI, BigDecimal.ZERO);
 	public static final XOMComplex POSITIVE_INFINITY = new XOMComplex(false, 1.0, 0.0);
 	public static final XOMComplex NEGATIVE_INFINITY = new XOMComplex(false, -1.0, 0.0);
 	public static final XOMComplex NaN = new XOMComplex(true, 0.0, 0.0);
-	public static final XOMComplex PI = new XOMComplex(XOMNumber.PI, XOMNumber.ZERO);
-	public static final XOMComplex E = new XOMComplex(XOMNumber.E, XOMNumber.ZERO);
-	public static final XOMComplex PHI = new XOMComplex(XOMNumber.PHI, XOMNumber.ZERO);
-	public static final XOMComplex I = new XOMComplex(XOMNumber.ZERO, XOMNumber.ONE);
+	public static final XOMComplex I = new XOMComplex(BigDecimal.ZERO, BigDecimal.ONE);
 	
 	private BigDecimal realPart;
 	private BigDecimal imaginaryPart;
 	private boolean undefined;
 	
-	public XOMComplex(Number real, Number imaginary) {
-		this(new XOMNumber(real), new XOMNumber(imaginary));
+	public XOMComplex(BigDecimal real, BigDecimal imaginary) {
+		this.realPart = real;
+		this.imaginaryPart = imaginary;
+		this.undefined = false;
+	}
+	
+	public XOMComplex(BigInteger real, BigInteger imaginary) {
+		this.realPart = new BigDecimal(real);
+		this.imaginaryPart = new BigDecimal(imaginary);
+		this.undefined = false;
 	}
 	
 	public XOMComplex(XOMNumber real, XOMNumber imaginary) {
@@ -59,23 +67,71 @@ public class XOMComplex extends XOMVariant {
 			this.realPart = BigDecimal.ZERO;
 			this.imaginaryPart = BigDecimal.ZERO;
 			this.undefined = true;
-		}
-		else if (real.isUndefined() || imaginary.isUndefined()) {
-			if ((real.isInfinite() || real.isZero()) && (imaginary.isInfinite() || imaginary.isZero())) {
-				this.realPart = real.signum().toBigDecimal();
-				this.imaginaryPart = imaginary.signum().toBigDecimal();
-				this.undefined = true;
-			} else {
-				this.realPart = BigDecimal.ZERO;
-				this.imaginaryPart = BigDecimal.ZERO;
-				this.undefined = true;
-			}
-		}
-		else {
+		} else if (real.isInfinite() || imaginary.isInfinite()) {
+			this.realPart = real.signum().toBigDecimal();
+			this.imaginaryPart = imaginary.signum().toBigDecimal();
+			this.undefined = true;
+		} else {
 			this.realPart = real.toBigDecimal();
 			this.imaginaryPart = imaginary.toBigDecimal();
 			this.undefined = false;
 		}
+	}
+	
+	public XOMComplex(double real, double imaginary) {
+		if (Double.isNaN(real) || Double.isNaN(imaginary)) {
+			this.realPart = BigDecimal.ZERO;
+			this.imaginaryPart = BigDecimal.ZERO;
+			this.undefined = true;
+		} else if (Double.isInfinite(real) || Double.isInfinite(imaginary)) {
+			this.realPart = BigDecimal.valueOf(Math.signum(real));
+			this.imaginaryPart = BigDecimal.valueOf(Math.signum(imaginary));
+			this.undefined = true;
+		} else {
+			this.realPart = BigDecimal.valueOf(real);
+			this.imaginaryPart = BigDecimal.valueOf(imaginary);
+			this.undefined = false;
+		}
+	}
+	
+	public XOMComplex(float real, float imaginary) {
+		if (Float.isNaN(real) || Float.isNaN(imaginary)) {
+			this.realPart = BigDecimal.ZERO;
+			this.imaginaryPart = BigDecimal.ZERO;
+			this.undefined = true;
+		} else if (Float.isInfinite(real) || Float.isInfinite(imaginary)) {
+			this.realPart = BigDecimal.valueOf(Math.signum(real));
+			this.imaginaryPart = BigDecimal.valueOf(Math.signum(imaginary));
+			this.undefined = true;
+		} else {
+			this.realPart = BigDecimal.valueOf(real);
+			this.imaginaryPart = BigDecimal.valueOf(imaginary);
+			this.undefined = false;
+		}
+	}
+	
+	public XOMComplex(long real, long imaginary) {
+		this.realPart = BigDecimal.valueOf(real);
+		this.imaginaryPart = BigDecimal.valueOf(imaginary);
+		this.undefined = false;
+	}
+	
+	public XOMComplex(int real, int imaginary) {
+		this.realPart = BigDecimal.valueOf(real);
+		this.imaginaryPart = BigDecimal.valueOf(imaginary);
+		this.undefined = false;
+	}
+	
+	public XOMComplex(short real, short imaginary) {
+		this.realPart = BigDecimal.valueOf(real);
+		this.imaginaryPart = BigDecimal.valueOf(imaginary);
+		this.undefined = false;
+	}
+	
+	public XOMComplex(byte real, byte imaginary) {
+		this.realPart = BigDecimal.valueOf(real);
+		this.imaginaryPart = BigDecimal.valueOf(imaginary);
+		this.undefined = false;
 	}
 	
 	public static XOMComplex makeInfinity(double realSign, double imagSign) {
@@ -278,7 +334,38 @@ public class XOMComplex extends XOMVariant {
 		else return new XOMNumber[]{new XOMNumber(realPart),new XOMNumber(imaginaryPart)};
 	}
 	
-	protected boolean equalsImpl(Object o) {
+	protected String toLanguageStringImpl() {
+		if (realPart == null || imaginaryPart == null) return "NAN";
+		else if (undefined) {
+			int rc = realPart.compareTo(BigDecimal.ZERO);
+			int ic = imaginaryPart.compareTo(BigDecimal.ZERO);
+			if (rc == 0 && ic == 0) return "NAN";
+			else return "(" + ((rc < 0) ? "-INF" : (rc > 0) ? "INF" : "0") + "," + ((ic < 0) ? "-INF" : (ic > 0) ? "INF" : "0") + ")";
+		}
+		else return "("
+			+ realPart.toString()
+				.replaceAll("[Ee][-]([0-9]+)", "''$1")
+				.replaceAll("[Ee][+]?([0-9]+)", "'$1")
+			+ ","
+			+ imaginaryPart.toString()
+				.replaceAll("[Ee][-]([0-9]+)", "''$1")
+				.replaceAll("[Ee][+]?([0-9]+)", "'$1")
+			+ ")";
+	}
+	protected String toTextStringImpl(XNContext ctx) {
+		if (realPart == null || imaginaryPart == null) return "NAN";
+		else if (undefined) {
+			int rc = realPart.compareTo(BigDecimal.ZERO);
+			int ic = imaginaryPart.compareTo(BigDecimal.ZERO);
+			if (rc == 0 && ic == 0) return "NAN";
+			else return ((rc < 0) ? "-INF" : (rc > 0) ? "INF" : "0") + "," + ((ic < 0) ? "-INF" : (ic > 0) ? "INF" : "0");
+		}
+		else return ctx.getNumberFormat().format(realPart)+","+ctx.getNumberFormat().format(imaginaryPart);
+	}
+	protected int hashCodeImpl() {
+		return (realPart == null || imaginaryPart == null) ? 0 : undefined ? (realPart.signum() * 3 + imaginaryPart.signum()) : realPart.hashCode() ^ imaginaryPart.hashCode();
+	}
+	protected boolean equalsImpl(XOMVariant o) {
 		if (o instanceof XOMComplex) {
 			XOMComplex other = (XOMComplex)o;
 			if (this.isNaN() && other.isNaN()) {
@@ -299,33 +386,5 @@ public class XOMComplex extends XOMVariant {
 		} else {
 			return false;
 		}
-	}
-	public int hashCode() {
-		return (realPart == null || imaginaryPart == null) ? 0 : undefined ? (realPart.signum() * 3 + imaginaryPart.signum()) : realPart.hashCode() ^ imaginaryPart.hashCode();
-	}
-	public String toDescriptionString() {
-		if (realPart == null || imaginaryPart == null) return "NAN";
-		else if (undefined) {
-			int rc = realPart.compareTo(BigDecimal.ZERO);
-			int ic = imaginaryPart.compareTo(BigDecimal.ZERO);
-			if (rc == 0 && ic == 0) return "NAN";
-			else return ((rc < 0) ? "-INF" : (rc > 0) ? "INF" : "0") + "," + ((ic < 0) ? "-INF" : (ic > 0) ? "INF" : "0");
-		}
-		else return realPart.toString()+","+imaginaryPart.toString();
-	}
-	public String toTextString(XNContext ctx) {
-		if (realPart == null || imaginaryPart == null) return "NAN";
-		else if (undefined) {
-			int rc = realPart.compareTo(BigDecimal.ZERO);
-			int ic = imaginaryPart.compareTo(BigDecimal.ZERO);
-			if (rc == 0 && ic == 0) return "NAN";
-			else return ((rc < 0) ? "-INF" : (rc > 0) ? "INF" : "0") + "," + ((ic < 0) ? "-INF" : (ic > 0) ? "INF" : "0");
-		}
-		else return ctx.getNumberFormat().format(realPart)+","+ctx.getNumberFormat().format(imaginaryPart);
-	}
-	public List<XOMVariant> toList(XNContext ctx) {
-		Vector<XOMVariant> v = new Vector<XOMVariant>();
-		v.add(this);
-		return v;
 	}
 }

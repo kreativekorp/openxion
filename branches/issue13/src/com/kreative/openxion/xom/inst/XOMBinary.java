@@ -27,12 +27,13 @@
 
 package com.kreative.openxion.xom.inst;
 
-import java.util.*;
+import java.util.Arrays;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.util.XIONUtil;
+import com.kreative.openxion.xom.XOMPrimitiveValue;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMBinary extends XOMVariant {
+public class XOMBinary extends XOMPrimitiveValue {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMBinary EMPTY_BINARY = new XOMBinary(new byte[0]);
@@ -47,26 +48,21 @@ public class XOMBinary extends XOMVariant {
 		return theData;
 	}
 	
-	protected boolean equalsImpl(Object o) {
+	protected String toLanguageStringImpl() {
+		return "\"" + XIONUtil.binaryToString(theData) + "\"";
+	}
+	protected String toTextStringImpl(XNContext ctx) {
+		return XIONUtil.binaryToString(theData);
+	}
+	protected int hashCodeImpl() {
+		return Arrays.hashCode(theData);
+	}
+	protected boolean equalsImpl(XOMVariant o) {
 		if (o instanceof XOMBinary) {
 			XOMBinary other = (XOMBinary)o;
 			return Arrays.equals(this.theData, other.theData);
 		} else {
 			return false;
 		}
-	}
-	public int hashCode() {
-		return Arrays.hashCode(theData);
-	}
-	public String toDescriptionString() {
-		return XIONUtil.binaryToString(theData);
-	}
-	public String toTextString(XNContext ctx) {
-		return XIONUtil.binaryToString(theData);
-	}
-	public List<XOMVariant> toList(XNContext ctx) {
-		Vector<XOMVariant> v = new Vector<XOMVariant>();
-		v.add(this);
-		return v;
 	}
 }

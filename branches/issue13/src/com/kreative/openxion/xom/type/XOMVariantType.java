@@ -29,12 +29,12 @@ package com.kreative.openxion.xom.type;
 
 import java.util.Vector;
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.xom.XOMDataType;
+import com.kreative.openxion.xom.XOMSimpleDataType;
 import com.kreative.openxion.xom.XOMVariant;
-import com.kreative.openxion.xom.inst.XOMEmpty;
 import com.kreative.openxion.xom.inst.XOMList;
+import com.kreative.openxion.xom.inst.XOMListChunk;
 
-public class XOMVariantType extends XOMDataType<XOMVariant> {
+public class XOMVariantType extends XOMSimpleDataType<XOMVariant> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMVariantType instance = new XOMVariantType();
@@ -44,12 +44,6 @@ public class XOMVariantType extends XOMDataType<XOMVariant> {
 		super("variant", DESCRIBABILITY_OF_PRIMITIVES, XOMVariant.class);
 	}
 	
-	/*
-	 * Polymorphism - The data type of an object is determined through these methods.
-	 * Unlike in Java, where an object's type is determined by the class hierarchy,
-	 * objects in XION can be of any mix of data types (hence the term variant for XION objects).
-	 */
-	
 	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
 		return true;
 	}
@@ -57,15 +51,20 @@ public class XOMVariantType extends XOMDataType<XOMVariant> {
 		return true;
 	}
 	protected XOMVariant makeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		return instance;
+		return instance.asValue(ctx);
 	}
 	protected XOMVariant makeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (left instanceof XOMEmpty) return right;
-		else if (right instanceof XOMEmpty) return left;
-		else {
-			Vector<XOMVariant> v = new Vector<XOMVariant>();
-			v.addAll(left.toList(ctx)); v.addAll(right.toList(ctx));
-			return new XOMList(v);
-		}
+		Vector<XOMVariant> v = new Vector<XOMVariant>();
+		if (left instanceof XOMList)
+			v.addAll(((XOMList)left).toList());
+		else if (left instanceof XOMListChunk)
+			v.addAll(((XOMListChunk)left).toList(ctx));
+		else v.add(left);
+		if (right instanceof XOMList)
+			v.addAll(((XOMList)right).toList());
+		else if (right instanceof XOMListChunk)
+			v.addAll(((XOMListChunk)right).toList(ctx));
+		else v.add(right);
+		return new XOMList(v);
 	}
 }

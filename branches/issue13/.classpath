@@ -2,5 +2,17 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Users/beckie/Etc/Software/freetts/lib/cmu_time_awb.jar"/>
+	<classpathentry kind="lib" path="/Users/beckie/Etc/Software/freetts/lib/cmu_us_kal.jar"/>
+	<classpathentry kind="lib" path="/Users/beckie/Etc/Software/freetts/lib/cmudict04.jar"/>
+	<classpathentry kind="lib" path="/Users/beckie/Etc/Software/freetts/lib/cmulex.jar"/>
+	<classpathentry kind="lib" path="/Users/beckie/Etc/Software/freetts/lib/cmutimelex.jar"/>
+	<classpathentry kind="lib" path="/Users/beckie/Etc/Software/freetts/lib/en_us.jar"/>
+	<classpathentry kind="lib" path="/Users/beckie/Etc/Software/freetts/lib/freetts-jsapi10.jar"/>
+	<classpathentry kind="lib" path="/Users/beckie/Etc/Software/freetts/lib/freetts.jar"/>
+	<classpathentry kind="lib" path="/Users/beckie/Etc/Software/freetts/lib/jsapi.jar"/>
+	<classpathentry kind="lib" path="/Users/beckie/Etc/Software/freetts/lib/mbrola.jar"/>
+	<classpathentry kind="lib" path="/Users/beckie/Etc/JARs/comm.jar"/>
+	<classpathentry kind="lib" path="/Users/beckie/Etc/JARs/RXTXcomm.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

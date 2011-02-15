@@ -30,11 +30,13 @@ package com.kreative.openxion.xom.inst;
 import java.util.*;
 import java.text.*;
 import com.kreative.openxion.XNContext;
+import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.util.XNDateFormat;
-import com.kreative.openxion.xom.XOMVariant;
+import com.kreative.openxion.xom.XOMPrimitiveValue;
 import com.kreative.openxion.xom.XOMMorphError;
+import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMDate extends XOMVariant {
+public class XOMDate extends XOMPrimitiveValue {
 	private static final long serialVersionUID = 1L;
 	
 	private XNDateFormat theFormat;
@@ -96,28 +98,23 @@ public class XOMDate extends XOMVariant {
 		return theDate.getTime();
 	}
 	
-	protected boolean equalsImpl(Object o) {
+	protected String toLanguageStringImpl() {
+		if (theFormat == null || theDate == null) return "\"\"";
+		return XIONUtil.quote(theFormat.toJavaDateFormat().format(theDate.getTime()));
+	}
+	protected String toTextStringImpl(XNContext ctx) {
+		if (theFormat == null || theDate == null) return "";
+		return theFormat.toJavaDateFormat().format(theDate.getTime());
+	}
+	protected int hashCodeImpl() {
+		return theFormat.hashCode() ^ theDate.hashCode();
+	}
+	protected boolean equalsImpl(XOMVariant o) {
 		if (o instanceof XOMDate) {
 			XOMDate other = (XOMDate)o;
 			return this.theFormat == other.theFormat && this.theDate.equals(other.theDate);
 		} else {
 			return false;
 		}
-	}
-	public int hashCode() {
-		return theFormat.hashCode() ^ theDate.hashCode();
-	}
-	public String toDescriptionString() {
-		if (theFormat == null || theDate == null) return "";
-		return theFormat.toJavaDateFormat().format(theDate.getTime());
-	}
-	public String toTextString(XNContext ctx) {
-		if (theFormat == null || theDate == null) return "";
-		return theFormat.toJavaDateFormat().format(theDate.getTime());
-	}
-	public List<XOMVariant> toList(XNContext ctx) {
-		Vector<XOMVariant> v = new Vector<XOMVariant>();
-		v.add(this);
-		return v;
 	}
 }

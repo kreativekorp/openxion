@@ -28,12 +28,12 @@
 package com.kreative.openxion.xom.inst;
 
 import java.awt.Color;
-import java.util.*;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.ast.XNModifier;
+import com.kreative.openxion.xom.XOMPrimitiveValue;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMColor extends XOMVariant {
+public class XOMColor extends XOMPrimitiveValue {
 	private static final long serialVersionUID = 1L;
 	
 	private int red;
@@ -116,32 +116,27 @@ public class XOMColor extends XOMVariant {
 		}
 	}
 	
-	protected boolean equalsImpl(Object o) {
+	protected String toLanguageStringImpl() {
+		if (alpha == 65535)
+			return "\""+red+","+green+","+blue+"\"";
+		else
+			return "\""+red+","+green+","+blue+","+alpha+"\"";
+	}
+	protected String toTextStringImpl(XNContext ctx) {
+		if (alpha == 65535)
+			return red+","+green+","+blue;
+		else
+			return red+","+green+","+blue+","+alpha;
+	}
+	protected int hashCodeImpl() {
+		return red ^ (green << 16) ^ blue ^ (alpha << 16);
+	}
+	protected boolean equalsImpl(XOMVariant o) {
 		if (o instanceof XOMColor) {
 			XOMColor other = (XOMColor)o;
 			return this.red == other.red && this.green == other.green && this.blue == other.blue && this.alpha == other.alpha;
 		} else {
 			return false;
 		}
-	}
-	public int hashCode() {
-		return red ^ (green << 16) ^ blue ^ (alpha << 16);
-	}
-	public String toDescriptionString() {
-		if (alpha == 65535)
-			return red+","+green+","+blue;
-		else
-			return red+","+green+","+blue+","+alpha;
-	}
-	public String toTextString(XNContext ctx) {
-		if (alpha == 65535)
-			return red+","+green+","+blue;
-		else
-			return red+","+green+","+blue+","+alpha;
-	}
-	public List<XOMVariant> toList(XNContext ctx) {
-		Vector<XOMVariant> v = new Vector<XOMVariant>();
-		v.add(this);
-		return v;
 	}
 }

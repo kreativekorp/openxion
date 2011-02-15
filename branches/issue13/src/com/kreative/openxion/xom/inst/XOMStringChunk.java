@@ -29,15 +29,17 @@ package com.kreative.openxion.xom.inst;
 
 import java.util.*;
 import com.kreative.openxion.XNContext;
+import com.kreative.openxion.XNScriptError;
 import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.util.StringChunkType;
 import com.kreative.openxion.util.StringChunkEx;
-import com.kreative.openxion.xom.XOMVariant;
+import com.kreative.openxion.xom.XOMContainerObject;
 import com.kreative.openxion.xom.XOMStringContainer;
 import com.kreative.openxion.xom.XOMComparator;
+import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
+public class XOMStringChunk extends XOMContainerObject implements XOMStringContainer {
 	private static final long serialVersionUID = 1L;
 	
 	private XOMVariant parent;
@@ -52,7 +54,7 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 		this.endIndex = endIndex;
 	}
 	
-	public boolean hasParent(XNContext ctx) {
+	public boolean canGetParent(XNContext ctx) {
 		return true;
 	}
 	
@@ -62,7 +64,6 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 	
 	private static class StringChunkInfo {
 		public String parentContent;
-		//public int chunkCount;
 		public int startChunkIndex;
 		public int endChunkIndex;
 		public int startCharIndex;
@@ -71,101 +72,92 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 	}
 	
 	private StringChunkInfo getChunkInfo(XNContext ctx, boolean puttingBefore, boolean puttingAfter) {
-		String ts;
-		if (parent.canGetContents(ctx)) {
-			ts = parent.getContents(ctx).toTextString(ctx);
-		} else {
-			ts = parent.toTextString(ctx);
-		}
-		if (ts == null) return null;
-		else {
-			char id = ctx.getItemDelimiter();
-			char cd = ctx.getColumnDelimiter();
-			char rd = ctx.getRowDelimiter();
-			int count = StringChunkEx.count(ts, chunkType, id, cd, rd);
-			int[] idx = XIONUtil.index(1, count, startIndex, endIndex);
-			int s = idx[0], e = idx[1];
-			if ((puttingBefore && s > count) || (puttingAfter && e > count)) {
-				if (chunkType == StringChunkType.LINE) {
-					String a = "";
-					int n = ( (puttingBefore && puttingAfter) ? Math.max(s,e) : puttingBefore ? s : puttingAfter ? e : count )-count;
-					while (n-- > 0) {
-						a += ctx.getLineEnding();
-						count++;
-					}
-					ts += a;
-					parent.putAfterContents(ctx, new XOMString(a));
+		String ts = parent.toTextString(ctx);
+		char id = ctx.getItemDelimiter();
+		char cd = ctx.getColumnDelimiter();
+		char rd = ctx.getRowDelimiter();
+		int count = StringChunkEx.count(ts, chunkType, id, cd, rd);
+		int[] idx = XIONUtil.index(1, count, startIndex, endIndex);
+		int s = idx[0], e = idx[1];
+		if ((puttingBefore && s > count) || (puttingAfter && e > count)) {
+			if (chunkType == StringChunkType.LINE) {
+				String a = "";
+				int n = ( (puttingBefore && puttingAfter) ? Math.max(s,e) : puttingBefore ? s : puttingAfter ? e : count )-count;
+				while (n-- > 0) {
+					a += ctx.getLineEnding();
+					count++;
 				}
-				else if (chunkType == StringChunkType.ITEM || chunkType == StringChunkType.ROW || chunkType == StringChunkType.COLUMN) {
-					char d;
-					switch (chunkType) {
-					case ITEM: d = id; break;
-					case ROW: d = rd; break;
-					case COLUMN: d = cd; break;
-					default: d = 0xFFFF; break;
-					}
-					String a = "";
-					int n = ( (puttingBefore && puttingAfter) ? Math.max(s,e) : puttingBefore ? s : puttingAfter ? e : count )-count;
-					while (n-- > 0) {
-						a += d;
-						count++;
-					}
-					ts += a;
-					parent.putAfterContents(ctx, new XOMString(a));
-				}
+				ts += a;
+				parent.asContainer(ctx).putAfterContents(ctx, new XOMString(a));
 			}
-			if ((puttingBefore && s < 1) || (puttingAfter && e < 1)) {
-				if (chunkType == StringChunkType.LINE) {
-					String a = "";
-					int n = 1-( (puttingBefore && puttingAfter) ? Math.min(s,e) : puttingBefore ? s : puttingAfter ? e : 1 );
-					while (n-- > 0) {
-						a += ctx.getLineEnding();
-						count++;
-						s++;
-						e++;
-					}
-					ts = a + ts;
-					parent.putBeforeContents(ctx, new XOMString(a));
+			else if (chunkType == StringChunkType.ITEM || chunkType == StringChunkType.ROW || chunkType == StringChunkType.COLUMN) {
+				char d;
+				switch (chunkType) {
+				case ITEM: d = id; break;
+				case ROW: d = rd; break;
+				case COLUMN: d = cd; break;
+				default: d = 0xFFFF; break;
 				}
-				else if (chunkType == StringChunkType.ITEM || chunkType == StringChunkType.ROW || chunkType == StringChunkType.COLUMN) {
-					char d;
-					switch (chunkType) {
-					case ITEM: d = id; break;
-					case ROW: d = rd; break;
-					case COLUMN: d = cd; break;
-					default: d = 0xFFFF; break;
-					}
-					String a = "";
-					int n = 1-( (puttingBefore && puttingAfter) ? Math.min(s,e) : puttingBefore ? s : puttingAfter ? e : 1 );
-					while (n-- > 0) {
-						a += d;
-						count++;
-						s++;
-						e++;
-					}
-					ts = a + ts;
-					parent.putBeforeContents(ctx, new XOMString(a));
+				String a = "";
+				int n = ( (puttingBefore && puttingAfter) ? Math.max(s,e) : puttingBefore ? s : puttingAfter ? e : count )-count;
+				while (n-- > 0) {
+					a += d;
+					count++;
 				}
+				ts += a;
+				parent.asContainer(ctx).putAfterContents(ctx, new XOMString(a));
 			}
-			StringChunkInfo ci = new StringChunkInfo();
-			ci.parentContent = ts;
-			//ci.chunkCount = count;
-			ci.startChunkIndex = s;
-			ci.endChunkIndex = e;
-			ci.startCharIndex = StringChunkEx.start(ts, chunkType, s, id, cd, rd);
-			ci.endCharIndex = StringChunkEx.end(ts, chunkType, e, id, cd, rd);
-			ci.deleteEndCharIndex = StringChunkEx.start(ts, chunkType, e+1, id, cd, rd);
-			if (ci.startCharIndex > ci.endCharIndex) ci.endCharIndex = ci.startCharIndex;
-			if (ci.startCharIndex > ci.deleteEndCharIndex) ci.deleteEndCharIndex = ci.startCharIndex;
-			return ci;
 		}
+		if ((puttingBefore && s < 1) || (puttingAfter && e < 1)) {
+			if (chunkType == StringChunkType.LINE) {
+				String a = "";
+				int n = 1-( (puttingBefore && puttingAfter) ? Math.min(s,e) : puttingBefore ? s : puttingAfter ? e : 1 );
+				while (n-- > 0) {
+					a += ctx.getLineEnding();
+					count++;
+					s++;
+					e++;
+				}
+				ts = a + ts;
+				parent.asContainer(ctx).putBeforeContents(ctx, new XOMString(a));
+			}
+			else if (chunkType == StringChunkType.ITEM || chunkType == StringChunkType.ROW || chunkType == StringChunkType.COLUMN) {
+				char d;
+				switch (chunkType) {
+				case ITEM: d = id; break;
+				case ROW: d = rd; break;
+				case COLUMN: d = cd; break;
+				default: d = 0xFFFF; break;
+				}
+				String a = "";
+				int n = 1-( (puttingBefore && puttingAfter) ? Math.min(s,e) : puttingBefore ? s : puttingAfter ? e : 1 );
+				while (n-- > 0) {
+					a += d;
+					count++;
+					s++;
+					e++;
+				}
+				ts = a + ts;
+				parent.asContainer(ctx).putBeforeContents(ctx, new XOMString(a));
+			}
+		}
+		StringChunkInfo ci = new StringChunkInfo();
+		ci.parentContent = ts;
+		ci.startChunkIndex = s;
+		ci.endChunkIndex = e;
+		ci.startCharIndex = StringChunkEx.start(ts, chunkType, s, id, cd, rd);
+		ci.endCharIndex = StringChunkEx.end(ts, chunkType, e, id, cd, rd);
+		ci.deleteEndCharIndex = StringChunkEx.start(ts, chunkType, e+1, id, cd, rd);
+		if (ci.startCharIndex > ci.endCharIndex) ci.endCharIndex = ci.startCharIndex;
+		if (ci.startCharIndex > ci.deleteEndCharIndex) ci.deleteEndCharIndex = ci.startCharIndex;
+		return ci;
 	}
 	
 	public boolean canDelete(XNContext ctx) {
 		if (parent instanceof XOMStringContainer && ((XOMStringContainer)parent).canDeleteString(ctx)) {
 			return true;
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			return true;
 		}
 		else {
@@ -179,14 +171,14 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 			StringChunkInfo ci = getChunkInfo(ctx,false,false);
 			p.deleteString(ctx, ci.startCharIndex, ci.deleteEndCharIndex);
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			StringChunkInfo ci = getChunkInfo(ctx,false,false);
 			String left = ci.parentContent.substring(0, ci.startCharIndex);
 			String right = ci.parentContent.substring(ci.deleteEndCharIndex);
-			parent.putIntoContents(ctx, new XOMString(left + right));
+			parent.asContainer(ctx).putIntoContents(ctx, new XOMString(left + right));
 		}
 		else {
-			super.delete(ctx);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -194,7 +186,7 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 		if (parent instanceof XOMStringContainer && ((XOMStringContainer)parent).canDeleteString(ctx)) {
 			return true;
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			return true;
 		}
 		else {
@@ -210,16 +202,16 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 			int e = Math.max(ci.startCharIndex, Math.min(ci.endCharIndex, ci.startCharIndex+endCharIndex));
 			p.deleteString(ctx, s, e);
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			StringChunkInfo ci = getChunkInfo(ctx,false,false);
 			int s = Math.max(ci.startCharIndex, Math.min(ci.endCharIndex, ci.startCharIndex+startCharIndex));
 			int e = Math.max(ci.startCharIndex, Math.min(ci.endCharIndex, ci.startCharIndex+endCharIndex));
 			String left = ci.parentContent.substring(0, s);
 			String right = ci.parentContent.substring(e);
-			parent.putIntoContents(ctx, new XOMString(left + right));
+			parent.asContainer(ctx).putIntoContents(ctx, new XOMString(left + right));
 		}
 		else {
-			super.delete(ctx);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -263,7 +255,7 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 		if (parent instanceof XOMStringContainer && ((XOMStringContainer)parent).canPutString(ctx)) {
 			return true;
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			return true;
 		}
 		else {
@@ -277,14 +269,14 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 			StringChunkInfo ci = getChunkInfo(ctx,true,true);
 			p.putIntoString(ctx, ci.startCharIndex, ci.endCharIndex, contents);
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			StringChunkInfo ci = getChunkInfo(ctx,true,true);
 			String left = ci.parentContent.substring(0, ci.startCharIndex);
 			String right = ci.parentContent.substring(ci.endCharIndex);
-			parent.putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right));
+			parent.asContainer(ctx).putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right));
 		}
 		else {
-			super.putIntoContents(ctx, contents);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -294,14 +286,14 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 			StringChunkInfo ci = getChunkInfo(ctx,true,false);
 			p.putBeforeString(ctx, ci.startCharIndex, ci.endCharIndex, contents);
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			StringChunkInfo ci = getChunkInfo(ctx,true,false);
 			String left = ci.parentContent.substring(0, ci.startCharIndex);
 			String right = ci.parentContent.substring(ci.startCharIndex);
-			parent.putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right));
+			parent.asContainer(ctx).putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right));
 		}
 		else {
-			super.putBeforeContents(ctx, contents);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -311,14 +303,14 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 			StringChunkInfo ci = getChunkInfo(ctx,false,true);
 			p.putAfterString(ctx, ci.startCharIndex, ci.endCharIndex, contents);
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			StringChunkInfo ci = getChunkInfo(ctx,false,true);
 			String left = ci.parentContent.substring(0, ci.endCharIndex);
 			String right = ci.parentContent.substring(ci.endCharIndex);
-			parent.putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right));
+			parent.asContainer(ctx).putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right));
 		}
 		else {
-			super.putAfterContents(ctx, contents);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -328,14 +320,14 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 			StringChunkInfo ci = getChunkInfo(ctx,true,true);
 			p.putIntoString(ctx, ci.startCharIndex, ci.endCharIndex, contents, property, pvalue);
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			StringChunkInfo ci = getChunkInfo(ctx,true,true);
 			String left = ci.parentContent.substring(0, ci.startCharIndex);
 			String right = ci.parentContent.substring(ci.endCharIndex);
-			parent.putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right), property, pvalue);
+			parent.asContainer(ctx).putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right), property, pvalue);
 		}
 		else {
-			super.putIntoContents(ctx, contents, property, pvalue);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -345,14 +337,14 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 			StringChunkInfo ci = getChunkInfo(ctx,true,false);
 			p.putBeforeString(ctx, ci.startCharIndex, ci.endCharIndex, contents, property, pvalue);
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			StringChunkInfo ci = getChunkInfo(ctx,true,false);
 			String left = ci.parentContent.substring(0, ci.startCharIndex);
 			String right = ci.parentContent.substring(ci.startCharIndex);
-			parent.putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right), property, pvalue);
+			parent.asContainer(ctx).putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right), property, pvalue);
 		}
 		else {
-			super.putBeforeContents(ctx, contents, property, pvalue);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -362,14 +354,14 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 			StringChunkInfo ci = getChunkInfo(ctx,false,true);
 			p.putAfterString(ctx, ci.startCharIndex, ci.endCharIndex, contents, property, pvalue);
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			StringChunkInfo ci = getChunkInfo(ctx, false,true);
 			String left = ci.parentContent.substring(0, ci.endCharIndex);
 			String right = ci.parentContent.substring(ci.endCharIndex);
-			parent.putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right), property, pvalue);
+			parent.asContainer(ctx).putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right), property, pvalue);
 		}
 		else {
-			super.putAfterContents(ctx, contents, property, pvalue);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -377,7 +369,7 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 		if (parent instanceof XOMStringContainer && ((XOMStringContainer)parent).canPutString(ctx)) {
 			return true;
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			return true;
 		}
 		else {
@@ -393,16 +385,16 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 			int e = Math.max(ci.startCharIndex, Math.min(ci.endCharIndex, ci.startCharIndex+endCharIndex));
 			p.putIntoString(ctx, s, e, contents);
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			StringChunkInfo ci = getChunkInfo(ctx,true,true);
 			int s = Math.max(ci.startCharIndex, Math.min(ci.endCharIndex, ci.startCharIndex+startCharIndex));
 			int e = Math.max(ci.startCharIndex, Math.min(ci.endCharIndex, ci.startCharIndex+endCharIndex));
 			String left = ci.parentContent.substring(0, s);
 			String right = ci.parentContent.substring(e);
-			parent.putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right));
+			parent.asContainer(ctx).putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right));
 		}
 		else {
-			super.putIntoContents(ctx, contents);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -414,15 +406,15 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 			int e = Math.max(ci.startCharIndex, Math.min(ci.endCharIndex, ci.startCharIndex+endCharIndex));
 			p.putBeforeString(ctx, s, e, contents);
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			StringChunkInfo ci = getChunkInfo(ctx,true,false);
 			int s = Math.max(ci.startCharIndex, Math.min(ci.endCharIndex, ci.startCharIndex+startCharIndex));
 			String left = ci.parentContent.substring(0, s);
 			String right = ci.parentContent.substring(s);
-			parent.putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right));
+			parent.asContainer(ctx).putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right));
 		}
 		else {
-			super.putBeforeContents(ctx, contents);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -434,15 +426,15 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 			int e = Math.max(ci.startCharIndex, Math.min(ci.endCharIndex, ci.startCharIndex+endCharIndex));
 			p.putAfterString(ctx, s, e, contents);
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			StringChunkInfo ci = getChunkInfo(ctx,false,true);
 			int e = Math.max(ci.startCharIndex, Math.min(ci.endCharIndex, ci.startCharIndex+endCharIndex));
 			String left = ci.parentContent.substring(0, e);
 			String right = ci.parentContent.substring(e);
-			parent.putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right));
+			parent.asContainer(ctx).putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right));
 		}
 		else {
-			super.putAfterContents(ctx, contents);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -454,16 +446,16 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 			int e = Math.max(ci.startCharIndex, Math.min(ci.endCharIndex, ci.startCharIndex+endCharIndex));
 			p.putIntoString(ctx, s, e, contents, property, pvalue);
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			StringChunkInfo ci = getChunkInfo(ctx,true,true);
 			int s = Math.max(ci.startCharIndex, Math.min(ci.endCharIndex, ci.startCharIndex+startCharIndex));
 			int e = Math.max(ci.startCharIndex, Math.min(ci.endCharIndex, ci.startCharIndex+endCharIndex));
 			String left = ci.parentContent.substring(0, s);
 			String right = ci.parentContent.substring(e);
-			parent.putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right), property, pvalue);
+			parent.asContainer(ctx).putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right), property, pvalue);
 		}
 		else {
-			super.putIntoContents(ctx, contents, property, pvalue);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -475,15 +467,15 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 			int e = Math.max(ci.startCharIndex, Math.min(ci.endCharIndex, ci.startCharIndex+endCharIndex));
 			p.putBeforeString(ctx, s, e, contents, property, pvalue);
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			StringChunkInfo ci = getChunkInfo(ctx,true,false);
 			int s = Math.max(ci.startCharIndex, Math.min(ci.endCharIndex, ci.startCharIndex+startCharIndex));
 			String left = ci.parentContent.substring(0, s);
 			String right = ci.parentContent.substring(s);
-			parent.putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right), property, pvalue);
+			parent.asContainer(ctx).putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right), property, pvalue);
 		}
 		else {
-			super.putBeforeContents(ctx, contents, property, pvalue);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -495,15 +487,15 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 			int e = Math.max(ci.startCharIndex, Math.min(ci.endCharIndex, ci.startCharIndex+endCharIndex));
 			p.putAfterString(ctx, s, e, contents, property, pvalue);
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			StringChunkInfo ci = getChunkInfo(ctx,false,true);
 			int e = Math.max(ci.startCharIndex, Math.min(ci.endCharIndex, ci.startCharIndex+endCharIndex));
 			String left = ci.parentContent.substring(0, e);
 			String right = ci.parentContent.substring(e);
-			parent.putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right), property, pvalue);
+			parent.asContainer(ctx).putIntoContents(ctx, new XOMString(left + contents.toTextString(ctx) + right), property, pvalue);
 		}
 		else {
-			super.putAfterContents(ctx, contents, property, pvalue);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -511,7 +503,7 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 		if (parent instanceof XOMStringContainer && ((XOMStringContainer)parent).canRearrangeString(ctx)) {
 			return true;
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			return true;
 		}
 		else {
@@ -523,12 +515,12 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 		if (parent instanceof XOMStringContainer && ((XOMStringContainer)parent).canRearrangeString(ctx)) {
 			XOMStringContainer p = (XOMStringContainer)parent;
 			StringChunkInfo ci = getChunkInfo(ctx, false, false);
-			Vector<XOMVariant> v = new Vector<XOMVariant>();
+			Vector<XOMStringChunk> v = new Vector<XOMStringChunk>();
 			Vector<Integer> tweenStarts = new Vector<Integer>();
 			Vector<Integer> tweenEnds = new Vector<Integer>();
 			tweenStarts.add(0);
 			for (int i = ci.startChunkIndex; i <= ci.endChunkIndex; i++) {
-				XOMStringChunk ch = new XOMStringChunk(parent, chunkType, i, i);
+				XOMStringChunk ch = new XOMStringChunk(parent.asGiven(), chunkType, i, i);
 				v.add(ch);
 				StringChunkInfo chci = ch.getChunkInfo(ctx, false, false);
 				tweenEnds.add(chci.startCharIndex);
@@ -544,7 +536,7 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 					ends.add(tweenEnds.remove(0));
 				}
 				if (!v.isEmpty()) {
-					XOMStringChunk ch = (XOMStringChunk)v.remove(0);
+					XOMStringChunk ch = v.remove(0);
 					StringChunkInfo chci = ch.getChunkInfo(ctx, false, false);
 					starts.add(chci.startCharIndex);
 					ends.add(chci.endCharIndex);
@@ -556,13 +548,13 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 			for (int i = 0; i < ends.size(); i++) e[i] = ends.get(i);
 			p.rearrangeString(ctx, s, e);
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			StringChunkInfo ci = getChunkInfo(ctx, false, false);
-			Vector<XOMVariant> v = new Vector<XOMVariant>();
+			Vector<XOMStringChunk> v = new Vector<XOMStringChunk>();
 			Vector<String> tweens = new Vector<String>();
 			int tweenStart = 0;
 			for (int i = ci.startChunkIndex; i <= ci.endChunkIndex; i++) {
-				XOMStringChunk ch = new XOMStringChunk(parent, chunkType, i, i);
+				XOMStringChunk ch = new XOMStringChunk(parent.asGiven(), chunkType, i, i);
 				v.add(ch);
 				StringChunkInfo chci = ch.getChunkInfo(ctx, false, false);
 				tweens.add(ci.parentContent.substring(tweenStart, chci.startCharIndex));
@@ -579,10 +571,10 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 					s.append(v.remove(0).toTextString(ctx));
 				}
 			}
-			parent.putIntoContents(ctx, new XOMString(s.toString()));
+			parent.asContainer(ctx).putIntoContents(ctx, new XOMString(s.toString()));
 		}
 		else {
-			super.sortContents(ctx, cmp);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -590,7 +582,7 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 		if (parent instanceof XOMStringContainer && ((XOMStringContainer)parent).canRearrangeString(ctx)) {
 			return true;
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			return true;
 		}
 		else {
@@ -614,7 +606,7 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 			e[e.length-1] = ci.parentContent.length();
 			p.rearrangeString(ctx, s, e);
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			StringChunkInfo ci = getChunkInfo(ctx,false,false);
 			StringBuffer s = new StringBuffer();
 			s.append(ci.parentContent.substring(0, ci.startCharIndex));
@@ -624,10 +616,10 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 				s.append(ci.parentContent.substring(ss, ee));
 			}
 			s.append(ci.parentContent.substring(ci.endCharIndex));
-			parent.putIntoContents(ctx, new XOMString(s.toString()));
+			parent.asContainer(ctx).putIntoContents(ctx, new XOMString(s.toString()));
 		}
 		else {
-			super.sortContents(ctx, null);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -645,7 +637,7 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 			StringChunkInfo ci = getChunkInfo(ctx,false,false);
 			return p.getStringProperty(ctx, modifier, property, ci.startCharIndex, ci.endCharIndex);
 		} else {
-			return super.getProperty(ctx, modifier, property);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -661,7 +653,7 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 			int e = Math.max(ci.startCharIndex, Math.min(ci.endCharIndex, ci.startCharIndex+endCharIndex));
 			return p.getStringProperty(ctx, modifier, property, s, e);
 		} else {
-			return super.getProperty(ctx, modifier, property);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -675,7 +667,7 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 			StringChunkInfo ci = getChunkInfo(ctx,false,false);
 			p.setStringProperty(ctx, property, ci.startCharIndex, ci.endCharIndex, value);
 		} else {
-			super.setProperty(ctx, property, value);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -691,39 +683,29 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 			int e = Math.max(ci.startCharIndex, Math.min(ci.endCharIndex, ci.startCharIndex+endCharIndex));
 			p.setStringProperty(ctx, property, s, e, value);
 		} else {
-			super.setProperty(ctx, property, value);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
-	protected boolean equalsImpl(Object o) {
+	protected String toLanguageStringImpl() {
+		if (startIndex == endIndex) {
+			return chunkType.toString() + " " + startIndex + " of " + parent.toLanguageString();
+		} else {
+			return chunkType.toPluralString() + " " + startIndex + " through " + endIndex + " of " + parent.toLanguageString();
+		}
+	}
+	protected String toTextStringImpl(XNContext ctx) {
+		return getContents(ctx).toTextString(ctx);
+	}
+	protected int hashCodeImpl() {
+		return parent.hashCode() ^ chunkType.hashCode() ^ startIndex ^ endIndex;
+	}
+	protected boolean equalsImpl(XOMVariant o) {
 		if (o instanceof XOMStringChunk) {
 			XOMStringChunk other = (XOMStringChunk)o;
 			return (this.parent.equals(other.parent) && this.chunkType == other.chunkType && this.startIndex == other.startIndex && this.endIndex == other.endIndex);
 		} else {
 			return false;
 		}
-	}
-	public int hashCode() {
-		return parent.hashCode() ^ chunkType.hashCode() ^ startIndex ^ endIndex;
-	}
-	public String toDescriptionString() {
-		if (startIndex == endIndex) {
-			return chunkType.toString() + " " + startIndex + " of " + parent.toDescriptionString();
-		} else {
-			return chunkType.toPluralString() + " " + startIndex + " through " + endIndex + " of " + parent.toDescriptionString();
-		}
-	}
-	public String toTextString(XNContext ctx) {
-		return getContents(ctx).toTextString(ctx);
-	}
-	public List<XOMVariant> toList(XNContext ctx) {
-		StringChunkInfo ci = getChunkInfo(ctx,false,false);
-		Vector<XOMVariant> v = new Vector<XOMVariant>();
-		if (ci != null) {
-			for (int i = ci.startChunkIndex; i <= ci.endChunkIndex; i++) {
-				v.add(new XOMStringChunk(parent, chunkType, i, i));
-			}
-		}
-		return v;
 	}
 }

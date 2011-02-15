@@ -27,349 +27,197 @@
 
 package com.kreative.openxion.xom;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 import com.kreative.openxion.XNContext;
+import com.kreative.openxion.XNScriptError;
 import com.kreative.openxion.ast.XNModifier;
-import com.kreative.openxion.xom.inst.XOMString;
 import com.kreative.openxion.xom.inst.XOMBinary;
+import com.kreative.openxion.xom.inst.XOMDictionary;
 import com.kreative.openxion.xom.inst.XOMList;
-import com.kreative.openxion.xom.type.XOMListType;
-import com.kreative.openxion.xom.type.XOMBinaryType;
+import com.kreative.openxion.xom.inst.XOMString;
 
 /**
  * XOMVariable represents a variable in a XION program.
  * It is specially handled separately from other kinds of XOMVariants.
+ * <p>
+ * Starting with OpenXION 1.3, the actual type and contents of the variable
+ * is not stored here. Rather, it is stored in the XNContext, where it belongs.
+ * This is a requirement for proper handling of unquoted literals,
+ * and is part of Issue the Thirteenth.
  * @since OpenXION 0.9
  * @author Rebecca G. Bettencourt, Kreative Software
  */
-public class XOMVariable extends XOMVariant implements XOMStringContainer, XOMBinaryContainer, XOMListContainer {
+public final class XOMVariable extends XOMVariant {
 	private static final long serialVersionUID = 1L;
 	
-	private XOMDataType<? extends XOMVariant> type;
-	private XOMVariant value;
+	private String name;
 	
-	public XOMVariable(XNContext ctx, XOMDataType<? extends XOMVariant> type, XOMVariant value) {
-		this.type = type;
-		this.value = type.makeInstanceFrom(ctx, value);
+	public XOMVariable(String name) {
+		this.name = name;
 	}
 	
-	public XOMVariant unwrap() {
-		return value.unwrap();
+	public boolean declared(XNContext ctx) {
+		XOMVariant v = ctx.getVariableMap(name).getVariable(ctx, name);
+		return v != null;
 	}
 	
-	public boolean hasParent(XNContext ctx) {
-		return value.hasParent(ctx);
+	public final XOMVariant asGiven() {
+		return this;
 	}
-	public XOMVariant getParent(XNContext ctx) {
-		return value.getParent(ctx);
+	public final XOMVariant asValue(XNContext ctx) {
+		XOMVariant v = ctx.getVariableMap(name).getVariable(ctx, name);
+		if (v != null) return v.asGiven();
+		else return new XOMString(name);
+	}
+	public final XOMVariant asContents(XNContext ctx) {
+		XOMVariant v = ctx.getVariableMap(name).getVariable(ctx, name);
+		if (v != null) return v.asGiven();
+		else return new XOMString(name);
+	}
+	public final XOMVariant asPrimitive(XNContext ctx) {
+		XOMVariant v = ctx.getVariableMap(name).getVariable(ctx, name);
+		if (v != null) return v.asPrimitive(ctx);
+		else return new XOMString(name);
+	}
+	public final XOMVariant asContainer(XNContext ctx) {
+		return this;
+	}
+	public final XOMVariable asVariable(XNContext ctx) {
+		return this;
 	}
 	
-	public boolean canDelete(XNContext ctx) {
-		return value.canDelete(ctx);
+	public final boolean canGetParent(XNContext ctx) {
+		return getContents(ctx).asGiven().canGetParent(ctx);
 	}
-	public void delete(XNContext ctx) {
-		value.delete(ctx);
+	public final XOMVariant getParent(XNContext ctx) {
+		return getContents(ctx).asGiven().getParent(ctx);
 	}
 	
-	public boolean canGetContents(XNContext ctx) {
+	public final boolean canDelete(XNContext ctx) {
+		return getContents(ctx).asGiven().canDelete(ctx);
+	}
+	public final void delete(XNContext ctx) {
+		getContents(ctx).asGiven().delete(ctx);
+	}
+	
+	public final boolean canGetContents(XNContext ctx) {
 		return true;
 	}
-	public XOMVariant getContents(XNContext ctx) {
-		return value;
+	public final XOMVariant getContents(XNContext ctx) {
+		XOMVariant v = ctx.getVariableMap(name).getVariable(ctx, name);
+		if (v != null) return v.asGiven();
+		else return new XOMString(name);
 	}
 	
-	public boolean canPutContents(XNContext ctx) {
+	public final boolean canPutContents(XNContext ctx) {
 		return true;
 	}
-	public void putIntoContents(XNContext ctx, XOMVariant contents) {
-		value = type.makeInstanceFrom(ctx, contents);
+	public final void putIntoContents(XNContext ctx, XOMVariant contents) {
+		ctx.getVariableMap(name).setVariable(ctx, name, contents.asValue(ctx));
 	}
-	public void putBeforeContents(XNContext ctx, XOMVariant contents) {
-		value = type.makeInstanceFrom(ctx, contents, value);
+	public final void putBeforeContents(XNContext ctx, XOMVariant contents) {
+		ctx.getVariableMap(name).prependVariable(ctx, name, contents.asValue(ctx));
 	}
-	public void putAfterContents(XNContext ctx, XOMVariant contents) {
-		value = type.makeInstanceFrom(ctx, value, contents);
+	public final void putAfterContents(XNContext ctx, XOMVariant contents) {
+		ctx.getVariableMap(name).appendVariable(ctx, name, contents.asValue(ctx));
 	}
-	public void putIntoContents(XNContext ctx, XOMVariant contents, String property, XOMVariant pvalue) {
-		XOMVariant newValue = type.makeInstanceFrom(ctx, contents);
-		newValue.setProperty(ctx, property, pvalue);
-		value = newValue;
+	public final void putIntoContents(XNContext ctx, XOMVariant contents, String property, XOMVariant value) {
+		throw new XNScriptError("Can't understand this");
 	}
-	public void putBeforeContents(XNContext ctx, XOMVariant contents, String property, XOMVariant pvalue) {
-		XOMVariant newValue = type.makeInstanceFrom(ctx, contents);
-		newValue.setProperty(ctx, property, pvalue);
-		value = type.makeInstanceFrom(ctx, newValue, value);
+	public final void putBeforeContents(XNContext ctx, XOMVariant contents, String property, XOMVariant value) {
+		throw new XNScriptError("Can't understand this");
 	}
-	public void putAfterContents(XNContext ctx, XOMVariant contents, String property, XOMVariant pvalue) {
-		XOMVariant newValue = type.makeInstanceFrom(ctx, contents);
-		newValue.setProperty(ctx, property, pvalue);
-		value = type.makeInstanceFrom(ctx, value, newValue);
+	public final void putAfterContents(XNContext ctx, XOMVariant contents, String property, XOMVariant value) {
+		throw new XNScriptError("Can't understand this");
 	}
 	
-	public boolean canSortContents(XNContext ctx) {
-		return true;
+	public final boolean canSortContents(XNContext ctx) {
+		XOMVariant v = ctx.getVariableMap(name).getVariable(ctx, name);
+		return v != null;
 	}
-	public void sortContents(XNContext ctx, XOMComparator cmp) {
-		List<XOMVariant> toSort = new Vector<XOMVariant>();
-		if (type instanceof XOMListType) {
-			List<XOMVariant> vars = value.toList(ctx);
-			toSort.addAll(vars);
-		} else if (type instanceof XOMBinaryType) {
-			byte[] bb = ((XOMBinaryType)type).makeInstanceFrom(ctx, value).toByteArray();
-			for (byte b : bb) toSort.add(new XOMBinary(new byte[]{b}));
-		} else {
-			String[] strs = value.toTextString(ctx).split("\r\n|\r|\n|\u2028|\u2029");
-			for (String str : strs) toSort.add(new XOMString(str));
+	public final void sortContents(XNContext ctx, XOMComparator cmp) {
+		XOMVariant v = ctx.getVariableMap(name).getVariable(ctx, name);
+		if (v != null) {
+			v = v.asPrimitive(ctx);
+			List<XOMVariant> toSort = new Vector<XOMVariant>();
+			if (v instanceof XOMList) {
+				toSort.addAll(((XOMList)v).toList());
+			} else if (v instanceof XOMDictionary) {
+				for (String s : ((XOMDictionary)v).toMap().keySet())
+					toSort.add(new XOMString(s));
+			} else if (v instanceof XOMBinary) {
+				for (byte b : ((XOMBinary)v).toByteArray())
+					toSort.add(new XOMBinary(new byte[]{b}));
+			} else {
+				for (String s : v.toTextString(ctx).split("\r\n|\r|\n|\u2028|\u2029"))
+					toSort.add(new XOMString(s));
+			}
+			Collections.sort(toSort, cmp);
+			if (v instanceof XOMList) {
+				ctx.getVariableMap(name).setVariable(ctx, name, new XOMList(toSort));
+			} else if (v instanceof XOMDictionary) {
+				Map<String, XOMVariant> oldMap = ((XOMDictionary)v).toMap();
+				Map<String, XOMVariant> newMap = new LinkedHashMap<String, XOMVariant>();
+				for (XOMVariant key : toSort)
+					newMap.put(key.toTextString(ctx), oldMap.get(key.toTextString(ctx)).asGiven());
+				ctx.getVariableMap(name).setVariable(ctx, name, new XOMDictionary(newMap));
+			} else if (v instanceof XOMBinary) {
+				byte[] b = new byte[toSort.size()];
+				for (int i = 0; i < b.length; i++) {
+					b[i] = ((XOMBinary)toSort.get(i)).toByteArray()[0];
+				}
+				ctx.getVariableMap(name).setVariable(ctx, name, new XOMBinary(b));
+			} else {
+				String endl = ctx.getLineEnding();
+				StringBuffer s = new StringBuffer();
+				for (XOMVariant line : toSort) {
+					s.append(line.toTextString(ctx));
+					s.append(endl);
+				}
+				if (s.length() >= endl.length()) {
+					s.delete(s.length()-endl.length(), s.length());
+				}
+				ctx.getVariableMap(name).setVariable(ctx, name, new XOMString(s.toString()));
+			}
 		}
-		Collections.sort(toSort, cmp);
-		if (type instanceof XOMListType) {
-			value = type.makeInstanceFrom(ctx, new XOMList(toSort));
-		} else if (type instanceof XOMBinaryType) {
-			byte[] bb = new byte[toSort.size()];
-			for (int i = 0; i < toSort.size(); i++) bb[i] = ((XOMBinary)toSort.get(i)).toByteArray()[0];
-			value = type.makeInstanceFrom(ctx, new XOMBinary(bb));
+		else throw new XNScriptError("Can't understand this");
+	}
+	
+	public final boolean canGetProperty(XNContext ctx, String property) {
+		return getContents(ctx).asGiven().canGetProperty(ctx, property);
+	}
+	public final XOMVariant getProperty(XNContext ctx, XNModifier modifier, String property) {
+		return getContents(ctx).asGiven().getProperty(ctx, modifier, property);
+	}
+	
+	public final boolean canSetProperty(XNContext ctx, String property) {
+		return getContents(ctx).asGiven().canSetProperty(ctx, property);
+	}
+	public final void setProperty(XNContext ctx, String property, XOMVariant value) {
+		getContents(ctx).asGiven().setProperty(ctx, property, value);
+	}
+	
+	protected final String toLanguageStringImpl() {
+		return name;
+	}
+	protected final String toTextStringImpl(XNContext ctx) {
+		XOMVariant v = ctx.getVariableMap(name).getVariable(ctx, name);
+		if (v != null) return v.toTextString(ctx);
+		else return name;
+	}
+	protected final int hashCodeImpl() {
+		return this.name.toLowerCase().hashCode();
+	}
+	protected final boolean equalsImpl(XOMVariant other) {
+		if (other instanceof XOMVariable) {
+			XOMVariable v = (XOMVariable)other;
+			return this.name.equalsIgnoreCase(v.name);
 		} else {
-			StringBuffer s = new StringBuffer();
-			for (XOMVariant v : toSort) s.append(v.toTextString(ctx) + ctx.getLineEnding());
-			if (s.length() > 0 && s.substring(s.length()-ctx.getLineEnding().length()).equals(ctx.getLineEnding()))
-				s.delete(s.length()-ctx.getLineEnding().length(), s.length());
-			value = type.makeInstanceFrom(ctx, new XOMString(s.toString()));
+			return false;
 		}
-	}
-	
-	public boolean canGetProperty(XNContext ctx, String property) {
-		return value.canGetProperty(ctx, property);
-	}
-	public XOMVariant getProperty(XNContext ctx, XNModifier modifier, String property) {
-		return value.getProperty(ctx, modifier, property);
-	}
-	public boolean canSetProperty(XNContext ctx, String property) {
-		return value.canSetProperty(ctx, property);
-	}
-	public void setProperty(XNContext ctx, String property, XOMVariant pvalue) {
-		value.setProperty(ctx, property, pvalue);
-	}
-	
-	public boolean canGetStringProperty(XNContext ctx, String property) {
-		return (value instanceof XOMStringContainer) && ((XOMStringContainer)value).canGetStringProperty(ctx, property);
-	}
-	public XOMVariant getStringProperty(XNContext ctx, XNModifier modifier, String property, int s, int e) {
-		if (value instanceof XOMStringContainer) return ((XOMStringContainer)value).getStringProperty(ctx, modifier, property, s, e);
-		else return super.getProperty(ctx, modifier, property);
-	}
-	public boolean canSetStringProperty(XNContext ctx, String property) {
-		return (value instanceof XOMStringContainer) && ((XOMStringContainer)value).canSetStringProperty(ctx, property);
-	}
-	public void setStringProperty(XNContext ctx, String property, int s, int e, XOMVariant pvalue) {
-		if (value instanceof XOMStringContainer) ((XOMStringContainer)value).setStringProperty(ctx, property, s, e, pvalue);
-		else super.setProperty(ctx, property, pvalue);
-	}
-	
-	public boolean canGetListProperty(XNContext ctx, String property) {
-		return (value instanceof XOMListContainer) && ((XOMListContainer)value).canGetListProperty(ctx, property);
-	}
-	public XOMVariant getListProperty(XNContext ctx, XNModifier modifier, String property, int s, int e) {
-		if (value instanceof XOMListContainer) return ((XOMListContainer)value).getListProperty(ctx, modifier, property, s, e);
-		else return super.getProperty(ctx, modifier, property);
-	}
-	public boolean canSetListProperty(XNContext ctx, String property) {
-		return (value instanceof XOMListContainer) && ((XOMListContainer)value).canSetListProperty(ctx, property);
-	}
-	public void setListProperty(XNContext ctx, String property, int s, int e, XOMVariant pvalue) {
-		if (value instanceof XOMListContainer) ((XOMListContainer)value).setListProperty(ctx, property, s, e, pvalue);
-		else super.setProperty(ctx, property, pvalue);
-	}
-	
-	public boolean canGetBinaryProperty(XNContext ctx, String property) {
-		return (value instanceof XOMBinaryContainer) && ((XOMBinaryContainer)value).canGetBinaryProperty(ctx, property);
-	}
-	public XOMVariant getBinaryProperty(XNContext ctx, XNModifier modifier, String property, int s, int e) {
-		if (value instanceof XOMBinaryContainer) return ((XOMBinaryContainer)value).getBinaryProperty(ctx, modifier, property, s, e);
-		else return super.getProperty(ctx, modifier, property);
-	}
-	public boolean canSetBinaryProperty(XNContext ctx, String property) {
-		return (value instanceof XOMBinaryContainer) && ((XOMBinaryContainer)value).canSetBinaryProperty(ctx, property);
-	}
-	public void setBinaryProperty(XNContext ctx, String property, int s, int e, XOMVariant pvalue) {
-		if (value instanceof XOMBinaryContainer) ((XOMBinaryContainer)value).setBinaryProperty(ctx, property, s, e, pvalue);
-		else super.setProperty(ctx, property, pvalue);
-	}
-	
-	public boolean equalsImpl(Object o) {
-		return value.equalsImpl(o);
-	}
-	public int hashCode() {
-		return value.hashCode();
-	}
-	public String toDescriptionString() {
-		return value.toDescriptionString();
-	}
-	public String toTextString(XNContext ctx) {
-		return value.toTextString(ctx);
-	}
-	public List<XOMVariant> toList(XNContext ctx) {
-		return value.toList(ctx);
-	}
-	
-	/*
-	 * Returning false for these should make XOM*Chunk use getContents
-	 * and putIntoContents instead of these. It makes things harder for them
-	 * but easier for us. :)
-	 */
-
-	public boolean canDeleteString(XNContext ctx) {
-		return false;
-	}
-
-	public boolean canGetString(XNContext ctx) {
-		return false;
-	}
-
-	public boolean canPutString(XNContext ctx) {
-		return false;
-	}
-	
-	public boolean canRearrangeString(XNContext ctx) {
-		return false;
-	}
-
-	public void deleteString(XNContext ctx, int startCharIndex, int endCharIndex) {
-		// nothing
-	}
-
-	public XOMVariant getString(XNContext ctx, int startCharIndex, int endCharIndex) {
-		return null;
-	}
-
-	public void putAfterString(XNContext ctx, int startCharIndex, int endCharIndex, XOMVariant contents) {
-		// nothing
-	}
-
-	public void putBeforeString(XNContext ctx, int startCharIndex, int endCharIndex, XOMVariant contents) {
-		// nothing
-	}
-
-	public void putIntoString(XNContext ctx, int startCharIndex, int endCharIndex, XOMVariant contents) {
-		// nothing
-	}
-
-	public void putAfterString(XNContext ctx, int startCharIndex, int endCharIndex, XOMVariant contents, String property, XOMVariant pvalue) {
-		// nothing
-	}
-
-	public void putBeforeString(XNContext ctx, int startCharIndex, int endCharIndex, XOMVariant contents, String property, XOMVariant pvalue) {
-		// nothing
-	}
-
-	public void putIntoString(XNContext ctx, int startCharIndex, int endCharIndex, XOMVariant contents, String property, XOMVariant pvalue) {
-		// nothing
-	}
-	
-	public void rearrangeString(XNContext ctx, int[] startIndexes, int[] endIndexes) {
-		// nothing
-	}
-
-	public boolean canDeleteBinary(XNContext ctx) {
-		return false;
-	}
-
-	public boolean canGetBinary(XNContext ctx) {
-		return false;
-	}
-
-	public boolean canPutBinary(XNContext ctx) {
-		return false;
-	}
-	
-	public boolean canSortBinary(XNContext ctx) {
-		return false;
-	}
-
-	public void deleteBinary(XNContext ctx, int startByteIndex, int endByteIndex) {
-		// nothing
-	}
-
-	public XOMVariant getBinary(XNContext ctx, int startByteIndex, int endByteIndex) {
-		return null;
-	}
-
-	public void putAfterBinary(XNContext ctx, int startByteIndex, int endByteIndex, XOMVariant contents) {
-		// nothing
-	}
-
-	public void putBeforeBinary(XNContext ctx, int startByteIndex, int endByteIndex, XOMVariant contents) {
-		// nothing
-	}
-
-	public void putIntoBinary(XNContext ctx, int startByteIndex, int endByteIndex, XOMVariant contents) {
-		// nothing
-	}
-
-	public void putAfterBinary(XNContext ctx, int startByteIndex, int endByteIndex, XOMVariant contents, String property, XOMVariant pvalue) {
-		// nothing
-	}
-
-	public void putBeforeBinary(XNContext ctx, int startByteIndex, int endByteIndex, XOMVariant contents, String property, XOMVariant pvalue) {
-		// nothing
-	}
-
-	public void putIntoBinary(XNContext ctx, int startByteIndex, int endByteIndex, XOMVariant contents, String property, XOMVariant pvalue) {
-		// nothing
-	}
-	
-	public void sortBinary(XNContext ctx, int startByteIndex, int endByteIndex, XOMComparator cmp) {
-		// nothing
-	}
-
-	public boolean canDeleteList(XNContext ctx) {
-		return false;
-	}
-
-	public boolean canGetList(XNContext ctx) {
-		return false;
-	}
-
-	public boolean canPutList(XNContext ctx) {
-		return false;
-	}
-	
-	public boolean canSortList(XNContext ctx) {
-		return false;
-	}
-
-	public void deleteList(XNContext ctx, int startElementIndex, int endElementIndex) {
-		// nothing
-	}
-
-	public XOMVariant getList(XNContext ctx, int startElementIndex, int endElementIndex) {
-		return null;
-	}
-
-	public void putAfterList(XNContext ctx, int startElementIndex, int endElementIndex, XOMVariant contents) {
-		// nothing
-	}
-
-	public void putBeforeList(XNContext ctx, int startElementIndex, int endElementIndex, XOMVariant contents) {
-		// nothing
-	}
-
-	public void putIntoList(XNContext ctx, int startElementIndex, int endElementIndex, XOMVariant contents) {
-		// nothing
-	}
-
-	public void putAfterList(XNContext ctx, int startElementIndex, int endElementIndex, XOMVariant contents, String property, XOMVariant pvalue) {
-		// nothing
-	}
-
-	public void putBeforeList(XNContext ctx, int startElementIndex, int endElementIndex, XOMVariant contents, String property, XOMVariant pvalue) {
-		// nothing
-	}
-
-	public void putIntoList(XNContext ctx, int startElementIndex, int endElementIndex, XOMVariant contents, String property, XOMVariant pvalue) {
-		// nothing
-	}
-	
-	public void sortList(XNContext ctx, int startElementIndex, int endElementIndex, XOMComparator cmp) {
-		// nothing
 	}
 }

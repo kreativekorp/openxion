@@ -27,11 +27,11 @@
 
 package com.kreative.openxion.xom.inst;
 
-import java.util.*;
 import com.kreative.openxion.XNContext;
+import com.kreative.openxion.xom.XOMPrimitiveValue;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMBoolean extends XOMVariant {
+public class XOMBoolean extends XOMPrimitiveValue {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMBoolean TRUE = new XOMBoolean(true);
@@ -47,26 +47,21 @@ public class XOMBoolean extends XOMVariant {
 		return theBoolean;
 	}
 	
-	protected boolean equalsImpl(Object o) {
+	protected String toLanguageStringImpl() {
+		return theBoolean ? "true" : "false";
+	}
+	protected String toTextStringImpl(XNContext ctx) {
+		return theBoolean ? "true" : "false";
+	}
+	protected int hashCodeImpl() {
+		return theBoolean ? 1 : 0;
+	}
+	protected boolean equalsImpl(XOMVariant o) {
 		if (o instanceof XOMBoolean) {
 			XOMBoolean other = (XOMBoolean)o;
 			return this.theBoolean == other.theBoolean;
 		} else {
 			return false;
 		}
-	}
-	public int hashCode() {
-		return theBoolean ? 1 : 0;
-	}
-	public String toDescriptionString() {
-		return theBoolean ? "true" : "false";
-	}
-	public String toTextString(XNContext ctx) {
-		return theBoolean ? "true" : "false";
-	}
-	public List<XOMVariant> toList(XNContext ctx) {
-		Vector<XOMVariant> v = new Vector<XOMVariant>();
-		v.add(this);
-		return v;
 	}
 }

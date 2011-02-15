@@ -38,8 +38,6 @@ import com.kreative.openxion.XNContext;
 import com.kreative.openxion.ast.XNExpression;
 import com.kreative.openxion.ast.XNVariableScope;
 import com.kreative.openxion.xom.inst.XOMNumber;
-import com.kreative.openxion.xom.inst.XOMEmpty;
-import com.kreative.openxion.xom.type.XOMStringType;
 import com.kreative.openxion.xom.type.XOMNumberType;
 import com.kreative.openxion.xom.type.XOMDateType;
 
@@ -109,35 +107,25 @@ public class XOMComparator implements Comparator<XOMVariant> {
 		} else {
 			if (filter != null && interp != null) {
 				ctx.setVariableScope("each", XNVariableScope.LOCAL);
-				XOMVariable e = ctx.getVariable("each");
-				if (e == null) e = ctx.createVariable("each", XOMStringType.instance, XOMEmpty.EMPTY);
-				e.putIntoContents(ctx, o);
+				ctx.getVariableMap("each").setVariable(ctx, "each", o.asValue(ctx));
 				o = interp.evaluateExpression(filter);
 			}
 			switch (type) {
 			case TYPE_TEXT:
-				try {
-					String s = XOMStringType.instance.makeInstanceFrom(ctx,o).toTextString(ctx);
-					map.put(o, s);
-					return s;
-				} catch (Exception e) {
+				{
 					String s = o.toTextString(ctx);
 					map.put(o, s);
 					return s;
 				}
 			case TYPE_INTERNATIONAL:
-				try {
-					CollationKey k = coll.getCollationKey(XOMStringType.instance.makeInstanceFrom(ctx,o).toTextString(ctx));
+				{
+					CollationKey k = coll.getCollationKey(o.toTextString(ctx));
 					map.put(o, k);
 					return k;
-				} catch (Exception e) {
-					String s = o.toTextString(ctx);
-					map.put(o, s);
-					return s;
 				}
 			case TYPE_NUMERIC:
 				try {
-					XOMNumber n = XOMNumberType.instance.makeInstanceFrom(ctx,o);
+					XOMNumber n = XOMNumberType.instance.makeInstanceFrom(ctx,o.asPrimitive(ctx));
 					Object q = n.isUndefined() ? n.toDouble() : n.toBigDecimal();
 					map.put(o, q);
 					return q;
@@ -148,7 +136,7 @@ public class XOMComparator implements Comparator<XOMVariant> {
 				}
 			case TYPE_DATETIME:
 				try {
-					Calendar c = XOMDateType.instance.makeInstanceFrom(ctx,o).toCalendar();
+					Calendar c = XOMDateType.instance.makeInstanceFrom(ctx,o.asPrimitive(ctx)).toCalendar();
 					map.put(o, c);
 					return c;
 				} catch (Exception e) {
@@ -157,9 +145,11 @@ public class XOMComparator implements Comparator<XOMVariant> {
 					return s;
 				}
 			default:
-				String s = o.toTextString(ctx);
-				map.put(o, s);
-				return s;
+				{
+					String s = o.toTextString(ctx);
+					map.put(o, s);
+					return s;
+				}
 			}
 		}
 	}
@@ -174,9 +164,9 @@ public class XOMComparator implements Comparator<XOMVariant> {
 		else if (k1 instanceof BigDecimal && k2 instanceof BigDecimal) {
 			cmp = ((BigDecimal)k1).compareTo((BigDecimal)k2);
 		}
-		else if ((k1 instanceof BigDecimal || k1 instanceof Double) && (k2 instanceof BigDecimal || k2 instanceof Double)) {
-			double d1 = (k1 instanceof BigDecimal) ? ((BigDecimal)k1).doubleValue() : ((Double)k1);
-			double d2 = (k2 instanceof BigDecimal) ? ((BigDecimal)k2).doubleValue() : ((Double)k2);
+		else if (k1 instanceof Number && k2 instanceof Number) {
+			double d1 = ((Number)k1).doubleValue();
+			double d2 = ((Number)k2).doubleValue();
 			cmp = Double.compare(d1, d2);
 		}
 		else if (k1 instanceof Calendar && k2 instanceof Calendar) {
@@ -186,7 +176,7 @@ public class XOMComparator implements Comparator<XOMVariant> {
 			cmp = ((String)k1).compareToIgnoreCase((String)k2);
 		}
 		else {
-			cmp = o1.toTextString(ctx).compareToIgnoreCase(o2.toTextString(ctx));
+			cmp = k1.toString().compareToIgnoreCase(k2.toString());
 		}
 		switch (order) {
 		case ORDER_ASCENDING:

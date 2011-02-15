@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2009-2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2011 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -21,63 +21,37 @@
  * other provisions required by the LGPL License. If you do not delete
  * the provisions above, a recipient may use your version of this file
  * under either the MPL or the LGPL License.
- * @since OpenXION 0.9
+ * @since OpenXION 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  */
 
 package com.kreative.openxion.xom.type;
 
-import java.util.List;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.xom.XOMChunkDataType;
 import com.kreative.openxion.xom.XOMVariant;
-import com.kreative.openxion.xom.XOMGetError;
-import com.kreative.openxion.xom.inst.XOMListChunk;
+import com.kreative.openxion.xom.inst.XOMDictionaryChunk;
 
-public class XOMListChunkType extends XOMChunkDataType<XOMListChunk> {
+public class XOMDictionaryChunkType extends XOMChunkDataType<XOMDictionaryChunk> {
 	private static final long serialVersionUID = 1L;
 	
-	public static final XOMListChunkType instance = new XOMListChunkType();
-	public static final XOMListType listInstance = new XOMListType("elements", DESCRIBABILITY_OF_PLURAL_CHUNKS, instance);
+	public static final XOMDictionaryChunkType instance = new XOMDictionaryChunkType();
+	public static final XOMListType listInstance = new XOMListType("entries", DESCRIBABILITY_OF_PRIMITIVES, instance);
 	
-	private XOMListChunkType() {
-		super("element", DESCRIBABILITY_OF_SINGULAR_CHUNKS | DESCRIBABLE_BY_NAME, XOMListChunk.class);
+	private XOMDictionaryChunkType() {
+		super("entry", DESCRIBABILITY_OF_PRIMITIVES, XOMDictionaryChunk.class);
 	}
 	
-	public boolean canGetChildMassVariant(XNContext ctx, XOMVariant parent) {
-		return true;
-	}
-	public XOMVariant getChildMassVariant(XNContext ctx, XOMVariant parent) {
-		return new XOMListChunk(parent, 1, -1);
-	}
 	public boolean canGetChildVariantByIndex(XNContext ctx, XOMVariant parent, int index) {
 		return true;
 	}
-	public boolean canGetChildVariantByIndex(XNContext ctx, XOMVariant parent, int startIndex, int endIndex) {
+	public boolean canGetChildVariantByName(XNContext ctx, XOMVariant parent, String name) {
 		return true;
 	}
 	public XOMVariant getChildVariantByIndex(XNContext ctx, XOMVariant parent, int index) {
-		return new XOMListChunk(parent, index);
-	}
-	public XOMVariant getChildVariantByIndex(XNContext ctx, XOMVariant parent, int startIndex, int endIndex) {
-		return new XOMListChunk(parent, startIndex, endIndex);
-	}
-	public boolean canGetChildVariantByName(XNContext ctx, XOMVariant parent, String name) {
-		List<XOMVariant> l = XOMListType.instance.makeInstanceFrom(ctx, parent).toList();
-		for (int i = 0; i < l.size(); i++) {
-			if (l.get(i).toTextString(ctx).equalsIgnoreCase(name)) {
-				return true;
-			}
-		}
-		return false;
+		return new XOMDictionaryChunk(parent, Integer.toString(index));
 	}
 	public XOMVariant getChildVariantByName(XNContext ctx, XOMVariant parent, String name) {
-		List<XOMVariant> l = XOMListType.instance.makeInstanceFrom(ctx, parent).toList();
-		for (int i = 0; i < l.size(); i++) {
-			if (l.get(i).toTextString(ctx).equalsIgnoreCase(name)) {
-				return new XOMListChunk(parent, i+1);
-			}
-		}
-		throw new XOMGetError(typeName);
+		return new XOMDictionaryChunk(parent, name);
 	}
 }

@@ -27,18 +27,19 @@
 
 package com.kreative.openxion.xom.inst;
 
-import java.util.*;
 import com.kreative.openxion.XNContext;
+import com.kreative.openxion.XNScriptError;
 import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.util.BinaryNumericChunkType;
-import com.kreative.openxion.xom.XOMVariant;
+import com.kreative.openxion.xom.XOMContainerObject;
 import com.kreative.openxion.xom.XOMBinaryContainer;
+import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.type.XOMBinaryType;
 import com.kreative.openxion.xom.type.XOMNumberType;
 import com.kreative.openxion.xom.type.XOMIntegerType;
 
-public class XOMBinaryNumericChunk extends XOMVariant {
+public class XOMBinaryNumericChunk extends XOMContainerObject {
 	private static final long serialVersionUID = 1L;
 	
 	private XOMVariant parent;
@@ -51,7 +52,7 @@ public class XOMBinaryNumericChunk extends XOMVariant {
 		this.index = index;
 	}
 	
-	public boolean hasParent(XNContext ctx) {
+	public boolean canGetParent(XNContext ctx) {
 		return true;
 	}
 	
@@ -67,12 +68,7 @@ public class XOMBinaryNumericChunk extends XOMVariant {
 	}
 	
 	private BinaryChunkInfo getChunkInfo(XNContext ctx, boolean puttingBefore, boolean puttingAfter, boolean padding) {
-		byte[] data;
-		if (parent.canGetContents(ctx)) {
-			data = XOMBinaryType.instance.makeInstanceFrom(ctx, parent.getContents(ctx)).toByteArray();
-		} else {
-			data = XOMBinaryType.instance.makeInstanceFrom(ctx, parent).toByteArray();
-		}
+		byte[] data = XOMBinaryType.instance.makeInstanceFrom(ctx, parent.asPrimitive(ctx)).toByteArray();
 		if (data == null) return null;
 		else {
 			int[] idx = XIONUtil.index(0, data.length-chunkType.length(), index, index);
@@ -81,7 +77,7 @@ public class XOMBinaryNumericChunk extends XOMVariant {
 				int n = ( (puttingBefore && puttingAfter) ? Math.max(s,e) : puttingBefore ? s-1 : puttingAfter ? e : (data.length-1) )-(data.length-1);
 				byte[] a = new byte[n];
 				data = XIONUtil.binaryConcat(data, a);
-				parent.putAfterContents(ctx, new XOMBinary(a));
+				parent.asContainer(ctx).putAfterContents(ctx, new XOMBinary(a));
 			}
 			if (padding && (s > (data.length-1) || e > (data.length-1))) {
 				int n = Math.max(s,e) - (data.length-1);
@@ -93,7 +89,7 @@ public class XOMBinaryNumericChunk extends XOMVariant {
 				byte[] a = new byte[n];
 				s += n; e += n;
 				data = XIONUtil.binaryConcat(a, data);
-				parent.putBeforeContents(ctx, new XOMBinary(a));
+				parent.asContainer(ctx).putBeforeContents(ctx, new XOMBinary(a));
 			}
 			if (padding && (s < 0 || e < 0)) {
 				int n = Math.abs(Math.min(s,e));
@@ -119,7 +115,7 @@ public class XOMBinaryNumericChunk extends XOMVariant {
 		if (parent instanceof XOMBinaryContainer && ((XOMBinaryContainer)parent).canDeleteBinary(ctx)) {
 			return true;
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			return true;
 		}
 		else {
@@ -133,14 +129,14 @@ public class XOMBinaryNumericChunk extends XOMVariant {
 			BinaryChunkInfo ci = getChunkInfo(ctx, false, false, false);
 			p.deleteBinary(ctx, ci.startByteIndex, ci.endByteIndex);
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			BinaryChunkInfo ci = getChunkInfo(ctx, false, false, false);
 			byte[] left = XIONUtil.binarySubstring(ci.parentContent, 0, ci.startByteIndex);
 			byte[] right = XIONUtil.binarySubstring(ci.parentContent, ci.endByteIndex, ci.byteCount);
-			parent.putIntoContents(ctx, new XOMBinary(XIONUtil.binaryConcat(left, right)));
+			parent.asContainer(ctx).putIntoContents(ctx, new XOMBinary(XIONUtil.binaryConcat(left, right)));
 		}
 		else {
-			super.delete(ctx);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -152,7 +148,7 @@ public class XOMBinaryNumericChunk extends XOMVariant {
 		if (parent instanceof XOMBinaryContainer && ((XOMBinaryContainer)parent).canGetBinary(ctx)) {
 			XOMBinaryContainer p = (XOMBinaryContainer)parent;
 			BinaryChunkInfo ci = getChunkInfo(ctx, false, false, true);
-			XOMVariant bin = p.getBinary(ctx, ci.startByteIndex, ci.endByteIndex);
+			XOMVariant bin = p.getBinary(ctx, ci.startByteIndex, ci.endByteIndex).asPrimitive(ctx);
 			if (chunkType.isFloat()) {
 				return new XOMNumber(chunkType.bigDecimalValueOf(XOMBinaryType.instance.makeInstanceFrom(ctx, bin).toByteArray(), ctx.getUnsigned(), ctx.getLittleEndian()));
 			} else {
@@ -174,7 +170,7 @@ public class XOMBinaryNumericChunk extends XOMVariant {
 		if (parent instanceof XOMBinaryContainer && ((XOMBinaryContainer)parent).canPutBinary(ctx)) {
 			return true;
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			return true;
 		}
 		else {
@@ -199,14 +195,14 @@ public class XOMBinaryNumericChunk extends XOMVariant {
 			BinaryChunkInfo ci = getChunkInfo(ctx, true, true, false);
 			p.putIntoBinary(ctx, ci.startByteIndex, ci.endByteIndex, contents);
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			BinaryChunkInfo ci = getChunkInfo(ctx, true, true, false);
 			byte[] left = XIONUtil.binarySubstring(ci.parentContent, 0, ci.startByteIndex);
 			byte[] right = XIONUtil.binarySubstring(ci.parentContent, ci.endByteIndex, ci.byteCount);
-			parent.putIntoContents(ctx, new XOMBinary(XIONUtil.binaryConcat(left, XOMBinaryType.instance.makeInstanceFrom(ctx, contents).toByteArray(), right)));
+			parent.asContainer(ctx).putIntoContents(ctx, new XOMBinary(XIONUtil.binaryConcat(left, XOMBinaryType.instance.makeInstanceFrom(ctx, contents).toByteArray(), right)));
 		}
 		else {
-			super.putIntoContents(ctx, contents);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -227,14 +223,14 @@ public class XOMBinaryNumericChunk extends XOMVariant {
 			BinaryChunkInfo ci = getChunkInfo(ctx, true, false, false);
 			p.putBeforeBinary(ctx, ci.startByteIndex, ci.endByteIndex, contents);
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			BinaryChunkInfo ci = getChunkInfo(ctx, true, false, false);
 			byte[] left = XIONUtil.binarySubstring(ci.parentContent,0, ci.startByteIndex);
 			byte[] right = XIONUtil.binarySubstring(ci.parentContent,ci.startByteIndex, ci.byteCount);
-			parent.putIntoContents(ctx, new XOMBinary(XIONUtil.binaryConcat(left, XOMBinaryType.instance.makeInstanceFrom(ctx, contents).toByteArray(), right)));
+			parent.asContainer(ctx).putIntoContents(ctx, new XOMBinary(XIONUtil.binaryConcat(left, XOMBinaryType.instance.makeInstanceFrom(ctx, contents).toByteArray(), right)));
 		}
 		else {
-			super.putBeforeContents(ctx, contents);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -255,14 +251,14 @@ public class XOMBinaryNumericChunk extends XOMVariant {
 			BinaryChunkInfo ci = getChunkInfo(ctx, false, true, false);
 			p.putAfterBinary(ctx, ci.startByteIndex, ci.endByteIndex, contents);
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			BinaryChunkInfo ci = getChunkInfo(ctx, false, true, false);
 			byte[] left = XIONUtil.binarySubstring(ci.parentContent,0, ci.endByteIndex);
 			byte[] right = XIONUtil.binarySubstring(ci.parentContent,ci.endByteIndex, ci.byteCount);
-			parent.putIntoContents(ctx, new XOMBinary(XIONUtil.binaryConcat(left, XOMBinaryType.instance.makeInstanceFrom(ctx, contents).toByteArray(), right)));
+			parent.asContainer(ctx).putIntoContents(ctx, new XOMBinary(XIONUtil.binaryConcat(left, XOMBinaryType.instance.makeInstanceFrom(ctx, contents).toByteArray(), right)));
 		}
 		else {
-			super.putBeforeContents(ctx, contents);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -283,14 +279,14 @@ public class XOMBinaryNumericChunk extends XOMVariant {
 			BinaryChunkInfo ci = getChunkInfo(ctx, true, true, false);
 			p.putIntoBinary(ctx, ci.startByteIndex, ci.endByteIndex, contents, property, pvalue);
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			BinaryChunkInfo ci = getChunkInfo(ctx, true, true, false);
 			byte[] left = XIONUtil.binarySubstring(ci.parentContent, 0, ci.startByteIndex);
 			byte[] right = XIONUtil.binarySubstring(ci.parentContent, ci.endByteIndex, ci.byteCount);
-			parent.putIntoContents(ctx, new XOMBinary(XIONUtil.binaryConcat(left, XOMBinaryType.instance.makeInstanceFrom(ctx, contents).toByteArray(), right)), property, pvalue);
+			parent.asContainer(ctx).putIntoContents(ctx, new XOMBinary(XIONUtil.binaryConcat(left, XOMBinaryType.instance.makeInstanceFrom(ctx, contents).toByteArray(), right)), property, pvalue);
 		}
 		else {
-			super.putIntoContents(ctx, contents, property, pvalue);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -311,14 +307,14 @@ public class XOMBinaryNumericChunk extends XOMVariant {
 			BinaryChunkInfo ci = getChunkInfo(ctx, true, false, false);
 			p.putBeforeBinary(ctx, ci.startByteIndex, ci.endByteIndex, contents, property, pvalue);
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			BinaryChunkInfo ci = getChunkInfo(ctx, true, false, false);
 			byte[] left = XIONUtil.binarySubstring(ci.parentContent,0, ci.startByteIndex);
 			byte[] right = XIONUtil.binarySubstring(ci.parentContent,ci.startByteIndex, ci.byteCount);
-			parent.putIntoContents(ctx, new XOMBinary(XIONUtil.binaryConcat(left, XOMBinaryType.instance.makeInstanceFrom(ctx, contents).toByteArray(), right)), property, pvalue);
+			parent.asContainer(ctx).putIntoContents(ctx, new XOMBinary(XIONUtil.binaryConcat(left, XOMBinaryType.instance.makeInstanceFrom(ctx, contents).toByteArray(), right)), property, pvalue);
 		}
 		else {
-			super.putBeforeContents(ctx, contents, property, pvalue);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
@@ -339,22 +335,19 @@ public class XOMBinaryNumericChunk extends XOMVariant {
 			BinaryChunkInfo ci = getChunkInfo(ctx, false, true, false);
 			p.putAfterBinary(ctx, ci.startByteIndex, ci.endByteIndex, contents, property, pvalue);
 		}
-		else if (parent.canPutContents(ctx)) {
+		else if (parent.asGiven().canPutContents(ctx)) {
 			BinaryChunkInfo ci = getChunkInfo(ctx, false, true, false);
 			byte[] left = XIONUtil.binarySubstring(ci.parentContent,0, ci.endByteIndex);
 			byte[] right = XIONUtil.binarySubstring(ci.parentContent,ci.endByteIndex, ci.byteCount);
-			parent.putIntoContents(ctx, new XOMBinary(XIONUtil.binaryConcat(left, XOMBinaryType.instance.makeInstanceFrom(ctx, contents).toByteArray(), right)), property, pvalue);
+			parent.asContainer(ctx).putIntoContents(ctx, new XOMBinary(XIONUtil.binaryConcat(left, XOMBinaryType.instance.makeInstanceFrom(ctx, contents).toByteArray(), right)), property, pvalue);
 		}
 		else {
-			super.putBeforeContents(ctx, contents, property, pvalue);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
 	public boolean canGetProperty(XNContext ctx, String property) {
 		if (parent instanceof XOMBinaryContainer && ((XOMBinaryContainer)parent).canGetBinaryProperty(ctx, property)) {
-			return true;
-		}
-		else if (parent.canGetProperty(ctx, property)) {
 			return true;
 		}
 		else {
@@ -368,19 +361,13 @@ public class XOMBinaryNumericChunk extends XOMVariant {
 			BinaryChunkInfo ci = getChunkInfo(ctx, false, false, false);
 			return p.getBinaryProperty(ctx, modifier, property, ci.startByteIndex, ci.endByteIndex);
 		}
-		else if (parent.canGetProperty(ctx, property)) {
-			return parent.getProperty(ctx, modifier, property);
-		}
 		else {
-			return super.getProperty(ctx, modifier, property);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
 	public boolean canSetProperty(XNContext ctx, String property) {
 		if (parent instanceof XOMBinaryContainer && ((XOMBinaryContainer)parent).canSetBinaryProperty(ctx, property)) {
-			return true;
-		}
-		else if (parent.canSetProperty(ctx, property)) {
 			return true;
 		}
 		else {
@@ -394,32 +381,26 @@ public class XOMBinaryNumericChunk extends XOMVariant {
 			BinaryChunkInfo ci = getChunkInfo(ctx, false, false, false);
 			p.setBinaryProperty(ctx, property, ci.startByteIndex, ci.endByteIndex, value);
 		}
-		else if (parent.canSetProperty(ctx, property)) {
-			parent.setProperty(ctx, property, value);
-		}
 		else {
-			super.setProperty(ctx, property, value);
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
-	protected boolean equalsImpl(Object o) {
+	protected String toLanguageStringImpl() {
+		return chunkType.toString() + " " + index + " of " + parent.toLanguageString();
+	}
+	protected String toTextStringImpl(XNContext ctx) {
+		return getContents(ctx).toTextString(ctx);
+	}
+	protected int hashCodeImpl() {
+		return parent.hashCode() ^ chunkType.hashCode() ^ index;
+	}
+	protected boolean equalsImpl(XOMVariant o) {
 		if (o instanceof XOMBinaryNumericChunk) {
 			XOMBinaryNumericChunk other = (XOMBinaryNumericChunk)o;
 			return (this.parent.equals(other.parent) && this.chunkType == other.chunkType && this.index == other.index);
 		} else {
 			return false;
 		}
-	}
-	public int hashCode() {
-		return parent.hashCode() ^ chunkType.hashCode() ^ index;
-	}
-	public String toDescriptionString() {
-		return chunkType.toString() + " " + index + " of " + parent.toDescriptionString();
-	}
-	public String toTextString(XNContext ctx) {
-		return getContents(ctx).toTextString(ctx);
-	}
-	public List<XOMVariant> toList(XNContext ctx) {
-		return getContents(ctx).toList(ctx);
 	}
 }

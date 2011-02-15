@@ -33,17 +33,15 @@ import com.kreative.openxion.XNContext;
 import com.kreative.openxion.XNSecurityKey;
 import com.kreative.openxion.XNScriptError;
 import com.kreative.openxion.util.XIONUtil;
-import com.kreative.openxion.xom.XOMDataType;
+import com.kreative.openxion.xom.XOMSimpleDataType;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMGetError;
 import com.kreative.openxion.xom.XOMCreateError;
 import com.kreative.openxion.xom.XOMMorphError;
 import com.kreative.openxion.xom.inst.XOMFile;
-import com.kreative.openxion.xom.inst.XOMEmpty;
 import com.kreative.openxion.xom.inst.XOMList;
-import com.kreative.openxion.xom.inst.XOMListChunk;
 
-public class XOMForkType extends XOMDataType<XOMFile> {
+public class XOMForkType extends XOMSimpleDataType<XOMFile> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMForkType instance = new XOMForkType();
@@ -58,10 +56,10 @@ public class XOMForkType extends XOMDataType<XOMFile> {
 	 */
 	
 	public boolean canGetChildMassVariant(XNContext ctx, XOMVariant parent) {
-		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetForks", "Parent", parent.toDescriptionString()) && (XOMFileType.instance.canMakeInstanceFrom(ctx, parent));
+		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetForks", "Parent", parent.toTextString(ctx)) && (XOMFileType.instance.canMakeInstanceFrom(ctx, parent));
 	}
 	public XOMVariant getChildMassVariant(XNContext ctx, XOMVariant parent) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetForks", "Parent", parent.toDescriptionString()))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetForks", "Parent", parent.toTextString(ctx)))
 			throw new XNScriptError("Security settings do not allow file system access");
 		if (XOMFileType.instance.canMakeInstanceFrom(ctx, parent)) {
 			File theFile = XOMFileType.instance.makeInstanceFrom(ctx, parent).toFile();
@@ -78,7 +76,7 @@ public class XOMForkType extends XOMDataType<XOMFile> {
 	}
 	
 	public boolean canGetChildVariantByIndex(XNContext ctx, XOMVariant parent, int index) {
-		if (ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFork", "Parent", parent.toDescriptionString(), "Index", Integer.toString(index)) && XOMFileType.instance.canMakeInstanceFrom(ctx, parent)) {
+		if (ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFork", "Parent", parent.toTextString(ctx), "Index", Integer.toString(index)) && XOMFileType.instance.canMakeInstanceFrom(ctx, parent)) {
 			File theFile = XOMFileType.instance.makeInstanceFrom(ctx, parent).toFile();
 			File theForkHandle = new File(theFile, "..namedfork");
 			File theDataFork = new File(theForkHandle, "data");
@@ -93,10 +91,10 @@ public class XOMForkType extends XOMDataType<XOMFile> {
 		}
 	}
 	public boolean canGetChildVariantByIndex(XNContext ctx, XOMVariant parent, int startIndex, int endIndex) {
-		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFork", "Parent", parent.toDescriptionString(), "StartIndex", Integer.toString(startIndex), "EndIndex", Integer.toString(endIndex)) && (XOMFileType.instance.canMakeInstanceFrom(ctx, parent));
+		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFork", "Parent", parent.toTextString(ctx), "StartIndex", Integer.toString(startIndex), "EndIndex", Integer.toString(endIndex)) && (XOMFileType.instance.canMakeInstanceFrom(ctx, parent));
 	}
 	public boolean canGetChildVariantByName(XNContext ctx, XOMVariant parent, String name) {
-		if (ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFork", "Parent", parent.toDescriptionString(), "Name", name) && XOMFileType.instance.canMakeInstanceFrom(ctx, parent)) {
+		if (ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFork", "Parent", parent.toTextString(ctx), "Name", name) && XOMFileType.instance.canMakeInstanceFrom(ctx, parent)) {
 			File theFile = XOMFileType.instance.makeInstanceFrom(ctx, parent).toFile();
 			File theForkHandle = new File(theFile, "..namedfork");
 			File theFork = new File(theForkHandle, name);
@@ -106,7 +104,7 @@ public class XOMForkType extends XOMDataType<XOMFile> {
 		}
 	}
 	public XOMVariant getChildVariantByIndex(XNContext ctx, XOMVariant parent, int index) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFork", "Parent", parent.toDescriptionString(), "Index", Integer.toString(index)))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFork", "Parent", parent.toTextString(ctx), "Index", Integer.toString(index)))
 			throw new XNScriptError("Security settings do not allow file system access");
 		if (XOMFileType.instance.canMakeInstanceFrom(ctx, parent)) {
 			File theFile = XOMFileType.instance.makeInstanceFrom(ctx, parent).toFile();
@@ -127,7 +125,7 @@ public class XOMForkType extends XOMDataType<XOMFile> {
 		}
 	}
 	public XOMVariant getChildVariantByIndex(XNContext ctx, XOMVariant parent, int startIndex, int endIndex) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFork", "Parent", parent.toDescriptionString(), "StartIndex", Integer.toString(startIndex), "EndIndex", Integer.toString(endIndex)))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFork", "Parent", parent.toTextString(ctx), "StartIndex", Integer.toString(startIndex), "EndIndex", Integer.toString(endIndex)))
 			throw new XNScriptError("Security settings do not allow file system access");
 		if (XOMFileType.instance.canMakeInstanceFrom(ctx, parent)) {
 			File theFile = XOMFileType.instance.makeInstanceFrom(ctx, parent).toFile();
@@ -148,7 +146,7 @@ public class XOMForkType extends XOMDataType<XOMFile> {
 		}
 	}
 	public XOMVariant getChildVariantByName(XNContext ctx, XOMVariant parent, String name) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFork", "Parent", parent.toDescriptionString(), "Name", name))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFork", "Parent", parent.toTextString(ctx), "Name", name))
 			throw new XNScriptError("Security settings do not allow file system access");
 		if (XOMFileType.instance.canMakeInstanceFrom(ctx, parent)) {
 			File theFile = XOMFileType.instance.makeInstanceFrom(ctx, parent).toFile();
@@ -165,10 +163,10 @@ public class XOMForkType extends XOMDataType<XOMFile> {
 	}
 	
 	public boolean canCreateChildVariantByName(XNContext ctx, XOMVariant parent, String name) {
-		return (ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE, "Operation", "CreateFork", "Parent", parent.toDescriptionString(), "Name", name) && XOMFileType.instance.canMakeInstanceFrom(ctx, parent));
+		return (ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE, "Operation", "CreateFork", "Parent", parent.toTextString(ctx), "Name", name) && XOMFileType.instance.canMakeInstanceFrom(ctx, parent));
 	}
 	public XOMVariant createChildVariantByName(XNContext ctx, XOMVariant parent, String name) {
-		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE, "Operation", "CreateFork", "Parent", parent.toDescriptionString(), "Name", name))
+		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_WRITE, "Operation", "CreateFork", "Parent", parent.toTextString(ctx), "Name", name))
 			throw new XNScriptError("Security settings do not allow file system access");
 		if (XOMFileType.instance.canMakeInstanceFrom(ctx, parent)) {
 			File theFile = XOMFileType.instance.makeInstanceFrom(ctx, parent).toFile();
@@ -194,67 +192,30 @@ public class XOMForkType extends XOMDataType<XOMFile> {
 	 * objects in XION can be of any mix of data types (hence the term variant for XION objects).
 	 */
 	
-	private boolean canMorphFromDescription(XNContext ctx, String desc) {
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, desc.trim());
-		return (v instanceof XOMFile && ((XOMFile)v).isFork());
-	}
-	private XOMVariant morphFromDescription(XNContext ctx, String desc) {
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, desc.trim());
-		if (v instanceof XOMFile && ((XOMFile)v).isFork()) return v;
-		else return null;
-	}
 	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		if (instance instanceof XOMFile && ((XOMFile)instance).isFork()) {
-			return true;
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMFile && ((XOMFile)instance.toList(ctx).get(0)).isFork()) {
-			return true;
-		}
-		else if (canMorphFromDescription(ctx, instance.toTextString(ctx))) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, instance.toTextString(ctx));
+		if (v == null) return false;
+		v = v.asPrimitive(ctx);
+		return v instanceof XOMFile && ((XOMFile)v).isFork();
 	}
 	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (left instanceof XOMEmpty) {
-			return canMakeInstanceFromImpl(ctx, right);
-		}
-		else if (right instanceof XOMEmpty) {
-			return canMakeInstanceFromImpl(ctx, left);
-		}
-		else if (canMorphFromDescription(ctx, left.toTextString(ctx) + right.toTextString(ctx))) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, left.toTextString(ctx) + right.toTextString(ctx));
+		if (v == null) return false;
+		v = v.asPrimitive(ctx);
+		return v instanceof XOMFile && ((XOMFile)v).isFork();
 	}
 	protected XOMFile makeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		if (instance instanceof XOMFile && ((XOMFile)instance).isFork()) {
-			return (XOMFile)instance;
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMFile && ((XOMFile)instance.toList(ctx).get(0)).isFork()) {
-			return (XOMFile)instance.toList(ctx).get(0);
-		}
-		else {
-			XOMVariant v = morphFromDescription(ctx, instance.toTextString(ctx));
-			if (v instanceof XOMFile) return (XOMFile)v;
-			else throw new XOMMorphError(typeName);
-		}
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, instance.toTextString(ctx));
+		if (v == null) throw new XOMMorphError(typeName);
+		v = v.asPrimitive(ctx);
+		if (v instanceof XOMFile && ((XOMFile)v).isFork()) return (XOMFile)v;
+		else throw new XOMMorphError(typeName);
 	}
 	protected XOMFile makeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (left instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, right);
-		}
-		else if (right instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, left);
-		}
-		else {
-			XOMVariant v = morphFromDescription(ctx, left.toTextString(ctx) + right.toTextString(ctx));
-			if (v instanceof XOMFile) return (XOMFile)v;
-			else throw new XOMMorphError(typeName);
-		}
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, left.toTextString(ctx) + right.toTextString(ctx));
+		if (v == null) throw new XOMMorphError(typeName);
+		v = v.asPrimitive(ctx);
+		if (v instanceof XOMFile && ((XOMFile)v).isFork()) return (XOMFile)v;
+		else throw new XOMMorphError(typeName);
 	}
 }

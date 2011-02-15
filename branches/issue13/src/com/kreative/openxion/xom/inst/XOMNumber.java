@@ -28,22 +28,26 @@
 package com.kreative.openxion.xom.inst;
 
 import java.math.*;
-import java.util.*;
 import com.kreative.openxion.XNContext;
+import com.kreative.openxion.xom.XOMPrimitiveValue;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMNumber extends XOMVariant {
+public class XOMNumber extends XOMPrimitiveValue {
 	private static final long serialVersionUID = 1L;
+	
+	public static final BigDecimal BIGDECIMAL_PI = new BigDecimal("3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117068");
+	public static final BigDecimal BIGDECIMAL_E = new BigDecimal("2.718281828459045235360287471352662497757247093699959574966967627724076630353547594571382178525166427");
+	public static final BigDecimal BIGDECIMAL_PHI = new BigDecimal("1.618033988749894848204586834365638117720309179805762862135448622705260462818902449707207204189391137");
 	
 	public static final XOMNumber ZERO = new XOMNumber(BigDecimal.ZERO);
 	public static final XOMNumber ONE = new XOMNumber(BigDecimal.ONE);
 	public static final XOMNumber TEN = new XOMNumber(BigDecimal.TEN);
+	public static final XOMNumber PI = new XOMNumber(BIGDECIMAL_PI);
+	public static final XOMNumber E = new XOMNumber(BIGDECIMAL_E);
+	public static final XOMNumber PHI = new XOMNumber(BIGDECIMAL_PHI);
 	public static final XOMNumber POSITIVE_INFINITY = new XOMNumber(false, false);
 	public static final XOMNumber NEGATIVE_INFINITY = new XOMNumber(false, true);
 	public static final XOMNumber NaN = new XOMNumber(true, false);
-	public static final XOMNumber PI = new XOMNumber(Math.PI);
-	public static final XOMNumber E = new XOMNumber(Math.E);
-	public static final XOMNumber PHI = new XOMNumber((1.0 + Math.sqrt(5.0)) / 2.0);
 	
 	private BigDecimal theNumber;
 	private boolean undefined;
@@ -67,7 +71,7 @@ public class XOMNumber extends XOMVariant {
 		} else if (n instanceof Float) {
 			float f = n.floatValue();
 			if (Float.isNaN(f) || Float.isInfinite(f)) {
-				this.theNumber = Double.isNaN(f) ? BigDecimal.ZERO : (f < 0) ? BigDecimal.ONE.negate() : BigDecimal.ONE;
+				this.theNumber = Float.isNaN(f) ? BigDecimal.ZERO : (f < 0) ? BigDecimal.ONE.negate() : BigDecimal.ONE;
 				this.undefined = true;
 			} else {
 				this.theNumber = new BigDecimal(Float.toString(f));
@@ -249,12 +253,37 @@ public class XOMNumber extends XOMVariant {
 		else return theNumber.longValue();
 	}
 	
-	public long toInt() {
+	public int toInt() {
 		if (theNumber == null || undefined) return 0;
 		else return theNumber.intValue();
 	}
 	
-	protected boolean equalsImpl(Object o) {
+	protected String toLanguageStringImpl() {
+		if (theNumber == null) return "NAN";
+		else if (undefined) {
+			int cmp = theNumber.compareTo(BigDecimal.ZERO);
+			if (cmp < 0) return "-INF";
+			else if (cmp > 0) return "INF";
+			else return "NAN";
+		}
+		else return theNumber.toString()
+			.replaceAll("[Ee][-]([0-9]+)", "''$1")
+			.replaceAll("[Ee][+]?([0-9]+)", "'$1");
+	}
+	protected String toTextStringImpl(XNContext ctx) {
+		if (theNumber == null) return "NAN";
+		else if (undefined) {
+			int cmp = theNumber.compareTo(BigDecimal.ZERO);
+			if (cmp < 0) return "-INF";
+			else if (cmp > 0) return "INF";
+			else return "NAN";
+		}
+		else return ctx.getNumberFormat().format(theNumber);
+	}
+	protected int hashCodeImpl() {
+		return (theNumber == null) ? 0 : undefined ? theNumber.signum() : theNumber.hashCode();
+	}
+	protected boolean equalsImpl(XOMVariant o) {
 		if (o instanceof XOMNumber) {
 			XOMNumber other = (XOMNumber)o;
 			if (this.isNaN() && other.isNaN()) {
@@ -275,33 +304,5 @@ public class XOMNumber extends XOMVariant {
 		} else {
 			return false;
 		}
-	}
-	public int hashCode() {
-		return (theNumber == null) ? 0 : undefined ? theNumber.signum() : theNumber.hashCode();
-	}
-	public String toDescriptionString() {
-		if (theNumber == null) return "NAN";
-		else if (undefined) {
-			int cmp = theNumber.compareTo(BigDecimal.ZERO);
-			if (cmp < 0) return "-INF";
-			else if (cmp > 0) return "INF";
-			else return "NAN";
-		}
-		else return theNumber.toString();
-	}
-	public String toTextString(XNContext ctx) {
-		if (theNumber == null) return "NAN";
-		else if (undefined) {
-			int cmp = theNumber.compareTo(BigDecimal.ZERO);
-			if (cmp < 0) return "-INF";
-			else if (cmp > 0) return "INF";
-			else return "NAN";
-		}
-		else return ctx.getNumberFormat().format(theNumber);
-	}
-	public List<XOMVariant> toList(XNContext ctx) {
-		Vector<XOMVariant> v = new Vector<XOMVariant>();
-		v.add(this);
-		return v;
 	}
 }

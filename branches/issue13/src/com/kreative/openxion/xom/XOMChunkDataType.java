@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2009-2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2011 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -21,54 +21,43 @@
  * other provisions required by the LGPL License. If you do not delete
  * the provisions above, a recipient may use your version of this file
  * under either the MPL or the LGPL License.
- * @since OpenXION 1.0
+ * @since OpenXION 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  */
 
-package com.kreative.openxion.xom.inst;
+package com.kreative.openxion.xom;
 
-import java.net.URL;
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.util.XIONUtil;
-import com.kreative.openxion.xom.XOMPrimitiveObject;
-import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMURL extends XOMPrimitiveObject {
+/**
+ * XOMChunkDataType handles polymorphic methods for chunk types.
+ * @since OpenXION 1.3
+ * @author Rebecca G. Bettencourt, Kreative Software
+ * @param <IT> the corresponding subclass of XOMVariant
+ * used to represent the values this data type produces.
+ */
+public abstract class XOMChunkDataType<IT extends XOMVariant> extends XOMDataType<IT> {
 	private static final long serialVersionUID = 1L;
 	
-	private URL theURL;
-	
-	public XOMURL(URL url) {
-		this.theURL = url;
+	protected XOMChunkDataType(String typeName, int describability, Class<IT> instanceClass) {
+		super(typeName, describability, instanceClass);
 	}
 	
-	public URL toURL() {
-		return theURL;
+	public final boolean canMakeInstanceFrom(XNContext ctx, XOMVariant instance) {
+		instance = instance.asValue(ctx);
+		return (instanceClass.isAssignableFrom(instance.getClass()));
 	}
-
-	protected String toLanguageStringImpl() {
-		return "URL "+XIONUtil.quote(theURL.toString());
+	public final boolean canMakeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
+		return false;
 	}
-	protected String toTextStringImpl(XNContext ctx) {
-		return "URL "+XIONUtil.quote(theURL.toString());
+	public final IT makeInstanceFrom(XNContext ctx, XOMVariant instance) {
+		instance = instance.asValue(ctx);
+		if (instanceClass.isAssignableFrom(instance.getClass()))
+			return instanceClass.cast(instance);
+		else
+			throw new XOMMorphError(typeName);
 	}
-	protected int hashCodeImpl() {
-		return (theURL == null) ? 0 : theURL.hashCode();
-	}
-	protected boolean equalsImpl(XOMVariant o) {
-		if (o instanceof XOMURL) {
-			XOMURL other = (XOMURL)o;
-			if (this.theURL == null && other.theURL == null) {
-				return true;
-			}
-			else if (this.theURL == null || other.theURL == null) {
-				return false;
-			}
-			else {
-				return this.theURL.equals(other.theURL);
-			}
-		} else {
-			return false;
-		}
+	public final IT makeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
+		throw new XOMMorphError(typeName);
 	}
 }

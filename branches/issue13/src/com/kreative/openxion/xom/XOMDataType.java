@@ -39,7 +39,7 @@ import com.kreative.openxion.XNContext;
  * @param <IT> the corresponding subclass of XOMVariant
  * used to represent the values this data type produces.
  */
-public abstract class XOMDataType<IT extends XOMVariant> implements Serializable, Cloneable {
+public abstract class XOMDataType<IT extends XOMVariant> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	public static final int DESCRIBABLE_BY_SINGLETON = 0x1;
@@ -198,20 +198,8 @@ public abstract class XOMDataType<IT extends XOMVariant> implements Serializable
 	 * objects in XION can be of any mix of data types (hence the term variant for XION objects).
 	 */
 	
-	public final boolean canMakeInstanceFrom(XNContext ctx, XOMVariant instance) {
-		return canMakeInstanceFromImpl(ctx, instance.unwrap());
-	}
-	public final boolean canMakeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
-		return canMakeInstanceFromImpl(ctx, left.unwrap(), right.unwrap());
-	}
-	public final IT makeInstanceFrom(XNContext ctx, XOMVariant instance) {
-		return makeInstanceFromImpl(ctx, instance.unwrap());
-	}
-	public final IT makeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
-		return makeInstanceFromImpl(ctx, left.unwrap(), right.unwrap());
-	}
-	protected abstract boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance);
-	protected abstract boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right);
-	protected abstract IT makeInstanceFromImpl(XNContext ctx, XOMVariant instance);
-	protected abstract IT makeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right);
+	public abstract boolean canMakeInstanceFrom(XNContext ctx, XOMVariant instance);
+	public abstract boolean canMakeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right);
+	public abstract IT makeInstanceFrom(XNContext ctx, XOMVariant instance);
+	public abstract IT makeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right);
 }
