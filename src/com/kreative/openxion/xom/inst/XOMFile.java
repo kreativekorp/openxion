@@ -34,10 +34,11 @@ import com.kreative.openxion.XNSecurityKey;
 import com.kreative.openxion.XNScriptError;
 import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.ast.XNModifier;
+import com.kreative.openxion.xom.XOMPrimitiveObject;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.type.XOMDateType;
 
-public class XOMFile extends XOMVariant {
+public class XOMFile extends XOMPrimitiveObject {
 	private static final long serialVersionUID = 1L;
 	
 	private File theFile;
@@ -70,7 +71,7 @@ public class XOMFile extends XOMVariant {
 		return theFile;
 	}
 	
-	public boolean hasParent(XNContext ctx) {
+	public boolean canGetParent(XNContext ctx) {
 		return ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetParent") && !(theFile == null || theFile.getParentFile() == null);
 	}
 	public XOMVariant getParent(XNContext ctx) {
@@ -136,13 +137,34 @@ public class XOMFile extends XOMVariant {
 		} else if (property.equalsIgnoreCase("path")) {
 			theFile.renameTo(new File(value.toTextString(ctx)));
 		} else if (property.equalsIgnoreCase("modificationDate")) {
-			theFile.setLastModified(XOMDateType.instance.makeInstanceFrom(ctx, value).toDate().getTime());
+			theFile.setLastModified(XOMDateType.instance.makeInstanceFrom(ctx, value.asPrimitive(ctx)).toDate().getTime());
 		} else {
 			super.setProperty(ctx, property, value);
 		}
 	}
-	
-	protected boolean equalsImpl(Object o) {
+
+	protected String toLanguageStringImpl() {
+		if (theFile.isDirectory()) {
+			if (theFile.getParentFile() == null) {
+				return "disk "+XIONUtil.quote(theFile.getAbsolutePath());
+			} else {
+				return "folder "+XIONUtil.quote(theFile.getAbsolutePath());
+			}
+		} else {
+			if (theFile.getParentFile() != null && theFile.getParentFile().getName().equals("..namedfork")) {
+				return "fork "+XIONUtil.quote(theFile.getAbsolutePath());
+			} else {
+				return "file "+XIONUtil.quote(theFile.getAbsolutePath());
+			}
+		}
+	}
+	protected String toTextStringImpl(XNContext ctx) {
+		return toLanguageStringImpl();
+	}
+	protected int hashCodeImpl() {
+		return (theFile == null) ? 0 : theFile.hashCode();
+	}
+	protected boolean equalsImpl(XOMVariant o) {
 		if (o instanceof XOMFile) {
 			XOMFile other = (XOMFile)o;
 			if (this.theFile == null && other.theFile == null) {
@@ -157,43 +179,5 @@ public class XOMFile extends XOMVariant {
 		} else {
 			return false;
 		}
-	}
-	public int hashCode() {
-		return (theFile == null) ? 0 : theFile.hashCode();
-	}
-	public String toDescriptionString() {
-		if (theFile.isDirectory()) {
-			if (theFile.getParentFile() == null) {
-				return "disk "+XIONUtil.quote(theFile.getAbsolutePath());
-			} else {
-				return "folder "+XIONUtil.quote(theFile.getAbsolutePath());
-			}
-		} else {
-			if (theFile.getParentFile() != null && theFile.getParentFile().getName().equals("..namedfork")) {
-				return "fork "+XIONUtil.quote(theFile.getAbsolutePath());
-			} else {
-				return "file "+XIONUtil.quote(theFile.getAbsolutePath());
-			}
-		}
-	}
-	public String toTextString(XNContext ctx) {
-		if (theFile.isDirectory()) {
-			if (theFile.getParentFile() == null) {
-				return "disk "+XIONUtil.quote(theFile.getAbsolutePath());
-			} else {
-				return "folder "+XIONUtil.quote(theFile.getAbsolutePath());
-			}
-		} else {
-			if (theFile.getParentFile() != null && theFile.getParentFile().getName().equals("..namedfork")) {
-				return "fork "+XIONUtil.quote(theFile.getAbsolutePath());
-			} else {
-				return "file "+XIONUtil.quote(theFile.getAbsolutePath());
-			}
-		}
-	}
-	public List<XOMVariant> toList(XNContext ctx) {
-		Vector<XOMVariant> v = new Vector<XOMVariant>();
-		v.add(this);
-		return v;
 	}
 }

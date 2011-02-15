@@ -28,15 +28,13 @@
 package com.kreative.openxion.xom.type;
 
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.xom.XOMDataType;
-import com.kreative.openxion.xom.XOMVariant;
+import com.kreative.openxion.util.XIONUtil;
+import com.kreative.openxion.xom.XOMSimpleDataType;
 import com.kreative.openxion.xom.XOMMorphError;
+import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.inst.XOMClipboard;
-import com.kreative.openxion.xom.inst.XOMEmpty;
-import com.kreative.openxion.xom.inst.XOMList;
-import com.kreative.openxion.xom.inst.XOMListChunk;
 
-public class XOMClipboardType extends XOMDataType<XOMClipboard> {
+public class XOMClipboardType extends XOMSimpleDataType<XOMClipboard> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMClipboardType instance = new XOMClipboardType();
@@ -46,10 +44,6 @@ public class XOMClipboardType extends XOMDataType<XOMClipboard> {
 		super("clipboard", DESCRIBABLE_BY_SINGLETON, XOMClipboard.class);
 	}
 	
-	/*
-	 * Instantiation of root variants of this type.
-	 */
-	
 	public boolean canGetSingletonInstance(XNContext ctx) {
 		return true;
 	}
@@ -57,71 +51,22 @@ public class XOMClipboardType extends XOMDataType<XOMClipboard> {
 		return XOMClipboard.CLIPBOARD;
 	}
 	
-	/*
-	 * Polymorphism - The data type of an object is determined through these methods.
-	 * Unlike in Java, where an object's type is determined by the class hierarchy,
-	 * objects in XION can be of any mix of data types (hence the term variant for XION objects).
-	 */
-	
-	private boolean fitsDescription(String s) {
-		s = s.replaceAll("(^| )the( |$)", " ");
-		s = s.trim().replaceAll(" +", " ");
-		return (s.equalsIgnoreCase("clipboard"));
-	}
 	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		if (instance instanceof XOMClipboard) {
-			return true;
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMClipboard) {
-			return true;
-		}
-		else if (fitsDescription(instance.toTextString(ctx))) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, instance.toTextString(ctx));
+		return v instanceof XOMClipboard;
 	}
 	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (left instanceof XOMEmpty) {
-			return canMakeInstanceFromImpl(ctx, right);
-		}
-		else if (right instanceof XOMEmpty) {
-			return canMakeInstanceFromImpl(ctx, left);
-		}
-		else if (fitsDescription(left.toTextString(ctx) + right.toTextString(ctx))) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, left.toTextString(ctx) + right.toTextString(ctx));
+		return v instanceof XOMClipboard;
 	}
 	protected XOMClipboard makeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		if (instance instanceof XOMClipboard) {
-			return (XOMClipboard)instance;
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMClipboard) {
-			return (XOMClipboard)instance.toList(ctx).get(0);
-		}
-		else if (fitsDescription(instance.toTextString(ctx))) {
-			return XOMClipboard.CLIPBOARD;
-		}
-		else {
-			throw new XOMMorphError(typeName);
-		}
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, instance.toTextString(ctx));
+		if (v instanceof XOMClipboard) return (XOMClipboard)v;
+		else throw new XOMMorphError(typeName);
 	}
 	protected XOMClipboard makeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (left instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, right);
-		}
-		else if (right instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, left);
-		}
-		else if (fitsDescription(left.toTextString(ctx) + right.toTextString(ctx))) {
-			return XOMClipboard.CLIPBOARD;
-		}
-		else {
-			throw new XOMMorphError(typeName);
-		}
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, left.toTextString(ctx) + right.toTextString(ctx));
+		if (v instanceof XOMClipboard) return (XOMClipboard)v;
+		else throw new XOMMorphError(typeName);
 	}
 }

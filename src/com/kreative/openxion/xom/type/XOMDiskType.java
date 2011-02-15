@@ -33,16 +33,14 @@ import com.kreative.openxion.XNContext;
 import com.kreative.openxion.XNSecurityKey;
 import com.kreative.openxion.XNScriptError;
 import com.kreative.openxion.util.XIONUtil;
-import com.kreative.openxion.xom.XOMDataType;
 import com.kreative.openxion.xom.XOMVariant;
+import com.kreative.openxion.xom.XOMSimpleDataType;
 import com.kreative.openxion.xom.XOMGetError;
 import com.kreative.openxion.xom.XOMMorphError;
 import com.kreative.openxion.xom.inst.XOMFile;
-import com.kreative.openxion.xom.inst.XOMEmpty;
 import com.kreative.openxion.xom.inst.XOMList;
-import com.kreative.openxion.xom.inst.XOMListChunk;
 
-public class XOMDiskType extends XOMDataType<XOMFile> {
+public class XOMDiskType extends XOMSimpleDataType<XOMFile> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMDiskType instance = new XOMDiskType();
@@ -133,67 +131,30 @@ public class XOMDiskType extends XOMDataType<XOMFile> {
 	 * objects in XION can be of any mix of data types (hence the term variant for XION objects).
 	 */
 	
-	private boolean canMorphFromDescription(XNContext ctx, String desc) {
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, desc.trim());
-		return (v instanceof XOMFile && ((XOMFile)v).isDisk());
-	}
-	private XOMVariant morphFromDescription(XNContext ctx, String desc) {
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, desc.trim());
-		if (v instanceof XOMFile && ((XOMFile)v).isDisk()) return v;
-		else return null;
-	}
 	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		if (instance instanceof XOMFile && ((XOMFile)instance).isDisk()) {
-			return true;
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMFile && ((XOMFile)instance.toList(ctx).get(0)).isDisk()) {
-			return true;
-		}
-		else if (canMorphFromDescription(ctx, instance.toTextString(ctx))) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, instance.toTextString(ctx));
+		if (v == null) return false;
+		v = v.asPrimitive(ctx);
+		return v instanceof XOMFile && ((XOMFile)v).isDisk();
 	}
 	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (left instanceof XOMEmpty) {
-			return canMakeInstanceFromImpl(ctx, right);
-		}
-		else if (right instanceof XOMEmpty) {
-			return canMakeInstanceFromImpl(ctx, left);
-		}
-		else if (canMorphFromDescription(ctx, left.toTextString(ctx) + right.toTextString(ctx))) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, left.toTextString(ctx) + right.toTextString(ctx));
+		if (v == null) return false;
+		v = v.asPrimitive(ctx);
+		return v instanceof XOMFile && ((XOMFile)v).isDisk();
 	}
 	protected XOMFile makeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		if (instance instanceof XOMFile && ((XOMFile)instance).isDisk()) {
-			return (XOMFile)instance;
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMFile && ((XOMFile)instance.toList(ctx).get(0)).isDisk()) {
-			return (XOMFile)instance.toList(ctx).get(0);
-		}
-		else {
-			XOMVariant v = morphFromDescription(ctx, instance.toTextString(ctx));
-			if (v instanceof XOMFile) return (XOMFile)v;
-			else throw new XOMMorphError(typeName);
-		}
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, instance.toTextString(ctx));
+		if (v == null) throw new XOMMorphError(typeName);
+		v = v.asPrimitive(ctx);
+		if (v instanceof XOMFile && ((XOMFile)v).isDisk()) return (XOMFile)v;
+		else throw new XOMMorphError(typeName);
 	}
 	protected XOMFile makeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (left instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, right);
-		}
-		else if (right instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, left);
-		}
-		else {
-			XOMVariant v = morphFromDescription(ctx, left.toTextString(ctx) + right.toTextString(ctx));
-			if (v instanceof XOMFile) return (XOMFile)v;
-			else throw new XOMMorphError(typeName);
-		}
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, left.toTextString(ctx) + right.toTextString(ctx));
+		if (v == null) throw new XOMMorphError(typeName);
+		v = v.asPrimitive(ctx);
+		if (v instanceof XOMFile && ((XOMFile)v).isDisk()) return (XOMFile)v;
+		else throw new XOMMorphError(typeName);
 	}
 }

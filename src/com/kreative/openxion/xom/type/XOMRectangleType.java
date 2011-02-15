@@ -29,15 +29,12 @@ package com.kreative.openxion.xom.type;
 
 import java.math.BigDecimal;
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.xom.XOMDataType;
+import com.kreative.openxion.xom.XOMValueDataType;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMMorphError;
 import com.kreative.openxion.xom.inst.XOMRectangle;
-import com.kreative.openxion.xom.inst.XOMEmpty;
-import com.kreative.openxion.xom.inst.XOMList;
-import com.kreative.openxion.xom.inst.XOMListChunk;
 
-public class XOMRectangleType extends XOMDataType<XOMRectangle> {
+public class XOMRectangleType extends XOMValueDataType<XOMRectangle> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMRectangleType instance = new XOMRectangleType();
@@ -47,108 +44,47 @@ public class XOMRectangleType extends XOMDataType<XOMRectangle> {
 		super("rectangle", DESCRIBABILITY_OF_PRIMITIVES, XOMRectangle.class);
 	}
 	
-	/*
-	 * Polymorphism - The data type of an object is determined through these methods.
-	 * Unlike in Java, where an object's type is determined by the class hierarchy,
-	 * objects in XION can be of any mix of data types (hence the term variant for XION objects).
-	 */
-	
+	protected boolean canMakeInstanceFromImpl(XNContext ctx) {
+		return false;
+	}
 	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		if (instance instanceof XOMRectangle) {
+		return false;
+	}
+	protected boolean canMakeInstanceFromImpl(XNContext ctx, String s) {
+		s = s.replace("''", "E-").replace("'", "E+");
+		String[] ss = s.split(",");
+		if (ss.length != 4) {
+			return false;
+		} else try {
+			new BigDecimal(ss[0]).toBigIntegerExact();
+			new BigDecimal(ss[1]).toBigIntegerExact();
+			new BigDecimal(ss[2]).toBigIntegerExact();
+			new BigDecimal(ss[3]).toBigIntegerExact();
 			return true;
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMRectangle) {
-			return true;
-		}
-		else {
-			String s = instance.toTextString(ctx);
-			s = s.replace("''", "E-").replace("'", "E+");
-			String[] ss = s.split(",");
-			if (ss.length != 4) {
-				return false;
-			} else try {
-				new BigDecimal(ss[0]).toBigIntegerExact();
-				new BigDecimal(ss[1]).toBigIntegerExact();
-				new BigDecimal(ss[2]).toBigIntegerExact();
-				new BigDecimal(ss[3]).toBigIntegerExact();
-				return true;
-			} catch (Exception e) {
-				return false;
-			}
+		} catch (Exception e) {
+			return false;
 		}
 	}
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (left instanceof XOMEmpty) {
-			return canMakeInstanceFromImpl(ctx, right);
-		}
-		else if (right instanceof XOMEmpty) {
-			return canMakeInstanceFromImpl(ctx, left);
-		}
-		else {
-			String s = left.toTextString(ctx) + right.toTextString(ctx);
-			s = s.replace("''", "E-").replace("'", "E+");
-			String[] ss = s.split(",");
-			if (ss.length != 4) {
-				return false;
-			} else try {
-				new BigDecimal(ss[0]).toBigIntegerExact();
-				new BigDecimal(ss[1]).toBigIntegerExact();
-				new BigDecimal(ss[2]).toBigIntegerExact();
-				new BigDecimal(ss[3]).toBigIntegerExact();
-				return true;
-			} catch (Exception e) {
-				return false;
-			}
-		}
+	protected XOMRectangle makeInstanceFromImpl(XNContext ctx) {
+		throw new XOMMorphError(typeName);
 	}
 	protected XOMRectangle makeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		if (instance instanceof XOMRectangle) {
-			return (XOMRectangle)instance;
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMRectangle) {
-			return ((XOMRectangle)instance.toList(ctx).get(0));
-		}
-		else {
-			String s = instance.toTextString(ctx);
-			s = s.replace("''", "E-").replace("'", "E+");
-			String[] ss = s.split(",");
-			if (ss.length != 4) {
-				throw new XOMMorphError(typeName);
-			} else try {
-				return new XOMRectangle(
-						new BigDecimal(ss[0]).toBigIntegerExact(),
-						new BigDecimal(ss[1]).toBigIntegerExact(),
-						new BigDecimal(ss[2]).toBigIntegerExact(),
-						new BigDecimal(ss[3]).toBigIntegerExact()
-				);
-			} catch (Exception e) {
-				throw new XOMMorphError(typeName);
-			}
-		}
+		throw new XOMMorphError(typeName);
 	}
-	protected XOMRectangle makeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (left instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, right);
-		}
-		else if (right instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, left);
-		}
-		else {
-			String s = left.toTextString(ctx) + right.toTextString(ctx);
-			s = s.replace("''", "E-").replace("'", "E+");
-			String[] ss = s.split(",");
-			if (ss.length != 4) {
-				throw new XOMMorphError(typeName);
-			} else try {
-				return new XOMRectangle(
-						new BigDecimal(ss[0]).toBigIntegerExact(),
-						new BigDecimal(ss[1]).toBigIntegerExact(),
-						new BigDecimal(ss[2]).toBigIntegerExact(),
-						new BigDecimal(ss[3]).toBigIntegerExact()
-				);
-			} catch (Exception e) {
-				throw new XOMMorphError(typeName);
-			}
+	protected XOMRectangle makeInstanceFromImpl(XNContext ctx, String s) {
+		s = s.replace("''", "E-").replace("'", "E+");
+		String[] ss = s.split(",");
+		if (ss.length != 4) {
+			throw new XOMMorphError(typeName);
+		} else try {
+			return new XOMRectangle(
+					new BigDecimal(ss[0]).toBigIntegerExact(),
+					new BigDecimal(ss[1]).toBigIntegerExact(),
+					new BigDecimal(ss[2]).toBigIntegerExact(),
+					new BigDecimal(ss[3]).toBigIntegerExact()
+			);
+		} catch (Exception e) {
+			throw new XOMMorphError(typeName);
 		}
 	}
 }

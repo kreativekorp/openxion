@@ -28,9 +28,7 @@
 package com.kreative.openxion.xom;
 
 import java.io.Serializable;
-import java.util.List;
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.XNScriptError;
 import com.kreative.openxion.ast.XNModifier;
 
 /**
@@ -38,48 +36,145 @@ import com.kreative.openxion.ast.XNModifier;
  * @since OpenXION 0.9
  * @author Rebecca G. Bettencourt, Kreative Software
  */
-public abstract class XOMVariant implements Serializable, Cloneable {
+public abstract class XOMVariant implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	public XOMVariant unwrap() {
-		return this;
-	}
+	/**
+	 * Returns this variant as originally given by the interpreter.
+	 * This may be a variable, a container, or a primitive.
+	 * @return this variant as originally given by the interpreter.
+	 */
+	public abstract XOMVariant asGiven();
 	
-	public boolean hasParent(XNContext ctx) { return false; }
-	public XOMVariant getParent(XNContext ctx) { throw new XNScriptError("Can't understand this"); }
-
-	public boolean canDelete(XNContext ctx) { return false; }
-	public void delete(XNContext ctx) { throw new XNScriptError("Can't delete this"); }
+	/**
+	 * If this is a variable, returns the variable's value.
+	 * Otherwise, returns this variant as given.
+	 * @param ctx the context.
+	 * @return if this is a variable, the variable's value;
+	 * otherwise, this variant as given.
+	 */
+	public abstract XOMVariant asValue(XNContext ctx);
 	
-	public boolean canGetContents(XNContext ctx) { return false; }
-	public XOMVariant getContents(XNContext ctx) { throw new XNScriptError("Can't get contents of this"); }
+	/**
+	 * If this is a variable, returns the variable's value.
+	 * If this is a container, returns the container's contents.
+	 * Otherwise, returns this variant as given.
+	 * @param ctx the context.
+	 * @return if this is a variable, the variable's value;
+	 * if this is a container, the container's contents;
+	 * otherwise, this variant as given.
+	 */
+	public abstract XOMVariant asContents(XNContext ctx);
 	
-	public boolean canPutContents(XNContext ctx) { return false; }
-	public void putIntoContents(XNContext ctx, XOMVariant contents) { throw new XNScriptError("Can't put into this"); }
-	public void putBeforeContents(XNContext ctx, XOMVariant contents) { throw new XNScriptError("Can't put before this"); }
-	public void putAfterContents(XNContext ctx, XOMVariant contents) { throw new XNScriptError("Can't put after this"); }
-	public void putIntoContents(XNContext ctx, XOMVariant contents, String property, XOMVariant value) { throw new XNScriptError("Can't put into this"); }
-	public void putBeforeContents(XNContext ctx, XOMVariant contents, String property, XOMVariant value) { throw new XNScriptError("Can't put before this"); }
-	public void putAfterContents(XNContext ctx, XOMVariant contents, String property, XOMVariant value) { throw new XNScriptError("Can't put after this"); }
+	/**
+	 * If this is a variable, returns the variable's value as a primitive.
+	 * If this is a container, returns the container's contents as a primitive.
+	 * Otherwise, returns this variant as given.
+	 * @param ctx the context.
+	 * @return if this is a variable, the variable's value as a primitive;
+	 * if this is a container, the container's contents as a primitive;
+	 * otherwise, this variant as given.
+	 */
+	public abstract XOMVariant asPrimitive(XNContext ctx);
 	
-	public boolean canSortContents(XNContext ctx) { return false; }
-	public void sortContents(XNContext ctx, XOMComparator cmp) { throw new XNScriptError("Can't sort this"); }
+	/**
+	 * If this is a variable or container, returns this variant as given.
+	 * Otherwise, treats this variant as a variable name and returns the
+	 * corresponding XOMVariable from the specified XNContext.
+	 * @param ctx the context.
+	 * @return if this is a variable or container, this variant as given;
+	 * otherwise, the XOMVariable corresponding to the variable name given
+	 * by this variant's value.
+	 */
+	public abstract XOMVariant asContainer(XNContext ctx);
 	
-	public boolean canGetProperty(XNContext ctx, String property) { return false; }
-	public XOMVariant getProperty(XNContext ctx, XNModifier modifier, String property) { throw new XNScriptError("Can't get that property"); }
+	/**
+	 * If this is a variable, returns this variant as given.
+	 * Otherwise, treats this variant as a variable name and returns the
+	 * corresponding XOMVariable from the specified XNContext.
+	 * @param ctx the context.
+	 * @return if this is a variable, this variant as given;
+	 * otherwise, the XOMVariable corresponding to the variable name given
+	 * by this variant's value.
+	 */
+	public abstract XOMVariable asVariable(XNContext ctx);
 	
-	public boolean canSetProperty(XNContext ctx, String property) { return false; }
-	public void setProperty(XNContext ctx, String property, XOMVariant value) { throw new XNScriptError("Can't set that property"); }
+	public abstract boolean canGetParent(XNContext ctx);
+	public abstract XOMVariant getParent(XNContext ctx);
 	
-	public final boolean equals(Object o) {
-		return equalsImpl((o instanceof XOMVariant) ? ((XOMVariant)o).unwrap() : o);
-	}
-	protected abstract boolean equalsImpl(Object o);
-	public abstract int hashCode();
+	public abstract boolean canDelete(XNContext ctx);
+	public abstract void delete(XNContext ctx);
+	
+	public abstract boolean canGetContents(XNContext ctx);
+	public abstract XOMVariant getContents(XNContext ctx);
+	
+	public abstract boolean canPutContents(XNContext ctx);
+	public abstract void putIntoContents(XNContext ctx, XOMVariant contents);
+	public abstract void putBeforeContents(XNContext ctx, XOMVariant contents);
+	public abstract void putAfterContents(XNContext ctx, XOMVariant contents);
+	public abstract void putIntoContents(XNContext ctx, XOMVariant contents, String property, XOMVariant value);
+	public abstract void putBeforeContents(XNContext ctx, XOMVariant contents, String property, XOMVariant value);
+	public abstract void putAfterContents(XNContext ctx, XOMVariant contents, String property, XOMVariant value);
+	
+	public abstract boolean canSortContents(XNContext ctx);
+	public abstract void sortContents(XNContext ctx, XOMComparator cmp);
+	
+	public abstract boolean canGetProperty(XNContext ctx, String property);
+	public abstract XOMVariant getProperty(XNContext ctx, XNModifier modifier, String property);
+	
+	public abstract boolean canSetProperty(XNContext ctx, String property);
+	public abstract void setProperty(XNContext ctx, String property, XOMVariant value);
+	
+	/**
+	 * Returns this variant as XION source code.
+	 * THIS IS PROVIDED SOLELY FOR DEBUGGING PURPOSES.
+	 * NEVER USE THIS INSIDE OPENXION ITSELF!
+	 * @return this variant as XION source code.
+	 */
+	@Deprecated
 	public final String toString() {
-		return toDescriptionString();
+		return asGiven().toLanguageStringImpl();
 	}
-	public abstract String toDescriptionString();
-	public abstract String toTextString(XNContext ctx);
-	public abstract List<XOMVariant> toList(XNContext ctx);
+	
+	/**
+	 * Returns this variant as XION source code.
+	 * @return this variant as XION source code.
+	 */
+	public final String toLanguageString() {
+		return asGiven().toLanguageStringImpl();
+	}
+	
+	/**
+	 * Returns this variant's value as a string.
+	 * @return this variant's value as a string.
+	 */
+	public final String toTextString(XNContext ctx) {
+		return asGiven().toTextStringImpl(ctx);
+	}
+	
+	/**
+	 * Returns a hash code for this variant.
+	 * @return a hash code for this variant.
+	 */
+	public final int hashCode() {
+		return asGiven().hashCodeImpl();
+	}
+	
+	/**
+	 * Determines if two XOMHandles refer to the same XOMVrnt.
+	 * @return true if the two XOMHandles are equal, false otherwise.
+	 */
+	public final boolean equals(Object o) {
+		if (o instanceof XOMVariant) {
+			XOMVariant other = ((XOMVariant)o).asGiven();
+			return asGiven().equalsImpl(other);
+		} else {
+			return false;
+		}
+	}
+	
+	protected abstract String toLanguageStringImpl();
+	protected abstract String toTextStringImpl(XNContext ctx);
+	protected abstract int hashCodeImpl();
+	protected abstract boolean equalsImpl(XOMVariant other);
 }

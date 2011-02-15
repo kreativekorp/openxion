@@ -29,12 +29,12 @@ package com.kreative.openxion.xom.inst;
 
 import java.awt.Rectangle;
 import java.math.BigInteger;
-import java.util.*;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.ast.XNModifier;
+import com.kreative.openxion.xom.XOMPrimitiveValue;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMRectangle extends XOMVariant {
+public class XOMRectangle extends XOMPrimitiveValue {
 	private static final long serialVersionUID = 1L;
 	
 	private BigInteger left;
@@ -71,7 +71,7 @@ public class XOMRectangle extends XOMVariant {
 	public XOMPoint topRight() { return new XOMPoint(right, top); }
 	public XOMPoint bottomLeft() { return new XOMPoint(left, bottom); }
 	public XOMPoint bottomRight() { return new XOMPoint(right, bottom); }
-	public XOMPoint center() { return new XOMPoint(left.add(right).divide(BigInteger.valueOf(2)), top.add(bottom).divide(BigInteger.valueOf(2))); }
+	public XOMPoint center() { return new XOMPoint(left.add(right).shiftLeft(1), top.add(bottom).shiftLeft(1)); }
 	public BigInteger width() { return right.subtract(left); }
 	public BigInteger height() { return bottom.subtract(top); }
 	
@@ -113,7 +113,7 @@ public class XOMRectangle extends XOMVariant {
 		} else if (property.equalsIgnoreCase("botRight") || property.equalsIgnoreCase("bottomRight")) {
 			return new XOMPoint(right, bottom);
 		} else if (property.equalsIgnoreCase("loc") || property.equalsIgnoreCase("location") || property.equalsIgnoreCase("center")) {
-			return new XOMPoint(left.add(right).divide(BigInteger.valueOf(2)), top.add(bottom).divide(BigInteger.valueOf(2)));
+			return new XOMPoint(left.add(right).shiftLeft(1), top.add(bottom).shiftLeft(1));
 		} else if (property.equalsIgnoreCase("width")) {
 			return new XOMInteger(right.subtract(left));
 		} else if (property.equalsIgnoreCase("height")) {
@@ -132,26 +132,21 @@ public class XOMRectangle extends XOMVariant {
 		);
 	}
 	
-	protected boolean equalsImpl(Object o) {
+	protected String toLanguageStringImpl() {
+		return "\""+((left == null)?"0":left.toString())+","+((top == null)?"0":top.toString())+","+((right == null)?"0":right.toString())+","+((bottom == null)?"0":bottom.toString())+"\"";
+	}
+	protected String toTextStringImpl(XNContext ctx) {
+		return ((left == null)?"0":left.toString())+","+((top == null)?"0":top.toString())+","+((right == null)?"0":right.toString())+","+((bottom == null)?"0":bottom.toString());
+	}
+	protected int hashCodeImpl() {
+		return left.hashCode() ^ top.hashCode() ^ right.hashCode() ^ bottom.hashCode();
+	}
+	protected boolean equalsImpl(XOMVariant o) {
 		if (o instanceof XOMRectangle) {
 			XOMRectangle other = (XOMRectangle)o;
 			return this.left.compareTo(other.left) == 0 && this.top.compareTo(other.top) == 0 && this.right.compareTo(other.right) == 0 && this.bottom.compareTo(other.bottom) == 0;
 		} else {
 			return false;
 		}
-	}
-	public int hashCode() {
-		return left.hashCode() ^ top.hashCode() ^ right.hashCode() ^ bottom.hashCode();
-	}
-	public String toDescriptionString() {
-		return ((left == null)?"0":left.toString())+","+((top == null)?"0":top.toString())+","+((right == null)?"0":right.toString())+","+((bottom == null)?"0":bottom.toString());
-	}
-	public String toTextString(XNContext ctx) {
-		return ((left == null)?"0":left.toString())+","+((top == null)?"0":top.toString())+","+((right == null)?"0":right.toString())+","+((bottom == null)?"0":bottom.toString());
-	}
-	public List<XOMVariant> toList(XNContext ctx) {
-		Vector<XOMVariant> v = new Vector<XOMVariant>();
-		v.add(this);
-		return v;
 	}
 }

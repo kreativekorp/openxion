@@ -33,6 +33,7 @@ import com.kreative.openxion.XNContext;
 import com.kreative.openxion.xom.XOMDataType;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMMorphError;
+import com.kreative.openxion.xom.inst.XOMEmpty;
 import com.kreative.openxion.xom.inst.XOMList;
 import com.kreative.openxion.xom.inst.XOMString;
 
@@ -276,31 +277,48 @@ public class XOMListType extends XOMDataType<XOMList> {
 		}
 		return out.toArray(new String[0]);
 	}
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		if (allCanMorph(ctx, instance.toList(ctx))) {
+	public boolean canMakeInstanceFrom(XNContext ctx, XOMVariant instance) {
+		instance = instance.asPrimitive(ctx);
+		if (instance instanceof XOMEmpty) {
 			return true;
-		} else if (allCanMorph(ctx, splitElements(instance.toTextString(ctx)))) {
-			return true;
-		} else {
-			return false;
 		}
-	}
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (canMakeInstanceFromImpl(ctx, left) && canMakeInstanceFromImpl(ctx, right)) {
-			return true;
-		} else if (canMakeInstanceFromImpl(ctx, new XOMString(left.toTextString(ctx) + right.toTextString(ctx)))) {
-			return true;
-		} else {
-			return false;
+		if (instance instanceof XOMList) {
+			if (allCanMorph(ctx, ((XOMList)instance).toList()))
+				return true;
 		}
+		if (elementInstanceType.canMakeInstanceFrom(ctx, instance)) {
+			return true;
+		}
+		String[] ss = splitElements(instance.toTextString(ctx));
+		return allCanMorph(ctx, ss);
 	}
-	protected XOMList makeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		List<? extends XOMVariant> elements = instance.toList(ctx);
-		if (allCanMorph(ctx, elements)) {
-			List<XOMVariant> newElements = new Vector<XOMVariant>();
-			for (XOMVariant element : elements) {
-				newElements.add(elementInstanceType.makeInstanceFrom(ctx, element));
+	public boolean canMakeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
+		left = left.asPrimitive(ctx);
+		right = right.asPrimitive(ctx);
+		if (canMakeInstanceFrom(ctx, left) && canMakeInstanceFrom(ctx, right)) {
+			return true;
+		}
+		String[] ss = splitElements(left.toTextString(ctx) + right.toTextString(ctx));
+		return allCanMorph(ctx, ss);
+	}
+	public XOMList makeInstanceFrom(XNContext ctx, XOMVariant instance) {
+		instance = instance.asPrimitive(ctx);
+		if (instance instanceof XOMEmpty) {
+			return XOMList.EMPTY_LIST;
+		}
+		if (instance instanceof XOMList) {
+			List<XOMVariant> v = ((XOMList)instance).toList();
+			if (allCanMorph(ctx, v)) {
+				List<XOMVariant> newElements = new Vector<XOMVariant>();
+				for (XOMVariant e : v) {
+					newElements.add(elementInstanceType.makeInstanceFrom(ctx, e));
+				}
+				return new XOMList(newElements);
 			}
+		}
+		if (elementInstanceType.canMakeInstanceFrom(ctx, instance)) {
+			List<XOMVariant> newElements = new Vector<XOMVariant>();
+			newElements.add(elementInstanceType.makeInstanceFrom(ctx, instance));
 			return new XOMList(newElements);
 		}
 		String[] ss = splitElements(instance.toTextString(ctx));
@@ -313,16 +331,23 @@ public class XOMListType extends XOMDataType<XOMList> {
 		}
 		throw new XOMMorphError(typeName);
 	}
-	protected XOMList makeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (canMakeInstanceFromImpl(ctx, left) && canMakeInstanceFromImpl(ctx, right)) {
+	public XOMList makeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
+		left = left.asPrimitive(ctx);
+		right = right.asPrimitive(ctx);
+		if (canMakeInstanceFrom(ctx, left) && canMakeInstanceFrom(ctx, right)) {
 			Vector<XOMVariant> v = new Vector<XOMVariant>();
-			v.addAll(makeInstanceFromImpl(ctx, left).toList(ctx));
-			v.addAll(makeInstanceFromImpl(ctx, right).toList(ctx));
+			v.addAll(makeInstanceFrom(ctx, left).toList());
+			v.addAll(makeInstanceFrom(ctx, right).toList());
 			return new XOMList(v);
-		} else if (canMakeInstanceFromImpl(ctx, new XOMString(left.toTextString(ctx) + right.toTextString(ctx)))) {
-			return makeInstanceFromImpl(ctx, new XOMString(left.toTextString(ctx) + right.toTextString(ctx)));
-		} else {
-			throw new XOMMorphError(typeName);
 		}
+		String[] ss = splitElements(left.toTextString(ctx) + right.toTextString(ctx));
+		if (allCanMorph(ctx, ss)) {
+			List<XOMVariant> newElements = new Vector<XOMVariant>();
+			for (String s : ss) {
+				newElements.add(elementInstanceType.makeInstanceFrom(ctx, new XOMString(s)));
+			}
+			return new XOMList(newElements);
+		}
+		throw new XOMMorphError(typeName);
 	}
 }

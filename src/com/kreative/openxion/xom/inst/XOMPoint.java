@@ -29,11 +29,11 @@ package com.kreative.openxion.xom.inst;
 
 import java.awt.Point;
 import java.math.BigInteger;
-import java.util.*;
 import com.kreative.openxion.XNContext;
+import com.kreative.openxion.xom.XOMPrimitiveValue;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMPoint extends XOMVariant {
+public class XOMPoint extends XOMPrimitiveValue {
 	private static final long serialVersionUID = 1L;
 	
 	private BigInteger x;
@@ -61,26 +61,21 @@ public class XOMPoint extends XOMVariant {
 		return new Point(x.intValue(), y.intValue());
 	}
 	
-	protected boolean equalsImpl(Object o) {
+	protected String toLanguageStringImpl() {
+		return "\""+((x == null)?"0":x.toString())+","+((y == null)?"0":y.toString())+"\"";
+	}
+	protected String toTextStringImpl(XNContext ctx) {
+		return ((x == null)?"0":x.toString())+","+((y == null)?"0":y.toString());
+	}
+	protected int hashCodeImpl() {
+		return x.hashCode() ^ y.hashCode();
+	}
+	protected boolean equalsImpl(XOMVariant o) {
 		if (o instanceof XOMPoint) {
 			XOMPoint other = (XOMPoint)o;
 			return this.x.compareTo(other.x) == 0 && this.y.compareTo(other.y) == 0;
 		} else {
 			return false;
 		}
-	}
-	public int hashCode() {
-		return x.hashCode() ^ y.hashCode();
-	}
-	public String toDescriptionString() {
-		return ((x == null)?"0":x.toString())+","+((y == null)?"0":y.toString());
-	}
-	public String toTextString(XNContext ctx) {
-		return ((x == null)?"0":x.toString())+","+((y == null)?"0":y.toString());
-	}
-	public List<XOMVariant> toList(XNContext ctx) {
-		Vector<XOMVariant> v = new Vector<XOMVariant>();
-		v.add(this);
-		return v;
 	}
 }

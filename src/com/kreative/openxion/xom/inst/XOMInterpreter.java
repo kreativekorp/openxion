@@ -27,13 +27,13 @@
 
 package com.kreative.openxion.xom.inst;
 
-import java.util.*;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.XNMain;
 import com.kreative.openxion.ast.XNModifier;
+import com.kreative.openxion.xom.XOMPrimitiveObject;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMInterpreter extends XOMVariant {
+public class XOMInterpreter extends XOMPrimitiveObject {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMInterpreter INTERPRETER = new XOMInterpreter();
@@ -67,22 +67,17 @@ public class XOMInterpreter extends XOMVariant {
 			return super.getProperty(ctx, modifier, property);
 		}
 	}
-	
-	protected boolean equalsImpl(Object o) {
-		return (o instanceof XOMInterpreter);
+
+	protected String toLanguageStringImpl() {
+		return "the interpreter";
 	}
-	public int hashCode() {
+	protected String toTextStringImpl(XNContext ctx) {
+		return "the interpreter";
+	}
+	protected int hashCodeImpl() {
 		return 0x12EBECCA;
 	}
-	public String toDescriptionString() {
-		return "interpreter";
-	}
-	public String toTextString(XNContext ctx) {
-		return "interpreter";
-	}
-	public List<XOMVariant> toList(XNContext ctx) {
-		Vector<XOMVariant> v = new Vector<XOMVariant>();
-		v.add(this);
-		return v;
+	protected boolean equalsImpl(XOMVariant o) {
+		return (o instanceof XOMInterpreter);
 	}
 }

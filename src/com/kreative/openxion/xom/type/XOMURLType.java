@@ -30,16 +30,13 @@ package com.kreative.openxion.xom.type;
 import java.net.URL;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.util.XIONUtil;
-import com.kreative.openxion.xom.XOMDataType;
-import com.kreative.openxion.xom.XOMVariant;
+import com.kreative.openxion.xom.XOMSimpleDataType;
 import com.kreative.openxion.xom.XOMGetError;
 import com.kreative.openxion.xom.XOMMorphError;
+import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.inst.XOMURL;
-import com.kreative.openxion.xom.inst.XOMEmpty;
-import com.kreative.openxion.xom.inst.XOMList;
-import com.kreative.openxion.xom.inst.XOMListChunk;
 
-public class XOMURLType extends XOMDataType<XOMURL> {
+public class XOMURLType extends XOMSimpleDataType<XOMURL> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMURLType instance = new XOMURLType();
@@ -52,6 +49,7 @@ public class XOMURLType extends XOMDataType<XOMURL> {
 	/*
 	 * Instantiation of root variants of this type.
 	 */
+	
 	public boolean canGetInstanceByName(XNContext ctx, String name) {
 		try {
 			new URL(name);
@@ -85,67 +83,22 @@ public class XOMURLType extends XOMDataType<XOMURL> {
 	 * objects in XION can be of any mix of data types (hence the term variant for XION objects).
 	 */
 	
-	private boolean canMorphFromDescription(XNContext ctx, String desc) {
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, desc.trim());
-		return (v instanceof XOMURL);
-	}
-	private XOMVariant morphFromDescription(XNContext ctx, String desc) {
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, desc.trim());
-		if (v instanceof XOMURL) return v;
-		else return null;
-	}
 	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		if (instance instanceof XOMURL) {
-			return true;
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMURL) {
-			return true;
-		}
-		else if (canMorphFromDescription(ctx, instance.toTextString(ctx))) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, instance.toTextString(ctx));
+		return v != null && v.asPrimitive(ctx) instanceof XOMURL;
 	}
 	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (left instanceof XOMEmpty) {
-			return canMakeInstanceFromImpl(ctx, right);
-		}
-		else if (right instanceof XOMEmpty) {
-			return canMakeInstanceFromImpl(ctx, left);
-		}
-		else if (canMorphFromDescription(ctx, left.toTextString(ctx) + right.toTextString(ctx))) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, left.toTextString(ctx) + right.toTextString(ctx));
+		return v != null && v.asPrimitive(ctx) instanceof XOMURL;
 	}
 	protected XOMURL makeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		if (instance instanceof XOMURL) {
-			return (XOMURL)instance;
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMURL) {
-			return (XOMURL)instance.toList(ctx).get(0);
-		}
-		else {
-			XOMVariant v = morphFromDescription(ctx, instance.toTextString(ctx));
-			if (v instanceof XOMURL) return (XOMURL)v;
-			else throw new XOMMorphError(typeName);
-		}
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, instance.toTextString(ctx));
+		if (v != null && v.asPrimitive(ctx) instanceof XOMURL) return (XOMURL)v.asPrimitive(ctx);
+		else throw new XOMMorphError(typeName);
 	}
 	protected XOMURL makeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (left instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, right);
-		}
-		else if (right instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, left);
-		}
-		else {
-			XOMVariant v = morphFromDescription(ctx, left.toTextString(ctx) + right.toTextString(ctx));
-			if (v instanceof XOMURL) return (XOMURL)v;
-			else throw new XOMMorphError(typeName);
-		}
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, left.toTextString(ctx) + right.toTextString(ctx));
+		if (v != null && v.asPrimitive(ctx) instanceof XOMURL) return (XOMURL)v.asPrimitive(ctx);
+		else throw new XOMMorphError(typeName);
 	}
 }
