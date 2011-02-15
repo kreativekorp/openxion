@@ -49,7 +49,7 @@ public class XOMBinaryByteChunk extends XOMVariant implements XOMBinaryContainer
 		this.endIndex = endIndex;
 	}
 	
-	public boolean hasParent(XNContext ctx) {
+	public boolean canGetParent(XNContext ctx) {
 		return true;
 	}
 	
