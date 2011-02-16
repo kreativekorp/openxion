@@ -1537,21 +1537,15 @@ public class XNStandardModule extends XNModule {
 	};
 	
 	private static XOMVariant makeDest(XNInterpreter interp, XNContext ctx, XOMVariant dest) {
-		if (dest.canPutContents(ctx)) {
+		if (dest instanceof XOMVariable) {
+			XOMVariable v = (XOMVariable)dest;
+			if (!v.isDeclared(ctx)) v.putIntoContents(ctx, XOMEmpty.EMPTY);
+			return v;
+		} else if (dest.canPutContents(ctx)) {
 			return dest;
 		} else {
 			String name = dest.unwrap(ctx).toTextString(ctx);
-			XNLexer namelex = new XNLexer(name, new StringReader(name));
-			try { if (namelex.lookToken(1).kind == XNToken.ID && namelex.lookToken(2).isEOF()) {
-				name = namelex.getToken().image;
-				if (ctx.getVariableMap(name).getVariable(ctx, name) == null)
-					ctx.getVariableMap(name).declareVariable(ctx, name, XOMStringType.instance, XOMEmpty.EMPTY);
-				return new XOMVariable(name);
-			} else {
-				throw new XNScriptError("Expected variable name but found "+name);
-			} } catch (IOException ioe) {
-				throw new XNScriptError("Expected variable name but found "+name);
-			}
+			throw new XNScriptError("Expected a variable name but found "+name);
 		}
 	}
 	
@@ -1562,18 +1556,7 @@ public class XNStandardModule extends XNModule {
 			else dest.putIntoContents(ctx, what);
 		} else {
 			String name = dest.unwrap(ctx).toTextString(ctx);
-			XNLexer namelex = new XNLexer(name, new StringReader(name));
-			try { if (namelex.lookToken(1).kind == XNToken.ID && namelex.lookToken(2).isEOF()) {
-				name = namelex.getToken().image;
-				dest = new XOMVariable(name);
-				if (prep.equalsIgnoreCase("before")) dest.putBeforeContents(ctx, what);
-				else if (prep.equalsIgnoreCase("after")) dest.putAfterContents(ctx, what);
-				else dest.putIntoContents(ctx, what);
-			} else {
-				throw new XNScriptError("Expected variable name but found "+name);
-			} } catch (IOException ioe) {
-				throw new XNScriptError("Expected variable name but found "+name);
-			}
+			throw new XNScriptError("Expected a variable name but found "+name);
 		}
 	}
 	
@@ -1584,18 +1567,7 @@ public class XNStandardModule extends XNModule {
 			else dest.putIntoContents(ctx, what, prep, pval);
 		} else {
 			String name = dest.unwrap(ctx).toTextString(ctx);
-			XNLexer namelex = new XNLexer(name, new StringReader(name));
-			try { if (namelex.lookToken(1).kind == XNToken.ID && namelex.lookToken(2).isEOF()) {
-				name = namelex.getToken().image;
-				dest = new XOMVariable(name);
-				if (prep.equalsIgnoreCase("before")) dest.putBeforeContents(ctx, what, prep, pval);
-				else if (prep.equalsIgnoreCase("after")) dest.putAfterContents(ctx, what, prep, pval);
-				else dest.putIntoContents(ctx, what, prep, pval);
-			} else {
-				throw new XNScriptError("Expected variable name but found "+name);
-			} } catch (IOException ioe) {
-				throw new XNScriptError("Expected variable name but found "+name);
-			}
+			throw new XNScriptError("Expected a variable name but found "+name);
 		}
 	}
 	
