@@ -106,12 +106,14 @@ public class XOMVariableMap {
 	public void prependVariable(XNContext ctx, String name, XOMVariant value) {
 		CIString ciname = new CIString(name);
 		if (!types.containsKey(ciname)) types.put(ciname, XOMStringType.instance);
+		if (!values.containsKey(ciname)) values.put(ciname, XOMEmpty.EMPTY);
 		values.put(ciname, types.get(ciname).makeInstanceFrom(ctx, value.unwrap(ctx), values.get(ciname)));
 	}
 	
 	public void appendVariable(XNContext ctx, String name, XOMVariant value) {
 		CIString ciname = new CIString(name);
 		if (!types.containsKey(ciname)) types.put(ciname, XOMStringType.instance);
+		if (!values.containsKey(ciname)) values.put(ciname, XOMEmpty.EMPTY);
 		values.put(ciname, types.get(ciname).makeInstanceFrom(ctx, values.get(ciname), value.unwrap(ctx)));
 	}
 	
