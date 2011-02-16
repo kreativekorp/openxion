@@ -92,6 +92,11 @@ public class XOMVariableMap {
 		return new XOMVariable(name);
 	}
 	
+	public boolean isVariableDeclared(XNContext ctx, String name) {
+		CIString ciname = new CIString(name);
+		return (types.containsKey(ciname) || values.containsKey(ciname));
+	}
+	
 	public XOMVariant getVariable(XNContext ctx, String name) {
 		CIString ciname = new CIString(name);
 		return (values.containsKey(ciname)) ? values.get(ciname) : null;

@@ -55,6 +55,10 @@ public class XOMVariable extends XOMVariant {
 		this.name = name;
 	}
 	
+	public boolean isDeclared(XNContext ctx) {
+		return ctx.getVariableMap(name).isVariableDeclared(ctx, name);
+	}
+	
 	public XOMVariant unwrap(XNContext ctx) {
 		return getContents(ctx);
 	}
@@ -77,9 +81,11 @@ public class XOMVariable extends XOMVariant {
 		return true;
 	}
 	public final XOMVariant getContents(XNContext ctx) {
-		XOMVariant v = ctx.getVariableMap(name).getVariable(ctx, name);
-		if (v != null) return v;
-		else return new XOMString(name);
+		XOMVariableMap vm = ctx.getVariableMap(name);
+		if (vm.isVariableDeclared(ctx, name))
+			return vm.getVariable(ctx, name);
+		else
+			return new XOMString(name);
 	}
 	
 	public final boolean canPutContents(XNContext ctx) {

@@ -837,9 +837,7 @@ public class XNInterpreter {
 			}
 			else if (expr instanceof XNVariableExpression) {
 				String name = ((XNVariableExpression)expr).varname.image;
-				XOMVariant value = context.getVariableMap(name).getVariable(context, name);
-				if (value == null) return new XOMString(name);
-				else return new XOMVariable(name);
+				return new XOMVariable(name);
 			}
 			else if (expr instanceof XNNewExpression) {
 				XNDataType dataTypeObj = ((XNNewExpression)expr).datatype;
@@ -1523,11 +1521,11 @@ public class XNInterpreter {
 						XNLexer namelex = new XNLexer(name, new StringReader(name));
 						try { if (namelex.lookToken(1).kind == XNToken.ID && namelex.lookToken(2).isEOF()) {
 							name = namelex.getToken().image;
-							dest = context.getVariableMap(name).declareVariable(context, name, XOMStringType.instance, XOMEmpty.EMPTY);
+							dest = new XOMVariable(name);
 						} else {
-							throw new XNScriptError("Expected variable name but found "+name);
+							throw new XNScriptError("Expected a variable name but found "+name);
 						} } catch (IOException ioe) {
-							throw new XNScriptError("Expected variable name but found "+name);
+							throw new XNScriptError("Expected a variable name but found "+name);
 						}
 					}
 					dest.putIntoContents(context, start);
