@@ -497,8 +497,8 @@ public class XNInterpreter {
 					bs = bv.toTextString(context);
 					return new XOMString(as + " " + bs);
 				case LIST_CONCAT:
-					av = evaluateExpression(a).asPrimitive(context);
-					bv = evaluateExpression(b).asPrimitive(context);
+					av = evaluateExpression(a).asValue(context);
+					bv = evaluateExpression(b).asValue(context);
 					al = av.toList(context);
 					bl = bv.toList(context);
 					return new XOMList(al, bl);
@@ -598,8 +598,8 @@ public class XNInterpreter {
 						throw new XOMMorphError("point");
 					}
 				case ELEMENT_OF:
-					av = evaluateExpression(a).asPrimitive(context);
-					bv = evaluateExpression(b).asPrimitive(context);
+					av = evaluateExpression(a).asValue(context);
+					bv = evaluateExpression(b).asValue(context);
 					bl = bv.toList(context);
 					for (XOMVariant v : bl) {
 						try {
@@ -611,7 +611,7 @@ public class XNInterpreter {
 					return XOMBoolean.FALSE;
 				case PRECISELY_ELEMENT_OF:
 					av = evaluateExpression(a).asValue(context);
-					bv = evaluateExpression(b).asPrimitive(context);
+					bv = evaluateExpression(b).asValue(context);
 					bl = bv.toList(context);
 					for (XOMVariant v : bl) {
 						if (av.equals(v)) return XOMBoolean.TRUE;
@@ -657,8 +657,8 @@ public class XNInterpreter {
 						throw new XOMMorphError("point");
 					}
 				case NOT_ELEMENT_OF:
-					av = evaluateExpression(a).asPrimitive(context);
-					bv = evaluateExpression(b).asPrimitive(context);
+					av = evaluateExpression(a).asValue(context);
+					bv = evaluateExpression(b).asValue(context);
 					bl = bv.toList(context);
 					for (XOMVariant v : bl) {
 						try {
@@ -670,7 +670,7 @@ public class XNInterpreter {
 					return XOMBoolean.TRUE;
 				case NOT_PRECISELY_ELEMENT_OF:
 					av = evaluateExpression(a).asValue(context);
-					bv = evaluateExpression(b).asPrimitive(context);
+					bv = evaluateExpression(b).asValue(context);
 					bl = bv.toList(context);
 					for (XOMVariant v : bl) {
 						if (av.equals(v)) return XOMBoolean.FALSE;
