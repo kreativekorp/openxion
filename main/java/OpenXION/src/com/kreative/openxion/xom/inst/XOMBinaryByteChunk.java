@@ -28,15 +28,17 @@
 package com.kreative.openxion.xom.inst;
 
 import java.util.*;
+
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.util.XIONUtil;
+import com.kreative.openxion.xom.XOMContainerObject;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMBinaryContainer;
 import com.kreative.openxion.xom.XOMComparator;
 import com.kreative.openxion.xom.type.XOMBinaryType;
 
-public class XOMBinaryByteChunk extends XOMVariant implements XOMBinaryContainer {
+public class XOMBinaryByteChunk extends XOMContainerObject implements XOMBinaryContainer {
 	private static final long serialVersionUID = 1L;
 	
 	private XOMVariant parent;
@@ -588,28 +590,17 @@ public class XOMBinaryByteChunk extends XOMVariant implements XOMBinaryContainer
 		}
 	}
 	
-	protected boolean equalsImpl(Object o) {
-		if (o instanceof XOMBinaryByteChunk) {
-			XOMBinaryByteChunk other = (XOMBinaryByteChunk)o;
-			return (this.parent.equals(other.parent) && this.startIndex == other.startIndex && this.endIndex == other.endIndex);
-		} else {
-			return false;
-		}
-	}
-	public int hashCode() {
-		return parent.hashCode() ^ startIndex ^ endIndex;
-	}
-	public String toDescriptionString() {
+	protected String toLanguageStringImpl() {
 		if (startIndex == endIndex) {
-			return "byte " + startIndex + " of " + parent.toDescriptionString();
+			return "byte " + startIndex + " of " + parent.toLanguageString();
 		} else {
-			return "bytes " + startIndex + " through " + endIndex + " of " + parent.toDescriptionString();
+			return "bytes " + startIndex + " through " + endIndex + " of " + parent.toLanguageString();
 		}
 	}
-	public String toTextString(XNContext ctx) {
+	protected String toTextStringImpl(XNContext ctx) {
 		return getContents(ctx).toTextString(ctx);
 	}
-	public List<XOMVariant> toList(XNContext ctx) {
+	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
 		BinaryChunkInfo ci = getChunkInfo(ctx, false, false);
 		Vector<XOMVariant> v = new Vector<XOMVariant>();
 		if (ci != null) {
@@ -618,5 +609,16 @@ public class XOMBinaryByteChunk extends XOMVariant implements XOMBinaryContainer
 			}
 		}
 		return v;
+	}
+	protected int hashCodeImpl() {
+		return parent.hashCode() ^ startIndex ^ endIndex;
+	}
+	protected boolean equalsImpl(XOMVariant o) {
+		if (o instanceof XOMBinaryByteChunk) {
+			XOMBinaryByteChunk other = (XOMBinaryByteChunk)o;
+			return (this.parent.equals(other.parent) && this.startIndex == other.startIndex && this.endIndex == other.endIndex);
+		} else {
+			return false;
+		}
 	}
 }

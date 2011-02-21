@@ -157,7 +157,7 @@ public class XNMain {
 					case EXPRESSION:
 						somethingOfConsequenceHappened = true;
 						try {
-							ui.println(interp.evaluateExpressionString(arg).unwrap(ctx).toTextString(ctx));
+							ui.println(interp.evaluateExpressionString(arg).toTextString(ctx));
 						} catch (XNScriptError se) {
 							System.err.println(se.getMessage());
 							if (stackTrace) se.printStackTrace();
@@ -392,7 +392,7 @@ public class XNMain {
 							if (programCapture) programMemory.addAll(Arrays.asList(line.split("\r\n|\r|\n")));
 						} catch (XNScriptError se1) {
 							try {
-								ui.println(interp.evaluateExpressionString(line).unwrap(ctx).toTextString(ctx));
+								ui.println(interp.evaluateExpressionString(line).toTextString(ctx));
 								if (programCapture) programMemory.addAll(Arrays.asList(("put "+line).split("\r\n|\r|\n")));
 							} catch (XNScriptError se3) {
 								if (stackTrace) {

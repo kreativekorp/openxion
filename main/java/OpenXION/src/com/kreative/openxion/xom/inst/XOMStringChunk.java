@@ -33,11 +33,12 @@ import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.util.StringChunkType;
 import com.kreative.openxion.util.StringChunkEx;
+import com.kreative.openxion.xom.XOMContainerObject;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMStringContainer;
 import com.kreative.openxion.xom.XOMComparator;
 
-public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
+public class XOMStringChunk extends XOMContainerObject implements XOMStringContainer {
 	private static final long serialVersionUID = 1L;
 	
 	private XOMVariant parent;
@@ -695,28 +696,17 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 		}
 	}
 	
-	protected boolean equalsImpl(Object o) {
-		if (o instanceof XOMStringChunk) {
-			XOMStringChunk other = (XOMStringChunk)o;
-			return (this.parent.equals(other.parent) && this.chunkType == other.chunkType && this.startIndex == other.startIndex && this.endIndex == other.endIndex);
-		} else {
-			return false;
-		}
-	}
-	public int hashCode() {
-		return parent.hashCode() ^ chunkType.hashCode() ^ startIndex ^ endIndex;
-	}
-	public String toDescriptionString() {
+	protected String toLanguageStringImpl() {
 		if (startIndex == endIndex) {
-			return chunkType.toString() + " " + startIndex + " of " + parent.toDescriptionString();
+			return chunkType.toString() + " " + startIndex + " of " + parent.toLanguageString();
 		} else {
-			return chunkType.toPluralString() + " " + startIndex + " through " + endIndex + " of " + parent.toDescriptionString();
+			return chunkType.toPluralString() + " " + startIndex + " through " + endIndex + " of " + parent.toLanguageString();
 		}
 	}
-	public String toTextString(XNContext ctx) {
+	protected String toTextStringImpl(XNContext ctx) {
 		return getContents(ctx).toTextString(ctx);
 	}
-	public List<XOMVariant> toList(XNContext ctx) {
+	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
 		StringChunkInfo ci = getChunkInfo(ctx,false,false);
 		Vector<XOMVariant> v = new Vector<XOMVariant>();
 		if (ci != null) {
@@ -725,5 +715,16 @@ public class XOMStringChunk extends XOMVariant implements XOMStringContainer {
 			}
 		}
 		return v;
+	}
+	protected int hashCodeImpl() {
+		return parent.hashCode() ^ chunkType.hashCode() ^ startIndex ^ endIndex;
+	}
+	protected boolean equalsImpl(XOMVariant o) {
+		if (o instanceof XOMStringChunk) {
+			XOMStringChunk other = (XOMStringChunk)o;
+			return (this.parent.equals(other.parent) && this.chunkType == other.chunkType && this.startIndex == other.startIndex && this.endIndex == other.endIndex);
+		} else {
+			return false;
+		}
 	}
 }

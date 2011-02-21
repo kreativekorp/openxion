@@ -28,13 +28,15 @@
 package com.kreative.openxion.xom.inst;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
+
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.util.XIONUtil;
+import com.kreative.openxion.xom.XOMPrimitiveObject;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMURL extends XOMVariant {
+public class XOMURL extends XOMPrimitiveObject {
 	private static final long serialVersionUID = 1L;
 	
 	private URL theURL;
@@ -46,8 +48,20 @@ public class XOMURL extends XOMVariant {
 	public URL toURL() {
 		return theURL;
 	}
-	
-	protected boolean equalsImpl(Object o) {
+
+	protected String toLanguageStringImpl() {
+		return "URL "+XIONUtil.quote(theURL.toString());
+	}
+	protected String toTextStringImpl(XNContext ctx) {
+		return "URL "+XIONUtil.quote(theURL.toString());
+	}
+	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+		return Arrays.asList(this);
+	}
+	protected int hashCodeImpl() {
+		return (theURL == null) ? 0 : theURL.hashCode();
+	}
+	protected boolean equalsImpl(XOMVariant o) {
 		if (o instanceof XOMURL) {
 			XOMURL other = (XOMURL)o;
 			if (this.theURL == null && other.theURL == null) {
@@ -62,19 +76,5 @@ public class XOMURL extends XOMVariant {
 		} else {
 			return false;
 		}
-	}
-	public int hashCode() {
-		return (theURL == null) ? 0 : theURL.hashCode();
-	}
-	public String toDescriptionString() {
-		return "URL "+XIONUtil.quote(theURL.toString());
-	}
-	public String toTextString(XNContext ctx) {
-		return "URL "+XIONUtil.quote(theURL.toString());
-	}
-	public List<XOMVariant> toList(XNContext ctx) {
-		Vector<XOMVariant> v = new Vector<XOMVariant>();
-		v.add(this);
-		return v;
 	}
 }

@@ -30,13 +30,15 @@ package com.kreative.openxion.xom.inst;
 import java.awt.Toolkit;
 import java.awt.datatransfer.*;
 import java.util.*;
+
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.XNSecurityKey;
 import com.kreative.openxion.XNScriptError;
-import com.kreative.openxion.xom.XOMVariant;
+import com.kreative.openxion.xom.XOMContainerObject;
 import com.kreative.openxion.xom.XOMComparator;
+import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMClipboard extends XOMVariant implements ClipboardOwner {
+public class XOMClipboard extends XOMContainerObject implements ClipboardOwner {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMClipboard CLIPBOARD = new XOMClipboard();
@@ -81,19 +83,22 @@ public class XOMClipboard extends XOMVariant implements ClipboardOwner {
 		return ctx.allow(XNSecurityKey.CLIPBOARD_WRITE, "Operation", "Write");
 	}
 	public void putIntoContents(XNContext ctx, XOMVariant contents) {
-		if (!ctx.allow(XNSecurityKey.CLIPBOARD_WRITE, "Operation", "Write", "Value", contents.toTextString(ctx)))
+		String s = contents.toTextString(ctx);
+		if (!ctx.allow(XNSecurityKey.CLIPBOARD_WRITE, "Operation", "Write", "Value", s))
 			throw new XNScriptError("Security settings do not allow clipboard access");
-		setClipboardString(contents.toTextString(ctx));
+		setClipboardString(s);
 	}
 	public void putBeforeContents(XNContext ctx, XOMVariant contents) {
-		if (!ctx.allow(XNSecurityKey.CLIPBOARD_WRITE, "Operation", "Write", "Value", contents.toTextString(ctx)))
+		String s = contents.toTextString(ctx);
+		if (!ctx.allow(XNSecurityKey.CLIPBOARD_WRITE, "Operation", "Write", "Value", s))
 			throw new XNScriptError("Security settings do not allow clipboard access");
-		setClipboardString(contents.toTextString(ctx) + getClipboardString());
+		setClipboardString(s + getClipboardString());
 	}
 	public void putAfterContents(XNContext ctx, XOMVariant contents) {
-		if (!ctx.allow(XNSecurityKey.CLIPBOARD_WRITE, "Operation", "Write", "Value", contents.toTextString(ctx)))
+		String s = contents.toTextString(ctx);
+		if (!ctx.allow(XNSecurityKey.CLIPBOARD_WRITE, "Operation", "Write", "Value", s))
 			throw new XNScriptError("Security settings do not allow clipboard access");
-		setClipboardString(getClipboardString() + contents.toTextString(ctx));
+		setClipboardString(getClipboardString() + s);
 	}
 	
 	public boolean canSortContents(XNContext ctx) {
@@ -113,23 +118,21 @@ public class XOMClipboard extends XOMVariant implements ClipboardOwner {
 		setClipboardString(s.toString());
 	}
 	
-	protected boolean equalsImpl(Object o) {
-		return (o instanceof XOMClipboard);
+	protected String toLanguageStringImpl() {
+		return "the clipboard";
 	}
-	public int hashCode() {
-		return 0xBEC1126B;
-	}
-	public String toDescriptionString() {
-		return "clipboard";
-	}
-	public String toTextString(XNContext ctx) {
-		if (!ctx.allow(XNSecurityKey.CLIPBOARD_READ, "Operation", "ToString"))
-			throw new XNScriptError("Security settings do not allow clipboard access");
+	protected String toTextStringImpl(XNContext ctx) {
+		if (!ctx.allow(XNSecurityKey.CLIPBOARD_READ, "Operation", "Read"))
+			return "the clipboard";
 		return getClipboardString();
 	}
-	public List<XOMVariant> toList(XNContext ctx) {
-		Vector<XOMVariant> v = new Vector<XOMVariant>();
-		v.add(this);
-		return v;
+	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+		return Arrays.asList(this);
+	}
+	protected int hashCodeImpl() {
+		return 0xBEC1126B;
+	}
+	protected boolean equalsImpl(XOMVariant o) {
+		return (o instanceof XOMClipboard);
 	}
 }

@@ -27,11 +27,15 @@
 
 package com.kreative.openxion.xom.inst;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+
 import com.kreative.openxion.XNContext;
+import com.kreative.openxion.util.XIONUtil;
+import com.kreative.openxion.xom.XOMPrimitiveValue;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMString extends XOMVariant {
+public class XOMString extends XOMPrimitiveValue {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMString EMPTY_STRING = new XOMString("");
@@ -42,26 +46,24 @@ public class XOMString extends XOMVariant {
 		this.theString = s;
 	}
 	
-	protected boolean equalsImpl(Object o) {
+	protected String toLanguageStringImpl() {
+		return XIONUtil.quote((theString == null) ? "" : theString);
+	}
+	protected String toTextStringImpl(XNContext ctx) {
+		return ((theString == null) ? "" : theString);
+	}
+	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+		return Arrays.asList(this);
+	}
+	protected int hashCodeImpl() {
+		return (theString == null) ? "".hashCode() : theString.hashCode();
+	}
+	protected boolean equalsImpl(XOMVariant o) {
 		if (o instanceof XOMString) {
 			XOMString other = (XOMString)o;
 			return this.theString.equals(other.theString);
 		} else {
 			return false;
 		}
-	}
-	public int hashCode() {
-		return (theString == null) ? "".hashCode() : theString.hashCode();
-	}
-	public String toDescriptionString() {
-		return ((theString == null) ? "" : theString);
-	}
-	public String toTextString(XNContext ctx) {
-		return ((theString == null) ? "" : theString);
-	}
-	public List<XOMVariant> toList(XNContext ctx) {
-		Vector<XOMVariant> v = new Vector<XOMVariant>();
-		v.add(this);
-		return v;
 	}
 }

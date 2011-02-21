@@ -28,15 +28,12 @@
 package com.kreative.openxion.xom.type;
 
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.xom.XOMDataType;
+import com.kreative.openxion.xom.XOMValueDataType;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMMorphError;
 import com.kreative.openxion.xom.inst.XOMDate;
-import com.kreative.openxion.xom.inst.XOMEmpty;
-import com.kreative.openxion.xom.inst.XOMList;
-import com.kreative.openxion.xom.inst.XOMListChunk;
 
-public class XOMDateType extends XOMDataType<XOMDate> {
+public class XOMDateType extends XOMValueDataType<XOMDate> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMDateType instance = new XOMDateType();
@@ -46,72 +43,31 @@ public class XOMDateType extends XOMDataType<XOMDate> {
 		super("date", DESCRIBABILITY_OF_PRIMITIVES, XOMDate.class);
 	}
 	
-	/*
-	 * Polymorphism - The data type of an object is determined through these methods.
-	 * Unlike in Java, where an object's type is determined by the class hierarchy,
-	 * objects in XION can be of any mix of data types (hence the term variant for XION objects).
-	 */
-	
+	protected boolean canMakeInstanceFromImpl(XNContext ctx) {
+		return false;
+	}
 	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		if (instance instanceof XOMDate) {
+		return false;
+	}
+	protected boolean canMakeInstanceFromImpl(XNContext ctx, String s) {
+		try {
+			new XOMDate(s);
 			return true;
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMDate) {
-			return true;
-		}
-		else {
-			try {
-				new XOMDate(instance.toTextString(ctx));
-				return true;
-			} catch (Exception e) {
-				return false;
-			}
+		} catch (Exception e) {
+			return false;
 		}
 	}
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (left instanceof XOMEmpty) {
-			return canMakeInstanceFromImpl(ctx, right);
-		}
-		else if (right instanceof XOMEmpty) {
-			return canMakeInstanceFromImpl(ctx, left);
-		}
-		else {
-			try {
-				new XOMDate(left.toTextString(ctx) + right.toTextString(ctx));
-				return true;
-			} catch (Exception e) {
-				return false;
-			}
-		}
+	protected XOMDate makeInstanceFromImpl(XNContext ctx) {
+		throw new XOMMorphError(typeName);
 	}
 	protected XOMDate makeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		if (instance instanceof XOMDate) {
-			return (XOMDate)instance;
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMDate) {
-			return (XOMDate)instance.toList(ctx).get(0);
-		}
-		else {
-			try {
-				return new XOMDate(instance.toTextString(ctx));
-			} catch (Exception e) {
-				throw new XOMMorphError(typeName);
-			}
-		}
+		throw new XOMMorphError(typeName);
 	}
-	protected XOMDate makeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (left instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, right);
-		}
-		else if (right instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, left);
-		}
-		else {
-			try {
-				return new XOMDate(left.toTextString(ctx) + right.toTextString(ctx));
-			} catch (Exception e) {
-				throw new XOMMorphError(typeName);
-			}
+	protected XOMDate makeInstanceFromImpl(XNContext ctx, String s) {
+		try {
+			return new XOMDate(s);
+		} catch (Exception e) {
+			throw new XOMMorphError(typeName);
 		}
 	}
 }

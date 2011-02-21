@@ -28,14 +28,11 @@
 package com.kreative.openxion.xom.type;
 
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.xom.XOMDataType;
+import com.kreative.openxion.xom.XOMValueDataType;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.inst.XOMString;
-import com.kreative.openxion.xom.inst.XOMEmpty;
-import com.kreative.openxion.xom.inst.XOMList;
-import com.kreative.openxion.xom.inst.XOMListChunk;
 
-public class XOMStringType extends XOMDataType<XOMString> {
+public class XOMStringType extends XOMValueDataType<XOMString> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMStringType instance = new XOMStringType();
@@ -45,41 +42,22 @@ public class XOMStringType extends XOMDataType<XOMString> {
 		super("string", DESCRIBABILITY_OF_PRIMITIVES, XOMString.class);
 	}
 	
-	/*
-	 * Polymorphism - The data type of an object is determined through these methods.
-	 * Unlike in Java, where an object's type is determined by the class hierarchy,
-	 * objects in XION can be of any mix of data types (hence the term variant for XION objects).
-	 */
-	
+	protected boolean canMakeInstanceFromImpl(XNContext ctx) {
+		return true;
+	}
 	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
 		return true;
 	}
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
+	protected boolean canMakeInstanceFromImpl(XNContext ctx, String s) {
 		return true;
 	}
-	protected XOMString makeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		if (instance instanceof XOMEmpty) {
-			return XOMString.EMPTY_STRING;
-		}
-		else if (instance instanceof XOMString) {
-			return (XOMString)instance;
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMString) {
-			return (XOMString)instance.toList(ctx).get(0);
-		}
-		else {
-			return new XOMString(instance.toTextString(ctx));
-		}
+	protected XOMString makeInstanceFromImpl(XNContext ctx) {
+		return XOMString.EMPTY_STRING;
 	}
-	protected XOMString makeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (left instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, right);
-		}
-		else if (right instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, left);
-		}
-		else {
-			return new XOMString(makeInstanceFromImpl(ctx, left).toTextString(ctx) + makeInstanceFromImpl(ctx, right).toTextString(ctx));
-		}
+	protected XOMString makeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
+		return new XOMString(instance.toTextString(ctx));
+	}
+	protected XOMString makeInstanceFromImpl(XNContext ctx, String s) {
+		return new XOMString(s);
 	}
 }

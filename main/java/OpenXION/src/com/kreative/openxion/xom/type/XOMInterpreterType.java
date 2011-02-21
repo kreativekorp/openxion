@@ -28,15 +28,13 @@
 package com.kreative.openxion.xom.type;
 
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.xom.XOMDataType;
+import com.kreative.openxion.util.XIONUtil;
+import com.kreative.openxion.xom.XOMSimpleDataType;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMMorphError;
 import com.kreative.openxion.xom.inst.XOMInterpreter;
-import com.kreative.openxion.xom.inst.XOMEmpty;
-import com.kreative.openxion.xom.inst.XOMList;
-import com.kreative.openxion.xom.inst.XOMListChunk;
 
-public class XOMInterpreterType extends XOMDataType<XOMInterpreter> {
+public class XOMInterpreterType extends XOMSimpleDataType<XOMInterpreter> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMInterpreterType instance = new XOMInterpreterType();
@@ -63,65 +61,22 @@ public class XOMInterpreterType extends XOMDataType<XOMInterpreter> {
 	 * objects in XION can be of any mix of data types (hence the term variant for XION objects).
 	 */
 	
-	private boolean fitsDescription(String s) {
-		s = s.replaceAll("(^| )the( |$)", " ");
-		s = s.trim().replaceAll(" +", " ");
-		return (s.equalsIgnoreCase("interpreter") || s.equalsIgnoreCase("environment"));
-	}
 	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		if (instance instanceof XOMInterpreter) {
-			return true;
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMInterpreter) {
-			return true;
-		}
-		else if (fitsDescription(instance.toTextString(ctx))) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, instance.toTextString(ctx));
+		return v != null && v.asPrimitive(ctx) instanceof XOMInterpreter;
 	}
 	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (left instanceof XOMEmpty) {
-			return canMakeInstanceFromImpl(ctx, right);
-		}
-		else if (right instanceof XOMEmpty) {
-			return canMakeInstanceFromImpl(ctx, left);
-		}
-		else if (fitsDescription(left.toTextString(ctx) + right.toTextString(ctx))) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, left.toTextString(ctx) + right.toTextString(ctx));
+		return v != null && v.asPrimitive(ctx) instanceof XOMInterpreter;
 	}
 	protected XOMInterpreter makeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		if (instance instanceof XOMInterpreter) {
-			return (XOMInterpreter)instance;
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMInterpreter) {
-			return (XOMInterpreter)instance.toList(ctx).get(0);
-		}
-		else if (fitsDescription(instance.toTextString(ctx))) {
-			return XOMInterpreter.INTERPRETER;
-		}
-		else {
-			throw new XOMMorphError(typeName);
-		}
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, instance.toTextString(ctx));
+		if (v != null && v.asPrimitive(ctx) instanceof XOMInterpreter) return (XOMInterpreter)v.asPrimitive(ctx);
+		else throw new XOMMorphError(typeName);
 	}
 	protected XOMInterpreter makeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (left instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, right);
-		}
-		else if (right instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, left);
-		}
-		else if (fitsDescription(left.toTextString(ctx) + right.toTextString(ctx))) {
-			return XOMInterpreter.INTERPRETER;
-		}
-		else {
-			throw new XOMMorphError(typeName);
-		}
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, left.toTextString(ctx) + right.toTextString(ctx));
+		if (v != null && v.asPrimitive(ctx) instanceof XOMInterpreter) return (XOMInterpreter)v.asPrimitive(ctx);
+		else throw new XOMMorphError(typeName);
 	}
 }
