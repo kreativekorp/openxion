@@ -30,15 +30,12 @@ package com.kreative.openxion.xom.type;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.util.StringChunkType;
 import com.kreative.openxion.util.StringChunkEx;
-import com.kreative.openxion.xom.XOMDataType;
-import com.kreative.openxion.xom.XOMVariant;
-import com.kreative.openxion.xom.XOMMorphError;
+import com.kreative.openxion.xom.XOMChunkDataType;
 import com.kreative.openxion.xom.XOMGetError;
+import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.inst.XOMStringChunk;
-import com.kreative.openxion.xom.inst.XOMEmpty;
-import com.kreative.openxion.xom.inst.XOMList;
 
-public class XOMStringChunkType extends XOMDataType<XOMStringChunk> {
+public class XOMStringChunkType extends XOMChunkDataType<XOMStringChunk> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMStringChunkType characterInstance = new XOMStringChunkType(StringChunkType.CHARACTER);
@@ -64,10 +61,6 @@ public class XOMStringChunkType extends XOMDataType<XOMStringChunk> {
 		super(ct.toString(), DESCRIBABILITY_OF_SINGULAR_CHUNKS | DESCRIBABLE_BY_NAME, XOMStringChunk.class);
 		this.ct = ct;
 	}
-	
-	/*
-	 * Instantiation of child variants of this type.
-	 */
 	
 	public boolean canGetChildMassVariant(XNContext ctx, XOMVariant parent) {
 		return true;
@@ -116,56 +109,5 @@ public class XOMStringChunkType extends XOMDataType<XOMStringChunk> {
 			}
 		}
 		throw new XOMGetError(typeName);
-	}
-	
-	/*
-	 * Polymorphism - The data type of an object is determined through these methods.
-	 * Unlike in Java, where an object's type is determined by the class hierarchy,
-	 * objects in XION can be of any mix of data types (hence the term variant for XION objects).
-	 */
-	
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		if (instance instanceof XOMStringChunk) {
-			return true;
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMStringChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMStringChunk) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (left instanceof XOMEmpty) {
-			return canMakeInstanceFromImpl(ctx, right);
-		}
-		else if (right instanceof XOMEmpty) {
-			return canMakeInstanceFromImpl(ctx, left);
-		}
-		else {
-			return false;
-		}
-	}
-	protected XOMStringChunk makeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		if (instance instanceof XOMStringChunk) {
-			return (XOMStringChunk)instance;
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMStringChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMStringChunk) {
-			return (XOMStringChunk)instance.toList(ctx).get(0);
-		}
-		else {
-			throw new XOMMorphError(typeName);
-		}
-	}
-	protected XOMStringChunk makeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (left instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, right);
-		}
-		else if (right instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, left);
-		}
-		else {
-			throw new XOMMorphError(typeName);
-		}
 	}
 }

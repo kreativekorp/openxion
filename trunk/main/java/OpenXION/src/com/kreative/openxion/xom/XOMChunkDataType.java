@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2009-2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2011 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -21,41 +21,43 @@
  * other provisions required by the LGPL License. If you do not delete
  * the provisions above, a recipient may use your version of this file
  * under either the MPL or the LGPL License.
- * @since OpenXION 0.9
+ * @since OpenXION 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  */
 
-package com.kreative.openxion.xom.type;
+package com.kreative.openxion.xom;
 
-import java.util.Vector;
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.xom.XOMSimpleDataType;
-import com.kreative.openxion.xom.XOMVariant;
-import com.kreative.openxion.xom.inst.XOMList;
 
-public class XOMVariantType extends XOMSimpleDataType<XOMVariant> {
+/**
+ * XOMChunkDataType handles polymorphic methods for chunk types.
+ * @since OpenXION 1.3
+ * @author Rebecca G. Bettencourt, Kreative Software
+ * @param <IT> the corresponding subclass of XOMVariant
+ * used to represent the values this data type produces.
+ */
+public abstract class XOMChunkDataType<IT extends XOMVariant> extends XOMDataType<IT> {
 	private static final long serialVersionUID = 1L;
 	
-	public static final XOMVariantType instance = new XOMVariantType();
-	public static final XOMListType listInstance = new XOMListType("variants", DESCRIBABILITY_OF_PRIMITIVES, instance);
-	
-	private XOMVariantType() {
-		super("variant", DESCRIBABILITY_OF_PRIMITIVES, XOMVariant.class);
+	protected XOMChunkDataType(String typeName, int describability, Class<IT> instanceClass) {
+		super(typeName, describability, instanceClass);
 	}
 	
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		return true;
+	public final boolean canMakeInstanceFrom(XNContext ctx, XOMVariant instance) {
+		instance = instance.asValue(ctx);
+		return (instanceClass.isAssignableFrom(instance.getClass()));
 	}
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		return true;
+	public final boolean canMakeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
+		return false;
 	}
-	protected XOMVariant makeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		return instance.asValue(ctx);
+	public final IT makeInstanceFrom(XNContext ctx, XOMVariant instance) {
+		instance = instance.asValue(ctx);
+		if (instanceClass.isAssignableFrom(instance.getClass()))
+			return instanceClass.cast(instance);
+		else
+			throw new XOMMorphError(typeName);
 	}
-	protected XOMVariant makeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		Vector<XOMVariant> v = new Vector<XOMVariant>();
-		v.addAll(left.toList(ctx));
-		v.addAll(right.toList(ctx));
-		return new XOMList(v);
+	public final IT makeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
+		throw new XOMMorphError(typeName);
 	}
 }

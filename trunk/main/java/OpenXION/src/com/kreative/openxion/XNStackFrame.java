@@ -45,13 +45,13 @@ public class XNStackFrame implements Serializable, Cloneable {
 	private static final long serialVersionUID = 9999L;
 
 	private String handlerName;
-	private List<XOMVariant> parameters;
+	private List<? extends XOMVariant> parameters;
 	private Map<String, XNVariableScope> variableScopes;
 	private XOMVariableMap localVariables;
 	private Map<String, XNMessageHandler> localUserCommands;
 	private Map<String, XNFunctionHandler> localUserFunctions;
 	
-	public XNStackFrame(String handlerName, List<XOMVariant> parameters) {
+	public XNStackFrame(String handlerName, List<? extends XOMVariant> parameters) {
 		this.handlerName = handlerName;
 		this.parameters = parameters;
 		this.variableScopes = new HashMap<String, XNVariableScope>();
@@ -64,7 +64,7 @@ public class XNStackFrame implements Serializable, Cloneable {
 		return handlerName;
 	}
 	
-	public List<XOMVariant> getParameters() {
+	public List<? extends XOMVariant> getParameters() {
 		return parameters;
 	}
 	

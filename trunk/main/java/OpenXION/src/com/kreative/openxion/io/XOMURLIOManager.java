@@ -53,7 +53,7 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public void open(XNContext ctx, XOMVariant obj) {
-		if (!ctx.allow(XNSecurityKey.BROWSER_LAUNCH, "Operation", "Open", "Object", obj.toDescriptionString()))
+		if (!ctx.allow(XNSecurityKey.BROWSER_LAUNCH, "Operation", "Open", "Object", obj.toLanguageString()))
 			throw new XNScriptError("Security settings do not allow open URL");
 		try {
 			XOMURL xu = XOMURLType.instance.makeInstanceFrom(ctx, obj);
@@ -66,7 +66,7 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public void open(XNContext ctx, XOMVariant obj, XNIOMethod method, String type) {
-		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Open", "Object", obj.toDescriptionString(), "Method", method.getClass().getSimpleName(), "Type", type))
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Open", "Object", obj.toLanguageString(), "Method", method.getClass().getSimpleName(), "Type", type))
 			throw new XNScriptError("Security settings do not allow open URL");
 		try {
 			XOMURL xu = XOMURLType.instance.makeInstanceFrom(ctx, obj);
@@ -87,7 +87,7 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj) {
-		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toDescriptionString()))
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toLanguageString()))
 			throw new XNScriptError("Security settings do not allow read from URL");
 		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
 		if (si == null) {
@@ -98,7 +98,7 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, XOMVariant stop) {
-		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toDescriptionString()))
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toLanguageString()))
 			throw new XNScriptError("Security settings do not allow read from URL");
 		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
 		if (si == null) {
@@ -109,7 +109,7 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, int len) {
-		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toDescriptionString()))
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toLanguageString()))
 			throw new XNScriptError("Security settings do not allow read from URL");
 		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
 		if (si == null) {
@@ -120,7 +120,7 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, int len, XOMVariant stop) {
-		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toDescriptionString()))
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toLanguageString()))
 			throw new XNScriptError("Security settings do not allow read from URL");
 		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
 		if (si == null) {
@@ -131,7 +131,7 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos) {
-		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toDescriptionString()))
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toLanguageString()))
 			throw new XNScriptError("Security settings do not allow read from URL");
 		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
 		if (si == null) {
@@ -142,7 +142,7 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos, XOMVariant stop) {
-		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toDescriptionString()))
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toLanguageString()))
 			throw new XNScriptError("Security settings do not allow read from URL");
 		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
 		if (si == null) {
@@ -153,7 +153,7 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos, int len) {
-		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toDescriptionString()))
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toLanguageString()))
 			throw new XNScriptError("Security settings do not allow read from URL");
 		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
 		if (si == null) {
@@ -164,7 +164,7 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public XOMVariant read(XNContext ctx, XOMVariant obj, long pos, int len, XOMVariant stop) {
-		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toDescriptionString()))
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Read", "Object", obj.toLanguageString()))
 			throw new XNScriptError("Security settings do not allow read from URL");
 		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
 		if (si == null) {
@@ -175,7 +175,7 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public void write(XNContext ctx, XOMVariant obj, XOMVariant data) {
-		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Write", "Object", obj.toDescriptionString()))
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Write", "Object", obj.toLanguageString()))
 			throw new XNScriptError("Security settings do not allow write to URL");
 		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
 		if (si == null) {
@@ -186,7 +186,7 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public void write(XNContext ctx, XOMVariant obj, XOMVariant data, long pos) {
-		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Write", "Object", obj.toDescriptionString()))
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Write", "Object", obj.toLanguageString()))
 			throw new XNScriptError("Security settings do not allow write to URL");
 		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
 		if (si == null) {
@@ -197,7 +197,7 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public void truncate(XNContext ctx, XOMVariant obj) {
-		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Truncate", "Object", obj.toDescriptionString()))
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Truncate", "Object", obj.toLanguageString()))
 			throw new XNScriptError("Security settings do not allow truncate URL");
 		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
 		if (si == null) {
@@ -208,7 +208,7 @@ public class XOMURLIOManager implements XNIOManager {
 	}
 
 	public void truncate(XNContext ctx, XOMVariant obj, long pos) {
-		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Truncate", "Object", obj.toDescriptionString()))
+		if (!ctx.allow(XNSecurityKey.INTERNET_ACCESS, "Operation", "Truncate", "Object", obj.toLanguageString()))
 			throw new XNScriptError("Security settings do not allow truncate URL");
 		XNIOStreamInfo si = sim.getURLStreamInfo(ctx, obj);
 		if (si == null) {

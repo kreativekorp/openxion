@@ -32,6 +32,7 @@ import java.math.*;
 import java.security.*;
 import java.text.*;
 import java.util.*;
+
 import com.kreative.openxion.ast.*;
 import com.kreative.openxion.io.*;
 import com.kreative.openxion.math.*;
@@ -1544,7 +1545,7 @@ public class XNStandardModule extends XNModule {
 		} else if (dest.canPutContents(ctx)) {
 			return dest;
 		} else {
-			String name = dest.unwrap(ctx).toTextString(ctx);
+			String name = dest.toTextString(ctx);
 			throw new XNScriptError("Expected a variable name but found "+name);
 		}
 	}
@@ -1555,7 +1556,7 @@ public class XNStandardModule extends XNModule {
 			else if (prep.equalsIgnoreCase("after")) dest.putAfterContents(ctx, what);
 			else dest.putIntoContents(ctx, what);
 		} else {
-			String name = dest.unwrap(ctx).toTextString(ctx);
+			String name = dest.toTextString(ctx);
 			throw new XNScriptError("Expected a variable name but found "+name);
 		}
 	}
@@ -1566,7 +1567,7 @@ public class XNStandardModule extends XNModule {
 			else if (prep.equalsIgnoreCase("after")) dest.putAfterContents(ctx, what, prep, pval);
 			else dest.putIntoContents(ctx, what, prep, pval);
 		} else {
-			String name = dest.unwrap(ctx).toTextString(ctx);
+			String name = dest.toTextString(ctx);
 			throw new XNScriptError("Expected a variable name but found "+name);
 		}
 	}
@@ -1594,7 +1595,7 @@ public class XNStandardModule extends XNModule {
 			}
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
-			XOMVariant bv = interp.evaluateExpression(parameters.get(0)).unwrap(ctx);
+			XOMVariant bv = interp.evaluateExpression(parameters.get(0)).asPrimitive(ctx);
 			XOMVariant av = makeDest(interp, ctx, interp.evaluateExpression(parameters.get(2)));
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av);
@@ -1641,22 +1642,22 @@ public class XNStandardModule extends XNModule {
 			}
 			else if (parameters.size() == 1) {
 				kind = "normal";
-				prompt = interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx);
+				prompt = interp.evaluateExpression(parameters.get(0)).toTextString(ctx);
 				voptions = new Vector<XOMVariant>();
 				x = 0; y = 0;
 			}
 			else if (parameters.size() == 2) {
-				kind = interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx);
-				prompt = interp.evaluateExpression(parameters.get(1)).unwrap(ctx).toTextString(ctx);
+				kind = interp.evaluateExpression(parameters.get(0)).toTextString(ctx);
+				prompt = interp.evaluateExpression(parameters.get(1)).toTextString(ctx);
 				voptions = new Vector<XOMVariant>();
 				x = 0; y = 0;
 			}
 			else {
-				kind = interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx);
-				prompt = interp.evaluateExpression(parameters.get(1)).unwrap(ctx).toTextString(ctx);
+				kind = interp.evaluateExpression(parameters.get(0)).toTextString(ctx);
+				prompt = interp.evaluateExpression(parameters.get(1)).toTextString(ctx);
 				voptions = new Vector<XOMVariant>();
 				for (int i = 2; i < parameters.size(); i++) {
-					voptions.add(interp.evaluateExpression(parameters.get(i)).unwrap(ctx));
+					voptions.add(interp.evaluateExpression(parameters.get(i)).asPrimitive(ctx));
 				}
 				if (voptions.get(0).toTextString(ctx).equalsIgnoreCase("with")) {
 					voptions.remove(0);
@@ -1740,22 +1741,22 @@ public class XNStandardModule extends XNModule {
 			}
 			else if (parameters.size() == 1) {
 				kind = "normal";
-				prompt = interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx);
+				prompt = interp.evaluateExpression(parameters.get(0)).toTextString(ctx);
 				text = "";
 				x = 0; y = 0;
 			}
 			else if (parameters.size() == 2) {
-				kind = interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx);
-				prompt = interp.evaluateExpression(parameters.get(1)).unwrap(ctx).toTextString(ctx);
+				kind = interp.evaluateExpression(parameters.get(0)).toTextString(ctx);
+				prompt = interp.evaluateExpression(parameters.get(1)).toTextString(ctx);
 				text = "";
 				x = 0; y = 0;
 			}
 			else {
-				kind = interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx);
-				prompt = interp.evaluateExpression(parameters.get(1)).unwrap(ctx).toTextString(ctx);
+				kind = interp.evaluateExpression(parameters.get(0)).toTextString(ctx);
+				prompt = interp.evaluateExpression(parameters.get(1)).toTextString(ctx);
 				List<XOMVariant> tmp = new Vector<XOMVariant>();
 				for (int i = 2; i < parameters.size(); i++) {
-					tmp.add(interp.evaluateExpression(parameters.get(i)).unwrap(ctx));
+					tmp.add(interp.evaluateExpression(parameters.get(i)).asPrimitive(ctx));
 				}
 				if (tmp.size() >= 2 && tmp.get(0).toTextString(ctx).equalsIgnoreCase("with")) {
 					text = tmp.remove(1).toTextString(ctx);
@@ -1853,7 +1854,7 @@ public class XNStandardModule extends XNModule {
 			}
 			
 			if (!(what instanceof XNVariantDescriptor)) {
-				String s = interp.evaluateExpression(what).unwrap(ctx).toTextString(ctx);
+				String s = interp.evaluateExpression(what).toTextString(ctx);
 				XNLexer lex = new XNLexer(s, new StringReader(s));
 				XNParser par = new XNParser(ctx, lex);
 				what = par.getListExpression(null);
@@ -1872,7 +1873,7 @@ public class XNStandardModule extends XNModule {
 			if (parameters.size() < 3) {
 				if (expr instanceof XNVariantIdDescriptor) {
 					XNExpression idExpression = ((XNVariantIdDescriptor)expr).id;
-					XOMVariant idVar = interp.evaluateExpression(idExpression).unwrap(ctx);
+					XOMVariant idVar = interp.evaluateExpression(idExpression).asPrimitive(ctx);
 					XOMInteger idInt = XOMIntegerType.instance.makeInstanceFrom(ctx, idVar);
 					if (parent != null) {
 						dataType.createChildVariantByID(ctx, parent, idInt.toInt());
@@ -1883,16 +1884,16 @@ public class XNStandardModule extends XNModule {
 					XNExpression startExpr = ((XNVariantIndexNameDescriptor)expr).start;
 					XNExpression endExpr = ((XNVariantIndexNameDescriptor)expr).end;
 					if (startExpr != null && endExpr != null) {
-						int start = XOMIntegerType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(startExpr).unwrap(ctx)).toInt();
-						int end = XOMIntegerType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(endExpr).unwrap(ctx)).toInt();
+						int start = XOMIntegerType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(startExpr).asPrimitive(ctx)).toInt();
+						int end = XOMIntegerType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(endExpr).asPrimitive(ctx)).toInt();
 						if (parent != null) {
 							dataType.createChildVariantByIndex(ctx, parent, start, end);
 						} else {
 							dataType.createInstanceByIndex(ctx, start, end);
 						}
 					} else if (startExpr != null) {
-						XOMVariant idxNameVar = interp.evaluateExpression(startExpr).unwrap(ctx);
-						if (!idxNameVar.toString().equals("") && XOMIntegerType.instance.canMakeInstanceFrom(ctx, idxNameVar)) {
+						XOMVariant idxNameVar = interp.evaluateExpression(startExpr).asPrimitive(ctx);
+						if (!idxNameVar.toTextString(ctx).equals("") && XOMIntegerType.instance.canMakeInstanceFrom(ctx, idxNameVar)) {
 							int index = XOMIntegerType.instance.makeInstanceFrom(ctx, idxNameVar).toInt();
 							if (parent != null) {
 								dataType.createChildVariantByIndex(ctx, parent, index);
@@ -1908,8 +1909,8 @@ public class XNStandardModule extends XNModule {
 							}
 						}
 					} else if (endExpr != null) {
-						XOMVariant idxNameVar = interp.evaluateExpression(endExpr).unwrap(ctx);
-						if (!idxNameVar.toString().equals("") && XOMIntegerType.instance.canMakeInstanceFrom(ctx, idxNameVar)) {
+						XOMVariant idxNameVar = interp.evaluateExpression(endExpr).asPrimitive(ctx);
+						if (!idxNameVar.toTextString(ctx).equals("") && XOMIntegerType.instance.canMakeInstanceFrom(ctx, idxNameVar)) {
 							int index = XOMIntegerType.instance.makeInstanceFrom(ctx, idxNameVar).toInt();
 							if (parent != null) {
 								dataType.createChildVariantByIndex(ctx, parent, index);
@@ -1962,7 +1963,7 @@ public class XNStandardModule extends XNModule {
 				XOMVariant content = interp.evaluateExpression(parameters.get(2));
 				if (expr instanceof XNVariantIdDescriptor) {
 					XNExpression idExpression = ((XNVariantIdDescriptor)expr).id;
-					XOMVariant idVar = interp.evaluateExpression(idExpression).unwrap(ctx);
+					XOMVariant idVar = interp.evaluateExpression(idExpression).asPrimitive(ctx);
 					XOMInteger idInt = XOMIntegerType.instance.makeInstanceFrom(ctx, idVar);
 					if (parent != null) {
 						dataType.createChildVariantByIDWith(ctx, parent, idInt.toInt(), content);
@@ -1973,16 +1974,16 @@ public class XNStandardModule extends XNModule {
 					XNExpression startExpr = ((XNVariantIndexNameDescriptor)expr).start;
 					XNExpression endExpr = ((XNVariantIndexNameDescriptor)expr).end;
 					if (startExpr != null && endExpr != null) {
-						int start = XOMIntegerType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(startExpr).unwrap(ctx)).toInt();
-						int end = XOMIntegerType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(endExpr).unwrap(ctx)).toInt();
+						int start = XOMIntegerType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(startExpr).asPrimitive(ctx)).toInt();
+						int end = XOMIntegerType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(endExpr).asPrimitive(ctx)).toInt();
 						if (parent != null) {
 							dataType.createChildVariantByIndexWith(ctx, parent, start, end, content);
 						} else {
 							dataType.createInstanceByIndexWith(ctx, start, end, content);
 						}
 					} else if (startExpr != null) {
-						XOMVariant idxNameVar = interp.evaluateExpression(startExpr).unwrap(ctx);
-						if (!idxNameVar.toString().equals("") && XOMIntegerType.instance.canMakeInstanceFrom(ctx, idxNameVar)) {
+						XOMVariant idxNameVar = interp.evaluateExpression(startExpr).asPrimitive(ctx);
+						if (!idxNameVar.toTextString(ctx).equals("") && XOMIntegerType.instance.canMakeInstanceFrom(ctx, idxNameVar)) {
 							int index = XOMIntegerType.instance.makeInstanceFrom(ctx, idxNameVar).toInt();
 							if (parent != null) {
 								dataType.createChildVariantByIndexWith(ctx, parent, index, content);
@@ -1998,8 +1999,8 @@ public class XNStandardModule extends XNModule {
 							}
 						}
 					} else if (endExpr != null) {
-						XOMVariant idxNameVar = interp.evaluateExpression(endExpr).unwrap(ctx);
-						if (!idxNameVar.toString().equals("") && XOMIntegerType.instance.canMakeInstanceFrom(ctx, idxNameVar)) {
+						XOMVariant idxNameVar = interp.evaluateExpression(endExpr).asPrimitive(ctx);
+						if (!idxNameVar.toTextString(ctx).equals("") && XOMIntegerType.instance.canMakeInstanceFrom(ctx, idxNameVar)) {
 							int index = XOMIntegerType.instance.makeInstanceFrom(ctx, idxNameVar).toInt();
 							if (parent != null) {
 								dataType.createChildVariantByIndexWith(ctx, parent, index, content);
@@ -2056,10 +2057,10 @@ public class XNStandardModule extends XNModule {
 	private static final Command c_delete = new Command() {
 		public XOMVariant executeCommand(XNInterpreter interp, XNContext ctx, String commandName, List<XNExpression> parameters) {
 			if (parameters == null || parameters.isEmpty()) throw new XNScriptError("Can't understand arguments to delete");
-			XOMVariant v = interp.evaluateExpression(parameters.get(0)).unwrap(ctx);
+			XOMVariant v = interp.evaluateExpression(parameters.get(0)).asValue(ctx);
 			if (v.canDelete(ctx)) v.delete(ctx);
 			else {
-				v = interp.evaluateExpressionString(v.toTextString(ctx)).unwrap(ctx);
+				v = interp.evaluateExpressionString(v.toTextString(ctx)).asValue(ctx);
 				if (v.canDelete(ctx)) v.delete(ctx);
 				else {
 					throw new XNScriptError("Can't delete this");
@@ -2092,7 +2093,7 @@ public class XNStandardModule extends XNModule {
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			XOMVariant av = makeDest(interp, ctx, interp.evaluateExpression(parameters.get(0)));
-			XOMVariant bv = interp.evaluateExpression(parameters.get(2)).unwrap(ctx);
+			XOMVariant bv = interp.evaluateExpression(parameters.get(2)).asPrimitive(ctx);
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv);
@@ -2131,7 +2132,7 @@ public class XNStandardModule extends XNModule {
 	private static final Command c_get = new Command() {
 		public XOMVariant executeCommand(XNInterpreter interp, XNContext ctx, String commandName, List<XNExpression> parameters) {
 			if (parameters == null || parameters.isEmpty()) throw new XNScriptError("Can't understand arguments to get");
-			ctx.getVariableMap("it").setVariable(ctx, "it", interp.evaluateExpression(parameters.get(0)).unwrap(ctx));
+			ctx.getVariableMap("it").setVariable(ctx, "it", interp.evaluateExpression(parameters.get(0)).asValue(ctx));
 			return null;
 		}
 	};
@@ -2140,7 +2141,7 @@ public class XNStandardModule extends XNModule {
 		public XOMVariant executeCommand(XNInterpreter interp, XNContext ctx, String commandName, List<XNExpression> parameters) {
 			if (parameters == null || parameters.size() < 3) throw new XNScriptError("Can't understand arguments to let");
 			XOMVariant dest = interp.evaluateExpression(parameters.get(0));
-			XOMVariant what = interp.evaluateExpression(parameters.get(2)).unwrap(ctx);
+			XOMVariant what = interp.evaluateExpression(parameters.get(2)).asValue(ctx);
 			put(interp, ctx, what, "into", dest);
 			return null;
 		}
@@ -2169,7 +2170,7 @@ public class XNStandardModule extends XNModule {
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			XOMVariant av = makeDest(interp, ctx, interp.evaluateExpression(parameters.get(0)));
-			XOMVariant bv = interp.evaluateExpression(parameters.get(2)).unwrap(ctx);
+			XOMVariant bv = interp.evaluateExpression(parameters.get(2)).asPrimitive(ctx);
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv);
@@ -2209,7 +2210,7 @@ public class XNStandardModule extends XNModule {
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			XOMVariant av = makeDest(interp, ctx, interp.evaluateExpression(parameters.get(0)));
-			XOMVariant bv = interp.evaluateExpression(parameters.get(2)).unwrap(ctx);
+			XOMVariant bv = interp.evaluateExpression(parameters.get(2)).asPrimitive(ctx);
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv);
@@ -2245,18 +2246,18 @@ public class XNStandardModule extends XNModule {
 		public XOMVariant executeCommand(XNInterpreter interp, XNContext ctx, String commandName, List<XNExpression> parameters) {
 			if (parameters == null || parameters.isEmpty()) throw new XNScriptError("Can't understand arguments to put");
 			if (parameters.size() < 3) {
-				ctx.getUI().put(interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx));
+				ctx.getUI().put(interp.evaluateExpression(parameters.get(0)).toTextString(ctx));
 			} else if (parameters.size() < 6) {
-				XOMVariant what = interp.evaluateExpression(parameters.get(0)).unwrap(ctx);
-				String prep = interp.evaluateExpression(parameters.get(1)).unwrap(ctx).toTextString(ctx);
+				XOMVariant what = interp.evaluateExpression(parameters.get(0)).asValue(ctx);
+				String prep = interp.evaluateExpression(parameters.get(1)).toTextString(ctx);
 				XOMVariant dest = interp.evaluateExpression(parameters.get(2));
 				put(interp, ctx, what, prep, dest);
 			} else {
-				XOMVariant what = interp.evaluateExpression(parameters.get(0)).unwrap(ctx);
-				String prep = interp.evaluateExpression(parameters.get(1)).unwrap(ctx).toTextString(ctx);
+				XOMVariant what = interp.evaluateExpression(parameters.get(0)).asValue(ctx);
+				String prep = interp.evaluateExpression(parameters.get(1)).toTextString(ctx);
 				XOMVariant dest = interp.evaluateExpression(parameters.get(2));
-				String prop = interp.evaluateExpression(parameters.get(4)).unwrap(ctx).toTextString(ctx);
-				XOMVariant pval = interp.evaluateExpression(parameters.get(5)).unwrap(ctx);
+				String prop = interp.evaluateExpression(parameters.get(4)).toTextString(ctx);
+				XOMVariant pval = interp.evaluateExpression(parameters.get(5)).asValue(ctx);
 				put(interp, ctx, what, prep, dest, prop, pval);
 			}
 			return null;
@@ -2266,9 +2267,9 @@ public class XNStandardModule extends XNModule {
 	private static final Command c_set = new Command() {
 		public XOMVariant executeCommand(XNInterpreter interp, XNContext ctx, String commandName, List<XNExpression> parameters) {
 			if (parameters == null || parameters.size() < 5) throw new XNScriptError("Can't understand arguments to set");
-			String property = interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx);
-			XOMVariant object = interp.evaluateExpression(parameters.get(2)).unwrap(ctx);
-			XOMVariant value = interp.evaluateExpression(parameters.get(4)).unwrap(ctx);
+			String property = interp.evaluateExpression(parameters.get(0)).toTextString(ctx);
+			XOMVariant object = interp.evaluateExpression(parameters.get(2)).asValue(ctx);
+			XOMVariant value = interp.evaluateExpression(parameters.get(4)).asValue(ctx);
 			if (object != null && object.canSetProperty(ctx, property)) {
 				object.setProperty(ctx, property, value);
 			} else if (
@@ -2291,7 +2292,7 @@ public class XNStandardModule extends XNModule {
 			}
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
-			XOMVariant bv = interp.evaluateExpression(parameters.get(0)).unwrap(ctx);
+			XOMVariant bv = interp.evaluateExpression(parameters.get(0)).asPrimitive(ctx);
 			XOMVariant av = makeDest(interp, ctx, interp.evaluateExpression(parameters.get(2)));
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av);
@@ -2329,7 +2330,7 @@ public class XNStandardModule extends XNModule {
 			if (parameters == null || parameters.isEmpty()) {
 				ctx.getUI().beep();
 			} else {
-				int i = XOMIntegerType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(parameters.get(0)).unwrap(ctx)).toInt();
+				int i = XOMIntegerType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(parameters.get(0)).asPrimitive(ctx)).toInt();
 				while (i-- > 0) {
 					ctx.getUI().beep();
 				}
@@ -2343,10 +2344,10 @@ public class XNStandardModule extends XNModule {
 			if (parameters == null || parameters.isEmpty()) {
 				throw new XNScriptError("Can't understand arguments to close");
 			}
-			XOMVariant object = interp.evaluateExpression(parameters.get(0)).unwrap(ctx);
-			XOMVariant opener = (parameters.size() > 2) ? interp.evaluateExpression(parameters.get(2)).unwrap(ctx) : null;
+			XOMVariant object = interp.evaluateExpression(parameters.get(0)).asValue(ctx);
+			XOMVariant opener = (parameters.size() > 2) ? interp.evaluateExpression(parameters.get(2)).asValue(ctx) : null;
 			if (opener != null) {
-				if (!ctx.allow(XNSecurityKey.FILE_LAUNCH, "Operation", "Close", "Object", object.toDescriptionString(), "Opener", opener.toDescriptionString()))
+				if (!ctx.allow(XNSecurityKey.FILE_LAUNCH, "Operation", "Close", "Object", object.toLanguageString(), "Opener", opener.toLanguageString()))
 					throw new XNScriptError("Security settings do not allow close");
 				String app = opener.toTextString(ctx);
 				String doc = object.toTextString(ctx);
@@ -2364,7 +2365,7 @@ public class XNStandardModule extends XNModule {
 			} else if (ctx.hasIOManager(object)) {
 				ctx.getIOManager(object).close(ctx, object);
 			} else {
-				if (!ctx.allow(XNSecurityKey.FILE_LAUNCH, "Operation", "Close", "Object", object.toDescriptionString()))
+				if (!ctx.allow(XNSecurityKey.FILE_LAUNCH, "Operation", "Close", "Object", object.toLanguageString()))
 					throw new XNScriptError("Security settings do not allow close");
 				String name = object.toTextString(ctx);
 				File f = XIONUtil.locateApplication(ctx, name, true);
@@ -2421,9 +2422,9 @@ public class XNStandardModule extends XNModule {
 			if (parameters == null || parameters.isEmpty()) {
 				throw new XNScriptError("Can't understand arguments to open");
 			}
-			XOMVariant object = interp.evaluateExpression(parameters.get(0)).unwrap(ctx);
+			XOMVariant object = interp.evaluateExpression(parameters.get(0)).asValue(ctx);
 			boolean as = (parameters.size() > 1 && interp.evaluateExpression(parameters.get(1)).toTextString(ctx).equalsIgnoreCase("as"));
-			XOMVariant opener = (parameters.size() > 2) ? interp.evaluateExpression(parameters.get(2)).unwrap(ctx) : null;
+			XOMVariant opener = (parameters.size() > 2) ? interp.evaluateExpression(parameters.get(2)).asValue(ctx) : null;
 			if (as && opener != null) {
 				String type = opener.toTextString(ctx);
 				if (ctx.hasIOManager(object)) {
@@ -2439,7 +2440,7 @@ public class XNStandardModule extends XNModule {
 				}
 			}
 			else if (opener != null) {
-				if (!ctx.allow(XNSecurityKey.FILE_LAUNCH, "Operation", "Open", "Object", object.toDescriptionString(), "Opener", opener.toDescriptionString()))
+				if (!ctx.allow(XNSecurityKey.FILE_LAUNCH, "Operation", "Open", "Object", object.toLanguageString(), "Opener", opener.toLanguageString()))
 					throw new XNScriptError("Security settings do not allow open");
 				String app = opener.toTextString(ctx);
 				String doc = object.toTextString(ctx);
@@ -2459,7 +2460,7 @@ public class XNStandardModule extends XNModule {
 				ctx.getIOManager(object).open(ctx, object);
 			}
 			else {
-				if (!ctx.allow(XNSecurityKey.FILE_LAUNCH, "Operation", "Open", "Object", object.toDescriptionString()))
+				if (!ctx.allow(XNSecurityKey.FILE_LAUNCH, "Operation", "Open", "Object", object.toLanguageString()))
 					throw new XNScriptError("Security settings do not allow open");
 				String name = object.toTextString(ctx);
 				File f = XIONUtil.locateApplicationOrDocument(ctx, name, true);
@@ -2480,7 +2481,7 @@ public class XNStandardModule extends XNModule {
 			if (parameters == null || parameters.size() < 8) {
 				throw new XNScriptError("Can't understand arguments to write");
 			}
-			XOMVariant obj = interp.evaluateExpression(parameters.get(1)).unwrap(ctx);
+			XOMVariant obj = interp.evaluateExpression(parameters.get(1)).asValue(ctx);
 			XNIOManager io = ctx.getIOManager(obj);
 			if (io == null) {
 				throw new XNScriptError("Can't read from this");
@@ -2532,12 +2533,12 @@ public class XNStandardModule extends XNModule {
 				throw new XNScriptError("Can't understand arguments to wait");
 			}
 			XOMVariant what = interp.evaluateExpression(parameters.get(0));
-			String dir = interp.evaluateExpression(parameters.get(1)).unwrap(ctx).toTextString(ctx);
+			String dir = interp.evaluateExpression(parameters.get(1)).toTextString(ctx);
 			int dirint = (
 					dir.equalsIgnoreCase("ascending") ? XOMComparator.ORDER_ASCENDING :
 					dir.equalsIgnoreCase("descending") ? XOMComparator.ORDER_DESCENDING :
 					XOMComparator.ORDER_ASCENDING);
-			String type = interp.evaluateExpression(parameters.get(2)).unwrap(ctx).toTextString(ctx);
+			String type = interp.evaluateExpression(parameters.get(2)).toTextString(ctx);
 			int typeint = (
 					type.equalsIgnoreCase("text") ? XOMComparator.TYPE_TEXT :
 					type.equalsIgnoreCase("international") ? XOMComparator.TYPE_INTERNATIONAL :
@@ -2556,7 +2557,7 @@ public class XNStandardModule extends XNModule {
 			if (parameters == null || parameters.isEmpty()) {
 				throw new XNScriptError("Can't understand arguments to truncate");
 			}
-			XOMVariant obj = interp.evaluateExpression(parameters.get(0)).unwrap(ctx);
+			XOMVariant obj = interp.evaluateExpression(parameters.get(0)).asValue(ctx);
 			XNIOManager io = ctx.getIOManager(obj);
 			if (io == null) {
 				throw new XNScriptError("Can't truncate this");
@@ -2578,11 +2579,11 @@ public class XNStandardModule extends XNModule {
 			String type = interp.evaluateExpression(parameters.get(0)).toTextString(ctx);
 			if (type.equalsIgnoreCase("while")) {
 				XNExpression condition = parameters.get(1);
-				while (XOMBooleanType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(condition).unwrap(ctx)).toBoolean());
+				while (XOMBooleanType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(condition).asPrimitive(ctx)).toBoolean());
 			}
 			else if (type.equalsIgnoreCase("until")) {
 				XNExpression condition = parameters.get(1);
-				while (!XOMBooleanType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(condition).unwrap(ctx)).toBoolean());
+				while (!XOMBooleanType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(condition).asPrimitive(ctx)).toBoolean());
 			}
 			else {
 				double d = XOMNumberType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(parameters.get(1))).toDouble();
@@ -2620,8 +2621,8 @@ public class XNStandardModule extends XNModule {
 			if (parameters == null || parameters.size() < 3) {
 				throw new XNScriptError("Can't understand arguments to write");
 			}
-			XOMVariant content = interp.evaluateExpression(parameters.get(0)).unwrap(ctx);
-			XOMVariant obj = interp.evaluateExpression(parameters.get(2)).unwrap(ctx);
+			XOMVariant content = interp.evaluateExpression(parameters.get(0)).asValue(ctx);
+			XOMVariant obj = interp.evaluateExpression(parameters.get(2)).asValue(ctx);
 			XNIOManager io = ctx.getIOManager(obj);
 			if (io == null) {
 				throw new XNScriptError("Can't write to this");
@@ -2710,8 +2711,13 @@ public class XNStandardModule extends XNModule {
 		}
 	}
 	
-	private static List<XOMVariant> listParameter(XNContext ctx, String functionName, XOMVariant parameter, int np) {
-		List<XOMVariant> l = (parameter == null) ? new Vector<XOMVariant>() : parameter.toList(ctx);
+	private static List<? extends XOMVariant> listParameter(XNContext ctx, String functionName, XOMVariant parameter) {
+		List<? extends XOMVariant> l = (parameter == null) ? new Vector<XOMVariant>() : parameter.toList(ctx);
+		return l;
+	}
+	
+	private static List<? extends XOMVariant> listParameter(XNContext ctx, String functionName, XOMVariant parameter, int np) {
+		List<? extends XOMVariant> l = (parameter == null) ? new Vector<XOMVariant>() : parameter.toList(ctx);
 		if (l.size() != np) {
 			throw new XNScriptError("Can't understand arguments to "+functionName);
 		} else {
@@ -2719,8 +2725,8 @@ public class XNStandardModule extends XNModule {
 		}
 	}
 	
-	private static List<XOMVariant> listParameter(XNContext ctx, String functionName, XOMVariant parameter, int min, int max) {
-		List<XOMVariant> l = (parameter == null) ? new Vector<XOMVariant>() : parameter.toList(ctx);
+	private static List<? extends XOMVariant> listParameter(XNContext ctx, String functionName, XOMVariant parameter, int min, int max) {
+		List<? extends XOMVariant> l = (parameter == null) ? new Vector<XOMVariant>() : parameter.toList(ctx);
 		if (l.size() < min || l.size() > max) {
 			throw new XNScriptError("Can't understand arguments to "+functionName);
 		} else {
@@ -2728,7 +2734,7 @@ public class XNStandardModule extends XNModule {
 		}
 	}
 	
-	private static List<XOMVariant> anyNumericListParameter(XNContext ctx, String functionName, XOMVariant parameter) {
+	private static List<? extends XOMVariant> anyNumericListParameter(XNContext ctx, String functionName, XOMVariant parameter) {
 		if (parameter == null || parameter instanceof XOMEmpty) {
 			return new Vector<XOMVariant>();
 		}
@@ -2752,7 +2758,7 @@ public class XNStandardModule extends XNModule {
 		}
 	}
 	
-	private static List<XOMVariant> fpNumericListParameter(XNContext ctx, String functionName, XOMVariant parameter) {
+	private static List<? extends XOMVariant> fpNumericListParameter(XNContext ctx, String functionName, XOMVariant parameter) {
 		if (parameter == null || parameter instanceof XOMEmpty) {
 			return new Vector<XOMVariant>();
 		}
@@ -2863,7 +2869,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_agm = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			XOMVariant a = fpNumericParameter(ctx, functionName, l.get(0));
@@ -2883,7 +2889,7 @@ public class XNStandardModule extends XNModule {
 	private static final Function f_and = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) return XOMBoolean.TRUE;
-			List<XOMVariant> booleans = XOMBooleanType.listInstance.makeInstanceFrom(ctx, parameter).toList(ctx);
+			List<? extends XOMVariant> booleans = XOMBooleanType.listInstance.makeInstanceFrom(ctx, parameter).toList(ctx);
 			boolean finalResult = true;
 			for (XOMVariant b : booleans) {
 				finalResult = finalResult && XOMBooleanType.instance.makeInstanceFrom(ctx, b).toBoolean();
@@ -2894,7 +2900,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_annuity = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			XOMVariant a = fpNumericParameter(ctx, functionName, l.get(0));
@@ -2974,7 +2980,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_asc = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> numbers = anyNumericListParameter(ctx, functionName, parameter);
+			List<? extends XOMVariant> numbers = anyNumericListParameter(ctx, functionName, parameter);
 			if (numbers.isEmpty()) return XOMBoolean.TRUE;
 			if (numbers.get(0) instanceof XOMComplex) {
 				XOMNumber[] prev = ((XOMComplex)numbers.get(0)).toXOMNumbers();
@@ -3060,7 +3066,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_atan2 = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			XOMNumber y = XOMNumberType.instance.makeInstanceFrom(ctx, l.get(0));
@@ -3092,7 +3098,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_average = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
+			List<? extends XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			if (numbers.isEmpty()) return XOMNumber.NaN;
@@ -3114,7 +3120,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_bc = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 3);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 3);
 			String ss = l.get(0).toTextString(ctx);
 			int sb = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(1)).toBigInteger().intValue();
 			int db = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(2)).toBigInteger().intValue();
@@ -3128,7 +3134,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_beta = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			XOMVariant a = fpNumericParameter(ctx, functionName, l.get(0));
@@ -3221,7 +3227,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_center = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			String s = l.get(0).toTextString(ctx);
 			int n = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(1)).toInt();
 			if (n <= 0) return XOMString.EMPTY_STRING;
@@ -3270,7 +3276,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_compound = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			XOMVariant a = fpNumericParameter(ctx, functionName, l.get(0));
@@ -3291,7 +3297,7 @@ public class XNStandardModule extends XNModule {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) return XOMString.EMPTY_STRING;
 			StringBuffer concatenatedString = new StringBuffer();
-			for (XOMVariant variant : parameter.toList(ctx)) {
+			for (XOMVariant variant : listParameter(ctx, functionName, parameter)) {
 				concatenatedString.append(variant.toTextString(ctx));
 			}
 			return new XOMString(concatenatedString.toString());
@@ -3302,7 +3308,7 @@ public class XNStandardModule extends XNModule {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) return XOMString.EMPTY_STRING;
 			StringBuffer concatenatedString = new StringBuffer();
-			for (XOMVariant variant : parameter.toList(ctx)) {
+			for (XOMVariant variant : listParameter(ctx, functionName, parameter)) {
 				concatenatedString.append(variant.toTextString(ctx));
 				concatenatedString.append(" ");
 			}
@@ -3369,7 +3375,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_countfields = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			String s = l.get(0).toTextString(ctx);
 			if (s.length() == 0) return XOMInteger.ZERO;
 			String d = "(?i)"+XIONUtil.makeRegexForExactMatch(l.get(1).toTextString(ctx));
@@ -3379,7 +3385,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_cpad = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2, 3);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, 3);
 			String s = l.get(0).toTextString(ctx);
 			int maxl = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(1)).toInt();
 			String p = (l.size() == 3) ? l.get(2).toTextString(ctx) : " ";
@@ -3415,7 +3421,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_cscountfields = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			String s = l.get(0).toTextString(ctx);
 			if (s.length() == 0) return XOMInteger.ZERO;
 			String d = XIONUtil.makeRegexForExactMatch(l.get(1).toTextString(ctx));
@@ -3425,7 +3431,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_csexplode = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			String s = l.get(0).toTextString(ctx);
 			if (s.length() == 0) return XOMString.EMPTY_STRING;
 			String d = XIONUtil.makeRegexForExactMatch(l.get(1).toTextString(ctx));
@@ -3440,14 +3446,14 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_csinstr = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			return new XOMInteger(l.get(0).toTextString(ctx).indexOf(l.get(1).toTextString(ctx))+1);
 		}
 	};
 	
 	private static final Function f_csnthfield = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 3);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 3);
 			String s = l.get(0).toTextString(ctx);
 			if (s.length() == 0) return XOMString.EMPTY_STRING;
 			String d = XIONUtil.makeRegexForExactMatch(l.get(1).toTextString(ctx));
@@ -3460,14 +3466,14 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_csoffset = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			return new XOMInteger(l.get(1).toTextString(ctx).indexOf(l.get(0).toTextString(ctx))+1);
 		}
 	};
 	
 	private static final Function f_csreplace = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 3);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 3);
 			String str = l.get(0).toTextString(ctx);
 			String src = XIONUtil.makeRegexForExactMatch(l.get(1).toTextString(ctx));
 			String rep = XIONUtil.makeRegexForExactReplace(l.get(2).toTextString(ctx));
@@ -3477,7 +3483,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_csreplaceall = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 3);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 3);
 			String str = l.get(0).toTextString(ctx);
 			String src = XIONUtil.makeRegexForExactMatch(l.get(1).toTextString(ctx));
 			String rep = XIONUtil.makeRegexForExactReplace(l.get(2).toTextString(ctx));
@@ -3487,14 +3493,14 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_csrinstr = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			return new XOMInteger(l.get(0).toTextString(ctx).lastIndexOf(l.get(1).toTextString(ctx))+1);
 		}
 	};
 	
 	private static final Function f_csstrcmp = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			return new XOMInteger(l.get(1).toTextString(ctx).compareTo(l.get(0).toTextString(ctx)));
 		}
 	};
@@ -3524,7 +3530,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_dec = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> numbers = anyNumericListParameter(ctx, functionName, parameter);
+			List<? extends XOMVariant> numbers = anyNumericListParameter(ctx, functionName, parameter);
 			if (numbers.isEmpty()) return XOMBoolean.TRUE;
 			if (numbers.get(0) instanceof XOMComplex) {
 				XOMNumber[] prev = ((XOMComplex)numbers.get(0)).toXOMNumbers();
@@ -3578,7 +3584,7 @@ public class XNStandardModule extends XNModule {
 	private static final Function f_equal = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) return XOMBoolean.TRUE;
-			List<XOMVariant> parameters = parameter.toList(ctx);
+			List<? extends XOMVariant> parameters = listParameter(ctx, functionName, parameter);
 			if (parameters.isEmpty()) return XOMBoolean.TRUE;
 			try {
 				XNInterpreter interp = new XNInterpreter(ctx);
@@ -3639,7 +3645,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_explode = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			String s = l.get(0).toTextString(ctx);
 			if (s.length() == 0) return XOMString.EMPTY_STRING;
 			String d = "(?i)"+XIONUtil.makeRegexForExactMatch(l.get(1).toTextString(ctx));
@@ -3696,7 +3702,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_gcd = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			XOMInteger xa = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(0));
 			XOMInteger xb = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(1));
 			if (xa.isUndefined() || xb.isUndefined()) return XOMInteger.NaN;
@@ -3712,7 +3718,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_geom = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
+			List<? extends XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			if (numbers.isEmpty()) return XOMNumber.NaN;
@@ -3734,7 +3740,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_hash = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 1, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 1, 2);
 			byte[] data;
 			if (l.get(0) instanceof XOMBinary) {
 				data = ((XOMBinary)l.get(0)).toByteArray();
@@ -3764,7 +3770,7 @@ public class XNStandardModule extends XNModule {
 	private static final Function f_head = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) return XOMEmpty.EMPTY;
-			List<XOMVariant> l = parameter.toList(ctx);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter);
 			if (l.isEmpty()) return XOMEmpty.EMPTY;
 			else return l.get(0);
 		}
@@ -3797,7 +3803,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_hypot = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
+			List<? extends XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			if (numbers.isEmpty()) return XOMNumber.ZERO;
@@ -3829,8 +3835,8 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_implode = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
-			List<XOMVariant> vs = l.get(0).toList(ctx);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> vs = listParameter(ctx, functionName, l.get(0));
 			String d = l.get(1).toTextString(ctx);
 			StringBuffer out = new StringBuffer();
 			for (XOMVariant v : vs) {
@@ -3868,7 +3874,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_instr = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			return new XOMInteger(l.get(0).toTextString(ctx).toLowerCase().indexOf(l.get(1).toTextString(ctx).toLowerCase())+1);
 		}
 	};
@@ -3912,7 +3918,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_lcm = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			XOMInteger xa = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(0));
 			XOMInteger xb = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(1));
 			if (xa.isUndefined() || xb.isUndefined()) return XOMInteger.NaN;
@@ -3930,10 +3936,10 @@ public class XNStandardModule extends XNModule {
 	private static final Function f_lconcat = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) return XOMList.EMPTY_LIST;
-			List<XOMVariant> parameters = parameter.toList(ctx);
+			List<? extends XOMVariant> parameters = listParameter(ctx, functionName, parameter);
 			List<XOMVariant> concatenatedList = new Vector<XOMVariant>();
 			for (XOMVariant variant : parameters) {
-				concatenatedList.addAll(variant.toList(ctx));
+				concatenatedList.addAll(listParameter(ctx, functionName, variant));
 			}
 			return new XOMList(concatenatedList);
 		}
@@ -3941,7 +3947,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_left = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			String s = l.get(0).toTextString(ctx);
 			int n = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(1)).toInt();
 			if (n <= 0) return XOMString.EMPTY_STRING;
@@ -3981,7 +3987,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_lnbeta = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			XOMVariant a = fpNumericParameter(ctx, functionName, l.get(0));
@@ -4022,7 +4028,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_log = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			XOMVariant a = fpNumericParameter(ctx, functionName, l.get(0));
@@ -4063,7 +4069,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_lpad = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2, 3);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, 3);
 			String s = l.get(0).toTextString(ctx);
 			int maxl = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(1)).toInt();
 			String p = (l.size() == 3) ? l.get(2).toTextString(ctx) : " ";
@@ -4079,7 +4085,7 @@ public class XNStandardModule extends XNModule {
 	private static final Function f_lreverse = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) return XOMEmpty.EMPTY;
-			List<XOMVariant> l = parameter.toList(ctx);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter);
 			List<XOMVariant> lr = new Vector<XOMVariant>();
 			for (XOMVariant v : l) lr.add(0,v);
 			return new XOMList(lr);
@@ -4100,7 +4106,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_max = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> numbers = anyNumericListParameter(ctx, functionName, parameter);
+			List<? extends XOMVariant> numbers = anyNumericListParameter(ctx, functionName, parameter);
 			if (numbers.isEmpty()) return XOMNumber.NaN;
 			if (numbers.get(0) instanceof XOMComplex) {
 				XOMNumber[] max = ((XOMComplex)numbers.get(0)).toXOMNumbers();
@@ -4128,7 +4134,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_mid = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2, 3);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, 3);
 			String s = l.get(0).toTextString(ctx);
 			if (l.size() == 3) {
 				int start = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(1)).toInt()-1;
@@ -4150,7 +4156,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_min = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> numbers = anyNumericListParameter(ctx, functionName, parameter);
+			List<? extends XOMVariant> numbers = anyNumericListParameter(ctx, functionName, parameter);
 			if (numbers.isEmpty()) return XOMNumber.NaN;
 			if (numbers.get(0) instanceof XOMComplex) {
 				XOMNumber[] min = ((XOMComplex)numbers.get(0)).toXOMNumbers();
@@ -4178,7 +4184,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_ncr = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			XOMVariant a = fpNumericParameter(ctx, functionName, l.get(0));
@@ -4197,7 +4203,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_npr = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			XOMVariant a = fpNumericParameter(ctx, functionName, l.get(0));
@@ -4216,7 +4222,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_nthfield = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 3);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 3);
 			String s = l.get(0).toTextString(ctx);
 			if (s.length() == 0) return XOMString.EMPTY_STRING;
 			String d = "(?i)"+XIONUtil.makeRegexForExactMatch(l.get(1).toTextString(ctx));
@@ -4230,7 +4236,7 @@ public class XNStandardModule extends XNModule {
 	private static final Function f_number = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) throw new XNScriptError("Can't understand arguments to " + functionName);
-			return new XOMInteger(parameter.toList(ctx).size());
+			return new XOMInteger(listParameter(ctx, functionName, parameter).size());
 		}
 	};
 	
@@ -4302,7 +4308,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_offset = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			return new XOMInteger(l.get(1).toTextString(ctx).toLowerCase().indexOf(l.get(0).toTextString(ctx).toLowerCase())+1);
 		}
 	};
@@ -4310,7 +4316,7 @@ public class XNStandardModule extends XNModule {
 	private static final Function f_or = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) return XOMBoolean.FALSE;
-			List<XOMVariant> booleans = XOMBooleanType.listInstance.makeInstanceFrom(ctx, parameter).toList(ctx);
+			List<? extends XOMVariant> booleans = XOMBooleanType.listInstance.makeInstanceFrom(ctx, parameter).toList(ctx);
 			boolean finalResult = false;
 			for (XOMVariant b : booleans) {
 				finalResult = finalResult || XOMBooleanType.instance.makeInstanceFrom(ctx, b).toBoolean();
@@ -4359,7 +4365,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_pow = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
+			List<? extends XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			if (numbers.isEmpty()) return XOMNumber.NaN;
@@ -4383,7 +4389,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_prod = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
+			List<? extends XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			if (numbers.isEmpty()) return XOMNumber.ONE;
@@ -4405,7 +4411,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_pstddev = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
+			List<? extends XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			if (numbers.isEmpty()) return XOMNumber.NaN;
@@ -4443,7 +4449,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_pvariance = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
+			List<? extends XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			if (numbers.isEmpty()) return XOMNumber.NaN;
@@ -4498,7 +4504,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_randomrange = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			int begin = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(0)).toInt();
 			int end = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(1)).toInt();
 			if (end < begin) {
@@ -4521,7 +4527,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_replace = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 3);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 3);
 			String str = l.get(0).toTextString(ctx);
 			String src = "(?i)"+XIONUtil.makeRegexForExactMatch(l.get(1).toTextString(ctx));
 			String rep = XIONUtil.makeRegexForExactReplace(l.get(2).toTextString(ctx));
@@ -4531,7 +4537,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_replaceall = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 3);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 3);
 			String str = l.get(0).toTextString(ctx);
 			String src = "(?i)"+XIONUtil.makeRegexForExactMatch(l.get(1).toTextString(ctx));
 			String rep = XIONUtil.makeRegexForExactReplace(l.get(2).toTextString(ctx));
@@ -4561,7 +4567,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_reversebits = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			XOMInteger xa = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(0));
 			XOMInteger xb = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(1));
 			if (xa.isUndefined() || xb.isUndefined() || xb.getSign() == XOMInteger.SIGN_NEGATIVE) return XOMInteger.NaN;
@@ -4580,7 +4586,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_reversebytes = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			XOMInteger xa = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(0));
 			XOMInteger xb = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(1));
 			if (xa.isUndefined() || xb.isUndefined() || xb.getSign() == XOMInteger.SIGN_NEGATIVE) return XOMInteger.NaN;
@@ -4598,7 +4604,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_right = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			String s = l.get(0).toTextString(ctx);
 			int n = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(1)).toInt();
 			if (n <= 0) return XOMString.EMPTY_STRING;
@@ -4609,7 +4615,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_rinstr = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			return new XOMInteger(l.get(0).toTextString(ctx).toLowerCase().lastIndexOf(l.get(1).toTextString(ctx).toLowerCase())+1);
 		}
 	};
@@ -4626,7 +4632,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_rms = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
+			List<? extends XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			if (numbers.isEmpty()) return XOMNumber.NaN;
@@ -4648,7 +4654,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_root = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
+			List<? extends XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			if (numbers.isEmpty()) return XOMNumber.NaN;
@@ -4689,7 +4695,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_rpad = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2, 3);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, 3);
 			String s = l.get(0).toTextString(ctx);
 			int maxl = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(1)).toInt();
 			String p = (l.size() == 3) ? l.get(2).toTextString(ctx) : " ";
@@ -4704,7 +4710,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_rsr = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
+			List<? extends XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			if (numbers.isEmpty()) return XOMNumber.ZERO;
@@ -4812,7 +4818,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_sstddev = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
+			List<? extends XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			if (numbers.isEmpty()) return XOMNumber.NaN;
@@ -4850,14 +4856,14 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_strcmp = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			return new XOMInteger(l.get(1).toTextString(ctx).compareToIgnoreCase(l.get(0).toTextString(ctx)));
 		}
 	};
 	
 	private static final Function f_substr = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2, 3);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, 3);
 			String s = l.get(0).toTextString(ctx);
 			if (l.size() == 3) {
 				int start = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(1)).toInt()-1;
@@ -4879,7 +4885,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_substring = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2, 3);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, 3);
 			String s = l.get(0).toTextString(ctx);
 			if (l.size() == 3) {
 				int start = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(1)).toInt()-1;
@@ -4901,7 +4907,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_sum = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
+			List<? extends XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			if (numbers.isEmpty()) return XOMNumber.ZERO;
@@ -4923,7 +4929,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_svariance = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
+			List<? extends XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			if (numbers.isEmpty()) return XOMNumber.NaN;
@@ -4978,7 +4984,7 @@ public class XNStandardModule extends XNModule {
 	private static final Function f_tail = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) return XOMEmpty.EMPTY;
-			List<XOMVariant> l = parameter.toList(ctx);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter);
 			if (l.isEmpty()) return XOMEmpty.EMPTY;
 			else return new XOMList(l.subList(1,l.size()));
 		}
@@ -5024,7 +5030,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_theta = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			XOMNumber x = XOMNumberType.instance.makeInstanceFrom(ctx, l.get(0));
@@ -5173,7 +5179,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_xcoord = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			XOMNumber r = XOMNumberType.instance.makeInstanceFrom(ctx, l.get(0));
@@ -5199,7 +5205,7 @@ public class XNStandardModule extends XNModule {
 	private static final Function f_xor = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) return XOMBoolean.FALSE;
-			List<XOMVariant> booleans = XOMBooleanType.listInstance.makeInstanceFrom(ctx, parameter).toList(ctx);
+			List<? extends XOMVariant> booleans = XOMBooleanType.listInstance.makeInstanceFrom(ctx, parameter).toList(ctx);
 			boolean finalResult = false;
 			for (XOMVariant b : booleans) {
 				if (XOMBooleanType.instance.makeInstanceFrom(ctx, b).toBoolean()) {
@@ -5212,7 +5218,7 @@ public class XNStandardModule extends XNModule {
 	
 	private static final Function f_ycoord = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			XOMNumber r = XOMNumberType.instance.makeInstanceFrom(ctx, l.get(0));
@@ -5249,7 +5255,7 @@ public class XNStandardModule extends XNModule {
 		public void setProperty(XNContext ctx, String propertyName, XOMVariant value) {
 			if (!ctx.allow(XNSecurityKey.SEARCH_PATHS, "Operation", "SetProperty", "Property", propertyName, "Value", value.toTextString(ctx)))
 				throw new XNScriptError("Security settings do not allow set the applicationPaths");
-			ctx.setApplicationPaths(value.unwrap(ctx).toTextString(ctx));
+			ctx.setApplicationPaths(value.toTextString(ctx));
 		}
 	};
 	
@@ -5266,7 +5272,7 @@ public class XNStandardModule extends XNModule {
 		public void setProperty(XNContext ctx, String propertyName, XOMVariant value) {
 			if (!ctx.allow(XNSecurityKey.SEARCH_PATHS, "Operation", "SetProperty", "Property", propertyName, "Value", value.toTextString(ctx)))
 				throw new XNScriptError("Security settings do not allow set the documentPaths");
-			ctx.setDocumentPaths(value.unwrap(ctx).toTextString(ctx));
+			ctx.setDocumentPaths(value.toTextString(ctx));
 		}
 	};
 	
@@ -5283,7 +5289,7 @@ public class XNStandardModule extends XNModule {
 		public void setProperty(XNContext ctx, String propertyName, XOMVariant value) {
 			if (!ctx.allow(XNSecurityKey.SEARCH_PATHS, "Operation", "SetProperty", "Property", propertyName, "Value", value.toTextString(ctx)))
 				throw new XNScriptError("Security settings do not allow set the includePaths");
-			ctx.setIncludePaths(value.unwrap(ctx).toTextString(ctx));
+			ctx.setIncludePaths(value.toTextString(ctx));
 		}
 	};
 	

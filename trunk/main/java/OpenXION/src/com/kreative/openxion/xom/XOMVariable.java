@@ -46,7 +46,7 @@ import com.kreative.openxion.xom.inst.XOMList;
  * @since OpenXION 0.9
  * @author Rebecca G. Bettencourt, Kreative Software
  */
-public class XOMVariable extends XOMVariant {
+public final class XOMVariable extends XOMVariant {
 	private static final long serialVersionUID = 1L;
 	
 	private String name;
@@ -55,12 +55,36 @@ public class XOMVariable extends XOMVariant {
 		this.name = name;
 	}
 	
-	public boolean isDeclared(XNContext ctx) {
+	public final boolean isDeclared(XNContext ctx) {
 		return ctx.getVariableMap(name).isVariableDeclared(ctx, name);
 	}
 	
-	public XOMVariant unwrap(XNContext ctx) {
-		return getContents(ctx);
+	public final XOMVariant asValue(XNContext ctx) {
+		XOMVariableMap vm = ctx.getVariableMap(name);
+		if (vm.isVariableDeclared(ctx, name))
+			return vm.getVariable(ctx, name);
+		else
+			return new XOMString(name);
+	}
+	public final XOMVariant asContents(XNContext ctx) {
+		XOMVariableMap vm = ctx.getVariableMap(name);
+		if (vm.isVariableDeclared(ctx, name))
+			return vm.getVariable(ctx, name);
+		else
+			return new XOMString(name);
+	}
+	public final XOMVariant asPrimitive(XNContext ctx) {
+		XOMVariableMap vm = ctx.getVariableMap(name);
+		if (vm.isVariableDeclared(ctx, name))
+			return vm.getVariable(ctx, name).asPrimitive(ctx);
+		else
+			return new XOMString(name);
+	}
+	public final XOMVariant asContainer(XNContext ctx) {
+		return this;
+	}
+	public final XOMVariable asVariable(XNContext ctx) {
+		return this;
 	}
 	
 	public final boolean canGetParent(XNContext ctx) {
@@ -92,13 +116,13 @@ public class XOMVariable extends XOMVariant {
 		return true;
 	}
 	public final void putIntoContents(XNContext ctx, XOMVariant contents) {
-		ctx.getVariableMap(name).setVariable(ctx, name, contents.unwrap(ctx));
+		ctx.getVariableMap(name).setVariable(ctx, name, contents.asValue(ctx));
 	}
 	public final void putBeforeContents(XNContext ctx, XOMVariant contents) {
-		ctx.getVariableMap(name).prependVariable(ctx, name, contents.unwrap(ctx));
+		ctx.getVariableMap(name).prependVariable(ctx, name, contents.asValue(ctx));
 	}
 	public final void putAfterContents(XNContext ctx, XOMVariant contents) {
-		ctx.getVariableMap(name).appendVariable(ctx, name, contents.unwrap(ctx));
+		ctx.getVariableMap(name).appendVariable(ctx, name, contents.asValue(ctx));
 	}
 	public final void putIntoContents(XNContext ctx, XOMVariant contents, String property, XOMVariant value) {
 		throw new XNScriptError("Can't understand this");
@@ -166,19 +190,32 @@ public class XOMVariable extends XOMVariant {
 		getContents(ctx).setProperty(ctx, property, value);
 	}
 	
-	public boolean equalsImpl(Object o) {
-		return (o instanceof XOMVariable) && this.name.equalsIgnoreCase(((XOMVariable)o).name);
-	}
-	public int hashCode() {
-		return name.hashCode();
-	}
-	public String toDescriptionString() {
+	protected final String toLanguageStringImpl() {
 		return name;
 	}
-	public String toTextString(XNContext ctx) {
-		return getContents(ctx).toTextString(ctx);
+	protected final String toTextStringImpl(XNContext ctx) {
+		XOMVariableMap vm = ctx.getVariableMap(name);
+		if (vm.isVariableDeclared(ctx, name))
+			return vm.getVariable(ctx, name).toTextString(ctx);
+		else
+			return name;
 	}
-	public List<XOMVariant> toList(XNContext ctx) {
-		return getContents(ctx).toList(ctx);
+	protected final List<? extends XOMVariant> toListImpl(XNContext ctx) {
+		XOMVariableMap vm = ctx.getVariableMap(name);
+		if (vm.isVariableDeclared(ctx, name))
+			return vm.getVariable(ctx, name).toList(ctx);
+		else
+			return Arrays.asList(new XOMString(name));
+	}
+	protected final int hashCodeImpl() {
+		return this.name.toLowerCase().hashCode();
+	}
+	protected final boolean equalsImpl(XOMVariant other) {
+		if (other instanceof XOMVariable) {
+			XOMVariable v = (XOMVariable)other;
+			return this.name.equalsIgnoreCase(v.name);
+		} else {
+			return false;
+		}
 	}
 }

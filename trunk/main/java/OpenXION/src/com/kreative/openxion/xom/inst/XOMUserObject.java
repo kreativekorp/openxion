@@ -28,18 +28,20 @@
 package com.kreative.openxion.xom.inst;
 
 import java.util.*;
+
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.XNResponder;
 import com.kreative.openxion.XNHandlerExit;
 import com.kreative.openxion.XNScriptError;
 import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.ast.XNExpression;
+import com.kreative.openxion.xom.XOMContainerObject;
 import com.kreative.openxion.xom.XOMStaticVariableMap;
 import com.kreative.openxion.xom.XOMVariableMap;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.type.XOMUserObjectType;
 
-public class XOMUserObject extends XOMVariant implements XNResponder {
+public class XOMUserObject extends XOMContainerObject implements XNResponder {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMUserObject NULL = new XOMUserObject();
@@ -186,37 +188,21 @@ public class XOMUserObject extends XOMVariant implements XNResponder {
 		}
 	}
 	
-	protected boolean equalsImpl(Object o) {
-		if (o instanceof XOMVariant) {
-			XOMVariant v = ((XOMVariant)o);
-			if (v instanceof XOMUserObject) {
-				XOMUserObject u = (XOMUserObject)v;
-				return this == u;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
+	protected String toLanguageStringImpl() {
+		if (type == null) return "empty";
+		else return type.toLanguageString(this);
 	}
-
-	public int hashCode() {
-		return id;
-	}
-
-	public String toDescriptionString() {
-		if (type == null || sharedVariables == null) return "";
-		else return type.toDescriptionString(this);
-	}
-
-	public String toTextString(XNContext ctx) {
-		if (type == null || sharedVariables == null) return "";
+	protected String toTextStringImpl(XNContext ctx) {
+		if (type == null) return "";
 		else return type.toTextString(ctx, this);
 	}
-	
-	public List<XOMVariant> toList(XNContext ctx) {
-		Vector<XOMVariant> v = new Vector<XOMVariant>();
-		if (type != null && sharedVariables != null) v.add(this);
-		return v;
+	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+		return Arrays.asList(this);
+	}
+	protected int hashCodeImpl() {
+		return id;
+	}
+	protected boolean equalsImpl(XOMVariant o) {
+		return this == o;
 	}
 }

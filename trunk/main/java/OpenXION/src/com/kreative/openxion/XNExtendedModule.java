@@ -278,15 +278,15 @@ public class XNExtendedModule extends XNModule {
 			if (parameters == null || parameters.size() == 0) {
 				throw new XNScriptError("Can't understand arguments to sql");
 			}
-			String kind = interp.evaluateExpression(parameters.get(0)).unwrap(ctx).toTextString(ctx);
+			String kind = interp.evaluateExpression(parameters.get(0)).toTextString(ctx);
 			if (kind.equalsIgnoreCase("connect")) {
 				String to = null;
 				String driver = null;
 				String username = null;
 				String password = null;
 				for (int i = 1; i+1 < parameters.size(); i += 2) {
-					String k = interp.evaluateExpression(parameters.get(i)).unwrap(ctx).toTextString(ctx);
-					String v = interp.evaluateExpression(parameters.get(i+1)).unwrap(ctx).toTextString(ctx);
+					String k = interp.evaluateExpression(parameters.get(i)).toTextString(ctx);
+					String v = interp.evaluateExpression(parameters.get(i+1)).toTextString(ctx);
 					if (k.equalsIgnoreCase("to")) to = v;
 					else if (k.equalsIgnoreCase("with driver")) driver = v;
 					else if (k.equalsIgnoreCase("with username")) username = v;
@@ -321,8 +321,8 @@ public class XNExtendedModule extends XNModule {
 			} else if (kind.equalsIgnoreCase("disconnect")) {
 				String from = null;
 				for (int i = 1; i+1 < parameters.size(); i += 2) {
-					String k = interp.evaluateExpression(parameters.get(i)).unwrap(ctx).toTextString(ctx);
-					String v = interp.evaluateExpression(parameters.get(i+1)).unwrap(ctx).toTextString(ctx);
+					String k = interp.evaluateExpression(parameters.get(i)).toTextString(ctx);
+					String v = interp.evaluateExpression(parameters.get(i+1)).toTextString(ctx);
 					if (k.equalsIgnoreCase("from")) from = v;
 					else throw new XNScriptError("Can't understand arguments to sql");
 				}
@@ -348,11 +348,11 @@ public class XNExtendedModule extends XNModule {
 				}
 			} else if (kind.equalsIgnoreCase("prepare")) {
 				if (parameters.size() > 1) {
-					kind = interp.evaluateExpression(parameters.get(1)).unwrap(ctx).toTextString(ctx);
+					kind = interp.evaluateExpression(parameters.get(1)).toTextString(ctx);
 					if (kind.equalsIgnoreCase("execute")) {
 						String from = null;
 						if (parameters.size() > 3) {
-							from = interp.evaluateExpression(parameters.get(3)).unwrap(ctx).toTextString(ctx);
+							from = interp.evaluateExpression(parameters.get(3)).toTextString(ctx);
 						}
 						if (from == null) {
 							from = lastConnection;
@@ -405,15 +405,15 @@ public class XNExtendedModule extends XNModule {
 						String value = null;
 						String from = null;
 						if (parameters.size() > 2) {
-							XOMVariant v = interp.evaluateExpression(parameters.get(2)).unwrap(ctx);
+							XOMVariant v = interp.evaluateExpression(parameters.get(2)).asPrimitive(ctx);
 							XOMInteger i = XOMIntegerType.instance.makeInstanceFrom(ctx, v);
 							param = i.toInt();
 						}
 						if (parameters.size() > 4) {
-							value = interp.evaluateExpression(parameters.get(4)).unwrap(ctx).toTextString(ctx);
+							value = interp.evaluateExpression(parameters.get(4)).toTextString(ctx);
 						}
 						if (parameters.size() > 6) {
-							from = interp.evaluateExpression(parameters.get(6)).unwrap(ctx).toTextString(ctx);
+							from = interp.evaluateExpression(parameters.get(6)).toTextString(ctx);
 						}
 						if (param < 1 || value == null) {
 							throw new XNScriptError("Can't understand arguments to sql");
@@ -437,10 +437,10 @@ public class XNExtendedModule extends XNModule {
 						String query = null;
 						String from = null;
 						if (parameters.size() > 2) {
-							query = interp.evaluateExpression(parameters.get(2)).unwrap(ctx).toTextString(ctx);
+							query = interp.evaluateExpression(parameters.get(2)).toTextString(ctx);
 						}
 						if (parameters.size() > 4) {
-							from = interp.evaluateExpression(parameters.get(4)).unwrap(ctx).toTextString(ctx);
+							from = interp.evaluateExpression(parameters.get(4)).toTextString(ctx);
 						}
 						if (query == null) {
 							throw new XNScriptError("Can't understand arguments to sql");
@@ -471,10 +471,10 @@ public class XNExtendedModule extends XNModule {
 				String query = null;
 				String from = null;
 				if (parameters.size() > 1) {
-					query = interp.evaluateExpression(parameters.get(1)).unwrap(ctx).toTextString(ctx);
+					query = interp.evaluateExpression(parameters.get(1)).toTextString(ctx);
 				}
 				if (parameters.size() > 3) {
-					from = interp.evaluateExpression(parameters.get(3)).unwrap(ctx).toTextString(ctx);
+					from = interp.evaluateExpression(parameters.get(3)).toTextString(ctx);
 				}
 				if (query == null) {
 					throw new XNScriptError("Can't understand arguments to sql");
@@ -575,8 +575,13 @@ public class XNExtendedModule extends XNModule {
 		}
 	}
 	
-	private static List<XOMVariant> listParameter(XNContext ctx, String functionName, XOMVariant parameter, int np) {
-		List<XOMVariant> l = (parameter == null) ? new Vector<XOMVariant>() : parameter.toList(ctx);
+	private static List<? extends XOMVariant> listParameter(XNContext ctx, String functionName, XOMVariant parameter) {
+		List<? extends XOMVariant> l = (parameter == null) ? new Vector<XOMVariant>() : parameter.toList(ctx);
+		return l;
+	}
+	
+	private static List<? extends XOMVariant> listParameter(XNContext ctx, String functionName, XOMVariant parameter, int np) {
+		List<? extends XOMVariant> l = (parameter == null) ? new Vector<XOMVariant>() : parameter.toList(ctx);
 		if (l.size() != np) {
 			throw new XNScriptError("Can't understand arguments to "+functionName);
 		} else {
@@ -961,7 +966,7 @@ public class XNExtendedModule extends XNModule {
 	
 	private static final Function f_pack = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = (parameter == null) ? new Vector<XOMVariant>() : parameter.toList(ctx);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter);
 			if (l.size() < 1) throw new XNScriptError("Can't understand arguments to "+functionName);
 			List<DataField> format;
 			try {
@@ -980,9 +985,9 @@ public class XNExtendedModule extends XNModule {
 			}
 			return new XOMBinary(res);
 		}
-		private List<Object> XOMtoNative(List<DataField> format, List<XOMVariant> l, XNContext ctx) {
+		private List<Object> XOMtoNative(List<DataField> format, List<? extends XOMVariant> l, XNContext ctx) {
 			List<Object> things = new ArrayList<Object>();
-			Iterator<XOMVariant> li = l.iterator();
+			Iterator<? extends XOMVariant> li = l.iterator();
 			for (DataField df : format) {
 				if (df.type().returns()) {
 					XOMVariant xo = li.hasNext() ? li.next() : XOMEmpty.EMPTY;
@@ -995,7 +1000,7 @@ public class XNExtendedModule extends XNModule {
 			if (df.count() == null || df.type().usesCustomCount()) {
 				return XOMtoNativeWithoutCount(df, xo, ctx);
 			} else {
-				List<XOMVariant> l = xo.toList(ctx);
+				List<? extends XOMVariant> l = xo.toList(ctx);
 				List<Object> things = new ArrayList<Object>();
 				for (XOMVariant xoi : l) things.add(XOMtoNativeWithoutCount(df, xoi, ctx));
 				return things;
@@ -1032,7 +1037,7 @@ public class XNExtendedModule extends XNModule {
 	
 	private static final Function f_regcountfields = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			String s = l.get(0).toTextString(ctx);
 			if (s.length() == 0) return XOMInteger.ZERO;
 			String d = l.get(1).toTextString(ctx);
@@ -1042,7 +1047,7 @@ public class XNExtendedModule extends XNModule {
 	
 	private static final Function f_regexplode = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			String s = l.get(0).toTextString(ctx);
 			if (s.length() == 0) return XOMString.EMPTY_STRING;
 			String d = l.get(1).toTextString(ctx);
@@ -1057,7 +1062,7 @@ public class XNExtendedModule extends XNModule {
 	
 	private static final Function f_reginstr = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			String s = l.get(0).toTextString(ctx);
 			String d = l.get(1).toTextString(ctx);
 			Matcher m = Pattern.compile(d).matcher(s);
@@ -1071,7 +1076,7 @@ public class XNExtendedModule extends XNModule {
 	
 	private static final Function f_regmatch = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			String s = l.get(0).toTextString(ctx);
 			String d = l.get(1).toTextString(ctx);
 			return s.matches(d) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
@@ -1080,7 +1085,7 @@ public class XNExtendedModule extends XNModule {
 	
 	private static final Function f_regnthfield = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 3);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 3);
 			String s = l.get(0).toTextString(ctx);
 			if (s.length() == 0) return XOMString.EMPTY_STRING;
 			String d = l.get(1).toTextString(ctx);
@@ -1093,7 +1098,7 @@ public class XNExtendedModule extends XNModule {
 	
 	private static final Function f_regoffset = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			String s = l.get(1).toTextString(ctx);
 			String d = l.get(0).toTextString(ctx);
 			Matcher m = Pattern.compile(d).matcher(s);
@@ -1107,7 +1112,7 @@ public class XNExtendedModule extends XNModule {
 	
 	private static final Function f_regreplace = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 3);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 3);
 			String str = l.get(0).toTextString(ctx);
 			String src = l.get(1).toTextString(ctx);
 			String rep = l.get(2).toTextString(ctx);
@@ -1117,7 +1122,7 @@ public class XNExtendedModule extends XNModule {
 	
 	private static final Function f_regreplaceall = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 3);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 3);
 			String str = l.get(0).toTextString(ctx);
 			String src = l.get(1).toTextString(ctx);
 			String rep = l.get(2).toTextString(ctx);
@@ -1127,7 +1132,7 @@ public class XNExtendedModule extends XNModule {
 	
 	private static final Function f_regrinstr = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			String s = l.get(0).toTextString(ctx);
 			String d = l.get(1).toTextString(ctx);
 			Matcher m = Pattern.compile(d).matcher(s);
@@ -1139,7 +1144,7 @@ public class XNExtendedModule extends XNModule {
 	
 	private static final Function f_unpack = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
 			List<DataField> format;
 			try {
 				format = new DataFormatParser(new StringReader(l.get(0).toTextString(ctx))).parseAuto();
@@ -1206,7 +1211,10 @@ public class XNExtendedModule extends XNModule {
 			case UFIXED: return new XOMNumber((Number)o);
 			case SFIXED: return new XOMNumber((Number)o);
 			case FLOAT: return new XOMNumber((Number)o);
-			case COMPLEX: return new XOMComplex(((Number[])o)[0], ((Number[])o)[1]);
+			case COMPLEX: return new XOMComplex(
+					new XOMNumber(((Number[])o)[0]),
+					new XOMNumber(((Number[])o)[1])
+				);
 			case CHAR: return new XOMString(o.toString());
 			case PSTRING: return new XOMString(o.toString());
 			case CSTRING: return new XOMString(o.toString());

@@ -29,17 +29,14 @@ package com.kreative.openxion.xom.type;
 
 import java.math.*;
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.xom.XOMDataType;
+import com.kreative.openxion.xom.XOMValueDataType;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMMorphError;
 import com.kreative.openxion.xom.inst.XOMComplex;
 import com.kreative.openxion.xom.inst.XOMNumber;
 import com.kreative.openxion.xom.inst.XOMInteger;
-import com.kreative.openxion.xom.inst.XOMEmpty;
-import com.kreative.openxion.xom.inst.XOMList;
-import com.kreative.openxion.xom.inst.XOMListChunk;
 
-public class XOMNumberType extends XOMDataType<XOMNumber> {
+public class XOMNumberType extends XOMValueDataType<XOMNumber> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMNumberType instance = new XOMNumberType();
@@ -49,136 +46,58 @@ public class XOMNumberType extends XOMDataType<XOMNumber> {
 		super("number", DESCRIBABILITY_OF_PRIMITIVES, XOMNumber.class);
 	}
 	
-	/*
-	 * Polymorphism - The data type of an object is determined through these methods.
-	 * Unlike in Java, where an object's type is determined by the class hierarchy,
-	 * objects in XION can be of any mix of data types (hence the term variant for XION objects).
-	 */
-	
+	protected boolean canMakeInstanceFromImpl(XNContext ctx) {
+		return true;
+	}
 	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		if (instance instanceof XOMEmpty) {
+		if (instance instanceof XOMInteger) {
 			return true;
-		}
-		else if (instance instanceof XOMInteger) {
-			return true;
-		}
-		else if (instance instanceof XOMNumber) {
-			return true;
-		}
-		else if (instance instanceof XOMComplex) {
+		} else if (instance instanceof XOMComplex) {
 			if (((XOMComplex)instance).isReal()) {
 				return true;
 			} else {
 				return false;
 			}
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMInteger) {
-			return true;
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMNumber) {
-			return true;
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMComplex) {
-			if (((XOMComplex)instance.toList(ctx).get(0)).isReal()) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-		else {
-			String s = instance.toTextString(ctx);
-			if (s.equals("") || s.equalsIgnoreCase("inf") || s.equalsIgnoreCase("-inf") || s.equalsIgnoreCase("nan")) return true;
-			s = s.replace("''", "E-").replace("'", "E+");
-			try {
-				ctx.getNumberFormat().parseBigDecimal(s);
-				return true;
-			} catch (Exception e1) {
-				return false;
-			}
+		} else {
+			return false;
 		}
 	}
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (left instanceof XOMEmpty) {
-			return canMakeInstanceFromImpl(ctx, right);
+	protected boolean canMakeInstanceFromImpl(XNContext ctx, String s) {
+		if (s.equals("") || s.equalsIgnoreCase("inf") || s.equalsIgnoreCase("-inf") || s.equalsIgnoreCase("nan")) return true;
+		s = s.replace("''", "E-").replace("'", "E+");
+		try {
+			ctx.getNumberFormat().parseBigDecimal(s);
+			return true;
+		} catch (Exception e1) {
+			return false;
 		}
-		else if (right instanceof XOMEmpty) {
-			return canMakeInstanceFromImpl(ctx, left);
-		}
-		else {
-			String s = left.toTextString(ctx) + right.toTextString(ctx);
-			if (s.equals("") || s.equalsIgnoreCase("inf") || s.equalsIgnoreCase("-inf") || s.equalsIgnoreCase("nan")) return true;
-			s = s.replace("''", "E-").replace("'", "E+");
-			try {
-				ctx.getNumberFormat().parseBigDecimal(s);
-				return true;
-			} catch (Exception e1) {
-				return false;
-			}
-		}
+	}
+	protected XOMNumber makeInstanceFromImpl(XNContext ctx) {
+		return XOMNumber.ZERO;
 	}
 	protected XOMNumber makeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		if (instance instanceof XOMEmpty) {
-			return XOMNumber.ZERO;
-		}
-		else if (instance instanceof XOMInteger) {
+		if (instance instanceof XOMInteger) {
 			return new XOMNumber(new BigDecimal(((XOMInteger)instance).toBigInteger()));
-		}
-		else if (instance instanceof XOMNumber) {
-			return ((XOMNumber)instance);
-		}
-		else if (instance instanceof XOMComplex) {
+		} else if (instance instanceof XOMComplex) {
 			if (((XOMComplex)instance).isReal()) {
 				return new XOMNumber(((XOMComplex)instance).toBigDecimals()[0]);
 			} else {
 				throw new XOMMorphError(typeName);
 			}
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMInteger) {
-			return new XOMNumber(new BigDecimal(((XOMInteger)instance.toList(ctx).get(0)).toBigInteger()));
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMNumber) {
-			return ((XOMNumber)instance.toList(ctx).get(0));
-		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMComplex) {
-			if (((XOMComplex)instance.toList(ctx).get(0)).isReal()) {
-				return new XOMNumber(((XOMComplex)instance.toList(ctx).get(0)).toBigDecimals()[0]);
-			} else {
-				throw new XOMMorphError(typeName);
-			}
-		}
-		else {
-			String s = instance.toTextString(ctx);
-			if (s.equals("")) return XOMNumber.ZERO;
-			else if (s.equalsIgnoreCase("inf")) return XOMNumber.POSITIVE_INFINITY;
-			else if (s.equalsIgnoreCase("-inf")) return XOMNumber.NEGATIVE_INFINITY;
-			else if (s.equalsIgnoreCase("nan")) return XOMNumber.NaN;
-			s = s.replace("''", "E-").replace("'", "E+");
-			try {
-				return new XOMNumber(ctx.getNumberFormat().parseBigDecimal(s));
-			} catch (Exception e1) {
-				throw new XOMMorphError(typeName);
-			}
+		} else {
+			throw new XOMMorphError(typeName);
 		}
 	}
-	protected XOMNumber makeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		if (left instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, right);
-		}
-		else if (right instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, left);
-		}
-		else {
-			String s = left.toTextString(ctx) + right.toTextString(ctx);
-			if (s.equals("")) return XOMNumber.ZERO;
-			else if (s.equalsIgnoreCase("inf")) return XOMNumber.POSITIVE_INFINITY;
-			else if (s.equalsIgnoreCase("-inf")) return XOMNumber.NEGATIVE_INFINITY;
-			else if (s.equalsIgnoreCase("nan")) return XOMNumber.NaN;
-			s = s.replace("''", "E-").replace("'", "E+");
-			try {
-				return new XOMNumber(ctx.getNumberFormat().parseBigDecimal(s));
-			} catch (Exception e1) {
-				throw new XOMMorphError(typeName);
-			}
+	protected XOMNumber makeInstanceFromImpl(XNContext ctx, String s) {
+		if (s.equals("")) return XOMNumber.ZERO;
+		else if (s.equalsIgnoreCase("inf")) return XOMNumber.POSITIVE_INFINITY;
+		else if (s.equalsIgnoreCase("-inf")) return XOMNumber.NEGATIVE_INFINITY;
+		else if (s.equalsIgnoreCase("nan")) return XOMNumber.NaN;
+		s = s.replace("''", "E-").replace("'", "E+");
+		try {
+			return new XOMNumber(ctx.getNumberFormat().parseBigDecimal(s));
+		} catch (Exception e1) {
+			throw new XOMMorphError(typeName);
 		}
 	}
 }

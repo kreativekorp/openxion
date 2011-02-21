@@ -30,16 +30,17 @@ package com.kreative.openxion.xom.inst;
 import java.util.*;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.ast.XNModifier;
+import com.kreative.openxion.xom.XOMPrimitiveValue;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMList extends XOMVariant {
+public class XOMList extends XOMPrimitiveValue {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMList EMPTY_LIST = new XOMList();
 	
 	private List<XOMVariant> theList;
 	
-	public XOMList() {
+	private XOMList() {
 		this.theList = new Vector<XOMVariant>();
 	}
 	
@@ -67,17 +68,6 @@ public class XOMList extends XOMVariant {
 		this.theList.add(b);
 		this.theList.add(c);
 		this.theList.add(d);
-	}
-	
-	public XOMList(XOMVariant[] a) {
-		this.theList = new Vector<XOMVariant>();
-		this.theList.addAll(Arrays.asList(a));
-	}
-	
-	public XOMList(XOMVariant[] a, XOMVariant[] b) {
-		this.theList = new Vector<XOMVariant>();
-		this.theList.addAll(Arrays.asList(a));
-		this.theList.addAll(Arrays.asList(b));
 	}
 	
 	public XOMList(Collection<? extends XOMVariant> c) {
@@ -123,7 +113,45 @@ public class XOMList extends XOMVariant {
 		}
 	}
 	
-	protected boolean equalsImpl(Object o) {
+	protected String toLanguageStringImpl() {
+		if (theList == null) return "()";
+		StringBuffer s = new StringBuffer();
+		s.append("(");
+		for (XOMVariant h : theList) {
+			s.append(h.toLanguageString());
+			s.append(",");
+		}
+		if (s.charAt(s.length()-1) == ',')
+			s.deleteCharAt(s.length()-1);
+		s.append(")");
+		return s.toString();
+	}
+	protected String toTextStringImpl(XNContext ctx) {
+		if (theList == null) return "";
+		StringBuffer theString = new StringBuffer();
+		for (XOMVariant theInstance : theList) {
+			theInstance = theInstance.asPrimitive(ctx);
+			if (theInstance instanceof XOMList) theString.append("(");
+			theString.append(theInstance.toTextString(ctx));
+			if (theInstance instanceof XOMList) theString.append(")");
+			theString.append(",");
+		}
+		if (theString.length() > 0)
+			theString.deleteCharAt(theString.length()-1);
+		return theString.toString();
+	}
+	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+		return Collections.unmodifiableList(theList);
+	}
+	protected int hashCodeImpl() {
+		if (theList == null) return 0;
+		int hc = theList.size();
+		for (XOMVariant v : theList) {
+			hc ^= v.hashCode();
+		}
+		return hc;
+	}
+	protected boolean equalsImpl(XOMVariant o) {
 		if (o instanceof XOMList) {
 			XOMList other = (XOMList)o;
 			if ((this.theList == null || this.theList.isEmpty()) && (other.theList == null || other.theList.isEmpty())) {
@@ -142,40 +170,5 @@ public class XOMList extends XOMVariant {
 		} else {
 			return false;
 		}
-	}
-	public int hashCode() {
-		if (theList == null) return 0;
-		int hc = theList.size();
-		for (XOMVariant v : theList) {
-			hc ^= v.hashCode();
-		}
-		return hc;
-	}
-	public String toDescriptionString() {
-		if (theList == null) return "";
-		StringBuffer theString = new StringBuffer();
-		for (XOMVariant theInstance : theList) {
-			if (theInstance instanceof XOMList) theString.append("(");
-			theString.append(theInstance.toDescriptionString());
-			if (theInstance instanceof XOMList) theString.append(")");
-			theString.append(",");
-		}
-		if (theString.length() > 0) theString.deleteCharAt(theString.length()-1);
-		return theString.toString();
-	}
-	public String toTextString(XNContext ctx) {
-		if (theList == null) return "";
-		StringBuffer theString = new StringBuffer();
-		for (XOMVariant theInstance : theList) {
-			if (theInstance instanceof XOMList) theString.append("(");
-			theString.append(theInstance.toTextString(ctx));
-			if (theInstance instanceof XOMList) theString.append(")");
-			theString.append(",");
-		}
-		if (theString.length() > 0) theString.deleteCharAt(theString.length()-1);
-		return theString.toString();
-	}
-	public List<XOMVariant> toList(XNContext ctx) {
-		return theList;
 	}
 }

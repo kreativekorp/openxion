@@ -27,18 +27,21 @@
 
 package com.kreative.openxion.xom.inst;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.util.BinaryNumericChunkType;
+import com.kreative.openxion.xom.XOMContainerObject;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMBinaryContainer;
 import com.kreative.openxion.xom.type.XOMBinaryType;
 import com.kreative.openxion.xom.type.XOMNumberType;
 import com.kreative.openxion.xom.type.XOMIntegerType;
 
-public class XOMBinaryNumericChunk extends XOMVariant {
+public class XOMBinaryNumericChunk extends XOMContainerObject {
 	private static final long serialVersionUID = 1L;
 	
 	private XOMVariant parent;
@@ -402,24 +405,24 @@ public class XOMBinaryNumericChunk extends XOMVariant {
 		}
 	}
 	
-	protected boolean equalsImpl(Object o) {
+	protected String toLanguageStringImpl() {
+		return chunkType.toString() + " " + index + " of " + parent.toLanguageString();
+	}
+	protected String toTextStringImpl(XNContext ctx) {
+		return getContents(ctx).toTextString(ctx);
+	}
+	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+		return Arrays.asList(this);
+	}
+	protected int hashCodeImpl() {
+		return parent.hashCode() ^ chunkType.hashCode() ^ index;
+	}
+	protected boolean equalsImpl(XOMVariant o) {
 		if (o instanceof XOMBinaryNumericChunk) {
 			XOMBinaryNumericChunk other = (XOMBinaryNumericChunk)o;
 			return (this.parent.equals(other.parent) && this.chunkType == other.chunkType && this.index == other.index);
 		} else {
 			return false;
 		}
-	}
-	public int hashCode() {
-		return parent.hashCode() ^ chunkType.hashCode() ^ index;
-	}
-	public String toDescriptionString() {
-		return chunkType.toString() + " " + index + " of " + parent.toDescriptionString();
-	}
-	public String toTextString(XNContext ctx) {
-		return getContents(ctx).toTextString(ctx);
-	}
-	public List<XOMVariant> toList(XNContext ctx) {
-		return getContents(ctx).toList(ctx);
 	}
 }

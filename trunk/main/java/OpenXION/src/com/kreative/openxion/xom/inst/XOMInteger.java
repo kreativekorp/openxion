@@ -28,11 +28,14 @@
 package com.kreative.openxion.xom.inst;
 
 import java.math.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+
 import com.kreative.openxion.XNContext;
+import com.kreative.openxion.xom.XOMPrimitiveValue;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMInteger extends XOMVariant {
+public class XOMInteger extends XOMPrimitiveValue {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMInteger ZERO = new XOMInteger(BigInteger.ZERO);
@@ -64,7 +67,7 @@ public class XOMInteger extends XOMVariant {
 		} else if (n instanceof Float) {
 			float f = n.floatValue();
 			if (Float.isNaN(f) || Float.isInfinite(f)) {
-				this.theInteger = Double.isNaN(f) ? BigInteger.ZERO : (f < 0) ? BigInteger.ONE.negate() : BigInteger.ONE;
+				this.theInteger = Float.isNaN(f) ? BigInteger.ZERO : (f < 0) ? BigInteger.ONE.negate() : BigInteger.ONE;
 				this.undefined = true;
 			} else {
 				this.theInteger = new BigDecimal(Float.toString(f)).toBigInteger();
@@ -72,6 +75,7 @@ public class XOMInteger extends XOMVariant {
 			}
 		} else {
 			this.theInteger = BigInteger.valueOf(n.longValue());
+			this.undefined = false;
 		}
 	}
 	
@@ -207,7 +211,33 @@ public class XOMInteger extends XOMVariant {
 		else return theInteger.intValue();
 	}
 	
-	protected boolean equalsImpl(Object o) {
+	protected String toLanguageStringImpl() {
+		if (theInteger == null) return "NAN";
+		else if (undefined) {
+			int cmp = theInteger.compareTo(BigInteger.ZERO);
+			if (cmp < 0) return "-INF";
+			else if (cmp > 0) return "INF";
+			else return "NAN";
+		}
+		else return theInteger.toString();
+	}
+	protected String toTextStringImpl(XNContext ctx) {
+		if (theInteger == null) return "NAN";
+		else if (undefined) {
+			int cmp = theInteger.compareTo(BigInteger.ZERO);
+			if (cmp < 0) return "-INF";
+			else if (cmp > 0) return "INF";
+			else return "NAN";
+		}
+		else return ctx.getNumberFormat().format(theInteger);
+	}
+	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+		return Arrays.asList(this);
+	}
+	protected int hashCodeImpl() {
+		return (theInteger == null) ? 0 : undefined ? theInteger.signum() : theInteger.hashCode();
+	}
+	protected boolean equalsImpl(XOMVariant o) {
 		if (o instanceof XOMInteger) {
 			XOMInteger other = (XOMInteger)o;
 			if (this.isNaN() && other.isNaN()) {
@@ -228,33 +258,5 @@ public class XOMInteger extends XOMVariant {
 		} else {
 			return false;
 		}
-	}
-	public int hashCode() {
-		return (theInteger == null) ? 0 : undefined ? theInteger.signum() : theInteger.hashCode();
-	}
-	public String toDescriptionString() {
-		if (theInteger == null) return "NAN";
-		else if (undefined) {
-			int cmp = theInteger.compareTo(BigInteger.ZERO);
-			if (cmp < 0) return "-INF";
-			else if (cmp > 0) return "INF";
-			else return "NAN";
-		}
-		else return theInteger.toString();
-	}
-	public String toTextString(XNContext ctx) {
-		if (theInteger == null) return "NAN";
-		else if (undefined) {
-			int cmp = theInteger.compareTo(BigInteger.ZERO);
-			if (cmp < 0) return "-INF";
-			else if (cmp > 0) return "INF";
-			else return "NAN";
-		}
-		else return ctx.getNumberFormat().format(theInteger);
-	}
-	public List<XOMVariant> toList(XNContext ctx) {
-		Vector<XOMVariant> v = new Vector<XOMVariant>();
-		v.add(this);
-		return v;
 	}
 }

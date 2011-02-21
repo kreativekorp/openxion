@@ -52,10 +52,10 @@ import com.kreative.openxion.ast.XNDataType;
 import com.kreative.openxion.ast.XNVariableScope;
 import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.xom.XOMDataType;
-import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMCreateError;
 import com.kreative.openxion.xom.XOMGetError;
 import com.kreative.openxion.xom.XOMMorphError;
+import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.inst.XOMUserObject;
 import com.kreative.openxion.xom.inst.XOMEmpty;
 import com.kreative.openxion.xom.inst.XOMList;
@@ -489,7 +489,7 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 			if (stat instanceof XNMessageHandler && ((XNMessageHandler)stat).name.equalsIgnoreCase(commandName)) {
 				List<XOMVariant> paramValues = new Vector<XOMVariant>();
 				for (XNExpression param : parameters) {
-					paramValues.add(new XNInterpreter(ctx).evaluateExpression(param).unwrap(ctx));
+					paramValues.add(new XNInterpreter(ctx).evaluateExpression(param));
 				}
 				return executeCommandHandler(new XNInterpreter(ctx), ctx, instance, (XNMessageHandler)stat, paramValues);
 			}
@@ -503,16 +503,13 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 	 * objects in XION can be of any mix of data types (hence the term variant for XION objects).
 	 */
 	
-	public String toDescriptionString(XOMUserObject instance) {
+	public String toLanguageString(XOMUserObject instance) {
 		return typeName + " id " + objectIds.get(instance);
 	}
 	
 	public String toTextString(XNContext ctx, XOMUserObject instance) {
-		if (canGetContents(ctx, instance)) {
-			return getContents(ctx, instance).unwrap(ctx).toTextString(ctx);
-		} else {
-			return toDescriptionString(instance);
-		}
+		if (canGetContents(ctx, instance)) return getContents(ctx, instance).toTextString(ctx);
+		else return typeName + " id " + objectIds.get(instance);
 	}
 
 	private boolean canMorphFromDescription(XNContext ctx, String desc) {
@@ -530,8 +527,8 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 		else return null;
 	}
 	
-	@Override
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
+	public boolean canMakeInstanceFrom(XNContext ctx, XOMVariant instance) {
+		instance = instance.asValue(ctx);
 		if (instance instanceof XOMEmpty) {
 			return true;
 		}
@@ -539,8 +536,12 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 			XOMUserObject u = (XOMUserObject)instance;
 			return u.isInstanceOf(this);
 		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMUserObject) {
-			XOMUserObject u = (XOMUserObject)instance.toList(ctx).get(0);
+		else if (instance instanceof XOMList && ((XOMList)instance).toList(ctx).size() == 1 && ((XOMList)instance).toList(ctx).get(0) instanceof XOMUserObject) {
+			XOMUserObject u = (XOMUserObject)((XOMList)instance).toList(ctx).get(0);
+			return u.isInstanceOf(this);
+		}
+		else if (instance instanceof XOMListChunk && ((XOMListChunk)instance).toList(ctx).size() == 1 && ((XOMListChunk)instance).toList(ctx).get(0) instanceof XOMUserObject) {
+			XOMUserObject u = (XOMUserObject)((XOMListChunk)instance).toList(ctx).get(0);
 			return u.isInstanceOf(this);
 		}
 		else if (canMorphFromDescription(ctx, instance.toTextString(ctx))) {
@@ -551,16 +552,17 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 		}
 	}
 
-	@Override
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
+	public boolean canMakeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
+		left = left.asValue(ctx);
+		right = right.asValue(ctx);
 		if (left instanceof XOMEmpty && right instanceof XOMEmpty) {
 			return true;
 		}
 		else if (left instanceof XOMEmpty) {
-			return canMakeInstanceFromImpl(ctx, right);
+			return canMakeInstanceFrom(ctx, right);
 		}
 		else if (right instanceof XOMEmpty) {
-			return canMakeInstanceFromImpl(ctx, left);
+			return canMakeInstanceFrom(ctx, left);
 		}
 		else if (canMorphFromDescription(ctx, left.toTextString(ctx) + right.toTextString(ctx))) {
 			return true;
@@ -570,8 +572,8 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 		}
 	}
 
-	@Override
-	protected XOMUserObject makeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
+	public XOMUserObject makeInstanceFrom(XNContext ctx, XOMVariant instance) {
+		instance = instance.asValue(ctx);
 		if (instance instanceof XOMEmpty) {
 			return XOMUserObject.NULL;
 		}
@@ -580,8 +582,13 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 			if (u.isInstanceOf(this)) return u;
 			else throw new XOMMorphError(declaration.singularNameString());
 		}
-		else if ((instance instanceof XOMList || instance instanceof XOMListChunk) && instance.toList(ctx).size() == 1 && instance.toList(ctx).get(0) instanceof XOMUserObject) {
-			XOMUserObject u = (XOMUserObject)instance.toList(ctx).get(0);
+		else if (instance instanceof XOMList && ((XOMList)instance).toList(ctx).size() == 1 && ((XOMList)instance).toList(ctx).get(0) instanceof XOMUserObject) {
+			XOMUserObject u = (XOMUserObject)((XOMList)instance).toList(ctx).get(0);
+			if (u.isInstanceOf(this)) return u;
+			else throw new XOMMorphError(declaration.singularNameString());
+		}
+		else if (instance instanceof XOMListChunk && ((XOMListChunk)instance).toList(ctx).size() == 1 && ((XOMListChunk)instance).toList(ctx).get(0) instanceof XOMUserObject) {
+			XOMUserObject u = (XOMUserObject)((XOMListChunk)instance).toList(ctx).get(0);
 			if (u.isInstanceOf(this)) return u;
 			else throw new XOMMorphError(declaration.singularNameString());
 		}
@@ -592,16 +599,17 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 		}
 	}
 
-	@Override
-	protected XOMUserObject makeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
+	public XOMUserObject makeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
+		left = left.asValue(ctx);
+		right = right.asValue(ctx);
 		if (left instanceof XOMEmpty && right instanceof XOMEmpty) {
 			return XOMUserObject.NULL;
 		}
 		else if (left instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, right);
+			return makeInstanceFrom(ctx, right);
 		}
 		else if (right instanceof XOMEmpty) {
-			return makeInstanceFromImpl(ctx, left);
+			return makeInstanceFrom(ctx, left);
 		}
 		else {
 			XOMVariant v = morphFromDescription(ctx, left.toTextString(ctx) + right.toTextString(ctx));
@@ -622,8 +630,8 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 			for (Map.Entry<String, XOMVariant> e : parameters.entrySet()) {
 				String paramName = e.getKey();
 				f.setVariableScope(paramName, XNVariableScope.LOCAL);
-				XOMVariant paramValue = e.getValue().unwrap(ctx);
-				f.localVariables().declareVariable(ctx, paramName, XOMVariantType.instance, paramValue);
+				XOMVariant paramValue = e.getValue();
+				f.localVariables().setVariable(ctx, paramName, paramValue);
 			}
 		}
 		ctx.pushStackFrame(f);
@@ -665,9 +673,10 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 		XNStackFrame f = new XNStackFrame(name, pvalues);
 		if (parameters != null) {
 			for (Map.Entry<String, XOMVariant> e : parameters.entrySet()) {
+				//System.err.println(name + ": " + e.getKey() + " -> " + e.getValue().toLanguageString());
 				String paramName = e.getKey();
 				f.setVariableScope(paramName, XNVariableScope.LOCAL);
-				XOMVariant paramValue = e.getValue().unwrap(ctx);
+				XOMVariant paramValue = e.getValue();
 				f.localVariables().declareVariable(ctx, paramName, XOMVariantType.instance, paramValue);
 			}
 		}
@@ -705,7 +714,7 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 		}
 	}
 	
-	private static XNHandlerExit evaluateFunctionHandler(XNInterpreter interp, XNContext ctx, XOMUserObject obj, XNFunctionHandler handler, List<XOMVariant> parameters) {
+	private static XNHandlerExit evaluateFunctionHandler(XNInterpreter interp, XNContext ctx, XOMUserObject obj, XNFunctionHandler handler, List<? extends XOMVariant> parameters) {
 		XNStackFrame f = new XNStackFrame(handler.name, parameters);
 		if (handler.parameters != null) {
 			for (int i = 0; i < handler.parameters.size(); i++) {
@@ -724,7 +733,7 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 							parameters.get(i) :
 								(paramValueExpr == null) ?
 										XOMEmpty.EMPTY :
-											interp.evaluateExpression(paramValueExpr).unwrap(ctx);
+											interp.evaluateExpression(paramValueExpr);
 				f.localVariables().declareVariable(ctx, paramName, paramDatatype, paramValue);
 			}
 		}
@@ -780,7 +789,7 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 							parameters.get(i) :
 								(paramValueExpr == null) ?
 										XOMEmpty.EMPTY :
-											interp.evaluateExpression(paramValueExpr).unwrap(ctx);
+											interp.evaluateExpression(paramValueExpr);
 				f.localVariables().declareVariable(ctx, paramName, paramDatatype, paramValue);
 			}
 		}
