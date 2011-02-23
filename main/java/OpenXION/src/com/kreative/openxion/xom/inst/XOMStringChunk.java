@@ -73,6 +73,9 @@ public class XOMStringChunk extends XOMContainerObject implements XOMStringConta
 	
 	private StringChunkInfo getChunkInfo(XNContext ctx, boolean puttingBefore, boolean puttingAfter) {
 		String ts;
+		if (puttingBefore || puttingAfter) {
+			parent.asContainer(ctx, false);
+		}
 		if (parent.canGetContents(ctx)) {
 			ts = parent.getContents(ctx).toTextString(ctx);
 		} else {

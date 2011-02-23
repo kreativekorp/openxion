@@ -49,16 +49,18 @@ public abstract class XOMPrimitiveValue extends XOMVariant {
 	public final XOMVariant asPrimitive(XNContext ctx) {
 		return this;
 	}
-	public final XOMVariant asContainer(XNContext ctx) {
+	public final XOMVariant asContainer(XNContext ctx, boolean resolveVariableNames) {
 		String s = toTextStringImpl(ctx);
+		if (!resolveVariableNames) throw new XNScriptError("Expected a variable name but found " + s);
 		XOMVariable v = XIONUtil.parseVariableName(ctx, s);
-		if (v == null) throw new XNScriptError("Expected variable name but found " + s);
+		if (v == null) throw new XNScriptError("Expected a variable name but found " + s);
 		else return v;
 	}
-	public final XOMVariable asVariable(XNContext ctx) {
+	public final XOMVariable asVariable(XNContext ctx, boolean resolveVariableNames) {
 		String s = toTextStringImpl(ctx);
+		if (!resolveVariableNames) throw new XNScriptError("Expected a variable name but found " + s);
 		XOMVariable v = XIONUtil.parseVariableName(ctx, s);
-		if (v == null) throw new XNScriptError("Expected variable name but found " + s);
+		if (v == null) throw new XNScriptError("Expected a variable name but found " + s);
 		else return v;
 	}
 	
