@@ -93,7 +93,10 @@ public class XOMStringChunk extends XOMContainerObject implements XOMStringConta
 				if (chunkType == StringChunkType.LINE) {
 					String a = "";
 					int n = ( (puttingBefore && puttingAfter) ? Math.max(s,e) : puttingBefore ? s : puttingAfter ? e : count )-count;
-					if (count == 0) n--;
+					if (count == 0) {
+						n--;
+						count++;
+					}
 					while (n-- > 0) {
 						a += ctx.getLineEnding();
 						count++;
@@ -111,7 +114,10 @@ public class XOMStringChunk extends XOMContainerObject implements XOMStringConta
 					}
 					String a = "";
 					int n = ( (puttingBefore && puttingAfter) ? Math.max(s,e) : puttingBefore ? s : puttingAfter ? e : count )-count;
-					if (count == 0) n--;
+					if (count == 0) {
+						n--;
+						count++;
+					}
 					while (n-- > 0) {
 						a += d;
 						count++;
@@ -124,7 +130,10 @@ public class XOMStringChunk extends XOMContainerObject implements XOMStringConta
 				if (chunkType == StringChunkType.LINE) {
 					String a = "";
 					int n = 1-( (puttingBefore && puttingAfter) ? Math.min(s,e) : puttingBefore ? s : puttingAfter ? e : 1 );
-					if (count == 0) n--;
+					if (count == 0) {
+						n--;
+						count++;
+					}
 					while (n-- > 0) {
 						a += ctx.getLineEnding();
 						count++;
@@ -144,7 +153,10 @@ public class XOMStringChunk extends XOMContainerObject implements XOMStringConta
 					}
 					String a = "";
 					int n = 1-( (puttingBefore && puttingAfter) ? Math.min(s,e) : puttingBefore ? s : puttingAfter ? e : 1 );
-					if (count == 0) n--;
+					if (count == 0) {
+						n--;
+						count++;
+					}
 					while (n-- > 0) {
 						a += d;
 						count++;
