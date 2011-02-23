@@ -1537,41 +1537,6 @@ public class XNStandardModule extends XNModule {
 		}
 	};
 	
-	private static XOMVariant makeDest(XNInterpreter interp, XNContext ctx, XOMVariant dest) {
-		if (dest instanceof XOMVariable) {
-			XOMVariable v = (XOMVariable)dest;
-			if (!v.isDeclared(ctx)) v.putIntoContents(ctx, XOMEmpty.EMPTY);
-			return v;
-		} else if (dest.canPutContents(ctx)) {
-			return dest;
-		} else {
-			String name = dest.toTextString(ctx);
-			throw new XNScriptError("Expected a variable name but found "+name);
-		}
-	}
-	
-	private static void put(XNInterpreter interp, XNContext ctx, XOMVariant what, String prep, XOMVariant dest) {
-		if (dest.canPutContents(ctx)) {
-			if (prep.equalsIgnoreCase("before")) dest.putBeforeContents(ctx, what);
-			else if (prep.equalsIgnoreCase("after")) dest.putAfterContents(ctx, what);
-			else dest.putIntoContents(ctx, what);
-		} else {
-			String name = dest.toTextString(ctx);
-			throw new XNScriptError("Expected a variable name but found "+name);
-		}
-	}
-	
-	private static void put(XNInterpreter interp, XNContext ctx, XOMVariant what, String prep, XOMVariant dest, String prop, XOMVariant pval) {
-		if (dest.canPutContents(ctx)) {
-			if (prep.equalsIgnoreCase("before")) dest.putBeforeContents(ctx, what, prep, pval);
-			else if (prep.equalsIgnoreCase("after")) dest.putAfterContents(ctx, what, prep, pval);
-			else dest.putIntoContents(ctx, what, prep, pval);
-		} else {
-			String name = dest.toTextString(ctx);
-			throw new XNScriptError("Expected a variable name but found "+name);
-		}
-	}
-	
 	private static final long MS_PER_DAY = 1000L * 60L * 60L * 24L;
 	private static long c_convert_0(long current, List<XNDateFormat> formats, String s, ParsePosition pos) {
 		if (formats.isEmpty()) return current;
@@ -1596,30 +1561,30 @@ public class XNStandardModule extends XNModule {
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			XOMVariant bv = interp.evaluateExpression(parameters.get(0)).asPrimitive(ctx);
-			XOMVariant av = makeDest(interp, ctx, interp.evaluateExpression(parameters.get(2)));
+			XOMVariant av = interp.evaluateExpression(parameters.get(2)).asContainer(ctx, false);
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv);
 				XOMComplex rc = XOMComplexMath.add(ac, bc, mc, mp);
-				put(interp,ctx,rc,"into",av);
+				av.putIntoContents(ctx, rc);
 			}
 			else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
 				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, av);
 				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv);
 				XOMNumber rn = XOMNumberMath.add(an, bn, mc, mp);
-				put(interp,ctx,rn,"into",av);
+				av.putIntoContents(ctx, rn);
 			}
 			else if (XOMNumberType.instance.canMakeInstanceFrom(ctx, av) && XOMNumberType.instance.canMakeInstanceFrom(ctx, bv)) {
 				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, av);
 				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv);
 				XOMNumber rn = XOMNumberMath.add(an, bn, mc, mp);
-				put(interp,ctx,rn,"into",av);
+				av.putIntoContents(ctx, rn);
 			}
 			else if (XOMComplexType.instance.canMakeInstanceFrom(ctx, av) && XOMComplexType.instance.canMakeInstanceFrom(ctx, bv)) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv);
 				XOMComplex rc = XOMComplexMath.add(ac, bc, mc, mp);
-				put(interp,ctx,rc,"into",av);
+				av.putIntoContents(ctx, rc);
 			}
 			else {
 				throw new XOMMorphError("number");
@@ -2092,35 +2057,35 @@ public class XNStandardModule extends XNModule {
 			}
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
-			XOMVariant av = makeDest(interp, ctx, interp.evaluateExpression(parameters.get(0)));
+			XOMVariant av = interp.evaluateExpression(parameters.get(0)).asContainer(ctx, false);
 			XOMVariant bv = interp.evaluateExpression(parameters.get(2)).asPrimitive(ctx);
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv);
 				XOMComplex rc = XOMComplexMath.divide(ac, bc, mc, mp);
 				if (rm != null) rc = rc.round(rm);
-				put(interp,ctx,rc,"into",av);
+				av.putIntoContents(ctx, rc);
 			}
 			else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
 				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, av);
 				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv);
 				XOMNumber rn = XOMNumberMath.divide(an, bn, mc, mp);
 				if (rm != null) rn = rn.round(rm);
-				put(interp,ctx,rn,"into",av);
+				av.putIntoContents(ctx, rn);
 			}
 			else if (XOMNumberType.instance.canMakeInstanceFrom(ctx, av) && XOMNumberType.instance.canMakeInstanceFrom(ctx, bv)) {
 				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, av);
 				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv);
 				XOMNumber rn = XOMNumberMath.divide(an, bn, mc, mp);
 				if (rm != null) rn = rn.round(rm);
-				put(interp,ctx,rn,"into",av);
+				av.putIntoContents(ctx, rn);
 			}
 			else if (XOMComplexType.instance.canMakeInstanceFrom(ctx, av) && XOMComplexType.instance.canMakeInstanceFrom(ctx, bv)) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv);
 				XOMComplex rc = XOMComplexMath.divide(ac, bc, mc, mp);
 				if (rm != null) rc = rc.round(rm);
-				put(interp,ctx,rc,"into",av);
+				av.putIntoContents(ctx, rc);
 			}
 			else {
 				throw new XOMMorphError("number");
@@ -2140,9 +2105,9 @@ public class XNStandardModule extends XNModule {
 	private static final Command c_let = new Command() {
 		public XOMVariant executeCommand(XNInterpreter interp, XNContext ctx, String commandName, List<XNExpression> parameters) {
 			if (parameters == null || parameters.size() < 3) throw new XNScriptError("Can't understand arguments to let");
-			XOMVariant dest = interp.evaluateExpression(parameters.get(0));
+			XOMVariant dest = interp.evaluateExpression(parameters.get(0)).asContainer(ctx, false);
 			XOMVariant what = interp.evaluateExpression(parameters.get(2)).asValue(ctx);
-			put(interp, ctx, what, "into", dest);
+			dest.putIntoContents(ctx, what);
 			return null;
 		}
 	};
@@ -2169,31 +2134,31 @@ public class XNStandardModule extends XNModule {
 			}
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
-			XOMVariant av = makeDest(interp, ctx, interp.evaluateExpression(parameters.get(0)));
+			XOMVariant av = interp.evaluateExpression(parameters.get(0)).asContainer(ctx, false);
 			XOMVariant bv = interp.evaluateExpression(parameters.get(2)).asPrimitive(ctx);
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv);
 				XOMComplex rc = XOMComplexMath.subtract(ac, XOMComplexMath.multiply(bc, XOMComplexMath.divide(ac, bc, mc, mp).round(rm), mc, mp), mc, mp);
-				put(interp,ctx,rc,"into",av);
+				av.putIntoContents(ctx, rc);
 			}
 			else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
 				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, av);
 				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv);
 				XOMNumber rn = XOMNumberMath.subtract(an, XOMNumberMath.multiply(bn, XOMNumberMath.divide(an, bn, mc, mp).round(rm), mc, mp), mc, mp);
-				put(interp,ctx,rn,"into",av);
+				av.putIntoContents(ctx, rn);
 			}
 			else if (XOMNumberType.instance.canMakeInstanceFrom(ctx, av) && XOMNumberType.instance.canMakeInstanceFrom(ctx, bv)) {
 				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, av);
 				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv);
 				XOMNumber rn = XOMNumberMath.subtract(an, XOMNumberMath.multiply(bn, XOMNumberMath.divide(an, bn, mc, mp).round(rm), mc, mp), mc, mp);
-				put(interp,ctx,rn,"into",av);
+				av.putIntoContents(ctx, rn);
 			}
 			else if (XOMComplexType.instance.canMakeInstanceFrom(ctx, av) && XOMComplexType.instance.canMakeInstanceFrom(ctx, bv)) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv);
 				XOMComplex rc = XOMComplexMath.subtract(ac, XOMComplexMath.multiply(bc, XOMComplexMath.divide(ac, bc, mc, mp).round(rm), mc, mp), mc, mp);
-				put(interp,ctx,rc,"into",av);
+				av.putIntoContents(ctx, rc);
 			}
 			else {
 				throw new XOMMorphError("number");
@@ -2209,31 +2174,31 @@ public class XNStandardModule extends XNModule {
 			}
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
-			XOMVariant av = makeDest(interp, ctx, interp.evaluateExpression(parameters.get(0)));
+			XOMVariant av = interp.evaluateExpression(parameters.get(0)).asContainer(ctx, false);
 			XOMVariant bv = interp.evaluateExpression(parameters.get(2)).asPrimitive(ctx);
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv);
 				XOMComplex rc = XOMComplexMath.multiply(ac, bc, mc, mp);
-				put(interp,ctx,rc,"into",av);
+				av.putIntoContents(ctx, rc);
 			}
 			else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
 				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, av);
 				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv);
 				XOMNumber rn = XOMNumberMath.multiply(an, bn, mc, mp);
-				put(interp,ctx,rn,"into",av);
+				av.putIntoContents(ctx, rn);
 			}
 			else if (XOMNumberType.instance.canMakeInstanceFrom(ctx, av) && XOMNumberType.instance.canMakeInstanceFrom(ctx, bv)) {
 				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, av);
 				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv);
 				XOMNumber rn = XOMNumberMath.multiply(an, bn, mc, mp);
-				put(interp,ctx,rn,"into",av);
+				av.putIntoContents(ctx, rn);
 			}
 			else if (XOMComplexType.instance.canMakeInstanceFrom(ctx, av) && XOMComplexType.instance.canMakeInstanceFrom(ctx, bv)) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv);
 				XOMComplex rc = XOMComplexMath.multiply(ac, bc, mc, mp);
-				put(interp,ctx,rc,"into",av);
+				av.putIntoContents(ctx, rc);
 			}
 			else {
 				throw new XOMMorphError("number");
@@ -2250,15 +2215,19 @@ public class XNStandardModule extends XNModule {
 			} else if (parameters.size() < 6) {
 				XOMVariant what = interp.evaluateExpression(parameters.get(0)).asValue(ctx);
 				String prep = interp.evaluateExpression(parameters.get(1)).toTextString(ctx);
-				XOMVariant dest = interp.evaluateExpression(parameters.get(2));
-				put(interp, ctx, what, prep, dest);
+				XOMVariant dest = interp.evaluateExpression(parameters.get(2)).asContainer(ctx, false);
+				if (prep.equalsIgnoreCase("before")) dest.putBeforeContents(ctx, what);
+				else if (prep.equalsIgnoreCase("after")) dest.putAfterContents(ctx, what);
+				else dest.putIntoContents(ctx, what);
 			} else {
 				XOMVariant what = interp.evaluateExpression(parameters.get(0)).asValue(ctx);
 				String prep = interp.evaluateExpression(parameters.get(1)).toTextString(ctx);
-				XOMVariant dest = interp.evaluateExpression(parameters.get(2));
+				XOMVariant dest = interp.evaluateExpression(parameters.get(2)).asContainer(ctx, false);
 				String prop = interp.evaluateExpression(parameters.get(4)).toTextString(ctx);
 				XOMVariant pval = interp.evaluateExpression(parameters.get(5)).asValue(ctx);
-				put(interp, ctx, what, prep, dest, prop, pval);
+				if (prep.equalsIgnoreCase("before")) dest.putBeforeContents(ctx, what, prop, pval);
+				else if (prep.equalsIgnoreCase("after")) dest.putAfterContents(ctx, what, prop, pval);
+				else dest.putIntoContents(ctx, what, prop, pval);
 			}
 			return null;
 		}
@@ -2293,30 +2262,30 @@ public class XNStandardModule extends XNModule {
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			XOMVariant bv = interp.evaluateExpression(parameters.get(0)).asPrimitive(ctx);
-			XOMVariant av = makeDest(interp, ctx, interp.evaluateExpression(parameters.get(2)));
+			XOMVariant av = interp.evaluateExpression(parameters.get(2)).asContainer(ctx, false);
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv);
 				XOMComplex rc = XOMComplexMath.subtract(ac, bc, mc, mp);
-				put(interp,ctx,rc,"into",av);
+				av.putIntoContents(ctx, rc);
 			}
 			else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
 				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, av);
 				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv);
 				XOMNumber rn = XOMNumberMath.subtract(an, bn, mc, mp);
-				put(interp,ctx,rn,"into",av);
+				av.putIntoContents(ctx, rn);
 			}
 			else if (XOMNumberType.instance.canMakeInstanceFrom(ctx, av) && XOMNumberType.instance.canMakeInstanceFrom(ctx, bv)) {
 				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, av);
 				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv);
 				XOMNumber rn = XOMNumberMath.subtract(an, bn, mc, mp);
-				put(interp,ctx,rn,"into",av);
+				av.putIntoContents(ctx, rn);
 			}
 			else if (XOMComplexType.instance.canMakeInstanceFrom(ctx, av) && XOMComplexType.instance.canMakeInstanceFrom(ctx, bv)) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv);
 				XOMComplex rc = XOMComplexMath.subtract(ac, bc, mc, mp);
-				put(interp,ctx,rc,"into",av);
+				av.putIntoContents(ctx, rc);
 			}
 			else {
 				throw new XOMMorphError("number");
@@ -2409,7 +2378,7 @@ public class XNStandardModule extends XNModule {
 			if (!df2.isEmpty()) output += df2.get(df2.size()-1).toJavaDateFormat().format(d) + " ";
 			
 			if (v.canPutContents(ctx)) {
-				put(interp, ctx, new XOMString(output.trim()), "into", v);
+				v.putIntoContents(ctx, new XOMString(output.trim()));
 			} else {
 				ctx.getVariableMap("it").setVariable(ctx, "it", new XOMString(output.trim()));
 			}

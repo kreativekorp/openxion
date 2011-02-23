@@ -31,9 +31,11 @@ import java.util.*;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.XNScriptError;
 import com.kreative.openxion.ast.XNModifier;
+import com.kreative.openxion.xom.inst.XOMEmpty;
 import com.kreative.openxion.xom.inst.XOMString;
 import com.kreative.openxion.xom.inst.XOMBinary;
 import com.kreative.openxion.xom.inst.XOMList;
+import com.kreative.openxion.xom.type.XOMStringType;
 
 /**
  * XOMVariable represents a variable in a XION program.
@@ -80,10 +82,16 @@ public final class XOMVariable extends XOMVariant {
 		else
 			return new XOMString(name);
 	}
-	public final XOMVariant asContainer(XNContext ctx) {
+	public final XOMVariant asContainer(XNContext ctx, boolean resolveVariableNames) {
+		XOMVariableMap vm = ctx.getVariableMap(name);
+		if (!vm.isVariableDeclared(ctx, name))
+			vm.declareVariable(ctx, name, XOMStringType.instance, XOMEmpty.EMPTY);
 		return this;
 	}
-	public final XOMVariable asVariable(XNContext ctx) {
+	public final XOMVariable asVariable(XNContext ctx, boolean resolveVariableNames) {
+		XOMVariableMap vm = ctx.getVariableMap(name);
+		if (!vm.isVariableDeclared(ctx, name))
+			vm.declareVariable(ctx, name, XOMStringType.instance, XOMEmpty.EMPTY);
 		return this;
 	}
 	
@@ -109,7 +117,7 @@ public final class XOMVariable extends XOMVariant {
 		if (vm.isVariableDeclared(ctx, name))
 			return vm.getVariable(ctx, name);
 		else
-			return new XOMString(name);
+			return XOMEmpty.EMPTY;
 	}
 	
 	public final boolean canPutContents(XNContext ctx) {
@@ -135,8 +143,7 @@ public final class XOMVariable extends XOMVariant {
 	}
 	
 	public final boolean canSortContents(XNContext ctx) {
-		XOMVariant v = ctx.getVariableMap(name).getVariable(ctx, name);
-		return v != null;
+		return true;
 	}
 	public final void sortContents(XNContext ctx, XOMComparator cmp) {
 		XOMVariant v = ctx.getVariableMap(name).getVariable(ctx, name);
@@ -173,7 +180,6 @@ public final class XOMVariable extends XOMVariant {
 				ctx.getVariableMap(name).setVariable(ctx, name, new XOMString(s.toString()));
 			}
 		}
-		else throw new XNScriptError("Can't understand this");
 	}
 	
 	public final boolean canGetProperty(XNContext ctx, String property) {

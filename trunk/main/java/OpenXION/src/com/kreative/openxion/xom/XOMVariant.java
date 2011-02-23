@@ -77,22 +77,26 @@ public abstract class XOMVariant implements Serializable {
 	 * Otherwise, treats this variant as a variable name and returns the
 	 * corresponding XOMVariable from the specified XNContext.
 	 * @param ctx the context.
+	 * @param resolveVariableNames if this variant should be used as a
+	 * variable name if it's not a container.
 	 * @return if this is a variable or container, this variant as given;
 	 * otherwise, the XOMVariable corresponding to the variable name given
 	 * by this variant's value.
 	 */
-	public abstract XOMVariant asContainer(XNContext ctx);
+	public abstract XOMVariant asContainer(XNContext ctx, boolean resolveVariableNames);
 	
 	/**
 	 * If this is a variable, returns this variant as given.
 	 * Otherwise, treats this variant as a variable name and returns the
 	 * corresponding XOMVariable from the specified XNContext.
 	 * @param ctx the context.
+	 * @param resolveVariableNames if this variant should be used as a
+	 * variable name if it's not a container.
 	 * @return if this is a variable, this variant as given;
 	 * otherwise, the XOMVariable corresponding to the variable name given
 	 * by this variant's value.
 	 */
-	public abstract XOMVariable asVariable(XNContext ctx);
+	public abstract XOMVariable asVariable(XNContext ctx, boolean resolveVariableNames);
 	
 	public abstract boolean canGetParent(XNContext ctx);
 	public abstract XOMVariant getParent(XNContext ctx);

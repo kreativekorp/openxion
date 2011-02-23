@@ -52,19 +52,19 @@ public abstract class XOMContainerObject extends XOMVariant {
 		if (canGetContents(ctx)) return getContents(ctx).asPrimitive(ctx);
 		else return this;
 	}
-	public final XOMVariant asContainer(XNContext ctx) {
+	public final XOMVariant asContainer(XNContext ctx, boolean resolveVariableNames) {
 		if (canGetContents(ctx)) return this;
-		else {
-			String s = toTextStringImpl(ctx);
-			XOMVariable v = XIONUtil.parseVariableName(ctx, s);
-			if (v == null) throw new XNScriptError("Expected variable name but found " + s);
-			else return v;
-		}
-	}
-	public final XOMVariable asVariable(XNContext ctx) {
 		String s = toTextStringImpl(ctx);
+		if (!resolveVariableNames) throw new XNScriptError("Expected a variable name but found " + s);
 		XOMVariable v = XIONUtil.parseVariableName(ctx, s);
-		if (v == null) throw new XNScriptError("Expected variable name but found " + s);
+		if (v == null) throw new XNScriptError("Expected a variable name but found " + s);
+		else return v;
+	}
+	public final XOMVariable asVariable(XNContext ctx, boolean resolveVariableNames) {
+		String s = toTextStringImpl(ctx);
+		if (!resolveVariableNames) throw new XNScriptError("Expected a variable name but found " + s);
+		XOMVariable v = XIONUtil.parseVariableName(ctx, s);
+		if (v == null) throw new XNScriptError("Expected a variable name but found " + s);
 		else return v;
 	}
 	

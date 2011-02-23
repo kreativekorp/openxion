@@ -70,6 +70,9 @@ public class XOMBinaryByteChunk extends XOMContainerObject implements XOMBinaryC
 	
 	private BinaryChunkInfo getChunkInfo(XNContext ctx, boolean puttingBefore, boolean puttingAfter) {
 		byte[] data;
+		if (puttingBefore || puttingAfter) {
+			parent.asContainer(ctx, false);
+		}
 		if (parent.canGetContents(ctx)) {
 			data = XOMBinaryType.instance.makeInstanceFrom(ctx, parent.getContents(ctx)).toByteArray();
 		} else {

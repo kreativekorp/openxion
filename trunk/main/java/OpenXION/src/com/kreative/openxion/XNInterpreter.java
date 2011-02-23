@@ -1509,7 +1509,7 @@ public class XNInterpreter {
 					else return XNHandlerExit.ended();
 				}
 				else if (rp instanceof XNRepeatWithParameters) {
-					XOMVariant dest = evaluateExpression(((XNRepeatWithParameters)rp).identifier).asVariable(context);
+					XOMVariant dest = evaluateExpression(((XNRepeatWithParameters)rp).identifier).asVariable(context, true);
 					XOMVariant start = evaluateExpression(((XNRepeatWithParameters)rp).startvalue).asPrimitive(context);
 					XOMVariant end = evaluateExpression(((XNRepeatWithParameters)rp).endvalue).asPrimitive(context);
 					XOMNumber step =

@@ -78,6 +78,9 @@ public class XOMListChunk extends XOMContainerObject implements XOMListContainer
 	
 	private ListChunkInfo getChunkInfo(XNContext ctx, boolean puttingBefore, boolean puttingAfter) {
 		List<? extends XOMVariant> pl;
+		if (puttingBefore || puttingAfter) {
+			parent.asContainer(ctx, false);
+		}
 		if (parent.canGetContents(ctx)) {
 			pl = parent.getContents(ctx).toList(ctx);
 		} else {
