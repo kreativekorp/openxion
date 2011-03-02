@@ -93,7 +93,7 @@ public class XIONUtil {
 			XNToken tk1 = lexer.getToken();
 			XNToken tk2 = lexer.getToken();
 			if (tk1.kind == XNToken.ID && tk2.isEOF()) {
-				return new XOMVariable(tk1.image);
+				return new XOMVariable(ctx.getVariableMap(tk1.image), tk1.image);
 			} else {
 				return null;
 			}

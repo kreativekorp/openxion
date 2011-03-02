@@ -51,45 +51,42 @@ import com.kreative.openxion.xom.type.XOMStringType;
 public final class XOMVariable extends XOMVariant {
 	private static final long serialVersionUID = 1L;
 	
+	private XOMVariableMap vm;
 	private String name;
 	
-	public XOMVariable(String name) {
+	public XOMVariable(XOMVariableMap vm, String name) {
+		this.vm = vm;
 		this.name = name;
 	}
 	
 	public final boolean isDeclared(XNContext ctx) {
-		return ctx.getVariableMap(name).isVariableDeclared(ctx, name);
+		return vm.isVariableDeclared(ctx, name);
 	}
 	
 	public final XOMVariant asValue(XNContext ctx) {
-		XOMVariableMap vm = ctx.getVariableMap(name);
 		if (vm.isVariableDeclared(ctx, name))
 			return vm.getVariable(ctx, name);
 		else
 			return new XOMString(name);
 	}
 	public final XOMVariant asContents(XNContext ctx) {
-		XOMVariableMap vm = ctx.getVariableMap(name);
 		if (vm.isVariableDeclared(ctx, name))
 			return vm.getVariable(ctx, name);
 		else
 			return new XOMString(name);
 	}
 	public final XOMVariant asPrimitive(XNContext ctx) {
-		XOMVariableMap vm = ctx.getVariableMap(name);
 		if (vm.isVariableDeclared(ctx, name))
 			return vm.getVariable(ctx, name).asPrimitive(ctx);
 		else
 			return new XOMString(name);
 	}
 	public final XOMVariant asContainer(XNContext ctx, boolean resolveVariableNames) {
-		XOMVariableMap vm = ctx.getVariableMap(name);
 		if (!vm.isVariableDeclared(ctx, name))
 			vm.declareVariable(ctx, name, XOMStringType.instance, XOMEmpty.EMPTY);
 		return this;
 	}
 	public final XOMVariable asVariable(XNContext ctx, boolean resolveVariableNames) {
-		XOMVariableMap vm = ctx.getVariableMap(name);
 		if (!vm.isVariableDeclared(ctx, name))
 			vm.declareVariable(ctx, name, XOMStringType.instance, XOMEmpty.EMPTY);
 		return this;
@@ -113,7 +110,6 @@ public final class XOMVariable extends XOMVariant {
 		return true;
 	}
 	public final XOMVariant getContents(XNContext ctx) {
-		XOMVariableMap vm = ctx.getVariableMap(name);
 		if (vm.isVariableDeclared(ctx, name))
 			return vm.getVariable(ctx, name);
 		else
@@ -124,13 +120,13 @@ public final class XOMVariable extends XOMVariant {
 		return true;
 	}
 	public final void putIntoContents(XNContext ctx, XOMVariant contents) {
-		ctx.getVariableMap(name).setVariable(ctx, name, contents.asValue(ctx));
+		vm.setVariable(ctx, name, contents.asValue(ctx));
 	}
 	public final void putBeforeContents(XNContext ctx, XOMVariant contents) {
-		ctx.getVariableMap(name).prependVariable(ctx, name, contents.asValue(ctx));
+		vm.prependVariable(ctx, name, contents.asValue(ctx));
 	}
 	public final void putAfterContents(XNContext ctx, XOMVariant contents) {
-		ctx.getVariableMap(name).appendVariable(ctx, name, contents.asValue(ctx));
+		vm.appendVariable(ctx, name, contents.asValue(ctx));
 	}
 	public final void putIntoContents(XNContext ctx, XOMVariant contents, String property, XOMVariant value) {
 		throw new XNScriptError("Can't understand this");
@@ -146,7 +142,7 @@ public final class XOMVariable extends XOMVariant {
 		return true;
 	}
 	public final void sortContents(XNContext ctx, XOMComparator cmp) {
-		XOMVariant v = ctx.getVariableMap(name).getVariable(ctx, name);
+		XOMVariant v = vm.getVariable(ctx, name);
 		if (v != null) {
 			List<XOMVariant> toSort = new Vector<XOMVariant>();
 			if (v instanceof XOMList) {
@@ -160,13 +156,13 @@ public final class XOMVariable extends XOMVariant {
 			}
 			Collections.sort(toSort, cmp);
 			if (v instanceof XOMList) {
-				ctx.getVariableMap(name).setVariable(ctx, name, new XOMList(toSort));
+				vm.setVariable(ctx, name, new XOMList(toSort));
 			} else if (v instanceof XOMBinary) {
 				byte[] b = new byte[toSort.size()];
 				for (int i = 0; i < b.length; i++) {
 					b[i] = ((XOMBinary)toSort.get(i)).toByteArray()[0];
 				}
-				ctx.getVariableMap(name).setVariable(ctx, name, new XOMBinary(b));
+				vm.setVariable(ctx, name, new XOMBinary(b));
 			} else {
 				String endl = ctx.getLineEnding();
 				StringBuffer s = new StringBuffer();
@@ -177,7 +173,7 @@ public final class XOMVariable extends XOMVariant {
 				if (s.length() >= endl.length()) {
 					s.delete(s.length()-endl.length(), s.length());
 				}
-				ctx.getVariableMap(name).setVariable(ctx, name, new XOMString(s.toString()));
+				vm.setVariable(ctx, name, new XOMString(s.toString()));
 			}
 		}
 	}
@@ -200,14 +196,12 @@ public final class XOMVariable extends XOMVariant {
 		return name;
 	}
 	public final String toTextString(XNContext ctx) {
-		XOMVariableMap vm = ctx.getVariableMap(name);
 		if (vm.isVariableDeclared(ctx, name))
 			return vm.getVariable(ctx, name).toTextString(ctx);
 		else
 			return name;
 	}
 	public final List<? extends XOMVariant> toList(XNContext ctx) {
-		XOMVariableMap vm = ctx.getVariableMap(name);
 		if (vm.isVariableDeclared(ctx, name))
 			return vm.getVariable(ctx, name).toList(ctx);
 		else

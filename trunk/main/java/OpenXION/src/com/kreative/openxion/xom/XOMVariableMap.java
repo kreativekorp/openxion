@@ -68,28 +68,28 @@ public class XOMVariableMap {
 		CIString ciname = new CIString(name);
 		types.put(ciname, XOMStringType.instance);
 		values.put(ciname, XOMString.EMPTY_STRING);
-		return new XOMVariable(name);
+		return new XOMVariable(this, name);
 	}
 	
 	public XOMVariable declareVariable(XNContext ctx, String name, XOMDataType<? extends XOMVariant> type) {
 		CIString ciname = new CIString(name);
 		types.put(ciname, type);
 		values.put(ciname, type.makeInstanceFrom(ctx, XOMEmpty.EMPTY));
-		return new XOMVariable(name);
+		return new XOMVariable(this, name);
 	}
 	
 	public XOMVariable declareVariable(XNContext ctx, String name, XOMVariant value) {
 		CIString ciname = new CIString(name);
 		types.put(ciname, XOMStringType.instance);
 		values.put(ciname, new XOMString(value.toTextString(ctx)));
-		return new XOMVariable(name);
+		return new XOMVariable(this, name);
 	}
 	
 	public XOMVariable declareVariable(XNContext ctx, String name, XOMDataType<? extends XOMVariant> type, XOMVariant value) {
 		CIString ciname = new CIString(name);
 		types.put(ciname, type);
 		values.put(ciname, type.makeInstanceFrom(ctx, value));
-		return new XOMVariable(name);
+		return new XOMVariable(this, name);
 	}
 	
 	public boolean isVariableDeclared(XNContext ctx, String name) {

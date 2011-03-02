@@ -837,7 +837,7 @@ public class XNInterpreter {
 			}
 			else if (expr instanceof XNVariableExpression) {
 				String name = ((XNVariableExpression)expr).varname.image;
-				return new XOMVariable(name);
+				return new XOMVariable(context.getVariableMap(name), name);
 			}
 			else if (expr instanceof XNNewExpression) {
 				XNDataType dataTypeObj = ((XNNewExpression)expr).datatype;
@@ -1564,7 +1564,7 @@ public class XNInterpreter {
 					String name = ((XNRepeatForEachParameters)rp).identifier;
 					List<? extends XOMVariant> list = evaluateExpression(((XNRepeatForEachParameters)rp).list).asValue(context).toList(context);
 					for (XOMVariant item : list) {
-						XOMVariant dest = new XOMVariable(name);
+						XOMVariant dest = new XOMVariable(context.getVariableMap(name), name);
 						dest.putIntoContents(context, item);
 						XNHandlerExit exit = executeStatements(body);
 						if (exit.status() == XNHandlerExitStatus.EXITED && "repeat".equalsIgnoreCase(exit.blockTypeValue())) {
