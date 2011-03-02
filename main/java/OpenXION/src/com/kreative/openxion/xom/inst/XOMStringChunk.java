@@ -33,12 +33,12 @@ import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.util.StringChunkType;
 import com.kreative.openxion.util.StringChunkEx;
-import com.kreative.openxion.xom.XOMContainerObject;
+import com.kreative.openxion.xom.XOMContainer;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMStringContainer;
 import com.kreative.openxion.xom.XOMComparator;
 
-public class XOMStringChunk extends XOMContainerObject implements XOMStringContainer {
+public class XOMStringChunk extends XOMContainer implements XOMStringContainer {
 	private static final long serialVersionUID = 1L;
 	
 	private XOMVariant parent;

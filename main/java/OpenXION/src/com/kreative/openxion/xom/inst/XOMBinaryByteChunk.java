@@ -32,13 +32,13 @@ import java.util.*;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.util.XIONUtil;
-import com.kreative.openxion.xom.XOMContainerObject;
+import com.kreative.openxion.xom.XOMContainer;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMBinaryContainer;
 import com.kreative.openxion.xom.XOMComparator;
 import com.kreative.openxion.xom.type.XOMBinaryType;
 
-public class XOMBinaryByteChunk extends XOMContainerObject implements XOMBinaryContainer {
+public class XOMBinaryByteChunk extends XOMContainer implements XOMBinaryContainer {
 	private static final long serialVersionUID = 1L;
 	
 	private XOMVariant parent;

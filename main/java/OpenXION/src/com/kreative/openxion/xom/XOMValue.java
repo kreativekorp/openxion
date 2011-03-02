@@ -37,7 +37,7 @@ import com.kreative.openxion.util.XIONUtil;
  * @since OpenXION 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  */
-public abstract class XOMPrimitiveValue extends XOMVariant {
+public abstract class XOMValue extends XOMVariant {
 	private static final long serialVersionUID = 1L;
 	
 	public final XOMVariant asValue(XNContext ctx) {

@@ -32,10 +32,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.xom.XOMPrimitiveValue;
+import com.kreative.openxion.xom.XOMValue;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMNumber extends XOMPrimitiveValue {
+public class XOMNumber extends XOMValue {
 	private static final long serialVersionUID = 1L;
 	
 	public static final BigDecimal BIGDECIMAL_PI = new BigDecimal("3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117068");

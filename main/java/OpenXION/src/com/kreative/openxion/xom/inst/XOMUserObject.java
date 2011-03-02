@@ -35,13 +35,13 @@ import com.kreative.openxion.XNHandlerExit;
 import com.kreative.openxion.XNScriptError;
 import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.ast.XNExpression;
-import com.kreative.openxion.xom.XOMPrimitiveObject;
+import com.kreative.openxion.xom.XOMObject;
 import com.kreative.openxion.xom.XOMStaticVariableMap;
 import com.kreative.openxion.xom.XOMVariableMap;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.type.XOMUserObjectType;
 
-public class XOMUserObject extends XOMPrimitiveObject implements XNResponder {
+public class XOMUserObject extends XOMObject implements XNResponder {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMUserObject NULL = new XOMUserObject();

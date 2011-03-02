@@ -32,10 +32,10 @@ import java.util.List;
 
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.util.XIONUtil;
-import com.kreative.openxion.xom.XOMPrimitiveValue;
+import com.kreative.openxion.xom.XOMValue;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMString extends XOMPrimitiveValue {
+public class XOMString extends XOMValue {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMString EMPTY_STRING = new XOMString("");

@@ -33,10 +33,10 @@ import java.util.List;
 
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.util.XIONUtil;
-import com.kreative.openxion.xom.XOMPrimitiveObject;
+import com.kreative.openxion.xom.XOMObject;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMURL extends XOMPrimitiveObject {
+public class XOMURL extends XOMObject {
 	private static final long serialVersionUID = 1L;
 	
 	private URL theURL;
