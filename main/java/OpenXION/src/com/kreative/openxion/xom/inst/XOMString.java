@@ -46,19 +46,19 @@ public class XOMString extends XOMValue {
 		this.theString = s;
 	}
 	
-	protected String toLanguageStringImpl() {
+	public String toLanguageString() {
 		return XIONUtil.quote((theString == null) ? "" : theString);
 	}
-	protected String toTextStringImpl(XNContext ctx) {
+	public String toTextString(XNContext ctx) {
 		return ((theString == null) ? "" : theString);
 	}
-	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+	public List<? extends XOMVariant> toList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
-	protected int hashCodeImpl() {
+	public int hashCode() {
 		return (theString == null) ? "".hashCode() : theString.hashCode();
 	}
-	protected boolean equalsImpl(XOMVariant o) {
+	public boolean equals(Object o) {
 		if (o instanceof XOMString) {
 			XOMString other = (XOMString)o;
 			return this.theString.equals(other.theString);

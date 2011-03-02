@@ -50,19 +50,19 @@ public class XOMBoolean extends XOMValue {
 		return theBoolean;
 	}
 	
-	protected String toLanguageStringImpl() {
+	public String toLanguageString() {
 		return theBoolean ? "true" : "false";
 	}
-	protected String toTextStringImpl(XNContext ctx) {
+	public String toTextString(XNContext ctx) {
 		return theBoolean ? "true" : "false";
 	}
-	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+	public List<? extends XOMVariant> toList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
-	protected int hashCodeImpl() {
+	public int hashCode() {
 		return theBoolean ? 1 : 0;
 	}
-	protected boolean equalsImpl(XOMVariant o) {
+	public boolean equals(Object o) {
 		if (o instanceof XOMBoolean) {
 			XOMBoolean other = (XOMBoolean)o;
 			return this.theBoolean == other.theBoolean;

@@ -593,17 +593,17 @@ public class XOMBinaryByteChunk extends XOMContainer implements XOMBinaryContain
 		}
 	}
 	
-	protected String toLanguageStringImpl() {
+	public String toLanguageString() {
 		if (startIndex == endIndex) {
 			return "byte " + startIndex + " of " + parent.toLanguageString();
 		} else {
 			return "bytes " + startIndex + " through " + endIndex + " of " + parent.toLanguageString();
 		}
 	}
-	protected String toTextStringImpl(XNContext ctx) {
+	public String toTextString(XNContext ctx) {
 		return getContents(ctx).toTextString(ctx);
 	}
-	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+	public List<? extends XOMVariant> toList(XNContext ctx) {
 		BinaryChunkInfo ci = getChunkInfo(ctx, false, false);
 		Vector<XOMVariant> v = new Vector<XOMVariant>();
 		if (ci != null) {
@@ -613,10 +613,10 @@ public class XOMBinaryByteChunk extends XOMContainer implements XOMBinaryContain
 		}
 		return v;
 	}
-	protected int hashCodeImpl() {
+	public int hashCode() {
 		return parent.hashCode() ^ startIndex ^ endIndex;
 	}
-	protected boolean equalsImpl(XOMVariant o) {
+	public boolean equals(Object o) {
 		if (o instanceof XOMBinaryByteChunk) {
 			XOMBinaryByteChunk other = (XOMBinaryByteChunk)o;
 			return (this.parent.equals(other.parent) && this.startIndex == other.startIndex && this.endIndex == other.endIndex);

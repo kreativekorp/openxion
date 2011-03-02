@@ -50,14 +50,14 @@ public abstract class XOMObject extends XOMVariant {
 		return this;
 	}
 	public final XOMVariant asContainer(XNContext ctx, boolean resolveVariableNames) {
-		String s = toTextStringImpl(ctx);
+		String s = toTextString(ctx);
 		if (!resolveVariableNames) throw new XNScriptError("Expected a variable name but found " + s);
 		XOMVariable v = XIONUtil.parseVariableName(ctx, s);
 		if (v == null) throw new XNScriptError("Expected a variable name but found " + s);
 		else return v;
 	}
 	public final XOMVariable asVariable(XNContext ctx, boolean resolveVariableNames) {
-		String s = toTextStringImpl(ctx);
+		String s = toTextString(ctx);
 		if (!resolveVariableNames) throw new XNScriptError("Expected a variable name but found " + s);
 		XOMVariable v = XIONUtil.parseVariableName(ctx, s);
 		if (v == null) throw new XNScriptError("Expected a variable name but found " + s);

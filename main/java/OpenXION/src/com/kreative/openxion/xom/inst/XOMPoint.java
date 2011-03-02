@@ -64,19 +64,19 @@ public class XOMPoint extends XOMValue {
 		return new Point(x.intValue(), y.intValue());
 	}
 	
-	protected String toLanguageStringImpl() {
+	public String toLanguageString() {
 		return "\""+((x == null)?"0":x.toString())+","+((y == null)?"0":y.toString())+"\"";
 	}
-	protected String toTextStringImpl(XNContext ctx) {
+	public String toTextString(XNContext ctx) {
 		return ((x == null)?"0":x.toString())+","+((y == null)?"0":y.toString());
 	}
-	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+	public List<? extends XOMVariant> toList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
-	protected int hashCodeImpl() {
+	public int hashCode() {
 		return x.hashCode() ^ y.hashCode();
 	}
-	protected boolean equalsImpl(XOMVariant o) {
+	public boolean equals(Object o) {
 		if (o instanceof XOMPoint) {
 			XOMPoint other = (XOMPoint)o;
 			return this.x.compareTo(other.x) == 0 && this.y.compareTo(other.y) == 0;

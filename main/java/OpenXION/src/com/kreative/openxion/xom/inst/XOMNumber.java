@@ -261,7 +261,7 @@ public class XOMNumber extends XOMValue {
 		else return theNumber.intValue();
 	}
 	
-	protected String toLanguageStringImpl() {
+	public String toLanguageString() {
 		if (theNumber == null) return "NAN";
 		else if (undefined) {
 			int cmp = theNumber.compareTo(BigDecimal.ZERO);
@@ -273,7 +273,7 @@ public class XOMNumber extends XOMValue {
 			.replaceAll("[Ee][-]([0-9]+)", "''$1")
 			.replaceAll("[Ee][+]?([0-9]+)", "'$1");
 	}
-	protected String toTextStringImpl(XNContext ctx) {
+	public String toTextString(XNContext ctx) {
 		if (theNumber == null) return "NAN";
 		else if (undefined) {
 			int cmp = theNumber.compareTo(BigDecimal.ZERO);
@@ -283,13 +283,13 @@ public class XOMNumber extends XOMValue {
 		}
 		else return ctx.getNumberFormat().format(theNumber);
 	}
-	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+	public List<? extends XOMVariant> toList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
-	protected int hashCodeImpl() {
+	public int hashCode() {
 		return (theNumber == null) ? 0 : undefined ? theNumber.signum() : theNumber.hashCode();
 	}
-	protected boolean equalsImpl(XOMVariant o) {
+	public boolean equals(Object o) {
 		if (o instanceof XOMNumber) {
 			XOMNumber other = (XOMNumber)o;
 			if (this.isNaN() && other.isNaN()) {

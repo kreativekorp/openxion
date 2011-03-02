@@ -113,7 +113,7 @@ public class XOMList extends XOMValue {
 		}
 	}
 	
-	protected String toLanguageStringImpl() {
+	public String toLanguageString() {
 		if (theList == null) return "()";
 		StringBuffer s = new StringBuffer();
 		s.append("(");
@@ -126,7 +126,7 @@ public class XOMList extends XOMValue {
 		s.append(")");
 		return s.toString();
 	}
-	protected String toTextStringImpl(XNContext ctx) {
+	public String toTextString(XNContext ctx) {
 		if (theList == null) return "";
 		StringBuffer theString = new StringBuffer();
 		for (XOMVariant theInstance : theList) {
@@ -140,10 +140,10 @@ public class XOMList extends XOMValue {
 			theString.deleteCharAt(theString.length()-1);
 		return theString.toString();
 	}
-	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+	public List<? extends XOMVariant> toList(XNContext ctx) {
 		return Collections.unmodifiableList(theList);
 	}
-	protected int hashCodeImpl() {
+	public int hashCode() {
 		if (theList == null) return 0;
 		int hc = theList.size();
 		for (XOMVariant v : theList) {
@@ -151,7 +151,7 @@ public class XOMList extends XOMValue {
 		}
 		return hc;
 	}
-	protected boolean equalsImpl(XOMVariant o) {
+	public boolean equals(Object o) {
 		if (o instanceof XOMList) {
 			XOMList other = (XOMList)o;
 			if ((this.theList == null || this.theList.isEmpty()) && (other.theList == null || other.theList.isEmpty())) {

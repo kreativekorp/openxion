@@ -49,19 +49,19 @@ public class XOMURL extends XOMObject {
 		return theURL;
 	}
 
-	protected String toLanguageStringImpl() {
+	public String toLanguageString() {
 		return "URL "+XIONUtil.quote(theURL.toString());
 	}
-	protected String toTextStringImpl(XNContext ctx) {
+	public String toTextString(XNContext ctx) {
 		return "URL "+XIONUtil.quote(theURL.toString());
 	}
-	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+	public List<? extends XOMVariant> toList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
-	protected int hashCodeImpl() {
+	public int hashCode() {
 		return (theURL == null) ? 0 : theURL.hashCode();
 	}
-	protected boolean equalsImpl(XOMVariant o) {
+	public boolean equals(Object o) {
 		if (o instanceof XOMURL) {
 			XOMURL other = (XOMURL)o;
 			if (this.theURL == null && other.theURL == null) {

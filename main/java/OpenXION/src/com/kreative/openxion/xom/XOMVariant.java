@@ -132,58 +132,38 @@ public abstract class XOMVariant implements Serializable {
 	 */
 	@Deprecated
 	public final String toString() {
-		return toLanguageStringImpl();
+		return toLanguageString();
 	}
 	
 	/**
 	 * Returns this variant as XION source code.
 	 * @return this variant as XION source code.
 	 */
-	public final String toLanguageString() {
-		return toLanguageStringImpl();
-	}
+	public abstract String toLanguageString();
 	
 	/**
 	 * Returns this variant's value as a string.
 	 * @param ctx the context.
 	 * @return this variant's value as a string.
 	 */
-	public final String toTextString(XNContext ctx) {
-		return toTextStringImpl(ctx);
-	}
+	public abstract String toTextString(XNContext ctx);
 	
 	/**
 	 * Returns this variant's value as a list.
 	 * @param ctx the context.
 	 * @return this variant's value as a list.
 	 */
-	public final List<? extends XOMVariant> toList(XNContext ctx) {
-		return toListImpl(ctx);
-	}
+	public abstract List<? extends XOMVariant> toList(XNContext ctx);
 	
 	/**
 	 * Returns a hash code for this variant.
 	 * @return a hash code for this variant.
 	 */
-	public final int hashCode() {
-		return hashCodeImpl();
-	}
+	public abstract int hashCode();
 	
 	/**
 	 * Determines if two XOMVariants are equal.
 	 * @return true if the two XOMVariants are equal, false otherwise.
 	 */
-	public final boolean equals(Object o) {
-		if (o instanceof XOMVariant) {
-			return equalsImpl((XOMVariant)o);
-		} else {
-			return false;
-		}
-	}
-	
-	protected abstract String toLanguageStringImpl();
-	protected abstract String toTextStringImpl(XNContext ctx);
-	protected abstract List<? extends XOMVariant> toListImpl(XNContext ctx);
-	protected abstract int hashCodeImpl();
-	protected abstract boolean equalsImpl(XOMVariant other);
+	public abstract boolean equals(Object o);
 }

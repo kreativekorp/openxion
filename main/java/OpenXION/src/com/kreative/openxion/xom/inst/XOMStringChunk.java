@@ -715,17 +715,17 @@ public class XOMStringChunk extends XOMContainer implements XOMStringContainer {
 		}
 	}
 	
-	protected String toLanguageStringImpl() {
+	public String toLanguageString() {
 		if (startIndex == endIndex) {
 			return chunkType.toString() + " " + startIndex + " of " + parent.toLanguageString();
 		} else {
 			return chunkType.toPluralString() + " " + startIndex + " through " + endIndex + " of " + parent.toLanguageString();
 		}
 	}
-	protected String toTextStringImpl(XNContext ctx) {
+	public String toTextString(XNContext ctx) {
 		return getContents(ctx).toTextString(ctx);
 	}
-	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+	public List<? extends XOMVariant> toList(XNContext ctx) {
 		StringChunkInfo ci = getChunkInfo(ctx,false,false);
 		Vector<XOMVariant> v = new Vector<XOMVariant>();
 		if (ci != null) {
@@ -735,10 +735,10 @@ public class XOMStringChunk extends XOMContainer implements XOMStringContainer {
 		}
 		return v;
 	}
-	protected int hashCodeImpl() {
+	public int hashCode() {
 		return parent.hashCode() ^ chunkType.hashCode() ^ startIndex ^ endIndex;
 	}
-	protected boolean equalsImpl(XOMVariant o) {
+	public boolean equals(Object o) {
 		if (o instanceof XOMStringChunk) {
 			XOMStringChunk other = (XOMStringChunk)o;
 			return (this.parent.equals(other.parent) && this.chunkType == other.chunkType && this.startIndex == other.startIndex && this.endIndex == other.endIndex);

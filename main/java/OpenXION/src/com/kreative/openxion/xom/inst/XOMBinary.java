@@ -50,19 +50,19 @@ public class XOMBinary extends XOMValue {
 		return theData;
 	}
 	
-	protected String toLanguageStringImpl() {
+	public String toLanguageString() {
 		return "\"" + XIONUtil.binaryToString(theData) + "\"";
 	}
-	protected String toTextStringImpl(XNContext ctx) {
+	public String toTextString(XNContext ctx) {
 		return XIONUtil.binaryToString(theData);
 	}
-	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+	public List<? extends XOMVariant> toList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
-	protected int hashCodeImpl() {
+	public int hashCode() {
 		return Arrays.hashCode(theData);
 	}
-	protected boolean equalsImpl(XOMVariant o) {
+	public boolean equals(Object o) {
 		if (o instanceof XOMBinary) {
 			XOMBinary other = (XOMBinary)o;
 			return Arrays.equals(this.theData, other.theData);

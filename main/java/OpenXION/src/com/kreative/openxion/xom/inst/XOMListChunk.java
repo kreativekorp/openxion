@@ -675,24 +675,24 @@ public class XOMListChunk extends XOMContainer implements XOMListContainer {
 		}
 	}
 	
-	protected String toLanguageStringImpl() {
+	public String toLanguageString() {
 		if (startIndex == endIndex) {
 			return "element " + startIndex + " of " + parent.toLanguageString();
 		} else {
 			return "elements " + startIndex + " through " + endIndex + " of " + parent.toLanguageString();
 		}
 	}
-	protected String toTextStringImpl(XNContext ctx) {
+	public String toTextString(XNContext ctx) {
 		return getContents(ctx).toTextString(ctx);
 	}
-	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+	public List<? extends XOMVariant> toList(XNContext ctx) {
 		ListChunkInfo ci = getChunkInfo(ctx, false, false);
 		return ci.parentContent.subList(ci.startElementIndex, ci.endElementIndex);
 	}
-	protected int hashCodeImpl() {
+	public int hashCode() {
 		return parent.hashCode() ^ startIndex ^ endIndex;
 	}
-	protected boolean equalsImpl(XOMVariant o) {
+	public boolean equals(Object o) {
 		if (o instanceof XOMListChunk) {
 			XOMListChunk other = (XOMListChunk)o;
 			return this.parent.equals(other.parent) && this.startIndex == other.startIndex && this.endIndex == other.endIndex;

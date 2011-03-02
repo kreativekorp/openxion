@@ -144,7 +144,7 @@ public class XOMFile extends XOMObject {
 		}
 	}
 
-	protected String toLanguageStringImpl() {
+	public String toLanguageString() {
 		if (theFile.isDirectory()) {
 			if (theFile.getParentFile() == null) {
 				return "disk "+XIONUtil.quote(theFile.getAbsolutePath());
@@ -159,16 +159,28 @@ public class XOMFile extends XOMObject {
 			}
 		}
 	}
-	protected String toTextStringImpl(XNContext ctx) {
-		return toLanguageStringImpl();
+	public String toTextString(XNContext ctx) {
+		if (theFile.isDirectory()) {
+			if (theFile.getParentFile() == null) {
+				return "disk "+XIONUtil.quote(theFile.getAbsolutePath());
+			} else {
+				return "folder "+XIONUtil.quote(theFile.getAbsolutePath());
+			}
+		} else {
+			if (theFile.getParentFile() != null && theFile.getParentFile().getName().equals("..namedfork")) {
+				return "fork "+XIONUtil.quote(theFile.getAbsolutePath());
+			} else {
+				return "file "+XIONUtil.quote(theFile.getAbsolutePath());
+			}
+		}
 	}
-	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+	public List<? extends XOMVariant> toList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
-	protected int hashCodeImpl() {
+	public int hashCode() {
 		return (theFile == null) ? 0 : theFile.hashCode();
 	}
-	protected boolean equalsImpl(XOMVariant o) {
+	public boolean equals(Object o) {
 		if (o instanceof XOMFile) {
 			XOMFile other = (XOMFile)o;
 			if (this.theFile == null && other.theFile == null) {
