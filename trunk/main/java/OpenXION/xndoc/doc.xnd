@@ -1681,7 +1681,7 @@
 </structure>
 
 <structure>
-	<name dialects="xn1,oxnb1,oxnb11,oxnb12,oxnb13">to get contents</name>
+	<name dialects="xn1,oxnb1,oxnb11,oxnb12">to get contents</name>
 	<syntax>[[to get contents]]\\[[  ]]{statementList}\\[[end get]]</syntax>
 	<description>
 		The [[*]] handler defines the behavior of a user-defined object when its contents
@@ -1698,11 +1698,15 @@
 	<note>
 		This structure is only valid inside an [[cs:object type]] structure.
 	</note>
+	<note>
+		In OpenXION 1.3 or later, due to a more correct understanding of how containers work,
+		user-defined objects can no longer be containers, and this structure is no longer supported.
+	</note>
 	<see-also>[[cs:object type]]</see-also>
 </structure>
 
 <structure>
-	<name dialects="xn1,oxnb1,oxnb11,oxnb12,oxnb13">to put contents</name>
+	<name dialects="xn1,oxnb1,oxnb11,oxnb12">to put contents</name>
 	<syntax>[[to put ]]{variableName}[[ into contents]]\\[[  ]]{statementList}\\[[end put]]</syntax>
 	<syntax>[[to put ]]{variableName}[[ before contents]]\\[[  ]]{statementList}\\[[end put]]</syntax>
 	<syntax>[[to put ]]{variableName}[[ after contents]]\\[[  ]]{statementList}\\[[end put]]</syntax>
@@ -1724,6 +1728,10 @@
 	</note>
 	<note>
 		This structure is only valid inside an [[cs:object type]] structure.
+	</note>
+	<note>
+		In OpenXION 1.3 or later, due to a more correct understanding of how containers work,
+		user-defined objects can no longer be containers, and this structure is no longer supported.
 	</note>
 	<see-also>[[cs:object type]], [[cm:put]]</see-also>
 </structure>
@@ -1777,8 +1785,8 @@
 	<syntax-note>
 		{ParentTypeName} is the name of a data type to inherit handlers and properties from.
 		{HandlerList} is a series of [[cs:on]], [[cs:function]], [[cs:to create]], [[cs:to delete]],
-		[[cs:to get contents]], [[cs:to put contents]], [[cs:to get]], and/or [[cs:to set]] structures.
-		{FirstTypeName} must be the first name that appears in {typeNames}.
+		[[cs:to get]], and/or [[cs:to set]] structures. {FirstTypeName} must be the first name that
+		appears in {typeNames}.
 	</syntax-note>
 	<description>
 		The [[*]] structure creates a new user-defined object type. The behavior
@@ -1790,8 +1798,7 @@
 		No script error is triggered, and the data type maintains its previously defined behavior.
 	</note>
 	<see-also>
-		[[cs:on]], [[cs:function]], [[cs:to create]], [[cs:to delete]],
-		[[cs:to get contents]], [[cs:to put contents]], [[cs:to get]], [[cs:to set]]
+		[[cs:on]], [[cs:function]], [[cs:to create]], [[cs:to delete]], [[cs:to get]], [[cs:to set]]
 	</see-also>
 </structure>
 
@@ -13636,15 +13643,13 @@
 		::TABLE
 		[[cs:object type]] :: [[cs:pl]] :: [[cs:aka]] :: [[cs:extends]]
 		ELBAT::::TABLE
-		[[cs:to create]]       :: [[cs:to delete]]
-		................................................
-		[[cs:to get contents]] :: [[cs:to put contents]]
-		................................................
-		[[cs:to get]]          :: [[cs:to set]]
-		................................................
-		[[kw:me]]              :: [[kw:super]]
-		................................................
-		[[cs:exit]]            :: [[cs:end]]
+		[[cs:to create]] :: [[cs:to delete]]
+		....................................
+		[[cs:to get]]    :: [[cs:to set]]
+		....................................
+		[[kw:me]]        :: [[kw:super]]
+		....................................
+		[[cs:exit]]      :: [[cs:end]]
 		ELBAT::
 		\\\\
 		{{{{Adjectives}}}}
