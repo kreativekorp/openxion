@@ -196,27 +196,27 @@ public final class XOMVariable extends XOMVariant {
 		getContents(ctx).setProperty(ctx, property, value);
 	}
 	
-	protected final String toLanguageStringImpl() {
+	public final String toLanguageString() {
 		return name;
 	}
-	protected final String toTextStringImpl(XNContext ctx) {
+	public final String toTextString(XNContext ctx) {
 		XOMVariableMap vm = ctx.getVariableMap(name);
 		if (vm.isVariableDeclared(ctx, name))
 			return vm.getVariable(ctx, name).toTextString(ctx);
 		else
 			return name;
 	}
-	protected final List<? extends XOMVariant> toListImpl(XNContext ctx) {
+	public final List<? extends XOMVariant> toList(XNContext ctx) {
 		XOMVariableMap vm = ctx.getVariableMap(name);
 		if (vm.isVariableDeclared(ctx, name))
 			return vm.getVariable(ctx, name).toList(ctx);
 		else
 			return Arrays.asList(new XOMString(name));
 	}
-	protected final int hashCodeImpl() {
+	public final int hashCode() {
 		return this.name.toLowerCase().hashCode();
 	}
-	protected final boolean equalsImpl(XOMVariant other) {
+	public final boolean equals(Object other) {
 		if (other instanceof XOMVariable) {
 			XOMVariable v = (XOMVariable)other;
 			return this.name.equalsIgnoreCase(v.name);

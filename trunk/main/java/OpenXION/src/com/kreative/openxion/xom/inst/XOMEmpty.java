@@ -42,19 +42,19 @@ public class XOMEmpty extends XOMValue {
 		// nothing
 	}
 	
-	protected String toLanguageStringImpl() {
+	public String toLanguageString() {
 		return "empty";
 	}
-	protected String toTextStringImpl(XNContext ctx) {
+	public String toTextString(XNContext ctx) {
 		return "";
 	}
-	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+	public List<? extends XOMVariant> toList(XNContext ctx) {
 		return new ArrayList<XOMVariant>();
 	}
-	protected int hashCodeImpl() {
+	public int hashCode() {
 		return 0;
 	}
-	protected boolean equalsImpl(XOMVariant o) {
+	public boolean equals(Object o) {
 		return (o instanceof XOMEmpty);
 	}
 }

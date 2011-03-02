@@ -118,21 +118,21 @@ public class XOMClipboard extends XOMContainer implements ClipboardOwner {
 		setClipboardString(s.toString());
 	}
 	
-	protected String toLanguageStringImpl() {
+	public String toLanguageString() {
 		return "the clipboard";
 	}
-	protected String toTextStringImpl(XNContext ctx) {
+	public String toTextString(XNContext ctx) {
 		if (!ctx.allow(XNSecurityKey.CLIPBOARD_READ, "Operation", "Read"))
 			return "the clipboard";
 		return getClipboardString();
 	}
-	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+	public List<? extends XOMVariant> toList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
-	protected int hashCodeImpl() {
+	public int hashCode() {
 		return 0xBEC1126B;
 	}
-	protected boolean equalsImpl(XOMVariant o) {
+	public boolean equals(Object o) {
 		return (o instanceof XOMClipboard);
 	}
 }

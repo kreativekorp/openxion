@@ -150,21 +150,21 @@ public class XOMUserObject extends XOMObject implements XNResponder {
 		}
 	}
 	
-	protected String toLanguageStringImpl() {
+	public String toLanguageString() {
 		if (type == null) return "empty";
 		else return type.toLanguageString(this);
 	}
-	protected String toTextStringImpl(XNContext ctx) {
+	public String toTextString(XNContext ctx) {
 		if (type == null) return "";
 		else return type.toTextString(ctx, this);
 	}
-	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+	public List<? extends XOMVariant> toList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
-	protected int hashCodeImpl() {
+	public int hashCode() {
 		return id;
 	}
-	protected boolean equalsImpl(XOMVariant o) {
+	public boolean equals(Object o) {
 		return this == o;
 	}
 }

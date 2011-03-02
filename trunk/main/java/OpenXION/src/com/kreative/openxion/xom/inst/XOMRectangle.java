@@ -135,19 +135,19 @@ public class XOMRectangle extends XOMValue {
 		);
 	}
 	
-	protected String toLanguageStringImpl() {
+	public String toLanguageString() {
 		return "\""+((left == null)?"0":left.toString())+","+((top == null)?"0":top.toString())+","+((right == null)?"0":right.toString())+","+((bottom == null)?"0":bottom.toString())+"\"";
 	}
-	protected String toTextStringImpl(XNContext ctx) {
+	public String toTextString(XNContext ctx) {
 		return ((left == null)?"0":left.toString())+","+((top == null)?"0":top.toString())+","+((right == null)?"0":right.toString())+","+((bottom == null)?"0":bottom.toString());
 	}
-	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+	public List<? extends XOMVariant> toList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
-	protected int hashCodeImpl() {
+	public int hashCode() {
 		return left.hashCode() ^ top.hashCode() ^ right.hashCode() ^ bottom.hashCode();
 	}
-	protected boolean equalsImpl(XOMVariant o) {
+	public boolean equals(Object o) {
 		if (o instanceof XOMRectangle) {
 			XOMRectangle other = (XOMRectangle)o;
 			return this.left.compareTo(other.left) == 0 && this.top.compareTo(other.top) == 0 && this.right.compareTo(other.right) == 0 && this.bottom.compareTo(other.bottom) == 0;

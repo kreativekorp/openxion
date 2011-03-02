@@ -337,7 +337,7 @@ public class XOMComplex extends XOMValue {
 		else return new XOMNumber[]{new XOMNumber(realPart),new XOMNumber(imaginaryPart)};
 	}
 	
-	protected String toLanguageStringImpl() {
+	public String toLanguageString() {
 		if (realPart == null || imaginaryPart == null) return "NAN";
 		else if (undefined) {
 			int rc = realPart.compareTo(BigDecimal.ZERO);
@@ -355,7 +355,7 @@ public class XOMComplex extends XOMValue {
 				.replaceAll("[Ee][+]?([0-9]+)", "'$1")
 			+ ")";
 	}
-	protected String toTextStringImpl(XNContext ctx) {
+	public String toTextString(XNContext ctx) {
 		if (realPart == null || imaginaryPart == null) return "NAN";
 		else if (undefined) {
 			int rc = realPart.compareTo(BigDecimal.ZERO);
@@ -365,13 +365,13 @@ public class XOMComplex extends XOMValue {
 		}
 		else return ctx.getNumberFormat().format(realPart)+","+ctx.getNumberFormat().format(imaginaryPart);
 	}
-	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+	public List<? extends XOMVariant> toList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
-	protected int hashCodeImpl() {
+	public int hashCode() {
 		return (realPart == null || imaginaryPart == null) ? 0 : undefined ? (realPart.signum() * 3 + imaginaryPart.signum()) : realPart.hashCode() ^ imaginaryPart.hashCode();
 	}
-	protected boolean equalsImpl(XOMVariant o) {
+	public boolean equals(Object o) {
 		if (o instanceof XOMComplex) {
 			XOMComplex other = (XOMComplex)o;
 			if (this.isNaN() && other.isNaN()) {

@@ -119,25 +119,25 @@ public class XOMColor extends XOMValue {
 		}
 	}
 	
-	protected String toLanguageStringImpl() {
+	public String toLanguageString() {
 		if (alpha == 65535)
 			return "\""+red+","+green+","+blue+"\"";
 		else
 			return "\""+red+","+green+","+blue+","+alpha+"\"";
 	}
-	protected String toTextStringImpl(XNContext ctx) {
+	public String toTextString(XNContext ctx) {
 		if (alpha == 65535)
 			return red+","+green+","+blue;
 		else
 			return red+","+green+","+blue+","+alpha;
 	}
-	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+	public List<? extends XOMVariant> toList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
-	protected int hashCodeImpl() {
+	public int hashCode() {
 		return red ^ (green << 16) ^ blue ^ (alpha << 16);
 	}
-	protected boolean equalsImpl(XOMVariant o) {
+	public boolean equals(Object o) {
 		if (o instanceof XOMColor) {
 			XOMColor other = (XOMColor)o;
 			return this.red == other.red && this.green == other.green && this.blue == other.blue && this.alpha == other.alpha;

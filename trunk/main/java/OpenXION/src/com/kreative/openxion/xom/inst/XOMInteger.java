@@ -211,7 +211,7 @@ public class XOMInteger extends XOMValue {
 		else return theInteger.intValue();
 	}
 	
-	protected String toLanguageStringImpl() {
+	public String toLanguageString() {
 		if (theInteger == null) return "NAN";
 		else if (undefined) {
 			int cmp = theInteger.compareTo(BigInteger.ZERO);
@@ -221,7 +221,7 @@ public class XOMInteger extends XOMValue {
 		}
 		else return theInteger.toString();
 	}
-	protected String toTextStringImpl(XNContext ctx) {
+	public String toTextString(XNContext ctx) {
 		if (theInteger == null) return "NAN";
 		else if (undefined) {
 			int cmp = theInteger.compareTo(BigInteger.ZERO);
@@ -231,13 +231,13 @@ public class XOMInteger extends XOMValue {
 		}
 		else return ctx.getNumberFormat().format(theInteger);
 	}
-	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+	public List<? extends XOMVariant> toList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
-	protected int hashCodeImpl() {
+	public int hashCode() {
 		return (theInteger == null) ? 0 : undefined ? theInteger.signum() : theInteger.hashCode();
 	}
-	protected boolean equalsImpl(XOMVariant o) {
+	public boolean equals(Object o) {
 		if (o instanceof XOMInteger) {
 			XOMInteger other = (XOMInteger)o;
 			if (this.isNaN() && other.isNaN()) {

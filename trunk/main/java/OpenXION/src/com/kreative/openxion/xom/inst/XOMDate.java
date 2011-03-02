@@ -98,21 +98,21 @@ public class XOMDate extends XOMValue {
 		return theDate.getTime();
 	}
 	
-	protected String toLanguageStringImpl() {
+	public String toLanguageString() {
 		if (theFormat == null || theDate == null) return "\"\"";
 		return XIONUtil.quote(theFormat.toJavaDateFormat().format(theDate.getTime()));
 	}
-	protected String toTextStringImpl(XNContext ctx) {
+	public String toTextString(XNContext ctx) {
 		if (theFormat == null || theDate == null) return "";
 		return theFormat.toJavaDateFormat().format(theDate.getTime());
 	}
-	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+	public List<? extends XOMVariant> toList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
-	protected int hashCodeImpl() {
+	public int hashCode() {
 		return theFormat.hashCode() ^ theDate.hashCode();
 	}
-	protected boolean equalsImpl(XOMVariant o) {
+	public boolean equals(Object o) {
 		if (o instanceof XOMDate) {
 			XOMDate other = (XOMDate)o;
 			return this.theFormat == other.theFormat && this.theDate.equals(other.theDate);

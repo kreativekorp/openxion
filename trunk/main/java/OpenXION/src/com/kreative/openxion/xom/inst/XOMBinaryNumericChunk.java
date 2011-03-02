@@ -408,19 +408,19 @@ public class XOMBinaryNumericChunk extends XOMContainer {
 		}
 	}
 	
-	protected String toLanguageStringImpl() {
+	public String toLanguageString() {
 		return chunkType.toString() + " " + index + " of " + parent.toLanguageString();
 	}
-	protected String toTextStringImpl(XNContext ctx) {
+	public String toTextString(XNContext ctx) {
 		return getContents(ctx).toTextString(ctx);
 	}
-	protected List<? extends XOMVariant> toListImpl(XNContext ctx) {
+	public List<? extends XOMVariant> toList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
-	protected int hashCodeImpl() {
+	public int hashCode() {
 		return parent.hashCode() ^ chunkType.hashCode() ^ index;
 	}
-	protected boolean equalsImpl(XOMVariant o) {
+	public boolean equals(Object o) {
 		if (o instanceof XOMBinaryNumericChunk) {
 			XOMBinaryNumericChunk other = (XOMBinaryNumericChunk)o;
 			return (this.parent.equals(other.parent) && this.chunkType == other.chunkType && this.index == other.index);
