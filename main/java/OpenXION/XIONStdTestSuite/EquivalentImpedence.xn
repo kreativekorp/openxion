@@ -87,22 +87,6 @@ object type impedor network pl impedor networks extends impedor
 		shared components as impedors
 		put x into components
 	end set
-	to get contents
-		shared components as impedors
-		return components
-	end get
-	to put x into contents
-		shared components as impedors
-		put x into components
-	end put
-	to put x before contents
-		shared components as impedors
-		put x before components
-	end put
-	to put x after contents
-		shared components as impedors
-		put x after components
-	end put
 	on insert x as impedor
 		shared components as impedors
 		put x after components
@@ -276,30 +260,4 @@ on test41 x as impedor network
 end test41
 
 test41 a new series network
-
-on test236pa x as impedor network
-	local tmp as impedor
-	put a new resistor into tmp
-	set the resistance of tmp to 2
-	put tmp after (x as impedor network) -- just "after x" by itself would put it at the end of the VARIABLE x instead of the OBJECT x
-	put a new resistor into tmp
-	set the resistance of tmp to 3
-	put tmp after (x as impedor network) -- just "after x" by itself would put it at the end of the VARIABLE x instead of the OBJECT x
-	put a new resistor into tmp
-	set the resistance of tmp to 6
-	put tmp after (x as impedor network) -- just "after x" by itself would put it at the end of the VARIABLE x instead of the OBJECT x
-	put the impedence of x
-end test236pa
-
-on test41pa x as impedor network
-	local tmp as impedor
-	put a new resistor into tmp
-	set the resistance of tmp to 4
-	put tmp after (x as impedor network) -- just "after x" by itself would put it at the end of the VARIABLE x instead of the OBJECT x
-	put a new parallel network into tmp
-	put tmp after (x as impedor network) -- just "after x" by itself would put it at the end of the VARIABLE x instead of the OBJECT x
-	test236pa tmp
-	put the impedence of x
-end test41pa
-
-test41pa a new series network
+test41 a new series network

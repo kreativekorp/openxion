@@ -35,14 +35,11 @@ import com.kreative.openxion.XNHandlerExitStatus;
 import com.kreative.openxion.XNScriptError;
 import com.kreative.openxion.XNStackFrame;
 import com.kreative.openxion.ast.XNModifier;
-import com.kreative.openxion.ast.XNPreposition;
 import com.kreative.openxion.ast.XNExpression;
 import com.kreative.openxion.ast.XNStatement;
 import com.kreative.openxion.ast.XNObjectTypeDeclaration;
 import com.kreative.openxion.ast.XNObjectTypeCreateHandler;
 import com.kreative.openxion.ast.XNObjectTypeDeleteHandler;
-import com.kreative.openxion.ast.XNObjectTypeGetContentsHandler;
-import com.kreative.openxion.ast.XNObjectTypePutContentsHandler;
 import com.kreative.openxion.ast.XNObjectTypePropertyGetter;
 import com.kreative.openxion.ast.XNObjectTypePropertySetter;
 import com.kreative.openxion.ast.XNMessageHandler;
@@ -269,105 +266,6 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 		forgetInstance(ctx, this, instance);
 	}
 	
-	public boolean canGetContents(XNContext ctx, XOMUserObject instance) {
-		if (declaration != null && declaration.body != null) for (XNStatement stat : declaration.body) {
-			if (stat instanceof XNObjectTypeGetContentsHandler) return true;
-		}
-		if (superType != null) {
-			return superType.canGetContents(ctx, instance);
-		} else {
-			return false;
-		}
-	}
-	public XOMVariant getContents(XNContext ctx, XOMUserObject instance) {
-		if (declaration != null && declaration.body != null) for (XNStatement stat : declaration.body) {
-			if (stat instanceof XNObjectTypeGetContentsHandler) {
-				XNHandlerExit exit = evaluateHandler(new XNInterpreter(ctx), ctx, instance, "get", ((XNObjectTypeGetContentsHandler)stat).body, null);
-				if (exit.status() == XNHandlerExitStatus.PASSED) break;
-				else return exit.returnValue();
-			}
-		}
-		if (superType != null) {
-			return superType.getContents(ctx, instance);
-		} else {
-			throw new XNScriptError("Can't get contents of this");
-		}
-	}
-	
-	public boolean canPutContents(XNContext ctx, XOMUserObject instance) {
-		if (declaration != null && declaration.body != null) for (XNStatement stat : declaration.body) {
-			if (stat instanceof XNObjectTypePutContentsHandler) return true;
-		}
-		if (superType != null) {
-			return superType.canPutContents(ctx, instance);
-		} else {
-			return false;
-		}
-	}
-	public void putIntoContents(XNContext ctx, XOMUserObject instance, XOMVariant contents) {
-		if (declaration != null && declaration.body != null) for (XNStatement stat : declaration.body) {
-			if (stat instanceof XNObjectTypePutContentsHandler && ((XNObjectTypePutContentsHandler)stat).preposition == XNPreposition.INTO) {
-				Map<String, XOMVariant> parameters = new LinkedHashMap<String, XOMVariant>();
-				parameters.put(((XNObjectTypePutContentsHandler)stat).identifier, contents);
-				XNHandlerExit exit = executeHandler(new XNInterpreter(ctx), ctx, instance, "put", ((XNObjectTypePutContentsHandler)stat).body, parameters);
-				if (exit.status() == XNHandlerExitStatus.PASSED) break;
-				else return;
-			}
-		}
-		if (superType != null) {
-			superType.putIntoContents(ctx, instance, contents);
-		} else {
-			throw new XNScriptError("Can't put into this");
-		}
-	}
-	public void putBeforeContents(XNContext ctx, XOMUserObject instance, XOMVariant contents) {
-		if (declaration != null && declaration.body != null) for (XNStatement stat : declaration.body) {
-			if (stat instanceof XNObjectTypePutContentsHandler && ((XNObjectTypePutContentsHandler)stat).preposition == XNPreposition.BEFORE) {
-				Map<String, XOMVariant> parameters = new LinkedHashMap<String, XOMVariant>();
-				parameters.put(((XNObjectTypePutContentsHandler)stat).identifier, contents);
-				XNHandlerExit exit = executeHandler(new XNInterpreter(ctx), ctx, instance, "put", ((XNObjectTypePutContentsHandler)stat).body, parameters);
-				if (exit.status() == XNHandlerExitStatus.PASSED) break;
-				else return;
-			}
-		}
-		if (superType != null) {
-			superType.putBeforeContents(ctx, instance, contents);
-		} else {
-			throw new XNScriptError("Can't put before this");
-		}
-	}
-	public void putAfterContents(XNContext ctx, XOMUserObject instance, XOMVariant contents) {
-		if (declaration != null && declaration.body != null) for (XNStatement stat : declaration.body) {
-			if (stat instanceof XNObjectTypePutContentsHandler && ((XNObjectTypePutContentsHandler)stat).preposition == XNPreposition.AFTER) {
-				Map<String, XOMVariant> parameters = new LinkedHashMap<String, XOMVariant>();
-				parameters.put(((XNObjectTypePutContentsHandler)stat).identifier, contents);
-				XNHandlerExit exit = executeHandler(new XNInterpreter(ctx), ctx, instance, "put", ((XNObjectTypePutContentsHandler)stat).body, parameters);
-				if (exit.status() == XNHandlerExitStatus.PASSED) break;
-				else return;
-			}
-		}
-		if (superType != null) {
-			superType.putAfterContents(ctx, instance, contents);
-		} else {
-			throw new XNScriptError("Can't put after this");
-		}
-	}
-	public void putIntoContents(XNContext ctx, XOMUserObject instance, XOMVariant contents, String property, XOMVariant pvalue) {
-		XOMUserObject newValue = makeInstanceFrom(ctx, contents);
-		setProperty(ctx, newValue, property, pvalue);
-		putIntoContents(ctx, instance, newValue);
-	}
-	public void putBeforeContents(XNContext ctx, XOMUserObject instance, XOMVariant contents, String property, XOMVariant pvalue) {
-		XOMUserObject newValue = makeInstanceFrom(ctx, contents);
-		setProperty(ctx, newValue, property, pvalue);
-		putBeforeContents(ctx, instance, newValue);
-	}
-	public void putAfterContents(XNContext ctx, XOMUserObject instance, XOMVariant contents, String property, XOMVariant pvalue) {
-		XOMUserObject newValue = makeInstanceFrom(ctx, contents);
-		setProperty(ctx, newValue, property, pvalue);
-		putAfterContents(ctx, instance, newValue);
-	}
-	
 	public boolean canGetProperty(XNContext ctx, XOMUserObject instance, String property) {
 		if (property.equalsIgnoreCase("number")) {
 			return objects.contains(instance);
@@ -508,8 +406,7 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 	}
 	
 	public String toTextString(XNContext ctx, XOMUserObject instance) {
-		if (canGetContents(ctx, instance)) return getContents(ctx, instance).toTextString(ctx);
-		else return typeName + " id " + objectIds.get(instance);
+		return typeName + " id " + objectIds.get(instance);
 	}
 
 	private boolean canMorphFromDescription(XNContext ctx, String desc) {

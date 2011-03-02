@@ -1467,76 +1467,6 @@ public class XNParser {
 		}
 	}
 	
-	private XNStatement getOTDGetContentsStatement() {
-		if (
-				lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("to") &&
-				lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("get") &&
-				lookToken(3).kind == XNToken.ID && lookToken(3).image.equalsIgnoreCase("contents")
-		) {
-			XNObjectTypeGetContentsHandler h = new XNObjectTypeGetContentsHandler();
-			h.beginToken = getToken(); getToken(); getToken();
-			if (lookEOL(1)) {
-				getEOL();
-				h.body = new Vector<XNStatement>();
-				while (true) {
-					if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("end") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("get")) {
-						consumeTokens(2);
-						break;
-					} else if (lookToken(1).isEOF()) {
-						throw new XNBlockParseError("end get", h.beginToken);
-					} else {
-						h.body.add(getStatement(null,true));
-					}
-				}
-				h.endToken = lookToken(0);
-				if (h.body.isEmpty()) h.body = null;
-				return h;
-			} else {
-				throw new XNParseError("end of line", lookToken(1));
-			}
-		} else {
-			throw new XNParseError("to get", lookToken(1));
-		}
-	}
-	
-	private XNStatement getOTDPutContentsStatement() {
-		if (
-				lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("to") &&
-				lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("put") &&
-				lookToken(3).kind == XNToken.ID &&
-				lookPreposition(4) != null &&
-				lookToken(5).kind == XNToken.ID && lookToken(5).image.equalsIgnoreCase("contents")
-		) {
-			XNObjectTypePutContentsHandler h = new XNObjectTypePutContentsHandler();
-			h.beginToken = getToken();
-			getToken();
-			h.identifier = getToken().image;
-			h.preposition = getPreposition();
-			getToken();
-			if (lookEOL(1)) {
-				getEOL();
-				h.body = new Vector<XNStatement>();
-				while (true) {
-					if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("end") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("put")) {
-						consumeTokens(2);
-						break;
-					} else if (lookToken(1).isEOF()) {
-						throw new XNBlockParseError("end put", h.beginToken);
-					} else {
-						h.body.add(getStatement(null,true));
-					}
-				}
-				h.endToken = lookToken(0);
-				if (h.body.isEmpty()) h.body = null;
-				return h;
-			} else {
-				throw new XNParseError("end of line", lookToken(1));
-			}
-		} else {
-			throw new XNParseError("to put", lookToken(1));
-		}
-	}
-	
 	private XNStatement getOTDGetPropertyStatement() {
 		if (
 				lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("to") &&
@@ -1613,16 +1543,11 @@ public class XNParser {
 			XNStatement st;
 			
 			if (lookToken(1).image.equalsIgnoreCase("to")) {
-				if (lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("put")) st = getOTDPutContentsStatement();
-				else if (lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("set")) st = getOTDSetPropertyStatement();
+				if (lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("set")) st = getOTDSetPropertyStatement();
 				else if (lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("delete")) st = getOTDDeleteStatement();
 				else if (lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("create")) st = getOTDCreateStatement();
-				else if (lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("get") && lookToken(3).kind == XNToken.ID) {
-					if (lookToken(3).image.equalsIgnoreCase("contents")) st = getOTDGetContentsStatement();
-					else st = getOTDGetPropertyStatement();
-				} else {
-					throw new XNParseError("handler", lookToken(1));
-				}
+				else if (lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("get")) st = getOTDGetPropertyStatement();
+				else throw new XNParseError("handler", lookToken(1));
 			}
 			else if (lookToken(1).image.equalsIgnoreCase("on")) st = getMessageHandler();
 			else if (lookToken(1).image.equalsIgnoreCase("function")) st = getFunctionHandler();
