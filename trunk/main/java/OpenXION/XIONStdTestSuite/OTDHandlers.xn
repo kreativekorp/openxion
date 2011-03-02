@@ -20,18 +20,7 @@ object type steve pl steves
 	To Get address
 		return "1 Infinite Loop, Cupertino, CA"
 	END GET
-	To put X into contents
-		beep
-		beep twice
-	end PUT
-	to put X after contents
-		beep
-	end pUT
 	
-	TO PUT x BEFORE CONtents
-		beep thrice
-		beep thrice
-	END put
 	to set address to Y
 		put "Y me?"
 	end set
@@ -47,7 +36,7 @@ END STEVE
 local jobs as steve
 put a new steve into jobs
 tell jobs to thisMakesNoSense
-put jobs
+put the contents of jobs
 put the snappyResponse of jobs
 put the address of jobs
 set the address of jobs to "Redmond, WA"

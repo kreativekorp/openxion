@@ -35,13 +35,13 @@ import com.kreative.openxion.XNHandlerExit;
 import com.kreative.openxion.XNScriptError;
 import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.ast.XNExpression;
-import com.kreative.openxion.xom.XOMContainerObject;
+import com.kreative.openxion.xom.XOMPrimitiveObject;
 import com.kreative.openxion.xom.XOMStaticVariableMap;
 import com.kreative.openxion.xom.XOMVariableMap;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.type.XOMUserObjectType;
 
-public class XOMUserObject extends XOMContainerObject implements XNResponder {
+public class XOMUserObject extends XOMPrimitiveObject implements XNResponder {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMUserObject NULL = new XOMUserObject();
@@ -112,44 +112,6 @@ public class XOMUserObject extends XOMContainerObject implements XNResponder {
 	public void delete(XNContext ctx) {
 		if (type == null) throw new XNScriptError("Can't access a null object");
 		else type.delete(ctx, this);
-	}
-	
-	public boolean canGetContents(XNContext ctx) {
-		if (type == null) return false;
-		else return type.canGetContents(ctx, this);
-	}
-	public XOMVariant getContents(XNContext ctx) {
-		if (type == null) throw new XNScriptError("Can't access a null object");
-		else return type.getContents(ctx, this);
-	}
-	
-	public boolean canPutContents(XNContext ctx) {
-		if (type == null) return false;
-		else return type.canPutContents(ctx, this);
-	}
-	public void putIntoContents(XNContext ctx, XOMVariant contents) {
-		if (type == null) throw new XNScriptError("Can't access a null object");
-		else type.putIntoContents(ctx, this, contents);
-	}
-	public void putBeforeContents(XNContext ctx, XOMVariant contents) {
-		if (type == null) throw new XNScriptError("Can't access a null object");
-		else type.putBeforeContents(ctx, this, contents);
-	}
-	public void putAfterContents(XNContext ctx, XOMVariant contents) {
-		if (type == null) throw new XNScriptError("Can't access a null object");
-		else type.putAfterContents(ctx, this, contents);
-	}
-	public void putIntoContents(XNContext ctx, XOMVariant contents, String property, XOMVariant pvalue) {
-		if (type == null) throw new XNScriptError("Can't access a null object");
-		else type.putIntoContents(ctx, this, contents, property, pvalue);
-	}
-	public void putBeforeContents(XNContext ctx, XOMVariant contents, String property, XOMVariant pvalue) {
-		if (type == null) throw new XNScriptError("Can't access a null object");
-		else type.putBeforeContents(ctx, this, contents, property, pvalue);
-	}
-	public void putAfterContents(XNContext ctx, XOMVariant contents, String property, XOMVariant pvalue) {
-		if (type == null) throw new XNScriptError("Can't access a null object");
-		else type.putAfterContents(ctx, this, contents, property, pvalue);
 	}
 	
 	public boolean canGetProperty(XNContext ctx, String property) {
