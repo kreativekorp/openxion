@@ -32,11 +32,11 @@ import java.text.*;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.util.XNDateFormat;
-import com.kreative.openxion.xom.XOMPrimitiveValue;
+import com.kreative.openxion.xom.XOMValue;
 import com.kreative.openxion.xom.XOMMorphError;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMDate extends XOMPrimitiveValue {
+public class XOMDate extends XOMValue {
 	private static final long serialVersionUID = 1L;
 	
 	private XNDateFormat theFormat;

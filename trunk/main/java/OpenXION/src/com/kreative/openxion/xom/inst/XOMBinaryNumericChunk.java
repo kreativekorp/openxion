@@ -34,14 +34,14 @@ import com.kreative.openxion.XNContext;
 import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.util.BinaryNumericChunkType;
-import com.kreative.openxion.xom.XOMContainerObject;
+import com.kreative.openxion.xom.XOMContainer;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMBinaryContainer;
 import com.kreative.openxion.xom.type.XOMBinaryType;
 import com.kreative.openxion.xom.type.XOMNumberType;
 import com.kreative.openxion.xom.type.XOMIntegerType;
 
-public class XOMBinaryNumericChunk extends XOMContainerObject {
+public class XOMBinaryNumericChunk extends XOMContainer {
 	private static final long serialVersionUID = 1L;
 	
 	private XOMVariant parent;

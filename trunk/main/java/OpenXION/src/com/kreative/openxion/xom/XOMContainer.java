@@ -33,23 +33,27 @@ import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.util.XIONUtil;
 
 /**
- * XOMPrimitiveObject is the recommended base class for a non-container object in XION.
+ * XOMContainerObject is the recommended base class for
+ * a container or potentially-container object in XION.
  * @since OpenXION 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  */
-public abstract class XOMPrimitiveObject extends XOMVariant {
+public abstract class XOMContainer extends XOMVariant {
 	private static final long serialVersionUID = 1L;
 	
 	public final XOMVariant asValue(XNContext ctx) {
 		return this;
 	}
 	public final XOMVariant asContents(XNContext ctx) {
-		return this;
+		if (canGetContents(ctx)) return getContents(ctx);
+		else return this;
 	}
 	public final XOMVariant asPrimitive(XNContext ctx) {
-		return this;
+		if (canGetContents(ctx)) return getContents(ctx).asPrimitive(ctx);
+		else return this;
 	}
 	public final XOMVariant asContainer(XNContext ctx, boolean resolveVariableNames) {
+		if (canGetContents(ctx)) return this;
 		String s = toTextStringImpl(ctx);
 		if (!resolveVariableNames) throw new XNScriptError("Expected a variable name but found " + s);
 		XOMVariable v = XIONUtil.parseVariableName(ctx, s);
@@ -70,19 +74,19 @@ public abstract class XOMPrimitiveObject extends XOMVariant {
 	public boolean canDelete(XNContext ctx) { return false; }
 	public void delete(XNContext ctx) { throw new XNScriptError("Can't understand this"); }
 	
-	public final boolean canGetContents(XNContext ctx) { return false; }
-	public final XOMVariant getContents(XNContext ctx) { throw new XNScriptError("Can't understand this"); }
+	public abstract boolean canGetContents(XNContext ctx);
+	public abstract XOMVariant getContents(XNContext ctx);
 	
-	public final boolean canPutContents(XNContext ctx) { return false; }
-	public final void putIntoContents(XNContext ctx, XOMVariant contents) { throw new XNScriptError("Can't understand this"); }
-	public final void putBeforeContents(XNContext ctx, XOMVariant contents) { throw new XNScriptError("Can't understand this"); }
-	public final void putAfterContents(XNContext ctx, XOMVariant contents) { throw new XNScriptError("Can't understand this"); }
-	public final void putIntoContents(XNContext ctx, XOMVariant contents, String property, XOMVariant value) { throw new XNScriptError("Can't understand this"); }
-	public final void putBeforeContents(XNContext ctx, XOMVariant contents, String property, XOMVariant value) { throw new XNScriptError("Can't understand this"); }
-	public final void putAfterContents(XNContext ctx, XOMVariant contents, String property, XOMVariant value) { throw new XNScriptError("Can't understand this"); }
+	public boolean canPutContents(XNContext ctx) { return false; }
+	public void putIntoContents(XNContext ctx, XOMVariant contents) { throw new XNScriptError("Can't understand this"); }
+	public void putBeforeContents(XNContext ctx, XOMVariant contents) { throw new XNScriptError("Can't understand this"); }
+	public void putAfterContents(XNContext ctx, XOMVariant contents) { throw new XNScriptError("Can't understand this"); }
+	public void putIntoContents(XNContext ctx, XOMVariant contents, String property, XOMVariant value) { throw new XNScriptError("Can't understand this"); }
+	public void putBeforeContents(XNContext ctx, XOMVariant contents, String property, XOMVariant value) { throw new XNScriptError("Can't understand this"); }
+	public void putAfterContents(XNContext ctx, XOMVariant contents, String property, XOMVariant value) { throw new XNScriptError("Can't understand this"); }
 	
-	public final boolean canSortContents(XNContext ctx) { return false; }
-	public final void sortContents(XNContext ctx, XOMComparator cmp) { throw new XNScriptError("Can't understand this"); }
+	public boolean canSortContents(XNContext ctx) { return false; }
+	public void sortContents(XNContext ctx, XOMComparator cmp) { throw new XNScriptError("Can't understand this"); }
 	
 	public boolean canGetProperty(XNContext ctx, String property) { return false; }
 	public XOMVariant getProperty(XNContext ctx, XNModifier modifier, String property) { throw new XNScriptError("Can't understand this"); }

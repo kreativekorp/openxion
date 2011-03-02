@@ -33,10 +33,10 @@ import java.util.List;
 
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.ast.XNModifier;
-import com.kreative.openxion.xom.XOMPrimitiveValue;
+import com.kreative.openxion.xom.XOMValue;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMColor extends XOMPrimitiveValue {
+public class XOMColor extends XOMValue {
 	private static final long serialVersionUID = 1L;
 	
 	private int red;

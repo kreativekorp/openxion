@@ -31,10 +31,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.xom.XOMPrimitiveValue;
+import com.kreative.openxion.xom.XOMValue;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMBoolean extends XOMPrimitiveValue {
+public class XOMBoolean extends XOMValue {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMBoolean TRUE = new XOMBoolean(true);

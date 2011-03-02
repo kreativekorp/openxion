@@ -35,11 +35,11 @@ import com.kreative.openxion.XNSecurityKey;
 import com.kreative.openxion.XNScriptError;
 import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.ast.XNModifier;
-import com.kreative.openxion.xom.XOMPrimitiveObject;
+import com.kreative.openxion.xom.XOMObject;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.type.XOMDateType;
 
-public class XOMFile extends XOMPrimitiveObject {
+public class XOMFile extends XOMObject {
 	private static final long serialVersionUID = 1L;
 	
 	private File theFile;

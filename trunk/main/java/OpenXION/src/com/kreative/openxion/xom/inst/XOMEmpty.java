@@ -30,10 +30,10 @@ package com.kreative.openxion.xom.inst;
 import java.util.ArrayList;
 import java.util.List;
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.xom.XOMPrimitiveValue;
+import com.kreative.openxion.xom.XOMValue;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMEmpty extends XOMPrimitiveValue {
+public class XOMEmpty extends XOMValue {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMEmpty EMPTY = new XOMEmpty();

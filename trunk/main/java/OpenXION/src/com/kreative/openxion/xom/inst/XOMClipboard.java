@@ -34,11 +34,11 @@ import java.util.*;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.XNSecurityKey;
 import com.kreative.openxion.XNScriptError;
-import com.kreative.openxion.xom.XOMContainerObject;
+import com.kreative.openxion.xom.XOMContainer;
 import com.kreative.openxion.xom.XOMComparator;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMClipboard extends XOMContainerObject implements ClipboardOwner {
+public class XOMClipboard extends XOMContainer implements ClipboardOwner {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMClipboard CLIPBOARD = new XOMClipboard();

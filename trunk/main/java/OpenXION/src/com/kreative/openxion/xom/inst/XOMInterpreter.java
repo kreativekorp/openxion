@@ -33,10 +33,10 @@ import java.util.List;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.XNMain;
 import com.kreative.openxion.ast.XNModifier;
-import com.kreative.openxion.xom.XOMPrimitiveObject;
+import com.kreative.openxion.xom.XOMObject;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMInterpreter extends XOMPrimitiveObject {
+public class XOMInterpreter extends XOMObject {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMInterpreter INTERPRETER = new XOMInterpreter();
