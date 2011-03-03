@@ -63,7 +63,6 @@ public class XOMStringChunk extends XOMContainer implements XOMStringContainer {
 	
 	private static class StringChunkInfo {
 		public String parentContent;
-		//public int chunkCount;
 		public int startChunkIndex;
 		public int endChunkIndex;
 		public int startCharIndex;
@@ -74,111 +73,106 @@ public class XOMStringChunk extends XOMContainer implements XOMStringContainer {
 	private StringChunkInfo getChunkInfo(XNContext ctx, boolean puttingBefore, boolean puttingAfter) {
 		String ts;
 		if (puttingBefore || puttingAfter) {
-			parent.asContainer(ctx, false);
-		}
-		if (parent.canGetContents(ctx)) {
+			ts = (parent = parent.asContainer(ctx, false)).getContents(ctx).toTextString(ctx);
+		} else if (parent.canGetContents(ctx)) {
 			ts = parent.getContents(ctx).toTextString(ctx);
 		} else {
 			ts = parent.toTextString(ctx);
 		}
-		if (ts == null) return null;
-		else {
-			char id = ctx.getItemDelimiter();
-			char cd = ctx.getColumnDelimiter();
-			char rd = ctx.getRowDelimiter();
-			int count = StringChunkEx.count(ts, chunkType, id, cd, rd);
-			int[] idx = XIONUtil.index(1, count, startIndex, endIndex);
-			int s = idx[0], e = idx[1];
-			if ((puttingBefore && s > count) || (puttingAfter && e > count)) {
-				if (chunkType == StringChunkType.LINE) {
-					String a = "";
-					int n = ( (puttingBefore && puttingAfter) ? Math.max(s,e) : puttingBefore ? s : puttingAfter ? e : count )-count;
-					if (count == 0) {
-						n--;
-						count++;
-					}
-					while (n-- > 0) {
-						a += ctx.getLineEnding();
-						count++;
-					}
-					ts += a;
-					parent.putAfterContents(ctx, new XOMString(a));
+		char id = ctx.getItemDelimiter();
+		char cd = ctx.getColumnDelimiter();
+		char rd = ctx.getRowDelimiter();
+		int count = StringChunkEx.count(ts, chunkType, id, cd, rd);
+		int[] idx = XIONUtil.index(1, count, startIndex, endIndex);
+		int s = idx[0], e = idx[1];
+		if ((puttingBefore && s > count) || (puttingAfter && e > count)) {
+			if (chunkType == StringChunkType.LINE) {
+				String a = "";
+				int n = ( (puttingBefore && puttingAfter) ? Math.max(s,e) : puttingBefore ? s : puttingAfter ? e : count )-count;
+				if (count == 0) {
+					n--;
+					count++;
 				}
-				else if (chunkType == StringChunkType.ITEM || chunkType == StringChunkType.ROW || chunkType == StringChunkType.COLUMN) {
-					char d;
-					switch (chunkType) {
-					case ITEM: d = id; break;
-					case ROW: d = rd; break;
-					case COLUMN: d = cd; break;
-					default: d = 0xFFFF; break;
-					}
-					String a = "";
-					int n = ( (puttingBefore && puttingAfter) ? Math.max(s,e) : puttingBefore ? s : puttingAfter ? e : count )-count;
-					if (count == 0) {
-						n--;
-						count++;
-					}
-					while (n-- > 0) {
-						a += d;
-						count++;
-					}
-					ts += a;
-					parent.putAfterContents(ctx, new XOMString(a));
+				while (n-- > 0) {
+					a += ctx.getLineEnding();
+					count++;
 				}
+				ts += a;
+				parent.putAfterContents(ctx, new XOMString(a));
 			}
-			if ((puttingBefore && s < 1) || (puttingAfter && e < 1)) {
-				if (chunkType == StringChunkType.LINE) {
-					String a = "";
-					int n = 1-( (puttingBefore && puttingAfter) ? Math.min(s,e) : puttingBefore ? s : puttingAfter ? e : 1 );
-					if (count == 0) {
-						n--;
-						count++;
-					}
-					while (n-- > 0) {
-						a += ctx.getLineEnding();
-						count++;
-						s++;
-						e++;
-					}
-					ts = a + ts;
-					parent.putBeforeContents(ctx, new XOMString(a));
+			else if (chunkType == StringChunkType.ITEM || chunkType == StringChunkType.ROW || chunkType == StringChunkType.COLUMN) {
+				char d;
+				switch (chunkType) {
+				case ITEM: d = id; break;
+				case ROW: d = rd; break;
+				case COLUMN: d = cd; break;
+				default: d = 0xFFFF; break;
 				}
-				else if (chunkType == StringChunkType.ITEM || chunkType == StringChunkType.ROW || chunkType == StringChunkType.COLUMN) {
-					char d;
-					switch (chunkType) {
-					case ITEM: d = id; break;
-					case ROW: d = rd; break;
-					case COLUMN: d = cd; break;
-					default: d = 0xFFFF; break;
-					}
-					String a = "";
-					int n = 1-( (puttingBefore && puttingAfter) ? Math.min(s,e) : puttingBefore ? s : puttingAfter ? e : 1 );
-					if (count == 0) {
-						n--;
-						count++;
-					}
-					while (n-- > 0) {
-						a += d;
-						count++;
-						s++;
-						e++;
-					}
-					ts = a + ts;
-					parent.putBeforeContents(ctx, new XOMString(a));
+				String a = "";
+				int n = ( (puttingBefore && puttingAfter) ? Math.max(s,e) : puttingBefore ? s : puttingAfter ? e : count )-count;
+				if (count == 0) {
+					n--;
+					count++;
 				}
+				while (n-- > 0) {
+					a += d;
+					count++;
+				}
+				ts += a;
+				parent.putAfterContents(ctx, new XOMString(a));
 			}
-			StringChunkInfo ci = new StringChunkInfo();
-			ci.parentContent = ts;
-			//ci.chunkCount = count;
-			ci.startChunkIndex = s;
-			ci.endChunkIndex = e;
-			ci.startCharIndex = StringChunkEx.start(ts, chunkType, s, id, cd, rd);
-			ci.endCharIndex = StringChunkEx.end(ts, chunkType, e, id, cd, rd);
-			ci.deleteEndCharIndex = StringChunkEx.start(ts, chunkType, e+1, id, cd, rd);
-			if (ci.startCharIndex > ci.endCharIndex) ci.endCharIndex = ci.startCharIndex;
-			if (ci.startCharIndex > ci.deleteEndCharIndex) ci.deleteEndCharIndex = ci.startCharIndex;
-			return ci;
 		}
+		if ((puttingBefore && s < 1) || (puttingAfter && e < 1)) {
+			if (chunkType == StringChunkType.LINE) {
+				String a = "";
+				int n = 1-( (puttingBefore && puttingAfter) ? Math.min(s,e) : puttingBefore ? s : puttingAfter ? e : 1 );
+				if (count == 0) {
+					n--;
+					count++;
+				}
+				while (n-- > 0) {
+					a += ctx.getLineEnding();
+					count++;
+					s++;
+					e++;
+				}
+				ts = a + ts;
+				parent.putBeforeContents(ctx, new XOMString(a));
+			}
+			else if (chunkType == StringChunkType.ITEM || chunkType == StringChunkType.ROW || chunkType == StringChunkType.COLUMN) {
+				char d;
+				switch (chunkType) {
+				case ITEM: d = id; break;
+				case ROW: d = rd; break;
+				case COLUMN: d = cd; break;
+				default: d = 0xFFFF; break;
+				}
+				String a = "";
+				int n = 1-( (puttingBefore && puttingAfter) ? Math.min(s,e) : puttingBefore ? s : puttingAfter ? e : 1 );
+				if (count == 0) {
+					n--;
+					count++;
+				}
+				while (n-- > 0) {
+					a += d;
+					count++;
+					s++;
+					e++;
+				}
+				ts = a + ts;
+				parent.putBeforeContents(ctx, new XOMString(a));
+			}
+		}
+		StringChunkInfo ci = new StringChunkInfo();
+		ci.parentContent = ts;
+		ci.startChunkIndex = s;
+		ci.endChunkIndex = e;
+		ci.startCharIndex = StringChunkEx.start(ts, chunkType, s, id, cd, rd);
+		ci.endCharIndex = StringChunkEx.end(ts, chunkType, e, id, cd, rd);
+		ci.deleteEndCharIndex = StringChunkEx.start(ts, chunkType, e+1, id, cd, rd);
+		if (ci.startCharIndex > ci.endCharIndex) ci.endCharIndex = ci.startCharIndex;
+		if (ci.startCharIndex > ci.deleteEndCharIndex) ci.deleteEndCharIndex = ci.startCharIndex;
+		return ci;
 	}
 	
 	public boolean canDelete(XNContext ctx) {

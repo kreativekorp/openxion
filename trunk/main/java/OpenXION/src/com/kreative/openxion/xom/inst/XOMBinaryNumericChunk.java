@@ -71,53 +71,49 @@ public class XOMBinaryNumericChunk extends XOMContainer {
 	private BinaryChunkInfo getChunkInfo(XNContext ctx, boolean puttingBefore, boolean puttingAfter, boolean padding) {
 		byte[] data;
 		if (puttingBefore || puttingAfter) {
-			parent.asContainer(ctx, false);
-		}
-		if (parent.canGetContents(ctx)) {
+			data = XOMBinaryType.instance.makeInstanceFrom(ctx, (parent = parent.asContainer(ctx, false)).getContents(ctx)).toByteArray();
+		} else if (parent.canGetContents(ctx)) {
 			data = XOMBinaryType.instance.makeInstanceFrom(ctx, parent.getContents(ctx)).toByteArray();
 		} else {
 			data = XOMBinaryType.instance.makeInstanceFrom(ctx, parent).toByteArray();
 		}
-		if (data == null) return null;
-		else {
-			int[] idx = XIONUtil.index(0, data.length-chunkType.length(), index, index);
-			int s = idx[0], e = idx[0]+chunkType.length()-1;
-			if ((puttingBefore && s > (data.length-1)) || (puttingAfter && e > (data.length-1))) {
-				int n = ( (puttingBefore && puttingAfter) ? Math.max(s,e) : puttingBefore ? s-1 : puttingAfter ? e : (data.length-1) )-(data.length-1);
-				byte[] a = new byte[n];
-				data = XIONUtil.binaryConcat(data, a);
-				parent.putAfterContents(ctx, new XOMBinary(a));
-			}
-			if (padding && (s > (data.length-1) || e > (data.length-1))) {
-				int n = Math.max(s,e) - (data.length-1);
-				byte[] a = new byte[n];
-				data = XIONUtil.binaryConcat(data, a);
-			}
-			if ((puttingBefore && s < 0) || (puttingAfter && e < 0)) {
-				int n = Math.abs( (puttingBefore && puttingAfter) ? Math.min(s,e) : puttingBefore ? s : puttingAfter ? e+1 : 0 );
-				byte[] a = new byte[n];
-				s += n; e += n;
-				data = XIONUtil.binaryConcat(a, data);
-				parent.putBeforeContents(ctx, new XOMBinary(a));
-			}
-			if (padding && (s < 0 || e < 0)) {
-				int n = Math.abs(Math.min(s,e));
-				byte[] a = new byte[n];
-				s += n; e += n;
-				data = XIONUtil.binaryConcat(a, data);
-			}
-			BinaryChunkInfo ci = new BinaryChunkInfo();
-			ci.parentContent = data;
-			ci.byteCount = data.length;
-			ci.startByteIndex = s;
-			ci.endByteIndex = e+1;
-			if (ci.startByteIndex < 0) ci.startByteIndex = 0;
-			else if (ci.startByteIndex > data.length) ci.startByteIndex = data.length;
-			if (ci.endByteIndex < 0) ci.endByteIndex = 0;
-			else if (ci.endByteIndex > data.length) ci.endByteIndex = data.length;
-			if (ci.startByteIndex > ci.endByteIndex) ci.endByteIndex = ci.startByteIndex;
-			return ci;
+		int[] idx = XIONUtil.index(0, data.length-chunkType.length(), index, index);
+		int s = idx[0], e = idx[0]+chunkType.length()-1;
+		if ((puttingBefore && s > (data.length-1)) || (puttingAfter && e > (data.length-1))) {
+			int n = ( (puttingBefore && puttingAfter) ? Math.max(s,e) : puttingBefore ? s-1 : puttingAfter ? e : (data.length-1) )-(data.length-1);
+			byte[] a = new byte[n];
+			data = XIONUtil.binaryConcat(data, a);
+			parent.putAfterContents(ctx, new XOMBinary(a));
 		}
+		if (padding && (s > (data.length-1) || e > (data.length-1))) {
+			int n = Math.max(s,e) - (data.length-1);
+			byte[] a = new byte[n];
+			data = XIONUtil.binaryConcat(data, a);
+		}
+		if ((puttingBefore && s < 0) || (puttingAfter && e < 0)) {
+			int n = Math.abs( (puttingBefore && puttingAfter) ? Math.min(s,e) : puttingBefore ? s : puttingAfter ? e+1 : 0 );
+			byte[] a = new byte[n];
+			s += n; e += n;
+			data = XIONUtil.binaryConcat(a, data);
+			parent.putBeforeContents(ctx, new XOMBinary(a));
+		}
+		if (padding && (s < 0 || e < 0)) {
+			int n = Math.abs(Math.min(s,e));
+			byte[] a = new byte[n];
+			s += n; e += n;
+			data = XIONUtil.binaryConcat(a, data);
+		}
+		BinaryChunkInfo ci = new BinaryChunkInfo();
+		ci.parentContent = data;
+		ci.byteCount = data.length;
+		ci.startByteIndex = s;
+		ci.endByteIndex = e+1;
+		if (ci.startByteIndex < 0) ci.startByteIndex = 0;
+		else if (ci.startByteIndex > data.length) ci.startByteIndex = data.length;
+		if (ci.endByteIndex < 0) ci.endByteIndex = 0;
+		else if (ci.endByteIndex > data.length) ci.endByteIndex = data.length;
+		if (ci.startByteIndex > ci.endByteIndex) ci.endByteIndex = ci.startByteIndex;
+		return ci;
 	}
 	
 	public boolean canDelete(XNContext ctx) {

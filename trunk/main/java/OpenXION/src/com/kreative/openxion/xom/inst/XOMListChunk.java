@@ -78,57 +78,53 @@ public class XOMListChunk extends XOMContainer implements XOMListContainer {
 	private ListChunkInfo getChunkInfo(XNContext ctx, boolean puttingBefore, boolean puttingAfter) {
 		List<? extends XOMVariant> pl;
 		if (puttingBefore || puttingAfter) {
-			parent.asContainer(ctx, false);
-		}
-		if (parent.canGetContents(ctx)) {
+			pl = (parent = parent.asContainer(ctx, false)).getContents(ctx).toPrimitiveList(ctx);
+		} else if (parent.canGetContents(ctx)) {
 			pl = parent.getContents(ctx).toPrimitiveList(ctx);
 		} else {
 			pl = parent.toPrimitiveList(ctx);
 		}
-		if (pl == null) return null;
-		else {
-			int[] idx = XIONUtil.index(1, pl.size(), startIndex, endIndex);
-			int s = idx[0], e = idx[1];
-			if ((puttingBefore && s > pl.size()) || (puttingAfter && e > pl.size())) {
-				List<XOMVariant> a = new Vector<XOMVariant>();
-				int n = ( (puttingBefore && puttingAfter) ? Math.max(s,e) : puttingBefore ? s-1 : puttingAfter ? e : pl.size() )-pl.size();
-				while (n-- > 0) {
-					a.add(XOMEmpty.EMPTY);
-				}
-				List<XOMVariant> nv = new ArrayList<XOMVariant>();
-				nv.addAll(pl);
-				nv.addAll(a);
-				parent.putAfterContents(ctx, new XOMList(a));
-				pl = nv;
+		int[] idx = XIONUtil.index(1, pl.size(), startIndex, endIndex);
+		int s = idx[0], e = idx[1];
+		if ((puttingBefore && s > pl.size()) || (puttingAfter && e > pl.size())) {
+			List<XOMVariant> a = new Vector<XOMVariant>();
+			int n = ( (puttingBefore && puttingAfter) ? Math.max(s,e) : puttingBefore ? s-1 : puttingAfter ? e : pl.size() )-pl.size();
+			while (n-- > 0) {
+				a.add(XOMEmpty.EMPTY);
 			}
-			if ((puttingBefore && s < 1) || (puttingAfter && e < 1)) {
-				List<XOMVariant> a = new Vector<XOMVariant>();
-				int n = 1-( (puttingBefore && puttingAfter) ? Math.min(s,e) : puttingBefore ? s : puttingAfter ? e+1 : 1 );
-				while (n-- > 0) {
-					a.add(XOMEmpty.EMPTY);
-					s++;
-					e++;
-				}
-				List<XOMVariant> nv = new ArrayList<XOMVariant>();
-				nv.addAll(a);
-				nv.addAll(pl);
-				parent.putBeforeContents(ctx, new XOMList(a));
-				pl = nv;
-			}
-			ListChunkInfo ci = new ListChunkInfo();
-			ci.parentContent = pl;
-			ci.chunkCount = pl.size();
-			ci.startChunkIndex = s;
-			ci.endChunkIndex = e;
-			ci.startElementIndex = s-1;
-			ci.endElementIndex = e;
-			if (ci.startElementIndex < 0) ci.startElementIndex = 0;
-			else if (ci.startElementIndex > pl.size()) ci.startElementIndex = pl.size();
-			if (ci.endElementIndex < 0) ci.endElementIndex = 0;
-			else if (ci.endElementIndex > pl.size()) ci.endElementIndex = pl.size();
-			if (ci.startElementIndex > ci.endElementIndex) ci.endElementIndex = ci.startElementIndex;
-			return ci;
+			List<XOMVariant> nv = new ArrayList<XOMVariant>();
+			nv.addAll(pl);
+			nv.addAll(a);
+			parent.putAfterContents(ctx, new XOMList(a));
+			pl = nv;
 		}
+		if ((puttingBefore && s < 1) || (puttingAfter && e < 1)) {
+			List<XOMVariant> a = new Vector<XOMVariant>();
+			int n = 1-( (puttingBefore && puttingAfter) ? Math.min(s,e) : puttingBefore ? s : puttingAfter ? e+1 : 1 );
+			while (n-- > 0) {
+				a.add(XOMEmpty.EMPTY);
+				s++;
+				e++;
+			}
+			List<XOMVariant> nv = new ArrayList<XOMVariant>();
+			nv.addAll(a);
+			nv.addAll(pl);
+			parent.putBeforeContents(ctx, new XOMList(a));
+			pl = nv;
+		}
+		ListChunkInfo ci = new ListChunkInfo();
+		ci.parentContent = pl;
+		ci.chunkCount = pl.size();
+		ci.startChunkIndex = s;
+		ci.endChunkIndex = e;
+		ci.startElementIndex = s-1;
+		ci.endElementIndex = e;
+		if (ci.startElementIndex < 0) ci.startElementIndex = 0;
+		else if (ci.startElementIndex > pl.size()) ci.startElementIndex = pl.size();
+		if (ci.endElementIndex < 0) ci.endElementIndex = 0;
+		else if (ci.endElementIndex > pl.size()) ci.endElementIndex = pl.size();
+		if (ci.startElementIndex > ci.endElementIndex) ci.endElementIndex = ci.startElementIndex;
+		return ci;
 	}
 	
 	public boolean canDelete(XNContext ctx) {
