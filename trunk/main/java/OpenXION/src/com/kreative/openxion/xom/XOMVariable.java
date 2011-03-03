@@ -59,17 +59,7 @@ public final class XOMVariable extends XOMVariant {
 		this.name = name;
 	}
 	
-	public final boolean isDeclared(XNContext ctx) {
-		return vm.isVariableDeclared(ctx, name);
-	}
-	
 	public final XOMVariant asValue(XNContext ctx) {
-		if (vm.isVariableDeclared(ctx, name))
-			return vm.getVariable(ctx, name);
-		else
-			return new XOMString(name);
-	}
-	public final XOMVariant asContents(XNContext ctx) {
 		if (vm.isVariableDeclared(ctx, name))
 			return vm.getVariable(ctx, name);
 		else

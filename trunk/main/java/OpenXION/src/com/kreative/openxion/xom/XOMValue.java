@@ -43,9 +43,6 @@ public abstract class XOMValue extends XOMVariant {
 	public final XOMVariant asValue(XNContext ctx) {
 		return this;
 	}
-	public final XOMVariant asContents(XNContext ctx) {
-		return this;
-	}
 	public final XOMVariant asPrimitive(XNContext ctx) {
 		return this;
 	}

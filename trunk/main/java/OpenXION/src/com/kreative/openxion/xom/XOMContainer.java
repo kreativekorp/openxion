@@ -44,10 +44,6 @@ public abstract class XOMContainer extends XOMVariant {
 	public final XOMVariant asValue(XNContext ctx) {
 		return this;
 	}
-	public final XOMVariant asContents(XNContext ctx) {
-		if (canGetContents(ctx)) return getContents(ctx);
-		else return this;
-	}
 	public final XOMVariant asPrimitive(XNContext ctx) {
 		if (canGetContents(ctx)) return getContents(ctx).asPrimitive(ctx);
 		else return this;
