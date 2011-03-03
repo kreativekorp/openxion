@@ -1,0 +1,8 @@
+#summary List of all versions of OpenXION
+
+= All Release Versions =
+
+|| *Version* || *General Binary* || *Windows Binary* || *Source* ||
+|| 1.0 || [http://openxion.googlecode.com/files/OpenXION-1.0.jar OpenXION-1.0.jar] || || r3 ||
+|| 1.1 || [http://openxion.googlecode.com/files/OpenXION-1.1-dist.zip OpenXION-1.1-dist.zip] || || r34 ||
+|| 1.2 || [http://openxion.googlecode.com/files/OpenXION-1.2-dist.zip OpenXION-1.2-dist.zip] || [http://openxion.googlecode.com/files/OpenXION-1.2-distwin.zip OpenXION-1.2-distwin.zip] || r99 ||
