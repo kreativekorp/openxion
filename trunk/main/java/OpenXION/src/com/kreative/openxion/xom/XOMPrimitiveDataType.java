@@ -33,7 +33,7 @@ import com.kreative.openxion.xom.inst.XOMEmpty;
 import com.kreative.openxion.xom.inst.XOMList;
 
 /**
- * XOMValueDataType handles polymorphic methods for primitive value types.
+ * XOMPrimitiveDataType handles polymorphic methods for primitive types.
  * @since OpenXION 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  * @param <IT> the corresponding subclass of XOMVariant

@@ -31,7 +31,6 @@ import java.awt.Point;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
-
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.xom.XOMValue;
 import com.kreative.openxion.xom.XOMVariant;

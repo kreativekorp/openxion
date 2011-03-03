@@ -44,22 +44,12 @@ public class XOMInterpreterType extends XOMPrimitiveDataType<XOMInterpreter> {
 		super("interpreter", DESCRIBABILITY_OF_SINGULAR_INTERPRETERS, XOMInterpreter.class);
 	}
 	
-	/*
-	 * Instantiation of root variants of this type.
-	 */
-	
 	public boolean canGetSingletonInstance(XNContext ctx) {
 		return true;
 	}
 	public XOMVariant getSingletonInstance(XNContext ctx) {
 		return XOMInterpreter.INTERPRETER;
 	}
-	
-	/*
-	 * Polymorphism - The data type of an object is determined through these methods.
-	 * Unlike in Java, where an object's type is determined by the class hierarchy,
-	 * objects in XION can be of any mix of data types (hence the term variant for XION objects).
-	 */
 	
 	protected boolean canMakeInstanceFromImpl(XNContext ctx) {
 		return false;

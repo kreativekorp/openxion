@@ -30,7 +30,6 @@ package com.kreative.openxion.xom.inst;
 import java.awt.Toolkit;
 import java.awt.datatransfer.*;
 import java.util.*;
-
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.XNSecurityKey;
 import com.kreative.openxion.XNScriptError;
