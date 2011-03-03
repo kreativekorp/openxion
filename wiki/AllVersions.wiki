@@ -1,8 +1,16 @@
 #summary List of all versions of OpenXION
 
-= All Release Versions =
+= OpenXION 0.9 =
+
+Source code and compiled binaries of version 0.9 of OpenXION are available at the Robert E. Kennedy Library at Cal Poly San Luis Obispo. The call number is 09-0385. There is no reason you would want this except as a historical curiosity.
+
+= Release Versions =
 
 || *Version* || *General Binary* || *Windows Binary* || *Source* ||
 || 1.0 || [http://openxion.googlecode.com/files/OpenXION-1.0.jar OpenXION-1.0.jar] || || r3 ||
 || 1.1 || [http://openxion.googlecode.com/files/OpenXION-1.1-dist.zip OpenXION-1.1-dist.zip] || || r34 ||
 || 1.2 || [http://openxion.googlecode.com/files/OpenXION-1.2-dist.zip OpenXION-1.2-dist.zip] || [http://openxion.googlecode.com/files/OpenXION-1.2-distwin.zip OpenXION-1.2-distwin.zip] || r99 ||
+
+= Bleeding Edge =
+
+Version 1.3 of OpenXION is currently being developed. See the [https://code.google.com/p/openxion/source/checkout Source] tab.
