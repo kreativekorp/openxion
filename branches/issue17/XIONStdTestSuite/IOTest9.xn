@@ -1,0 +1,50 @@
+on writeToFile text
+	open file "Temp IOTest Nine.txt"
+	write text to file "Temp IOTest Nine.txt"
+	close file "Temp IOTest Nine.txt"
+end writeToFile
+
+on writeToFileAt0 text
+	open file "Temp IOTest Nine.txt"
+	write text to file "Temp IOTest Nine.txt" at 0
+	close file "Temp IOTest Nine.txt"
+end writeToFileAt0
+
+on putFile
+	open file "Temp IOTest Nine.txt"
+	read from file "Temp IOTest Nine.txt" until eof
+	put it
+	close file "Temp IOTest Nine.txt"
+end putFile
+
+writeToFileAt0 "How razorback-jumping frogs can level six piqued gymnasts!"
+putFile
+writeToFileAt0 "The quick brown fox jumped over the lazy dogs."
+putFile
+writeToFileAt0 "Jackdaws love my big sphinx of quartz."
+putFile
+writeToFileAt0 "How quickly daft jumping zebras vex."
+putFile
+writeToFileAt0 "Blowzy night-frumps vexed Jack Q."
+putFile
+writeToFileAt0 "Hello"
+putFile
+writeToFileAt0 "Hi"
+putFile
+delete file "Temp IOTest Nine.txt"
+
+writeToFile "How razorback-jumping frogs can level six piqued gymnasts!"
+putFile
+writeToFile "The quick brown fox jumped over the lazy dogs."
+putFile
+writeToFile "Jackdaws love my big sphinx of quartz."
+putFile
+writeToFile "How quickly daft jumping zebras vex."
+putFile
+writeToFile "Blowzy night-frumps vexed Jack Q."
+putFile
+writeToFile "Hello"
+putFile
+writeToFile "Hi"
+putFile
+delete file "Temp IOTest Nine.txt"

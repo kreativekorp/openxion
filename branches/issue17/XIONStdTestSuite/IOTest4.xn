@@ -1,0 +1,75 @@
+open file "iotest4.tmp" as "binary"
+write "12EBECCA0006AB121E11A000BE77E9C08127" to file "iotest4.tmp"
+close file "iotest4.tmp"
+
+open file "iotest4.tmp" as "binary"
+read from file "iotest4.tmp"
+put it
+close file "iotest4.tmp"
+
+open file "iotest4.tmp" as "binary"
+read from file "iotest4.tmp" for 6
+put it
+read from file "iotest4.tmp" for 6
+put it
+read from file "iotest4.tmp" for 6
+put it
+close file "iotest4.tmp"
+
+open file "iotest4.tmp" as "binary"
+read from file "iotest4.tmp" until "00"
+put it
+read from file "iotest4.tmp" until "00"
+put it
+close file "iotest4.tmp"
+
+open file "iotest4.tmp" as "binary"
+read from file "iotest4.tmp" for 3 until "00"
+put it
+read from file "iotest4.tmp" for 3 until "00"
+put it
+read from file "iotest4.tmp" for 3 until "00"
+put it
+read from file "iotest4.tmp" for 3 until "00"
+put it
+read from file "iotest4.tmp" for 3 until "00"
+put it
+read from file "iotest4.tmp" for 3 until "00"
+put it
+close file "iotest4.tmp"
+
+open file "iotest4.tmp" as "binary"
+read from file "iotest4.tmp" at 8
+put it
+close file "iotest4.tmp"
+
+open file "iotest4.tmp" as "binary"
+read from file "iotest4.tmp" at 8 for 6
+put it
+read from file "iotest4.tmp" at 16 for 6
+put it
+close file "iotest4.tmp"
+
+open file "iotest4.tmp" as "binary"
+read from file "iotest4.tmp" at 8 until "00"
+put it
+read from file "iotest4.tmp" at 16 until "00"
+put it
+close file "iotest4.tmp"
+
+open file "iotest4.tmp" as "binary"
+read from file "iotest4.tmp" at 4 for 3 until "00"
+put it
+read from file "iotest4.tmp" at 6 for 3 until "00"
+put it
+read from file "iotest4.tmp" at 8 for 3 until "00"
+put it
+read from file "iotest4.tmp" at 10 for 3 until "00"
+put it
+read from file "iotest4.tmp" at 12 for 3 until "00"
+put it
+read from file "iotest4.tmp" at 14 for 3 until "00"
+put it
+close file "iotest4.tmp"
+
+delete file "iotest4.tmp"

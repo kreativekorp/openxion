@@ -1,0 +1,81 @@
+local x as string
+local y as list
+
+put (there is a char "e" in "Hello")
+put (there is a char "q" in "Hello")
+put (there is a char "h" in "Hello")
+put (there is a char "2" in "Hello")
+put (there is a char "." in "Hello")
+
+put char "e" of "Hello"
+put char "h" of "Hello"
+put char "2" of "Hello"
+
+put "Hello" into x
+delete char "e" of x
+put x
+
+put "Hello" into x
+delete char "h" of x
+put x
+
+put "Hello" into x
+delete char "2" of x
+put x
+
+put "Hello" into x
+repeat while there is a char "l" in x
+	delete char "l" of x
+end repeat
+put x
+
+put (there is a word "HELLO" in "Hello, my name is Rebecca.")
+put (there is a word "HeLLo," in "Hello, my name is Rebecca.")
+put (there is a word "my" in "Hello, my name is Rebecca.")
+put (there is a word "Rebecca" in "Hello, my name is Rebecca.")
+put (there is a word "Rebecca." in "Hello, my name is Rebecca.")
+put (there is a word "Ginny" in "Hello, my name is Rebecca.")
+put (there is a word "3" in "Hello, my name is Rebecca.")
+
+put word "HeLLo," of "Hello, my name is Rebecca."
+put word "my" of "Hello, my name is Rebecca."
+put word "REBECCA." of "Hello, my name is Rebecca."
+put word "3" of "Hello, my name is Rebecca."
+
+put "Hello, my name is Rebecca." into x
+delete word "HellO," of x
+put x
+
+put "Hello, my name is Rebecca." into x
+delete word "my" of x
+put x
+
+put "Hello, my name is Rebecca." into x
+delete word "RebeCCa." of x
+put x
+
+put "Hello, my name is Rebecca." into x
+delete word "3" of x
+put x
+
+put (there is an element "a" in ("a","b","c","x","y","z"))
+put (there is an element "x" in ("a","b","c","x","y","z"))
+put (there is an element "g" in ("a","b","c","x","y","z"))
+put (there is an element "q" in ("a","b","c","x","y","z"))
+put (there is an element "5" in ("a","b","c","x","y","z"))
+
+put element "a" of ("a","b","c","x","y","z")
+put element "x" of ("a","b","c","x","y","z")
+put element "5" of ("a","b","c","x","y","z")
+
+put ("a","b","c","x","y","z") into y
+delete element "a" of y
+put y
+
+put ("a","b","c","x","y","z") into y
+delete element "x" of y
+put y
+
+put ("a","b","c","x","y","z") into y
+delete element "5" of y
+put y

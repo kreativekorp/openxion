@@ -1,0 +1,14 @@
+local myList as numbers -- or integers, or strings...
+put (1,2,3,4) into myList
+put the number of elements in myList
+put element 1 of myList
+put element 2 of myList
+put element 3 of myList
+put element 4 of myList
+
+local steve as strings
+put "now is the time" into the first element of steve
+put "for all good men" into the second element of steve
+put the number of elements in steve
+put element 1 of steve
+put element 2 of steve
