@@ -59,19 +59,9 @@ public final class XOMVariable extends XOMVariant {
 		this.name = name;
 	}
 	
-	public final boolean isDeclared(XNContext ctx) {
-		return vm.isVariableDeclared(ctx, name);
-	}
-	
-	public final XOMVariant asValue(XNContext ctx) {
+	public final XOMVariant asObject(XNContext ctx) {
 		if (vm.isVariableDeclared(ctx, name))
-			return vm.getVariable(ctx, name);
-		else
-			return new XOMString(name);
-	}
-	public final XOMVariant asContents(XNContext ctx) {
-		if (vm.isVariableDeclared(ctx, name))
-			return vm.getVariable(ctx, name);
+			return vm.getVariable(ctx, name).asObject(ctx);
 		else
 			return new XOMString(name);
 	}
@@ -120,13 +110,13 @@ public final class XOMVariable extends XOMVariant {
 		return true;
 	}
 	public final void putIntoContents(XNContext ctx, XOMVariant contents) {
-		vm.setVariable(ctx, name, contents.asValue(ctx));
+		vm.setVariable(ctx, name, contents.asPrimitive(ctx));
 	}
 	public final void putBeforeContents(XNContext ctx, XOMVariant contents) {
-		vm.prependVariable(ctx, name, contents.asValue(ctx));
+		vm.prependVariable(ctx, name, contents.asPrimitive(ctx));
 	}
 	public final void putAfterContents(XNContext ctx, XOMVariant contents) {
-		vm.appendVariable(ctx, name, contents.asValue(ctx));
+		vm.appendVariable(ctx, name, contents.asPrimitive(ctx));
 	}
 	public final void putIntoContents(XNContext ctx, XOMVariant contents, String property, XOMVariant value) {
 		throw new XNScriptError("Can't understand this");
@@ -146,7 +136,7 @@ public final class XOMVariable extends XOMVariant {
 		if (v != null) {
 			List<XOMVariant> toSort = new Vector<XOMVariant>();
 			if (v instanceof XOMList) {
-				toSort.addAll(((XOMList)v).toList(ctx));
+				toSort.addAll(v.toPrimitiveList(ctx));
 			} else if (v instanceof XOMBinary) {
 				for (byte b : ((XOMBinary)v).toByteArray())
 					toSort.add(new XOMBinary(new byte[]{b}));
@@ -201,19 +191,25 @@ public final class XOMVariable extends XOMVariant {
 		else
 			return name;
 	}
-	public final List<? extends XOMVariant> toList(XNContext ctx) {
+	public final List<? extends XOMVariant> toVariantList(XNContext ctx) {
 		if (vm.isVariableDeclared(ctx, name))
-			return vm.getVariable(ctx, name).toList(ctx);
+			return vm.getVariable(ctx, name).toVariantList(ctx);
+		else
+			return Arrays.asList(new XOMString(name));
+	}
+	public final List<? extends XOMVariant> toPrimitiveList(XNContext ctx) {
+		if (vm.isVariableDeclared(ctx, name))
+			return vm.getVariable(ctx, name).toPrimitiveList(ctx);
 		else
 			return Arrays.asList(new XOMString(name));
 	}
 	public final int hashCode() {
-		return this.name.toLowerCase().hashCode();
+		return this.vm.hashCode() ^ this.name.toLowerCase().hashCode();
 	}
 	public final boolean equals(Object other) {
 		if (other instanceof XOMVariable) {
 			XOMVariable v = (XOMVariable)other;
-			return this.name.equalsIgnoreCase(v.name);
+			return this.vm.equals(v.vm) && this.name.equalsIgnoreCase(v.name);
 		} else {
 			return false;
 		}

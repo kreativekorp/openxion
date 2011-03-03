@@ -30,7 +30,6 @@ package com.kreative.openxion.xom.inst;
 import java.math.*;
 import java.util.Arrays;
 import java.util.List;
-
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.xom.XOMValue;
 import com.kreative.openxion.xom.XOMVariant;
@@ -365,7 +364,10 @@ public class XOMComplex extends XOMValue {
 		}
 		else return ctx.getNumberFormat().format(realPart)+","+ctx.getNumberFormat().format(imaginaryPart);
 	}
-	public List<? extends XOMVariant> toList(XNContext ctx) {
+	public List<? extends XOMVariant> toVariantList(XNContext ctx) {
+		return Arrays.asList(this);
+	}
+	public List<? extends XOMVariant> toPrimitiveList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
 	public int hashCode() {

@@ -28,7 +28,6 @@
 package com.kreative.openxion.xom.inst;
 
 import java.util.*;
-
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.XNResponder;
 import com.kreative.openxion.XNHandlerExit;
@@ -158,7 +157,10 @@ public class XOMUserObject extends XOMObject implements XNResponder {
 		if (type == null) return "";
 		else return type.toTextString(ctx, this);
 	}
-	public List<? extends XOMVariant> toList(XNContext ctx) {
+	public List<? extends XOMVariant> toVariantList(XNContext ctx) {
+		return Arrays.asList(this);
+	}
+	public List<? extends XOMVariant> toPrimitiveList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
 	public int hashCode() {

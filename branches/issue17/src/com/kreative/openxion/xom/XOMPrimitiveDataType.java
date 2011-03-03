@@ -33,16 +33,16 @@ import com.kreative.openxion.xom.inst.XOMEmpty;
 import com.kreative.openxion.xom.inst.XOMList;
 
 /**
- * XOMValueDataType handles polymorphic methods for primitive value types.
+ * XOMPrimitiveDataType handles polymorphic methods for primitive types.
  * @since OpenXION 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  * @param <IT> the corresponding subclass of XOMVariant
  * used to represent the values this data type produces.
  */
-public abstract class XOMValueDataType<IT extends XOMVariant> extends XOMDataType<IT> {
+public abstract class XOMPrimitiveDataType<IT extends XOMVariant> extends XOMDataType<IT> {
 	private static final long serialVersionUID = 1L;
 	
-	protected XOMValueDataType(String typeName, int describability, Class<IT> instanceClass) {
+	protected XOMPrimitiveDataType(String typeName, int describability, Class<IT> instanceClass) {
 		super(typeName, describability, instanceClass);
 	}
 	
@@ -57,7 +57,7 @@ public abstract class XOMValueDataType<IT extends XOMVariant> extends XOMDataTyp
 	public final boolean canMakeInstanceFrom(XNContext ctx, XOMVariant instance) {
 		instance = instance.asPrimitive(ctx);
 		if (instance instanceof XOMList) {
-			List<? extends XOMVariant> l = instance.toList(ctx);
+			List<? extends XOMVariant> l = instance.toPrimitiveList(ctx);
 			if (l.size() == 1)
 				if (canMakeInstanceFrom(ctx, l.get(0)))
 					return true;
@@ -88,7 +88,7 @@ public abstract class XOMValueDataType<IT extends XOMVariant> extends XOMDataTyp
 	public final IT makeInstanceFrom(XNContext ctx, XOMVariant instance) {
 		instance = instance.asPrimitive(ctx);
 		if (instance instanceof XOMList) {
-			List<? extends XOMVariant> l = instance.toList(ctx);
+			List<? extends XOMVariant> l = instance.toPrimitiveList(ctx);
 			if (l.size() == 1)
 				if (canMakeInstanceFrom(ctx, l.get(0)))
 					return makeInstanceFrom(ctx, l.get(0));

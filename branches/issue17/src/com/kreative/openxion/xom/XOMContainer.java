@@ -41,12 +41,8 @@ import com.kreative.openxion.util.XIONUtil;
 public abstract class XOMContainer extends XOMVariant {
 	private static final long serialVersionUID = 1L;
 	
-	public final XOMVariant asValue(XNContext ctx) {
+	public final XOMVariant asObject(XNContext ctx) {
 		return this;
-	}
-	public final XOMVariant asContents(XNContext ctx) {
-		if (canGetContents(ctx)) return getContents(ctx);
-		else return this;
 	}
 	public final XOMVariant asPrimitive(XNContext ctx) {
 		if (canGetContents(ctx)) return getContents(ctx).asPrimitive(ctx);

@@ -140,8 +140,13 @@ public class XOMList extends XOMValue {
 			theString.deleteCharAt(theString.length()-1);
 		return theString.toString();
 	}
-	public List<? extends XOMVariant> toList(XNContext ctx) {
+	public List<? extends XOMVariant> toVariantList(XNContext ctx) {
 		return Collections.unmodifiableList(theList);
+	}
+	public List<? extends XOMVariant> toPrimitiveList(XNContext ctx) {
+		List<XOMVariant> pl = new ArrayList<XOMVariant>();
+		for (XOMVariant v : theList) pl.add(v.asPrimitive(ctx));
+		return Collections.unmodifiableList(pl);
 	}
 	public int hashCode() {
 		if (theList == null) return 0;

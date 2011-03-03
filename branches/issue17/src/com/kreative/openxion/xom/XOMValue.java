@@ -40,10 +40,7 @@ import com.kreative.openxion.util.XIONUtil;
 public abstract class XOMValue extends XOMVariant {
 	private static final long serialVersionUID = 1L;
 	
-	public final XOMVariant asValue(XNContext ctx) {
-		return this;
-	}
-	public final XOMVariant asContents(XNContext ctx) {
+	public final XOMVariant asObject(XNContext ctx) {
 		return this;
 	}
 	public final XOMVariant asPrimitive(XNContext ctx) {

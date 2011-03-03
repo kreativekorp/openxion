@@ -497,10 +497,10 @@ public class XNInterpreter {
 					bs = bv.toTextString(context);
 					return new XOMString(as + " " + bs);
 				case LIST_CONCAT:
-					av = evaluateExpression(a).asValue(context);
-					bv = evaluateExpression(b).asValue(context);
-					al = av.toList(context);
-					bl = bv.toList(context);
+					av = evaluateExpression(a).asPrimitive(context);
+					bv = evaluateExpression(b).asPrimitive(context);
+					al = av.toPrimitiveList(context);
+					bl = bv.toPrimitiveList(context);
 					return new XOMList(al, bl);
 				case LT_NUM:
 					try {
@@ -598,9 +598,9 @@ public class XNInterpreter {
 						throw new XOMMorphError("point");
 					}
 				case ELEMENT_OF:
-					av = evaluateExpression(a).asValue(context);
-					bv = evaluateExpression(b).asValue(context);
-					bl = bv.toList(context);
+					av = evaluateExpression(a).asPrimitive(context);
+					bv = evaluateExpression(b).asPrimitive(context);
+					bl = bv.toPrimitiveList(context);
 					for (XOMVariant v : bl) {
 						try {
 							if (compareVariants(av,v) == 0) return XOMBoolean.TRUE;
@@ -610,9 +610,9 @@ public class XNInterpreter {
 					}
 					return XOMBoolean.FALSE;
 				case PRECISELY_ELEMENT_OF:
-					av = evaluateExpression(a).asValue(context);
-					bv = evaluateExpression(b).asValue(context);
-					bl = bv.toList(context);
+					av = evaluateExpression(a).asPrimitive(context);
+					bv = evaluateExpression(b).asPrimitive(context);
+					bl = bv.toPrimitiveList(context);
 					for (XOMVariant v : bl) {
 						if (av.equals(v)) return XOMBoolean.TRUE;
 					}
@@ -657,9 +657,9 @@ public class XNInterpreter {
 						throw new XOMMorphError("point");
 					}
 				case NOT_ELEMENT_OF:
-					av = evaluateExpression(a).asValue(context);
-					bv = evaluateExpression(b).asValue(context);
-					bl = bv.toList(context);
+					av = evaluateExpression(a).asPrimitive(context);
+					bv = evaluateExpression(b).asPrimitive(context);
+					bl = bv.toPrimitiveList(context);
 					for (XOMVariant v : bl) {
 						try {
 							if (compareVariants(av,v) == 0) return XOMBoolean.FALSE;
@@ -669,9 +669,9 @@ public class XNInterpreter {
 					}
 					return XOMBoolean.TRUE;
 				case NOT_PRECISELY_ELEMENT_OF:
-					av = evaluateExpression(a).asValue(context);
-					bv = evaluateExpression(b).asValue(context);
-					bl = bv.toList(context);
+					av = evaluateExpression(a).asPrimitive(context);
+					bv = evaluateExpression(b).asPrimitive(context);
+					bl = bv.toPrimitiveList(context);
 					for (XOMVariant v : bl) {
 						if (av.equals(v)) return XOMBoolean.FALSE;
 					}
@@ -685,8 +685,8 @@ public class XNInterpreter {
 						return XOMBoolean.FALSE;
 					}
 				case STRICT_EQUAL:
-					av = evaluateExpression(a).asValue(context);
-					bv = evaluateExpression(b).asValue(context);
+					av = evaluateExpression(a).asPrimitive(context);
+					bv = evaluateExpression(b).asPrimitive(context);
 					return (av.equals(bv)) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
 				case STRING_EQUAL:
 					av = evaluateExpression(a).asPrimitive(context);
@@ -701,8 +701,8 @@ public class XNInterpreter {
 						return XOMBoolean.FALSE;
 					}
 				case NOT_STRICT_EQUAL:
-					av = evaluateExpression(a).asValue(context);
-					bv = evaluateExpression(b).asValue(context);
+					av = evaluateExpression(a).asPrimitive(context);
+					bv = evaluateExpression(b).asPrimitive(context);
 					return (!av.equals(bv)) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
 				case NOT_STRING_EQUAL:
 					av = evaluateExpression(a).asPrimitive(context);
@@ -767,7 +767,7 @@ public class XNInterpreter {
 				String dtn = ((XNInstanceOfExpression)expr).datatype.toNameString();
 				XOMDataType<? extends XOMVariant> dt = context.getDataType(dtn);
 				XNExpression a = ((XNInstanceOfExpression)expr).argument;
-				XOMVariant av = evaluateExpression(a).asValue(context);
+				XOMVariant av = evaluateExpression(a).asObject(context);
 				switch (op) {
 				case IS_A:
 					if (dt == null) return XOMBoolean.FALSE;
@@ -831,7 +831,7 @@ public class XNInterpreter {
 			else if (expr instanceof XNListExpression) {
 				List<XOMVariant> theList = new Vector<XOMVariant>();
 				for (XNExpression e : ((XNListExpression)expr).exprs) {
-					theList.add(evaluateExpression(e).asValue(context));
+					theList.add(evaluateExpression(e).asPrimitive(context));
 				}
 				return new XOMList(theList);
 			}
@@ -960,7 +960,7 @@ public class XNInterpreter {
 			}
 			else if (expr instanceof XNFunctionCallPropertyDescriptor) {
 				XNFunctionCallPropertyDescriptor fc = (XNFunctionCallPropertyDescriptor)expr;
-				XOMVariant argument = (fc.argument == null) ? null : evaluateExpression(fc.argument).asValue(context);
+				XOMVariant argument = (fc.argument == null) ? null : evaluateExpression(fc.argument);
 				if (fc.isBuiltInFunction()) {
 					if (argument != null && argument.canGetProperty(context, fc.identifier)) {
 						return argument.getProperty(context, fc.modifier, fc.identifier);
@@ -1029,7 +1029,7 @@ public class XNInterpreter {
 				context.pushResponder(resp);
 				XNHandlerExit exit = null;
 				try {
-					exit = evaluateUserFunction(fh, parameter.toList(context));
+					exit = evaluateUserFunction(fh, parameter.toPrimitiveList(context));
 				} finally {
 					context.popResponder();
 				}
@@ -1079,7 +1079,7 @@ public class XNInterpreter {
 				context.pushResponder(resp);
 				XNHandlerExit exit = null;
 				try {
-					exit = evaluateUserFunction(mh, parameter.toList(context));
+					exit = evaluateUserFunction(mh, parameter.toPrimitiveList(context));
 				} finally {
 					context.popResponder();
 				}
@@ -1121,7 +1121,7 @@ public class XNInterpreter {
 							parameters.get(i) :
 								(paramValueExpr == null) ?
 										XOMEmpty.EMPTY :
-											evaluateExpression(paramValueExpr).asValue(context);
+											evaluateExpression(paramValueExpr).asPrimitive(context);
 				f.localVariables().declareVariable(context, paramName, paramDatatype, paramValue);
 			}
 		}
@@ -1332,7 +1332,7 @@ public class XNInterpreter {
 						return XNHandlerExit.exitedBlock(((XNExitStatement)stat).whatToExit);
 					}
 				} else {
-					XOMVariant exitTo = evaluateExpression(((XNExitStatement)stat).whatToExitTo).asValue(context);
+					XOMVariant exitTo = evaluateExpression(((XNExitStatement)stat).whatToExitTo);
 					if (XOMInterpreterType.instance.canMakeInstanceFrom(context, exitTo)) {
 						if (((XNExitStatement)stat).error != null) {
 							XOMVariant err = evaluateExpression(((XNExitStatement)stat).error).asPrimitive(context);
@@ -1428,7 +1428,7 @@ public class XNInterpreter {
 				if (((XNPassStatement)stat).whatToPassTo == null) {
 					return XNHandlerExit.passed();
 				} else {
-					XOMVariant passTo = evaluateExpression(((XNPassStatement)stat).whatToPassTo).asValue(context);
+					XOMVariant passTo = evaluateExpression(((XNPassStatement)stat).whatToPassTo);
 					if (passTo instanceof XNResponder) {
 						return XNHandlerExit.passedTo((XNResponder)passTo);
 					} else if (XOMInterpreterType.instance.canMakeInstanceFrom(context, passTo)) {
@@ -1562,7 +1562,7 @@ public class XNInterpreter {
 				}
 				else if (rp instanceof XNRepeatForEachParameters) {
 					String name = ((XNRepeatForEachParameters)rp).identifier;
-					List<? extends XOMVariant> list = evaluateExpression(((XNRepeatForEachParameters)rp).list).asValue(context).toList(context);
+					List<? extends XOMVariant> list = evaluateExpression(((XNRepeatForEachParameters)rp).list).toVariantList(context);
 					for (XOMVariant item : list) {
 						XOMVariant dest = new XOMVariable(context.getVariableMap(name), name);
 						dest.putIntoContents(context, item);
@@ -1585,11 +1585,11 @@ public class XNInterpreter {
 				if (((XNReturnStatement)stat).whatToReturn == null) {
 					return XNHandlerExit.returned();
 				} else {
-					return XNHandlerExit.returned(evaluateExpression(((XNReturnStatement)stat).whatToReturn).asValue(context));
+					return XNHandlerExit.returned(evaluateExpression(((XNReturnStatement)stat).whatToReturn).asPrimitive(context));
 				}
 			} else if (stat instanceof XNSendStatement) {
 				String message = evaluateExpression(((XNSendStatement)stat).message).toTextString(context);
-				XOMVariant recip = evaluateExpression(((XNSendStatement)stat).recipient).asValue(context);
+				XOMVariant recip = evaluateExpression(((XNSendStatement)stat).recipient).asObject(context);
 				boolean reply = ((XNSendStatement)stat).withReply;
 				if (recip instanceof XNResponder) {
 					sendMessageString((XNResponder)recip, message);
@@ -1645,7 +1645,7 @@ public class XNInterpreter {
 				return XNHandlerExit.ended();
 			} else if (stat instanceof XNTellBlock) {
 				List<XNStatement> message = ((XNTellBlock)stat).messages;
-				XOMVariant recip = evaluateExpression(((XNTellBlock)stat).recipient).asValue(context);
+				XOMVariant recip = evaluateExpression(((XNTellBlock)stat).recipient).asObject(context);
 				if (recip instanceof XNResponder) {
 					sendMessage((XNResponder)recip, message);
 					return XNHandlerExit.ended();
@@ -1735,7 +1735,7 @@ public class XNInterpreter {
 						XOMVariant value =
 							(valueExpr == null) ?
 									XOMEmpty.EMPTY :
-										evaluateExpression(valueExpr).asValue(context);
+										evaluateExpression(valueExpr).asPrimitive(context);
 						context.getVariableMap(name).declareVariable(context, name, datatype, value);
 					}
 				}
@@ -1758,7 +1758,7 @@ public class XNInterpreter {
 			if (mh != null) {
 				List<XOMVariant> paramValues = new Vector<XOMVariant>();
 				for (XNExpression param : parameters) {
-					paramValues.add(evaluateExpression(param).asValue(context));
+					paramValues.add(evaluateExpression(param).asPrimitive(context));
 				}
 				context.pushResponder(resp);
 				XNHandlerExit exit = null;
@@ -1812,7 +1812,7 @@ public class XNInterpreter {
 			if (mh != null) {
 				List<XOMVariant> paramValues = new Vector<XOMVariant>();
 				for (XNExpression param : parameters) {
-					paramValues.add(evaluateExpression(param).asValue(context));
+					paramValues.add(evaluateExpression(param).asPrimitive(context));
 				}
 				context.pushResponder(resp);
 				XNHandlerExit exit = null;
@@ -1859,7 +1859,7 @@ public class XNInterpreter {
 							parameters.get(i) :
 								(paramValueExpr == null) ?
 										XOMEmpty.EMPTY :
-											evaluateExpression(paramValueExpr).asValue(context);
+											evaluateExpression(paramValueExpr).asPrimitive(context);
 				f.localVariables().declareVariable(context, paramName, paramDatatype, paramValue);
 			}
 		}

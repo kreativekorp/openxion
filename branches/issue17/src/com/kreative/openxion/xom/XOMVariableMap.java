@@ -105,21 +105,21 @@ public class XOMVariableMap {
 	public void setVariable(XNContext ctx, String name, XOMVariant value) {
 		CIString ciname = new CIString(name);
 		if (!types.containsKey(ciname)) types.put(ciname, XOMStringType.instance);
-		values.put(ciname, types.get(ciname).makeInstanceFrom(ctx, value.asValue(ctx)));
+		values.put(ciname, types.get(ciname).makeInstanceFrom(ctx, value.asPrimitive(ctx)));
 	}
 	
 	public void prependVariable(XNContext ctx, String name, XOMVariant value) {
 		CIString ciname = new CIString(name);
 		if (!types.containsKey(ciname)) types.put(ciname, XOMStringType.instance);
 		if (!values.containsKey(ciname)) values.put(ciname, XOMEmpty.EMPTY);
-		values.put(ciname, types.get(ciname).makeInstanceFrom(ctx, value.asValue(ctx), values.get(ciname)));
+		values.put(ciname, types.get(ciname).makeInstanceFrom(ctx, value.asPrimitive(ctx), values.get(ciname)));
 	}
 	
 	public void appendVariable(XNContext ctx, String name, XOMVariant value) {
 		CIString ciname = new CIString(name);
 		if (!types.containsKey(ciname)) types.put(ciname, XOMStringType.instance);
 		if (!values.containsKey(ciname)) values.put(ciname, XOMEmpty.EMPTY);
-		values.put(ciname, types.get(ciname).makeInstanceFrom(ctx, values.get(ciname), value.asValue(ctx)));
+		values.put(ciname, types.get(ciname).makeInstanceFrom(ctx, values.get(ciname), value.asPrimitive(ctx)));
 	}
 	
 	public void merge(XOMVariableMap vm) {

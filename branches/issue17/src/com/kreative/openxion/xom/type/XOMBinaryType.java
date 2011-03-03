@@ -29,12 +29,12 @@ package com.kreative.openxion.xom.type;
 
 import java.text.*;
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.xom.XOMValueDataType;
+import com.kreative.openxion.xom.XOMPrimitiveDataType;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMMorphError;
 import com.kreative.openxion.xom.inst.XOMBinary;
 
-public class XOMBinaryType extends XOMValueDataType<XOMBinary> {
+public class XOMBinaryType extends XOMPrimitiveDataType<XOMBinary> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMBinaryType instance = new XOMBinaryType();

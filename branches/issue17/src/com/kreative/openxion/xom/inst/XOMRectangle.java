@@ -31,7 +31,6 @@ import java.awt.Rectangle;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
-
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.xom.XOMValue;
@@ -141,7 +140,10 @@ public class XOMRectangle extends XOMValue {
 	public String toTextString(XNContext ctx) {
 		return ((left == null)?"0":left.toString())+","+((top == null)?"0":top.toString())+","+((right == null)?"0":right.toString())+","+((bottom == null)?"0":bottom.toString());
 	}
-	public List<? extends XOMVariant> toList(XNContext ctx) {
+	public List<? extends XOMVariant> toVariantList(XNContext ctx) {
+		return Arrays.asList(this);
+	}
+	public List<? extends XOMVariant> toPrimitiveList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
 	public int hashCode() {
