@@ -96,22 +96,6 @@ object type impedor network pl impedor networks extends impedor
         shared components as impedors
         put x into components
     end set
-    to get contents
-        shared components as impedors
-        return components
-    end get
-    to put x into contents
-        shared components as impedors
-        put x into components
-    end put
-    to put x before contents
-        shared components as impedors
-        put x before components
-    end put
-    to put x after contents
-        shared components as impedors
-        put x after components
-    end put
     on insert x as impedor
         shared components as impedors
         put x after components
