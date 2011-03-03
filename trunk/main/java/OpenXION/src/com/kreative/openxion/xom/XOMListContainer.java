@@ -31,8 +31,8 @@ import com.kreative.openxion.XNContext;
 import com.kreative.openxion.ast.XNModifier;
 
 /**
- * The XOMListContainer interface is implemented by any container
- * that can hold a list.
+ * The XOMListContainer interface is implemented by a container
+ * that holds a list and requires special handling of list chunks.
  * @since OpenXION 0.9
  * @author Rebecca G. Bettencourt, Kreative Software
  */

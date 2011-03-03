@@ -31,8 +31,8 @@ import com.kreative.openxion.XNContext;
 import com.kreative.openxion.ast.XNModifier;
 
 /**
- * The XOMBinaryContainer interface is implemented by any container
- * that can hold a byte array.
+ * The XOMBinaryContainer interface is implemented by a container
+ * that holds a byte array and requires special handling of binary chunks.
  * @since OpenXION 0.9
  * @author Rebecca G. Bettencourt, Kreative Software
  */

@@ -31,8 +31,8 @@ import com.kreative.openxion.XNContext;
 import com.kreative.openxion.ast.XNModifier;
 
 /**
- * The XOMStringContainer interface is implemented by any container
- * that can hold a string.
+ * The XOMStringContainer interface is implemented by a container
+ * that holds a string and requires special handling of string chunks.
  * @since OpenXION 0.9
  * @author Rebecca G. Bettencourt, Kreative Software
  */
