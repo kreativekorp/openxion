@@ -56,7 +56,6 @@ import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.inst.XOMUserObject;
 import com.kreative.openxion.xom.inst.XOMEmpty;
 import com.kreative.openxion.xom.inst.XOMList;
-import com.kreative.openxion.xom.inst.XOMListChunk;
 import com.kreative.openxion.xom.inst.XOMInteger;
 import com.kreative.openxion.xom.inst.XOMString;
 
@@ -409,110 +408,84 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 		return typeName + " id " + objectIds.get(instance);
 	}
 
-	private boolean canMorphFromDescription(XNContext ctx, String desc) {
-		desc = desc.trim();
-		if (desc.length() == 0) return true;
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, desc);
-		return (v instanceof XOMUserObject && ((XOMUserObject)v).isInstanceOf(this));
-	}
-	
-	private XOMVariant morphFromDescription(XNContext ctx, String desc) {
-		desc = desc.trim();
-		if (desc.length() == 0) return XOMUserObject.NULL;
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, desc);
-		if (v instanceof XOMUserObject && ((XOMUserObject)v).isInstanceOf(this)) return v;
-		else return null;
-	}
-	
 	public boolean canMakeInstanceFrom(XNContext ctx, XOMVariant instance) {
 		instance = instance.asPrimitive(ctx);
-		if (instance instanceof XOMEmpty) {
+		if (instance instanceof XOMList) {
+			List<? extends XOMVariant> l = instance.toPrimitiveList(ctx);
+			if (l.size() == 1)
+				if (canMakeInstanceFrom(ctx, l.get(0)))
+					return true;
+		}
+		if (instance instanceof XOMEmpty)
 			return true;
-		}
-		else if (instance instanceof XOMUserObject) {
-			XOMUserObject u = (XOMUserObject)instance;
-			return u.isInstanceOf(this);
-		}
-		else if (instance instanceof XOMList && ((XOMList)instance).toPrimitiveList(ctx).size() == 1 && ((XOMList)instance).toPrimitiveList(ctx).get(0) instanceof XOMUserObject) {
-			XOMUserObject u = (XOMUserObject)((XOMList)instance).toPrimitiveList(ctx).get(0);
-			return u.isInstanceOf(this);
-		}
-		else if (instance instanceof XOMListChunk && ((XOMListChunk)instance).toPrimitiveList(ctx).size() == 1 && ((XOMListChunk)instance).toPrimitiveList(ctx).get(0) instanceof XOMUserObject) {
-			XOMUserObject u = (XOMUserObject)((XOMListChunk)instance).toPrimitiveList(ctx).get(0);
-			return u.isInstanceOf(this);
-		}
-		else if (canMorphFromDescription(ctx, instance.toTextString(ctx))) {
+		else if (canMakeInstanceFromImpl(ctx, instance))
 			return true;
-		}
-		else {
+		else if (canMakeInstanceFromImpl(ctx, instance.toTextString(ctx)))
+			return true;
+		else
 			return false;
-		}
 	}
-
 	public boolean canMakeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
 		left = left.asPrimitive(ctx);
 		right = right.asPrimitive(ctx);
-		if (left instanceof XOMEmpty && right instanceof XOMEmpty) {
-			return true;
-		}
-		else if (left instanceof XOMEmpty) {
+		if (left instanceof XOMEmpty)
 			return canMakeInstanceFrom(ctx, right);
-		}
-		else if (right instanceof XOMEmpty) {
+		else if (right instanceof XOMEmpty)
 			return canMakeInstanceFrom(ctx, left);
-		}
-		else if (canMorphFromDescription(ctx, left.toTextString(ctx) + right.toTextString(ctx))) {
+		else if (canMakeInstanceFromImpl(ctx, left.toTextString(ctx) + right.toTextString(ctx)))
 			return true;
-		}
-		else {
+		else
 			return false;
-		}
 	}
-
 	public XOMUserObject makeInstanceFrom(XNContext ctx, XOMVariant instance) {
 		instance = instance.asPrimitive(ctx);
-		if (instance instanceof XOMEmpty) {
+		if (instance instanceof XOMList) {
+			List<? extends XOMVariant> l = instance.toPrimitiveList(ctx);
+			if (l.size() == 1)
+				if (canMakeInstanceFrom(ctx, l.get(0)))
+					return makeInstanceFrom(ctx, l.get(0));
+		}
+		if (instance instanceof XOMEmpty)
 			return XOMUserObject.NULL;
-		}
-		else if (instance instanceof XOMUserObject) {
-			XOMUserObject u = (XOMUserObject)instance;
-			if (u.isInstanceOf(this)) return u;
-			else throw new XOMMorphError(declaration.singularNameString());
-		}
-		else if (instance instanceof XOMList && ((XOMList)instance).toPrimitiveList(ctx).size() == 1 && ((XOMList)instance).toPrimitiveList(ctx).get(0) instanceof XOMUserObject) {
-			XOMUserObject u = (XOMUserObject)((XOMList)instance).toPrimitiveList(ctx).get(0);
-			if (u.isInstanceOf(this)) return u;
-			else throw new XOMMorphError(declaration.singularNameString());
-		}
-		else if (instance instanceof XOMListChunk && ((XOMListChunk)instance).toPrimitiveList(ctx).size() == 1 && ((XOMListChunk)instance).toPrimitiveList(ctx).get(0) instanceof XOMUserObject) {
-			XOMUserObject u = (XOMUserObject)((XOMListChunk)instance).toPrimitiveList(ctx).get(0);
-			if (u.isInstanceOf(this)) return u;
-			else throw new XOMMorphError(declaration.singularNameString());
-		}
-		else {
-			XOMVariant v = morphFromDescription(ctx, instance.toTextString(ctx));
-			if (v instanceof XOMUserObject) return (XOMUserObject)v;
-			else throw new XOMMorphError(declaration.singularNameString());
-		}
+		else if (canMakeInstanceFromImpl(ctx, instance))
+			return makeInstanceFromImpl(ctx, instance);
+		else if (canMakeInstanceFromImpl(ctx, instance.toTextString(ctx)))
+			return makeInstanceFromImpl(ctx, instance.toTextString(ctx));
+		else
+			throw new XOMMorphError(declaration.singularNameString());
 	}
-
 	public XOMUserObject makeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
 		left = left.asPrimitive(ctx);
 		right = right.asPrimitive(ctx);
-		if (left instanceof XOMEmpty && right instanceof XOMEmpty) {
-			return XOMUserObject.NULL;
-		}
-		else if (left instanceof XOMEmpty) {
+		if (left instanceof XOMEmpty)
 			return makeInstanceFrom(ctx, right);
-		}
-		else if (right instanceof XOMEmpty) {
+		else if (right instanceof XOMEmpty)
 			return makeInstanceFrom(ctx, left);
-		}
-		else {
-			XOMVariant v = morphFromDescription(ctx, left.toTextString(ctx) + right.toTextString(ctx));
-			if (v instanceof XOMUserObject) return (XOMUserObject)v;
-			else throw new XOMMorphError(declaration.singularNameString());
-		}
+		else if (canMakeInstanceFromImpl(ctx, left.toTextString(ctx) + right.toTextString(ctx)))
+			return makeInstanceFromImpl(ctx, left.toTextString(ctx) + right.toTextString(ctx));
+		else
+			throw new XOMMorphError(declaration.singularNameString());
+	}
+	
+	private boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant v) {
+		return v != null && v.asPrimitive(ctx) instanceof XOMUserObject && ((XOMUserObject)v.asPrimitive(ctx)).isInstanceOf(this);
+	}
+	private boolean canMakeInstanceFromImpl(XNContext ctx, String s) {
+		if (s.length() == 0) return true;
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, s);
+		return v != null && v.asPrimitive(ctx) instanceof XOMUserObject && ((XOMUserObject)v.asPrimitive(ctx)).isInstanceOf(this);
+	}
+	private XOMUserObject makeInstanceFromImpl(XNContext ctx, XOMVariant v) {
+		if (v != null && v.asPrimitive(ctx) instanceof XOMUserObject && ((XOMUserObject)v.asPrimitive(ctx)).isInstanceOf(this))
+			return (XOMUserObject)v.asPrimitive(ctx);
+		else throw new XOMMorphError(declaration.singularNameString());
+	}
+	private XOMUserObject makeInstanceFromImpl(XNContext ctx, String s) {
+		if (s.length() == 0) return XOMUserObject.NULL;
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, s);
+		if (v != null && v.asPrimitive(ctx) instanceof XOMUserObject && ((XOMUserObject)v.asPrimitive(ctx)).isInstanceOf(this))
+			return (XOMUserObject)v.asPrimitive(ctx);
+		else throw new XOMMorphError(declaration.singularNameString());
 	}
 	
 	/*
