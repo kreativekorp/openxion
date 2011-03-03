@@ -28,7 +28,6 @@
 package com.kreative.openxion.xom.inst;
 
 import java.util.*;
-
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.util.XIONUtil;

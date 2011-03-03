@@ -30,7 +30,6 @@ package com.kreative.openxion.xom.inst;
 import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
-
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.xom.XOMValue;

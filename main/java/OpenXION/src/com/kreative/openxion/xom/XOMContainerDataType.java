@@ -30,7 +30,7 @@ package com.kreative.openxion.xom;
 import com.kreative.openxion.XNContext;
 
 /**
- * XOMChunkDataType handles polymorphic methods for chunk types.
+ * XOMContainerDataType handles polymorphic methods for container types.
  * @since OpenXION 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  * @param <IT> the corresponding subclass of XOMVariant
