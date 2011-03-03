@@ -74,7 +74,7 @@ public class XOMFileType extends XOMSimpleDataType<XOMFile> {
 	
 	public boolean canGetInstanceByIndex(XNContext ctx, int index) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFile", "Index", Integer.toString(index))) return false;
-		List<? extends XOMVariant> theXFiles = getMassInstance(ctx).toList(ctx);
+		List<? extends XOMVariant> theXFiles = getMassInstance(ctx).toPrimitiveList(ctx);
 		index = XIONUtil.index(1, theXFiles.size(), index, index)[0];
 		return (index >= 1 && index <= theXFiles.size());
 	}
@@ -89,7 +89,7 @@ public class XOMFileType extends XOMSimpleDataType<XOMFile> {
 	public XOMVariant getInstanceByIndex(XNContext ctx, int index) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFile", "Index", Integer.toString(index)))
 			throw new XNScriptError("Security settings do not allow file system access");
-		List<? extends XOMVariant> theXFiles = getMassInstance(ctx).toList(ctx);
+		List<? extends XOMVariant> theXFiles = getMassInstance(ctx).toPrimitiveList(ctx);
 		index = XIONUtil.index(1, theXFiles.size(), index, index)[0];
 		if (index >= 1 && index <= theXFiles.size()) {
 			return theXFiles.get(index-1);
@@ -100,7 +100,7 @@ public class XOMFileType extends XOMSimpleDataType<XOMFile> {
 	public XOMVariant getInstanceByIndex(XNContext ctx, int startIndex, int endIndex) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFile", "StartIndex", Integer.toString(startIndex), "EndIndex", Integer.toString(endIndex)))
 			throw new XNScriptError("Security settings do not allow file system access");
-		List<? extends XOMVariant> theXFiles = getMassInstance(ctx).toList(ctx);
+		List<? extends XOMVariant> theXFiles = getMassInstance(ctx).toPrimitiveList(ctx);
 		int[] indexes = XIONUtil.index(1, theXFiles.size(), startIndex, endIndex);
 		if (indexes[0] < 1) indexes[0] = 1;
 		else if (indexes[0] > theXFiles.size()) indexes[0] = theXFiles.size();
@@ -165,7 +165,7 @@ public class XOMFileType extends XOMSimpleDataType<XOMFile> {
 	public boolean canGetChildVariantByIndex(XNContext ctx, XOMVariant parent, int index) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFile", "Parent", parent.toTextString(ctx), "Index", Integer.toString(index))) return false;
 		if (!canGetChildMassVariant(ctx, parent)) return false;
-		List<? extends XOMVariant> theXFiles = getChildMassVariant(ctx, parent).toList(ctx);
+		List<? extends XOMVariant> theXFiles = getChildMassVariant(ctx, parent).toPrimitiveList(ctx);
 		index = XIONUtil.index(1, theXFiles.size(), index, index)[0];
 		return (index >= 1 && index <= theXFiles.size());
 	}
@@ -184,7 +184,7 @@ public class XOMFileType extends XOMSimpleDataType<XOMFile> {
 	public XOMVariant getChildVariantByIndex(XNContext ctx, XOMVariant parent, int index) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFile", "Parent", parent.toTextString(ctx), "Index", Integer.toString(index)))
 			throw new XNScriptError("Security settings do not allow file system access");
-		List<? extends XOMVariant> theXFiles = getChildMassVariant(ctx, parent).toList(ctx);
+		List<? extends XOMVariant> theXFiles = getChildMassVariant(ctx, parent).toPrimitiveList(ctx);
 		index = XIONUtil.index(1, theXFiles.size(), index, index)[0];
 		if (index >= 1 && index <= theXFiles.size()) {
 			return theXFiles.get(index-1);
@@ -195,7 +195,7 @@ public class XOMFileType extends XOMSimpleDataType<XOMFile> {
 	public XOMVariant getChildVariantByIndex(XNContext ctx, XOMVariant parent, int startIndex, int endIndex) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFile", "Parent", parent.toTextString(ctx), "StartIndex", Integer.toString(startIndex), "EndIndex", Integer.toString(endIndex)))
 			throw new XNScriptError("Security settings do not allow file system access");
-		List<? extends XOMVariant> theXFiles = getChildMassVariant(ctx, parent).toList(ctx);
+		List<? extends XOMVariant> theXFiles = getChildMassVariant(ctx, parent).toPrimitiveList(ctx);
 		int[] indexes = XIONUtil.index(1, theXFiles.size(), startIndex, endIndex);
 		if (indexes[0] < 1) indexes[0] = 1;
 		else if (indexes[0] > theXFiles.size()) indexes[0] = theXFiles.size();

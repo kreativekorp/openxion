@@ -136,7 +136,7 @@ public final class XOMVariable extends XOMVariant {
 		if (v != null) {
 			List<XOMVariant> toSort = new Vector<XOMVariant>();
 			if (v instanceof XOMList) {
-				toSort.addAll(((XOMList)v).toList(ctx));
+				toSort.addAll(((XOMList)v).toVariantList(ctx));
 			} else if (v instanceof XOMBinary) {
 				for (byte b : ((XOMBinary)v).toByteArray())
 					toSort.add(new XOMBinary(new byte[]{b}));
@@ -191,9 +191,15 @@ public final class XOMVariable extends XOMVariant {
 		else
 			return name;
 	}
-	public final List<? extends XOMVariant> toList(XNContext ctx) {
+	public final List<? extends XOMVariant> toVariantList(XNContext ctx) {
 		if (vm.isVariableDeclared(ctx, name))
-			return vm.getVariable(ctx, name).toList(ctx);
+			return vm.getVariable(ctx, name).toVariantList(ctx);
+		else
+			return Arrays.asList(new XOMString(name));
+	}
+	public final List<? extends XOMVariant> toPrimitiveList(XNContext ctx) {
+		if (vm.isVariableDeclared(ctx, name))
+			return vm.getVariable(ctx, name).toPrimitiveList(ctx);
 		else
 			return Arrays.asList(new XOMString(name));
 	}

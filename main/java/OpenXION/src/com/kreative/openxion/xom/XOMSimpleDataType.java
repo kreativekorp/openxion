@@ -57,7 +57,7 @@ public abstract class XOMSimpleDataType<IT extends XOMVariant> extends XOMDataTy
 		if (instanceClass.isAssignableFrom(instance.getClass())) {
 			return true;
 		} else if (instance instanceof XOMList) {
-			List<? extends XOMVariant> l = instance.toList(ctx);
+			List<? extends XOMVariant> l = instance.toVariantList(ctx);
 			if (l.size() == 1) {
 				if (instanceClass.isAssignableFrom(l.get(0).getClass())) {
 					return true;
@@ -87,7 +87,7 @@ public abstract class XOMSimpleDataType<IT extends XOMVariant> extends XOMDataTy
 		if (instanceClass.isAssignableFrom(instance.getClass())) {
 			return instanceClass.cast(instance);
 		} else if (instance instanceof XOMList) {
-			List<? extends XOMVariant> l = instance.toList(ctx);
+			List<? extends XOMVariant> l = instance.toVariantList(ctx);
 			if (l.size() == 1) {
 				if (instanceClass.isAssignableFrom(l.get(0).getClass())) {
 					return instanceClass.cast(l.get(0));

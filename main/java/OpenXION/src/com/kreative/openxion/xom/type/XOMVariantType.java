@@ -54,8 +54,8 @@ public class XOMVariantType extends XOMSimpleDataType<XOMVariant> {
 	}
 	protected XOMVariant makeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
 		Vector<XOMVariant> v = new Vector<XOMVariant>();
-		v.addAll(left.toList(ctx));
-		v.addAll(right.toList(ctx));
+		v.addAll(left.toVariantList(ctx));
+		v.addAll(right.toVariantList(ctx));
 		return new XOMList(v);
 	}
 }

@@ -575,13 +575,13 @@ public class XNExtendedModule extends XNModule {
 		}
 	}
 	
-	private static List<? extends XOMVariant> listParameter(XNContext ctx, String functionName, XOMVariant parameter) {
-		List<? extends XOMVariant> l = (parameter == null) ? new Vector<XOMVariant>() : parameter.toList(ctx);
+	private static List<? extends XOMVariant> listParameter(XNContext ctx, String functionName, XOMVariant parameter, boolean primitive) {
+		List<? extends XOMVariant> l = (parameter == null) ? new Vector<XOMVariant>() : primitive ? parameter.toPrimitiveList(ctx) : parameter.toVariantList(ctx);
 		return l;
 	}
 	
-	private static List<? extends XOMVariant> listParameter(XNContext ctx, String functionName, XOMVariant parameter, int np) {
-		List<? extends XOMVariant> l = (parameter == null) ? new Vector<XOMVariant>() : parameter.toList(ctx);
+	private static List<? extends XOMVariant> listParameter(XNContext ctx, String functionName, XOMVariant parameter, int np, boolean primitive) {
+		List<? extends XOMVariant> l = (parameter == null) ? new Vector<XOMVariant>() : primitive ? parameter.toPrimitiveList(ctx) : parameter.toVariantList(ctx);
 		if (l.size() != np) {
 			throw new XNScriptError("Can't understand arguments to "+functionName);
 		} else {
@@ -966,7 +966,7 @@ public class XNExtendedModule extends XNModule {
 	
 	private static final Function f_pack = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, true);
 			if (l.size() < 1) throw new XNScriptError("Can't understand arguments to "+functionName);
 			List<DataField> format;
 			try {
@@ -1000,7 +1000,7 @@ public class XNExtendedModule extends XNModule {
 			if (df.count() == null || df.type().usesCustomCount()) {
 				return XOMtoNativeWithoutCount(df, xo, ctx);
 			} else {
-				List<? extends XOMVariant> l = xo.toList(ctx);
+				List<? extends XOMVariant> l = xo.toPrimitiveList(ctx);
 				List<Object> things = new ArrayList<Object>();
 				for (XOMVariant xoi : l) things.add(XOMtoNativeWithoutCount(df, xoi, ctx));
 				return things;
@@ -1029,7 +1029,7 @@ public class XNExtendedModule extends XNModule {
 			case STRUCT:
 				@SuppressWarnings("unchecked")
 				List<DataField> sfmt = (List<DataField>)df.elaboration();
-				return XOMtoNative(sfmt, xo.toList(ctx), ctx);
+				return XOMtoNative(sfmt, xo.toPrimitiveList(ctx), ctx);
 			default: throw new XNScriptError("Unknown data type: " + df.type().toString());
 			}
 		}
@@ -1037,7 +1037,7 @@ public class XNExtendedModule extends XNModule {
 	
 	private static final Function f_regcountfields = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
 			String s = l.get(0).toTextString(ctx);
 			if (s.length() == 0) return XOMInteger.ZERO;
 			String d = l.get(1).toTextString(ctx);
@@ -1047,7 +1047,7 @@ public class XNExtendedModule extends XNModule {
 	
 	private static final Function f_regexplode = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
 			String s = l.get(0).toTextString(ctx);
 			if (s.length() == 0) return XOMString.EMPTY_STRING;
 			String d = l.get(1).toTextString(ctx);
@@ -1062,7 +1062,7 @@ public class XNExtendedModule extends XNModule {
 	
 	private static final Function f_reginstr = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
 			String s = l.get(0).toTextString(ctx);
 			String d = l.get(1).toTextString(ctx);
 			Matcher m = Pattern.compile(d).matcher(s);
@@ -1076,7 +1076,7 @@ public class XNExtendedModule extends XNModule {
 	
 	private static final Function f_regmatch = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
 			String s = l.get(0).toTextString(ctx);
 			String d = l.get(1).toTextString(ctx);
 			return s.matches(d) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
@@ -1085,7 +1085,7 @@ public class XNExtendedModule extends XNModule {
 	
 	private static final Function f_regnthfield = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 3);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 3, true);
 			String s = l.get(0).toTextString(ctx);
 			if (s.length() == 0) return XOMString.EMPTY_STRING;
 			String d = l.get(1).toTextString(ctx);
@@ -1098,7 +1098,7 @@ public class XNExtendedModule extends XNModule {
 	
 	private static final Function f_regoffset = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
 			String s = l.get(1).toTextString(ctx);
 			String d = l.get(0).toTextString(ctx);
 			Matcher m = Pattern.compile(d).matcher(s);
@@ -1112,7 +1112,7 @@ public class XNExtendedModule extends XNModule {
 	
 	private static final Function f_regreplace = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 3);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 3, true);
 			String str = l.get(0).toTextString(ctx);
 			String src = l.get(1).toTextString(ctx);
 			String rep = l.get(2).toTextString(ctx);
@@ -1122,7 +1122,7 @@ public class XNExtendedModule extends XNModule {
 	
 	private static final Function f_regreplaceall = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 3);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 3, true);
 			String str = l.get(0).toTextString(ctx);
 			String src = l.get(1).toTextString(ctx);
 			String rep = l.get(2).toTextString(ctx);
@@ -1132,7 +1132,7 @@ public class XNExtendedModule extends XNModule {
 	
 	private static final Function f_regrinstr = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
 			String s = l.get(0).toTextString(ctx);
 			String d = l.get(1).toTextString(ctx);
 			Matcher m = Pattern.compile(d).matcher(s);
@@ -1144,7 +1144,7 @@ public class XNExtendedModule extends XNModule {
 	
 	private static final Function f_unpack = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2);
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
 			List<DataField> format;
 			try {
 				format = new DataFormatParser(new StringReader(l.get(0).toTextString(ctx))).parseAuto();

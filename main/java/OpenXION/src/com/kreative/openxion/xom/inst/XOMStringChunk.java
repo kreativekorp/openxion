@@ -725,12 +725,22 @@ public class XOMStringChunk extends XOMContainer implements XOMStringContainer {
 	public String toTextString(XNContext ctx) {
 		return getContents(ctx).toTextString(ctx);
 	}
-	public List<? extends XOMVariant> toList(XNContext ctx) {
+	public List<? extends XOMVariant> toVariantList(XNContext ctx) {
 		StringChunkInfo ci = getChunkInfo(ctx,false,false);
 		Vector<XOMVariant> v = new Vector<XOMVariant>();
 		if (ci != null) {
 			for (int i = ci.startChunkIndex; i <= ci.endChunkIndex; i++) {
 				v.add(new XOMStringChunk(parent, chunkType, i, i));
+			}
+		}
+		return v;
+	}
+	public List<? extends XOMVariant> toPrimitiveList(XNContext ctx) {
+		StringChunkInfo ci = getChunkInfo(ctx,false,false);
+		Vector<XOMVariant> v = new Vector<XOMVariant>();
+		if (ci != null) {
+			for (int i = ci.startChunkIndex; i <= ci.endChunkIndex; i++) {
+				v.add(new XOMString(new XOMStringChunk(parent, chunkType, i, i).toTextString(ctx)));
 			}
 		}
 		return v;

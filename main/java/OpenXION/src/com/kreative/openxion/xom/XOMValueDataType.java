@@ -57,7 +57,7 @@ public abstract class XOMValueDataType<IT extends XOMVariant> extends XOMDataTyp
 	public final boolean canMakeInstanceFrom(XNContext ctx, XOMVariant instance) {
 		instance = instance.asPrimitive(ctx);
 		if (instance instanceof XOMList) {
-			List<? extends XOMVariant> l = instance.toList(ctx);
+			List<? extends XOMVariant> l = instance.toPrimitiveList(ctx);
 			if (l.size() == 1)
 				if (canMakeInstanceFrom(ctx, l.get(0)))
 					return true;
@@ -88,7 +88,7 @@ public abstract class XOMValueDataType<IT extends XOMVariant> extends XOMDataTyp
 	public final IT makeInstanceFrom(XNContext ctx, XOMVariant instance) {
 		instance = instance.asPrimitive(ctx);
 		if (instance instanceof XOMList) {
-			List<? extends XOMVariant> l = instance.toList(ctx);
+			List<? extends XOMVariant> l = instance.toPrimitiveList(ctx);
 			if (l.size() == 1)
 				if (canMakeInstanceFrom(ctx, l.get(0)))
 					return makeInstanceFrom(ctx, l.get(0));
