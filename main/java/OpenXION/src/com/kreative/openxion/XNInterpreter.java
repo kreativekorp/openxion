@@ -497,10 +497,10 @@ public class XNInterpreter {
 					bs = bv.toTextString(context);
 					return new XOMString(as + " " + bs);
 				case LIST_CONCAT:
-					av = evaluateExpression(a).asValue(context);
-					bv = evaluateExpression(b).asValue(context);
-					al = av.toVariantList(context);
-					bl = bv.toVariantList(context);
+					av = evaluateExpression(a).asPrimitive(context);
+					bv = evaluateExpression(b).asPrimitive(context);
+					al = av.toPrimitiveList(context);
+					bl = bv.toPrimitiveList(context);
 					return new XOMList(al, bl);
 				case LT_NUM:
 					try {
@@ -598,9 +598,9 @@ public class XNInterpreter {
 						throw new XOMMorphError("point");
 					}
 				case ELEMENT_OF:
-					av = evaluateExpression(a).asValue(context);
-					bv = evaluateExpression(b).asValue(context);
-					bl = bv.toVariantList(context);
+					av = evaluateExpression(a).asPrimitive(context);
+					bv = evaluateExpression(b).asPrimitive(context);
+					bl = bv.toPrimitiveList(context);
 					for (XOMVariant v : bl) {
 						try {
 							if (compareVariants(av,v) == 0) return XOMBoolean.TRUE;
@@ -610,9 +610,9 @@ public class XNInterpreter {
 					}
 					return XOMBoolean.FALSE;
 				case PRECISELY_ELEMENT_OF:
-					av = evaluateExpression(a).asValue(context);
-					bv = evaluateExpression(b).asValue(context);
-					bl = bv.toVariantList(context);
+					av = evaluateExpression(a).asPrimitive(context);
+					bv = evaluateExpression(b).asPrimitive(context);
+					bl = bv.toPrimitiveList(context);
 					for (XOMVariant v : bl) {
 						if (av.equals(v)) return XOMBoolean.TRUE;
 					}
@@ -657,9 +657,9 @@ public class XNInterpreter {
 						throw new XOMMorphError("point");
 					}
 				case NOT_ELEMENT_OF:
-					av = evaluateExpression(a).asValue(context);
-					bv = evaluateExpression(b).asValue(context);
-					bl = bv.toVariantList(context);
+					av = evaluateExpression(a).asPrimitive(context);
+					bv = evaluateExpression(b).asPrimitive(context);
+					bl = bv.toPrimitiveList(context);
 					for (XOMVariant v : bl) {
 						try {
 							if (compareVariants(av,v) == 0) return XOMBoolean.FALSE;
@@ -669,9 +669,9 @@ public class XNInterpreter {
 					}
 					return XOMBoolean.TRUE;
 				case NOT_PRECISELY_ELEMENT_OF:
-					av = evaluateExpression(a).asValue(context);
-					bv = evaluateExpression(b).asValue(context);
-					bl = bv.toVariantList(context);
+					av = evaluateExpression(a).asPrimitive(context);
+					bv = evaluateExpression(b).asPrimitive(context);
+					bl = bv.toPrimitiveList(context);
 					for (XOMVariant v : bl) {
 						if (av.equals(v)) return XOMBoolean.FALSE;
 					}
@@ -685,8 +685,8 @@ public class XNInterpreter {
 						return XOMBoolean.FALSE;
 					}
 				case STRICT_EQUAL:
-					av = evaluateExpression(a).asValue(context);
-					bv = evaluateExpression(b).asValue(context);
+					av = evaluateExpression(a).asPrimitive(context);
+					bv = evaluateExpression(b).asPrimitive(context);
 					return (av.equals(bv)) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
 				case STRING_EQUAL:
 					av = evaluateExpression(a).asPrimitive(context);
@@ -701,8 +701,8 @@ public class XNInterpreter {
 						return XOMBoolean.FALSE;
 					}
 				case NOT_STRICT_EQUAL:
-					av = evaluateExpression(a).asValue(context);
-					bv = evaluateExpression(b).asValue(context);
+					av = evaluateExpression(a).asPrimitive(context);
+					bv = evaluateExpression(b).asPrimitive(context);
 					return (!av.equals(bv)) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
 				case NOT_STRING_EQUAL:
 					av = evaluateExpression(a).asPrimitive(context);
