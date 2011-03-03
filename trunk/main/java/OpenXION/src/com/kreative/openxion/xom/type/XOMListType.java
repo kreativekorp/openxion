@@ -277,15 +277,15 @@ public class XOMListType extends XOMDataType<XOMList> {
 		return out.toArray(new String[0]);
 	}
 	public boolean canMakeInstanceFrom(XNContext ctx, XOMVariant instance) {
-		instance = instance.asValue(ctx);
-		if (allCanMorph(ctx, instance.toVariantList(ctx)))
+		instance = instance.asPrimitive(ctx);
+		if (allCanMorph(ctx, instance.toPrimitiveList(ctx)))
 			return true;
 		String[] ss = splitElements(instance.toTextString(ctx));
 		return allCanMorph(ctx, ss);
 	}
 	public boolean canMakeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
-		left = left.asValue(ctx);
-		right = right.asValue(ctx);
+		left = left.asPrimitive(ctx);
+		right = right.asPrimitive(ctx);
 		if (canMakeInstanceFrom(ctx, left) && canMakeInstanceFrom(ctx, right)) {
 			return true;
 		}
@@ -293,8 +293,8 @@ public class XOMListType extends XOMDataType<XOMList> {
 		return allCanMorph(ctx, ss);
 	}
 	public XOMList makeInstanceFrom(XNContext ctx, XOMVariant instance) {
-		instance = instance.asValue(ctx);
-		List<? extends XOMVariant> v = instance.toVariantList(ctx);
+		instance = instance.asPrimitive(ctx);
+		List<? extends XOMVariant> v = instance.toPrimitiveList(ctx);
 		if (allCanMorph(ctx, v)) {
 			List<XOMVariant> newElements = new Vector<XOMVariant>();
 			for (XOMVariant e : v) {
@@ -313,8 +313,8 @@ public class XOMListType extends XOMDataType<XOMList> {
 		throw new XOMMorphError(typeName);
 	}
 	public XOMList makeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
-		left = left.asValue(ctx);
-		right = right.asValue(ctx);
+		left = left.asPrimitive(ctx);
+		right = right.asPrimitive(ctx);
 		if (canMakeInstanceFrom(ctx, left) && canMakeInstanceFrom(ctx, right)) {
 			Vector<XOMVariant> v = new Vector<XOMVariant>();
 			v.addAll(makeInstanceFrom(ctx, left).toVariantList(ctx));
