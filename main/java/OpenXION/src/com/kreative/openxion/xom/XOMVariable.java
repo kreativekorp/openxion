@@ -61,7 +61,7 @@ public final class XOMVariable extends XOMVariant {
 	
 	public final XOMVariant asValue(XNContext ctx) {
 		if (vm.isVariableDeclared(ctx, name))
-			return vm.getVariable(ctx, name);
+			return vm.getVariable(ctx, name).asValue(ctx);
 		else
 			return new XOMString(name);
 	}
@@ -110,13 +110,13 @@ public final class XOMVariable extends XOMVariant {
 		return true;
 	}
 	public final void putIntoContents(XNContext ctx, XOMVariant contents) {
-		vm.setVariable(ctx, name, contents.asValue(ctx));
+		vm.setVariable(ctx, name, contents.asPrimitive(ctx));
 	}
 	public final void putBeforeContents(XNContext ctx, XOMVariant contents) {
-		vm.prependVariable(ctx, name, contents.asValue(ctx));
+		vm.prependVariable(ctx, name, contents.asPrimitive(ctx));
 	}
 	public final void putAfterContents(XNContext ctx, XOMVariant contents) {
-		vm.appendVariable(ctx, name, contents.asValue(ctx));
+		vm.appendVariable(ctx, name, contents.asPrimitive(ctx));
 	}
 	public final void putIntoContents(XNContext ctx, XOMVariant contents, String property, XOMVariant value) {
 		throw new XNScriptError("Can't understand this");
@@ -136,7 +136,7 @@ public final class XOMVariable extends XOMVariant {
 		if (v != null) {
 			List<XOMVariant> toSort = new Vector<XOMVariant>();
 			if (v instanceof XOMList) {
-				toSort.addAll(((XOMList)v).toVariantList(ctx));
+				toSort.addAll(v.toPrimitiveList(ctx));
 			} else if (v instanceof XOMBinary) {
 				for (byte b : ((XOMBinary)v).toByteArray())
 					toSort.add(new XOMBinary(new byte[]{b}));
@@ -204,12 +204,12 @@ public final class XOMVariable extends XOMVariant {
 			return Arrays.asList(new XOMString(name));
 	}
 	public final int hashCode() {
-		return this.name.toLowerCase().hashCode();
+		return this.vm.hashCode() ^ this.name.toLowerCase().hashCode();
 	}
 	public final boolean equals(Object other) {
 		if (other instanceof XOMVariable) {
 			XOMVariable v = (XOMVariable)other;
-			return this.name.equalsIgnoreCase(v.name);
+			return this.vm.equals(v.vm) && this.name.equalsIgnoreCase(v.name);
 		} else {
 			return false;
 		}
