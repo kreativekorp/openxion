@@ -106,7 +106,10 @@ public class XOMDate extends XOMValue {
 		if (theFormat == null || theDate == null) return "";
 		return theFormat.toJavaDateFormat().format(theDate.getTime());
 	}
-	public List<? extends XOMVariant> toList(XNContext ctx) {
+	public List<? extends XOMVariant> toVariantList(XNContext ctx) {
+		return Arrays.asList(this);
+	}
+	public List<? extends XOMVariant> toPrimitiveList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
 	public int hashCode() {

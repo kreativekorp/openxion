@@ -48,7 +48,10 @@ public class XOMEmpty extends XOMValue {
 	public String toTextString(XNContext ctx) {
 		return "";
 	}
-	public List<? extends XOMVariant> toList(XNContext ctx) {
+	public List<? extends XOMVariant> toVariantList(XNContext ctx) {
+		return new ArrayList<XOMVariant>();
+	}
+	public List<? extends XOMVariant> toPrimitiveList(XNContext ctx) {
 		return new ArrayList<XOMVariant>();
 	}
 	public int hashCode() {

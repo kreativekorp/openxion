@@ -499,8 +499,8 @@ public class XNInterpreter {
 				case LIST_CONCAT:
 					av = evaluateExpression(a).asValue(context);
 					bv = evaluateExpression(b).asValue(context);
-					al = av.toList(context);
-					bl = bv.toList(context);
+					al = av.toVariantList(context);
+					bl = bv.toVariantList(context);
 					return new XOMList(al, bl);
 				case LT_NUM:
 					try {
@@ -600,7 +600,7 @@ public class XNInterpreter {
 				case ELEMENT_OF:
 					av = evaluateExpression(a).asValue(context);
 					bv = evaluateExpression(b).asValue(context);
-					bl = bv.toList(context);
+					bl = bv.toVariantList(context);
 					for (XOMVariant v : bl) {
 						try {
 							if (compareVariants(av,v) == 0) return XOMBoolean.TRUE;
@@ -612,7 +612,7 @@ public class XNInterpreter {
 				case PRECISELY_ELEMENT_OF:
 					av = evaluateExpression(a).asValue(context);
 					bv = evaluateExpression(b).asValue(context);
-					bl = bv.toList(context);
+					bl = bv.toVariantList(context);
 					for (XOMVariant v : bl) {
 						if (av.equals(v)) return XOMBoolean.TRUE;
 					}
@@ -659,7 +659,7 @@ public class XNInterpreter {
 				case NOT_ELEMENT_OF:
 					av = evaluateExpression(a).asValue(context);
 					bv = evaluateExpression(b).asValue(context);
-					bl = bv.toList(context);
+					bl = bv.toVariantList(context);
 					for (XOMVariant v : bl) {
 						try {
 							if (compareVariants(av,v) == 0) return XOMBoolean.FALSE;
@@ -671,7 +671,7 @@ public class XNInterpreter {
 				case NOT_PRECISELY_ELEMENT_OF:
 					av = evaluateExpression(a).asValue(context);
 					bv = evaluateExpression(b).asValue(context);
-					bl = bv.toList(context);
+					bl = bv.toVariantList(context);
 					for (XOMVariant v : bl) {
 						if (av.equals(v)) return XOMBoolean.FALSE;
 					}
@@ -1029,7 +1029,7 @@ public class XNInterpreter {
 				context.pushResponder(resp);
 				XNHandlerExit exit = null;
 				try {
-					exit = evaluateUserFunction(fh, parameter.toList(context));
+					exit = evaluateUserFunction(fh, parameter.toVariantList(context));
 				} finally {
 					context.popResponder();
 				}
@@ -1079,7 +1079,7 @@ public class XNInterpreter {
 				context.pushResponder(resp);
 				XNHandlerExit exit = null;
 				try {
-					exit = evaluateUserFunction(mh, parameter.toList(context));
+					exit = evaluateUserFunction(mh, parameter.toVariantList(context));
 				} finally {
 					context.popResponder();
 				}
@@ -1562,7 +1562,7 @@ public class XNInterpreter {
 				}
 				else if (rp instanceof XNRepeatForEachParameters) {
 					String name = ((XNRepeatForEachParameters)rp).identifier;
-					List<? extends XOMVariant> list = evaluateExpression(((XNRepeatForEachParameters)rp).list).asValue(context).toList(context);
+					List<? extends XOMVariant> list = evaluateExpression(((XNRepeatForEachParameters)rp).list).asValue(context).toVariantList(context);
 					for (XOMVariant item : list) {
 						XOMVariant dest = new XOMVariable(context.getVariableMap(name), name);
 						dest.putIntoContents(context, item);

@@ -376,7 +376,7 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 	public XNHandlerExit evaluateFunction(XNContext ctx, XOMUserObject instance, String functionName, XNModifier modifier, XOMVariant parameter) {
 		if (declaration != null && declaration.body != null) for (XNStatement stat : declaration.body) {
 			if (stat instanceof XNFunctionHandler && ((XNFunctionHandler)stat).name.equalsIgnoreCase(functionName)) {
-				return evaluateFunctionHandler(new XNInterpreter(ctx), ctx, instance, (XNFunctionHandler)stat, parameter.toList(ctx));
+				return evaluateFunctionHandler(new XNInterpreter(ctx), ctx, instance, (XNFunctionHandler)stat, parameter.toVariantList(ctx));
 			}
 		}
 		return XNHandlerExit.passed();
@@ -433,12 +433,12 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 			XOMUserObject u = (XOMUserObject)instance;
 			return u.isInstanceOf(this);
 		}
-		else if (instance instanceof XOMList && ((XOMList)instance).toList(ctx).size() == 1 && ((XOMList)instance).toList(ctx).get(0) instanceof XOMUserObject) {
-			XOMUserObject u = (XOMUserObject)((XOMList)instance).toList(ctx).get(0);
+		else if (instance instanceof XOMList && ((XOMList)instance).toVariantList(ctx).size() == 1 && ((XOMList)instance).toVariantList(ctx).get(0) instanceof XOMUserObject) {
+			XOMUserObject u = (XOMUserObject)((XOMList)instance).toVariantList(ctx).get(0);
 			return u.isInstanceOf(this);
 		}
-		else if (instance instanceof XOMListChunk && ((XOMListChunk)instance).toList(ctx).size() == 1 && ((XOMListChunk)instance).toList(ctx).get(0) instanceof XOMUserObject) {
-			XOMUserObject u = (XOMUserObject)((XOMListChunk)instance).toList(ctx).get(0);
+		else if (instance instanceof XOMListChunk && ((XOMListChunk)instance).toVariantList(ctx).size() == 1 && ((XOMListChunk)instance).toVariantList(ctx).get(0) instanceof XOMUserObject) {
+			XOMUserObject u = (XOMUserObject)((XOMListChunk)instance).toVariantList(ctx).get(0);
 			return u.isInstanceOf(this);
 		}
 		else if (canMorphFromDescription(ctx, instance.toTextString(ctx))) {
@@ -479,13 +479,13 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 			if (u.isInstanceOf(this)) return u;
 			else throw new XOMMorphError(declaration.singularNameString());
 		}
-		else if (instance instanceof XOMList && ((XOMList)instance).toList(ctx).size() == 1 && ((XOMList)instance).toList(ctx).get(0) instanceof XOMUserObject) {
-			XOMUserObject u = (XOMUserObject)((XOMList)instance).toList(ctx).get(0);
+		else if (instance instanceof XOMList && ((XOMList)instance).toVariantList(ctx).size() == 1 && ((XOMList)instance).toVariantList(ctx).get(0) instanceof XOMUserObject) {
+			XOMUserObject u = (XOMUserObject)((XOMList)instance).toVariantList(ctx).get(0);
 			if (u.isInstanceOf(this)) return u;
 			else throw new XOMMorphError(declaration.singularNameString());
 		}
-		else if (instance instanceof XOMListChunk && ((XOMListChunk)instance).toList(ctx).size() == 1 && ((XOMListChunk)instance).toList(ctx).get(0) instanceof XOMUserObject) {
-			XOMUserObject u = (XOMUserObject)((XOMListChunk)instance).toList(ctx).get(0);
+		else if (instance instanceof XOMListChunk && ((XOMListChunk)instance).toVariantList(ctx).size() == 1 && ((XOMListChunk)instance).toVariantList(ctx).get(0) instanceof XOMUserObject) {
+			XOMUserObject u = (XOMUserObject)((XOMListChunk)instance).toVariantList(ctx).get(0);
 			if (u.isInstanceOf(this)) return u;
 			else throw new XOMMorphError(declaration.singularNameString());
 		}

@@ -158,7 +158,10 @@ public class XOMUserObject extends XOMObject implements XNResponder {
 		if (type == null) return "";
 		else return type.toTextString(ctx, this);
 	}
-	public List<? extends XOMVariant> toList(XNContext ctx) {
+	public List<? extends XOMVariant> toVariantList(XNContext ctx) {
+		return Arrays.asList(this);
+	}
+	public List<? extends XOMVariant> toPrimitiveList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
 	public int hashCode() {

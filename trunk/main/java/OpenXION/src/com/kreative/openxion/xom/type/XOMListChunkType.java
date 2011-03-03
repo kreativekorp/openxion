@@ -63,7 +63,7 @@ public class XOMListChunkType extends XOMChunkDataType<XOMListChunk> {
 		return new XOMListChunk(parent, startIndex, endIndex);
 	}
 	public boolean canGetChildVariantByName(XNContext ctx, XOMVariant parent, String name) {
-		List<? extends XOMVariant> l = parent.toList(ctx);
+		List<? extends XOMVariant> l = parent.toPrimitiveList(ctx);
 		for (int i = 0; i < l.size(); i++) {
 			if (l.get(i).toTextString(ctx).equalsIgnoreCase(name)) {
 				return true;
@@ -72,7 +72,7 @@ public class XOMListChunkType extends XOMChunkDataType<XOMListChunk> {
 		return false;
 	}
 	public XOMVariant getChildVariantByName(XNContext ctx, XOMVariant parent, String name) {
-		List<? extends XOMVariant> l = parent.toList(ctx);
+		List<? extends XOMVariant> l = parent.toPrimitiveList(ctx);
 		for (int i = 0; i < l.size(); i++) {
 			if (l.get(i).toTextString(ctx).equalsIgnoreCase(name)) {
 				return new XOMListChunk(parent, i+1);

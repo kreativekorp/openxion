@@ -142,7 +142,14 @@ public abstract class XOMVariant implements Serializable {
 	 * @param ctx the context.
 	 * @return this variant's value as a list.
 	 */
-	public abstract List<? extends XOMVariant> toList(XNContext ctx);
+	public abstract List<? extends XOMVariant> toVariantList(XNContext ctx);
+
+	/**
+	 * Returns this variant's value as a list of primitives.
+	 * @param ctx the context.
+	 * @return this variant's value as a list of primitives.
+	 */
+	public abstract List<? extends XOMVariant> toPrimitiveList(XNContext ctx);
 	
 	/**
 	 * Returns a hash code for this variant.

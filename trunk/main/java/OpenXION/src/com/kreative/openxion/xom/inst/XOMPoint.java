@@ -70,7 +70,10 @@ public class XOMPoint extends XOMValue {
 	public String toTextString(XNContext ctx) {
 		return ((x == null)?"0":x.toString())+","+((y == null)?"0":y.toString());
 	}
-	public List<? extends XOMVariant> toList(XNContext ctx) {
+	public List<? extends XOMVariant> toVariantList(XNContext ctx) {
+		return Arrays.asList(this);
+	}
+	public List<? extends XOMVariant> toPrimitiveList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
 	public int hashCode() {
