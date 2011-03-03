@@ -29,12 +29,12 @@ package com.kreative.openxion.xom.type;
 
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.util.XIONUtil;
-import com.kreative.openxion.xom.XOMSimpleDataType;
+import com.kreative.openxion.xom.XOMPrimitiveDataType;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMMorphError;
 import com.kreative.openxion.xom.inst.XOMInterpreter;
 
-public class XOMInterpreterType extends XOMSimpleDataType<XOMInterpreter> {
+public class XOMInterpreterType extends XOMPrimitiveDataType<XOMInterpreter> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMInterpreterType instance = new XOMInterpreterType();
@@ -61,21 +61,24 @@ public class XOMInterpreterType extends XOMSimpleDataType<XOMInterpreter> {
 	 * objects in XION can be of any mix of data types (hence the term variant for XION objects).
 	 */
 	
+	protected boolean canMakeInstanceFromImpl(XNContext ctx) {
+		return false;
+	}
 	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, instance.toTextString(ctx));
+		return false;
+	}
+	protected boolean canMakeInstanceFromImpl(XNContext ctx, String s) {
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, s);
 		return v != null && v.asPrimitive(ctx) instanceof XOMInterpreter;
 	}
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, left.toTextString(ctx) + right.toTextString(ctx));
-		return v != null && v.asPrimitive(ctx) instanceof XOMInterpreter;
+	protected XOMInterpreter makeInstanceFromImpl(XNContext ctx) {
+		throw new XOMMorphError(typeName);
 	}
 	protected XOMInterpreter makeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, instance.toTextString(ctx));
-		if (v != null && v.asPrimitive(ctx) instanceof XOMInterpreter) return (XOMInterpreter)v.asPrimitive(ctx);
-		else throw new XOMMorphError(typeName);
+		throw new XOMMorphError(typeName);
 	}
-	protected XOMInterpreter makeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, left.toTextString(ctx) + right.toTextString(ctx));
+	protected XOMInterpreter makeInstanceFromImpl(XNContext ctx, String s) {
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, s);
 		if (v != null && v.asPrimitive(ctx) instanceof XOMInterpreter) return (XOMInterpreter)v.asPrimitive(ctx);
 		else throw new XOMMorphError(typeName);
 	}

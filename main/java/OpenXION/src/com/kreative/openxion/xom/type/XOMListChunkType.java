@@ -29,12 +29,12 @@ package com.kreative.openxion.xom.type;
 
 import java.util.List;
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.xom.XOMChunkDataType;
+import com.kreative.openxion.xom.XOMContainerDataType;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMGetError;
 import com.kreative.openxion.xom.inst.XOMListChunk;
 
-public class XOMListChunkType extends XOMChunkDataType<XOMListChunk> {
+public class XOMListChunkType extends XOMContainerDataType<XOMListChunk> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMListChunkType instance = new XOMListChunkType();

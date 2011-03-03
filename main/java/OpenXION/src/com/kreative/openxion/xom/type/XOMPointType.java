@@ -29,12 +29,12 @@ package com.kreative.openxion.xom.type;
 
 import java.math.BigDecimal;
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.xom.XOMValueDataType;
+import com.kreative.openxion.xom.XOMPrimitiveDataType;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMMorphError;
 import com.kreative.openxion.xom.inst.XOMPoint;
 
-public class XOMPointType extends XOMValueDataType<XOMPoint> {
+public class XOMPointType extends XOMPrimitiveDataType<XOMPoint> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMPointType instance = new XOMPointType();

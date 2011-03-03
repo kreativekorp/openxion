@@ -28,11 +28,11 @@
 package com.kreative.openxion.xom.type;
 
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.xom.XOMValueDataType;
+import com.kreative.openxion.xom.XOMPrimitiveDataType;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.inst.XOMString;
 
-public class XOMStringType extends XOMValueDataType<XOMString> {
+public class XOMStringType extends XOMPrimitiveDataType<XOMString> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMStringType instance = new XOMStringType();

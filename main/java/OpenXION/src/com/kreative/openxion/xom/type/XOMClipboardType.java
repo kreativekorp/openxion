@@ -28,13 +28,11 @@
 package com.kreative.openxion.xom.type;
 
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.util.XIONUtil;
-import com.kreative.openxion.xom.XOMSimpleDataType;
-import com.kreative.openxion.xom.XOMMorphError;
+import com.kreative.openxion.xom.XOMContainerDataType;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.inst.XOMClipboard;
 
-public class XOMClipboardType extends XOMSimpleDataType<XOMClipboard> {
+public class XOMClipboardType extends XOMContainerDataType<XOMClipboard> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMClipboardType instance = new XOMClipboardType();
@@ -49,24 +47,5 @@ public class XOMClipboardType extends XOMSimpleDataType<XOMClipboard> {
 	}
 	public XOMVariant getSingletonInstance(XNContext ctx) {
 		return XOMClipboard.CLIPBOARD;
-	}
-	
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, instance.toTextString(ctx));
-		return v instanceof XOMClipboard;
-	}
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, left.toTextString(ctx) + right.toTextString(ctx));
-		return v instanceof XOMClipboard;
-	}
-	protected XOMClipboard makeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, instance.toTextString(ctx));
-		if (v instanceof XOMClipboard) return (XOMClipboard)v;
-		else throw new XOMMorphError(typeName);
-	}
-	protected XOMClipboard makeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, left.toTextString(ctx) + right.toTextString(ctx));
-		if (v instanceof XOMClipboard) return (XOMClipboard)v;
-		else throw new XOMMorphError(typeName);
 	}
 }

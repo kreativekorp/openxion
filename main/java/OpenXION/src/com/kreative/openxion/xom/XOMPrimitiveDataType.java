@@ -33,83 +33,87 @@ import com.kreative.openxion.xom.inst.XOMEmpty;
 import com.kreative.openxion.xom.inst.XOMList;
 
 /**
- * XOMSimpleDataType handles some instances
- * of the polymorphic methods for simple data types.
+ * XOMValueDataType handles polymorphic methods for primitive value types.
  * @since OpenXION 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  * @param <IT> the corresponding subclass of XOMVariant
  * used to represent the values this data type produces.
  */
-public abstract class XOMSimpleDataType<IT extends XOMVariant> extends XOMDataType<IT> {
+public abstract class XOMPrimitiveDataType<IT extends XOMVariant> extends XOMDataType<IT> {
 	private static final long serialVersionUID = 1L;
 	
-	protected XOMSimpleDataType(String typeName, int describability, Class<IT> instanceClass) {
+	protected XOMPrimitiveDataType(String typeName, int describability, Class<IT> instanceClass) {
 		super(typeName, describability, instanceClass);
 	}
 	
+	protected abstract boolean canMakeInstanceFromImpl(XNContext ctx);
 	protected abstract boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance);
-	protected abstract boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right);
+	protected abstract boolean canMakeInstanceFromImpl(XNContext ctx, String s);
+	
+	protected abstract IT makeInstanceFromImpl(XNContext ctx);
 	protected abstract IT makeInstanceFromImpl(XNContext ctx, XOMVariant instance);
-	protected abstract IT makeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right);
+	protected abstract IT makeInstanceFromImpl(XNContext ctx, String s);
 	
 	public final boolean canMakeInstanceFrom(XNContext ctx, XOMVariant instance) {
-		instance = instance.asValue(ctx);
-		if (instanceClass.isAssignableFrom(instance.getClass())) {
-			return true;
-		} else if (instance instanceof XOMList) {
-			List<? extends XOMVariant> l = instance.toVariantList(ctx);
-			if (l.size() == 1) {
-				if (instanceClass.isAssignableFrom(l.get(0).getClass())) {
+		instance = instance.asPrimitive(ctx);
+		if (instance instanceof XOMList) {
+			List<? extends XOMVariant> l = instance.toPrimitiveList(ctx);
+			if (l.size() == 1)
+				if (canMakeInstanceFrom(ctx, l.get(0)))
 					return true;
-				} else {
-					return canMakeInstanceFromImpl(ctx, l.get(0));
-				}
-			} else {
-				return canMakeInstanceFromImpl(ctx, instance);
-			}
-		} else {
-			return canMakeInstanceFromImpl(ctx, instance);
 		}
+		if (instanceClass.isAssignableFrom(instance.getClass()))
+			return true;
+		else if (instance instanceof XOMEmpty && canMakeInstanceFromImpl(ctx))
+			return true;
+		else if (canMakeInstanceFromImpl(ctx, instance))
+			return true;
+		else if (canMakeInstanceFromImpl(ctx, instance.toTextString(ctx)))
+			return true;
+		else
+			return false;
 	}
 	public final boolean canMakeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
-		left = left.asValue(ctx);
-		right = right.asValue(ctx);
-		if (left instanceof XOMEmpty) {
+		left = left.asPrimitive(ctx);
+		right = right.asPrimitive(ctx);
+		if (left instanceof XOMEmpty)
 			return canMakeInstanceFrom(ctx, right);
-		} else if (right instanceof XOMEmpty) {
+		else if (right instanceof XOMEmpty)
 			return canMakeInstanceFrom(ctx, left);
-		} else {
-			return canMakeInstanceFromImpl(ctx, left, right);
-		}
+		else if (canMakeInstanceFromImpl(ctx, left.toTextString(ctx) + right.toTextString(ctx)))
+			return true;
+		else
+			return false;
 	}
 	public final IT makeInstanceFrom(XNContext ctx, XOMVariant instance) {
-		instance = instance.asValue(ctx);
-		if (instanceClass.isAssignableFrom(instance.getClass())) {
-			return instanceClass.cast(instance);
-		} else if (instance instanceof XOMList) {
-			List<? extends XOMVariant> l = instance.toVariantList(ctx);
-			if (l.size() == 1) {
-				if (instanceClass.isAssignableFrom(l.get(0).getClass())) {
-					return instanceClass.cast(l.get(0));
-				} else {
-					return makeInstanceFromImpl(ctx, l.get(0));
-				}
-			} else {
-				return makeInstanceFromImpl(ctx, instance);
-			}
-		} else {
-			return makeInstanceFromImpl(ctx, instance);
+		instance = instance.asPrimitive(ctx);
+		if (instance instanceof XOMList) {
+			List<? extends XOMVariant> l = instance.toPrimitiveList(ctx);
+			if (l.size() == 1)
+				if (canMakeInstanceFrom(ctx, l.get(0)))
+					return makeInstanceFrom(ctx, l.get(0));
 		}
+		if (instanceClass.isAssignableFrom(instance.getClass()))
+			return instanceClass.cast(instance);
+		else if (instance instanceof XOMEmpty && canMakeInstanceFromImpl(ctx))
+			return makeInstanceFromImpl(ctx);
+		else if (canMakeInstanceFromImpl(ctx, instance))
+			return makeInstanceFromImpl(ctx, instance);
+		else if (canMakeInstanceFromImpl(ctx, instance.toTextString(ctx)))
+			return makeInstanceFromImpl(ctx, instance.toTextString(ctx));
+		else
+			throw new XOMMorphError(typeName);
 	}
 	public final IT makeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
-		left = left.asValue(ctx);
-		right = right.asValue(ctx);
-		if (left instanceof XOMEmpty) {
+		left = left.asPrimitive(ctx);
+		right = right.asPrimitive(ctx);
+		if (left instanceof XOMEmpty)
 			return makeInstanceFrom(ctx, right);
-		} else if (right instanceof XOMEmpty) {
+		else if (right instanceof XOMEmpty)
 			return makeInstanceFrom(ctx, left);
-		} else {
-			return makeInstanceFromImpl(ctx, left, right);
-		}
+		else if (canMakeInstanceFromImpl(ctx, left.toTextString(ctx) + right.toTextString(ctx)))
+			return makeInstanceFromImpl(ctx, left.toTextString(ctx) + right.toTextString(ctx));
+		else
+			throw new XOMMorphError(typeName);
 	}
 }

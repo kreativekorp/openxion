@@ -28,12 +28,12 @@
 package com.kreative.openxion.xom.type;
 
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.xom.XOMValueDataType;
+import com.kreative.openxion.xom.XOMPrimitiveDataType;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMMorphError;
 import com.kreative.openxion.xom.inst.XOMColor;
 
-public class XOMColorType extends XOMValueDataType<XOMColor> {
+public class XOMColorType extends XOMPrimitiveDataType<XOMColor> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMColorType instance = new XOMColorType();
