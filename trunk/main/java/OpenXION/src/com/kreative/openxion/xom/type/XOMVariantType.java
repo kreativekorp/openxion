@@ -29,11 +29,11 @@ package com.kreative.openxion.xom.type;
 
 import java.util.Vector;
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.xom.XOMSimpleDataType;
+import com.kreative.openxion.xom.XOMDataType;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.inst.XOMList;
 
-public class XOMVariantType extends XOMSimpleDataType<XOMVariant> {
+public class XOMVariantType extends XOMDataType<XOMVariant> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMVariantType instance = new XOMVariantType();
@@ -43,16 +43,16 @@ public class XOMVariantType extends XOMSimpleDataType<XOMVariant> {
 		super("variant", DESCRIBABILITY_OF_PRIMITIVES, XOMVariant.class);
 	}
 	
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
+	public boolean canMakeInstanceFrom(XNContext ctx, XOMVariant instance) {
 		return true;
 	}
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
+	public boolean canMakeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
 		return true;
 	}
-	protected XOMVariant makeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
+	public XOMVariant makeInstanceFrom(XNContext ctx, XOMVariant instance) {
 		return instance.asValue(ctx);
 	}
-	protected XOMVariant makeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
+	public XOMVariant makeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
 		Vector<XOMVariant> v = new Vector<XOMVariant>();
 		v.addAll(left.toVariantList(ctx));
 		v.addAll(right.toVariantList(ctx));

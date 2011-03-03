@@ -28,11 +28,11 @@
 package com.kreative.openxion.xom.type;
 
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.xom.XOMChunkDataType;
+import com.kreative.openxion.xom.XOMContainerDataType;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.inst.XOMBinaryByteChunk;
 
-public class XOMBinaryByteChunkType extends XOMChunkDataType<XOMBinaryByteChunk> {
+public class XOMBinaryByteChunkType extends XOMContainerDataType<XOMBinaryByteChunk> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMBinaryByteChunkType instance = new XOMBinaryByteChunkType();

@@ -29,14 +29,14 @@ package com.kreative.openxion.xom.type;
 
 import java.math.*;
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.xom.XOMValueDataType;
+import com.kreative.openxion.xom.XOMPrimitiveDataType;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMMorphError;
 import com.kreative.openxion.xom.inst.XOMComplex;
 import com.kreative.openxion.xom.inst.XOMNumber;
 import com.kreative.openxion.xom.inst.XOMInteger;
 
-public class XOMIntegerType extends XOMValueDataType<XOMInteger> {
+public class XOMIntegerType extends XOMPrimitiveDataType<XOMInteger> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMIntegerType instance = new XOMIntegerType();

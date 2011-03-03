@@ -25,34 +25,33 @@
  * @author Rebecca G. Bettencourt, Kreative Software
  */
 
-package com.kreative.openxion.xom;
+package com.kreative.openxion.xom.type;
 
 import java.util.List;
 import com.kreative.openxion.XNContext;
+import com.kreative.openxion.util.XIONUtil;
+import com.kreative.openxion.xom.XOMDataType;
+import com.kreative.openxion.xom.XOMMorphError;
+import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.inst.XOMEmpty;
+import com.kreative.openxion.xom.inst.XOMFile;
 import com.kreative.openxion.xom.inst.XOMList;
 
 /**
- * XOMValueDataType handles polymorphic methods for primitive value types.
+ * XOMFSDataType handles polymorphic methods for file system types.
  * @since OpenXION 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  * @param <IT> the corresponding subclass of XOMVariant
  * used to represent the values this data type produces.
  */
-public abstract class XOMValueDataType<IT extends XOMVariant> extends XOMDataType<IT> {
+public abstract class XOMFSDataType extends XOMDataType<XOMFile> {
 	private static final long serialVersionUID = 1L;
 	
-	protected XOMValueDataType(String typeName, int describability, Class<IT> instanceClass) {
-		super(typeName, describability, instanceClass);
+	protected XOMFSDataType(String typeName, int describability) {
+		super(typeName, describability, XOMFile.class);
 	}
 	
-	protected abstract boolean canMakeInstanceFromImpl(XNContext ctx);
-	protected abstract boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance);
-	protected abstract boolean canMakeInstanceFromImpl(XNContext ctx, String s);
-	
-	protected abstract IT makeInstanceFromImpl(XNContext ctx);
-	protected abstract IT makeInstanceFromImpl(XNContext ctx, XOMVariant instance);
-	protected abstract IT makeInstanceFromImpl(XNContext ctx, String s);
+	protected abstract boolean accept(XOMFile f);
 	
 	public final boolean canMakeInstanceFrom(XNContext ctx, XOMVariant instance) {
 		instance = instance.asPrimitive(ctx);
@@ -62,11 +61,7 @@ public abstract class XOMValueDataType<IT extends XOMVariant> extends XOMDataTyp
 				if (canMakeInstanceFrom(ctx, l.get(0)))
 					return true;
 		}
-		if (instanceClass.isAssignableFrom(instance.getClass()))
-			return true;
-		else if (instance instanceof XOMEmpty && canMakeInstanceFromImpl(ctx))
-			return true;
-		else if (canMakeInstanceFromImpl(ctx, instance))
+		if (canMakeInstanceFromImpl(ctx, instance))
 			return true;
 		else if (canMakeInstanceFromImpl(ctx, instance.toTextString(ctx)))
 			return true;
@@ -85,7 +80,7 @@ public abstract class XOMValueDataType<IT extends XOMVariant> extends XOMDataTyp
 		else
 			return false;
 	}
-	public final IT makeInstanceFrom(XNContext ctx, XOMVariant instance) {
+	public final XOMFile makeInstanceFrom(XNContext ctx, XOMVariant instance) {
 		instance = instance.asPrimitive(ctx);
 		if (instance instanceof XOMList) {
 			List<? extends XOMVariant> l = instance.toPrimitiveList(ctx);
@@ -93,18 +88,14 @@ public abstract class XOMValueDataType<IT extends XOMVariant> extends XOMDataTyp
 				if (canMakeInstanceFrom(ctx, l.get(0)))
 					return makeInstanceFrom(ctx, l.get(0));
 		}
-		if (instanceClass.isAssignableFrom(instance.getClass()))
-			return instanceClass.cast(instance);
-		else if (instance instanceof XOMEmpty && canMakeInstanceFromImpl(ctx))
-			return makeInstanceFromImpl(ctx);
-		else if (canMakeInstanceFromImpl(ctx, instance))
+		if (canMakeInstanceFromImpl(ctx, instance))
 			return makeInstanceFromImpl(ctx, instance);
 		else if (canMakeInstanceFromImpl(ctx, instance.toTextString(ctx)))
 			return makeInstanceFromImpl(ctx, instance.toTextString(ctx));
 		else
 			throw new XOMMorphError(typeName);
 	}
-	public final IT makeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
+	public final XOMFile makeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
 		left = left.asPrimitive(ctx);
 		right = right.asPrimitive(ctx);
 		if (left instanceof XOMEmpty)
@@ -115,5 +106,24 @@ public abstract class XOMValueDataType<IT extends XOMVariant> extends XOMDataTyp
 			return makeInstanceFromImpl(ctx, left.toTextString(ctx) + right.toTextString(ctx));
 		else
 			throw new XOMMorphError(typeName);
+	}
+	
+	private boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant v) {
+		return v != null && v.asPrimitive(ctx) instanceof XOMFile && accept((XOMFile)v.asPrimitive(ctx));
+	}
+	private boolean canMakeInstanceFromImpl(XNContext ctx, String s) {
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, s);
+		return v != null && v.asPrimitive(ctx) instanceof XOMFile && accept((XOMFile)v.asPrimitive(ctx));
+	}
+	private XOMFile makeInstanceFromImpl(XNContext ctx, XOMVariant v) {
+		if (v != null && v.asPrimitive(ctx) instanceof XOMFile && accept((XOMFile)v.asPrimitive(ctx)))
+			return (XOMFile)v.asPrimitive(ctx);
+		else throw new XOMMorphError(typeName);
+	}
+	private XOMFile makeInstanceFromImpl(XNContext ctx, String s) {
+		XOMVariant v = XIONUtil.parseDescriptor(ctx, s);
+		if (v != null && v.asPrimitive(ctx) instanceof XOMFile && accept((XOMFile)v.asPrimitive(ctx)))
+			return (XOMFile)v.asPrimitive(ctx);
+		else throw new XOMMorphError(typeName);
 	}
 }

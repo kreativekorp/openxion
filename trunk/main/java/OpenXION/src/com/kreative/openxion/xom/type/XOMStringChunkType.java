@@ -30,12 +30,12 @@ package com.kreative.openxion.xom.type;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.util.StringChunkType;
 import com.kreative.openxion.util.StringChunkEx;
-import com.kreative.openxion.xom.XOMChunkDataType;
+import com.kreative.openxion.xom.XOMContainerDataType;
 import com.kreative.openxion.xom.XOMGetError;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.inst.XOMStringChunk;
 
-public class XOMStringChunkType extends XOMChunkDataType<XOMStringChunk> {
+public class XOMStringChunkType extends XOMContainerDataType<XOMStringChunk> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMStringChunkType characterInstance = new XOMStringChunkType(StringChunkType.CHARACTER);

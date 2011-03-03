@@ -36,10 +36,10 @@ import com.kreative.openxion.XNContext;
  * @param <IT> the corresponding subclass of XOMVariant
  * used to represent the values this data type produces.
  */
-public abstract class XOMChunkDataType<IT extends XOMVariant> extends XOMDataType<IT> {
+public abstract class XOMContainerDataType<IT extends XOMVariant> extends XOMDataType<IT> {
 	private static final long serialVersionUID = 1L;
 	
-	protected XOMChunkDataType(String typeName, int describability, Class<IT> instanceClass) {
+	protected XOMContainerDataType(String typeName, int describability, Class<IT> instanceClass) {
 		super(typeName, describability, instanceClass);
 	}
 	
