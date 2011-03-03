@@ -29,7 +29,6 @@ package com.kreative.openxion.xom.inst;
 
 import java.util.Arrays;
 import java.util.List;
-
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.xom.XOMValue;
@@ -56,7 +55,10 @@ public class XOMBinary extends XOMValue {
 	public String toTextString(XNContext ctx) {
 		return XIONUtil.binaryToString(theData);
 	}
-	public List<? extends XOMVariant> toList(XNContext ctx) {
+	public List<? extends XOMVariant> toVariantList(XNContext ctx) {
+		return Arrays.asList(this);
+	}
+	public List<? extends XOMVariant> toPrimitiveList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
 	public int hashCode() {

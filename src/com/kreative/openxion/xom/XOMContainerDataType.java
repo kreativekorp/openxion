@@ -30,28 +30,26 @@ package com.kreative.openxion.xom;
 import com.kreative.openxion.XNContext;
 
 /**
- * XOMChunkDataType handles polymorphic methods for chunk types.
+ * XOMContainerDataType handles polymorphic methods for container types.
  * @since OpenXION 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  * @param <IT> the corresponding subclass of XOMVariant
  * used to represent the values this data type produces.
  */
-public abstract class XOMChunkDataType<IT extends XOMVariant> extends XOMDataType<IT> {
+public abstract class XOMContainerDataType<IT extends XOMVariant> extends XOMDataType<IT> {
 	private static final long serialVersionUID = 1L;
 	
-	protected XOMChunkDataType(String typeName, int describability, Class<IT> instanceClass) {
+	protected XOMContainerDataType(String typeName, int describability, Class<IT> instanceClass) {
 		super(typeName, describability, instanceClass);
 	}
 	
 	public final boolean canMakeInstanceFrom(XNContext ctx, XOMVariant instance) {
-		instance = instance.asValue(ctx);
 		return (instanceClass.isAssignableFrom(instance.getClass()));
 	}
 	public final boolean canMakeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
 		return false;
 	}
 	public final IT makeInstanceFrom(XNContext ctx, XOMVariant instance) {
-		instance = instance.asValue(ctx);
 		if (instanceClass.isAssignableFrom(instance.getClass()))
 			return instanceClass.cast(instance);
 		else

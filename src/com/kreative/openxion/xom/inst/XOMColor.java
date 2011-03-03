@@ -30,7 +30,6 @@ package com.kreative.openxion.xom.inst;
 import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
-
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.xom.XOMValue;
@@ -131,7 +130,10 @@ public class XOMColor extends XOMValue {
 		else
 			return red+","+green+","+blue+","+alpha;
 	}
-	public List<? extends XOMVariant> toList(XNContext ctx) {
+	public List<? extends XOMVariant> toVariantList(XNContext ctx) {
+		return Arrays.asList(this);
+	}
+	public List<? extends XOMVariant> toPrimitiveList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
 	public int hashCode() {

@@ -33,22 +33,20 @@ import com.kreative.openxion.XNContext;
 import com.kreative.openxion.XNSecurityKey;
 import com.kreative.openxion.XNScriptError;
 import com.kreative.openxion.util.XIONUtil;
-import com.kreative.openxion.xom.XOMSimpleDataType;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMGetError;
 import com.kreative.openxion.xom.XOMCreateError;
-import com.kreative.openxion.xom.XOMMorphError;
 import com.kreative.openxion.xom.inst.XOMFile;
 import com.kreative.openxion.xom.inst.XOMList;
 
-public class XOMForkType extends XOMSimpleDataType<XOMFile> {
+public class XOMForkType extends XOMFSDataType {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMForkType instance = new XOMForkType();
 	public static final XOMListType listInstance = new XOMListType("forks", DESCRIBABILITY_OF_PLURAL_FSOBJECTS, instance);
 	
 	private XOMForkType() {
-		super("fork", DESCRIBABILITY_OF_SINGULAR_FSOBJECTS, XOMFile.class);
+		super("fork", DESCRIBABILITY_OF_SINGULAR_FSOBJECTS);
 	}
 	
 	/*
@@ -192,30 +190,7 @@ public class XOMForkType extends XOMSimpleDataType<XOMFile> {
 	 * objects in XION can be of any mix of data types (hence the term variant for XION objects).
 	 */
 	
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, instance.toTextString(ctx));
-		if (v == null) return false;
-		v = v.asPrimitive(ctx);
-		return v instanceof XOMFile && ((XOMFile)v).isFork();
-	}
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, left.toTextString(ctx) + right.toTextString(ctx));
-		if (v == null) return false;
-		v = v.asPrimitive(ctx);
-		return v instanceof XOMFile && ((XOMFile)v).isFork();
-	}
-	protected XOMFile makeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, instance.toTextString(ctx));
-		if (v == null) throw new XOMMorphError(typeName);
-		v = v.asPrimitive(ctx);
-		if (v instanceof XOMFile && ((XOMFile)v).isFork()) return (XOMFile)v;
-		else throw new XOMMorphError(typeName);
-	}
-	protected XOMFile makeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, left.toTextString(ctx) + right.toTextString(ctx));
-		if (v == null) throw new XOMMorphError(typeName);
-		v = v.asPrimitive(ctx);
-		if (v instanceof XOMFile && ((XOMFile)v).isFork()) return (XOMFile)v;
-		else throw new XOMMorphError(typeName);
+	protected boolean accept(XOMFile f) {
+		return f.isFork();
 	}
 }

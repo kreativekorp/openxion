@@ -30,7 +30,6 @@ package com.kreative.openxion.xom.inst;
 import java.awt.Toolkit;
 import java.awt.datatransfer.*;
 import java.util.*;
-
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.XNSecurityKey;
 import com.kreative.openxion.XNScriptError;
@@ -126,8 +125,13 @@ public class XOMClipboard extends XOMContainer implements ClipboardOwner {
 			return "the clipboard";
 		return getClipboardString();
 	}
-	public List<? extends XOMVariant> toList(XNContext ctx) {
+	public List<? extends XOMVariant> toVariantList(XNContext ctx) {
 		return Arrays.asList(this);
+	}
+	public List<? extends XOMVariant> toPrimitiveList(XNContext ctx) {
+		if (!ctx.allow(XNSecurityKey.CLIPBOARD_READ, "Operation", "Read"))
+			return Arrays.asList(this);
+		return Arrays.asList(new XOMString(getClipboardString()));
 	}
 	public int hashCode() {
 		return 0xBEC1126B;

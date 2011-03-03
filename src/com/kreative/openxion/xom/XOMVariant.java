@@ -29,7 +29,6 @@ package com.kreative.openxion.xom;
 
 import java.io.Serializable;
 import java.util.List;
-
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.ast.XNModifier;
 
@@ -48,18 +47,7 @@ public abstract class XOMVariant implements Serializable {
 	 * @return if this is a variable, the variable's value;
 	 * otherwise, this variant as given.
 	 */
-	public abstract XOMVariant asValue(XNContext ctx);
-	
-	/**
-	 * If this is a variable, returns the variable's value.
-	 * If this is a container, returns the container's contents.
-	 * Otherwise, returns this variant as given.
-	 * @param ctx the context.
-	 * @return if this is a variable, the variable's value;
-	 * if this is a container, the container's contents;
-	 * otherwise, this variant as given.
-	 */
-	public abstract XOMVariant asContents(XNContext ctx);
+	public abstract XOMVariant asObject(XNContext ctx);
 	
 	/**
 	 * If this is a variable, returns the variable's value as a primitive.
@@ -153,7 +141,14 @@ public abstract class XOMVariant implements Serializable {
 	 * @param ctx the context.
 	 * @return this variant's value as a list.
 	 */
-	public abstract List<? extends XOMVariant> toList(XNContext ctx);
+	public abstract List<? extends XOMVariant> toVariantList(XNContext ctx);
+	
+	/**
+	 * Returns this variant's value as a list of primitives.
+	 * @param ctx the context.
+	 * @return this variant's value as a list of primitives.
+	 */
+	public abstract List<? extends XOMVariant> toPrimitiveList(XNContext ctx);
 	
 	/**
 	 * Returns a hash code for this variant.

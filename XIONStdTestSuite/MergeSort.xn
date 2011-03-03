@@ -21,6 +21,7 @@ function Merge leftList as list, rightList as list
 end Merge
 
 function MergeSort unsortedList as list
+	put ">>>>>" & the descriptor of unsortedList
 	if unsortedList is empty then return unsortedList
 	if the number of elements in unsortedList is one then return unsortedList
 	local middleElement as integer is (the number of elements in unsortedList) div 2
@@ -44,6 +45,7 @@ put MergeSort(-7)
 
 -- Testing MergeSort itself
 local x as list is (5, 9, 3.14, 12, 0, -4, 18, -7.7, 1, 36, 2.4, 42.01, -99)
+put ">>>>>" & the descriptor of x
 put MergeSort(x)
 sort elements of x numeric
 put x

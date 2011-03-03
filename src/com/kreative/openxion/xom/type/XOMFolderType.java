@@ -33,22 +33,20 @@ import com.kreative.openxion.XNContext;
 import com.kreative.openxion.XNSecurityKey;
 import com.kreative.openxion.XNScriptError;
 import com.kreative.openxion.util.XIONUtil;
-import com.kreative.openxion.xom.XOMSimpleDataType;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMGetError;
 import com.kreative.openxion.xom.XOMCreateError;
-import com.kreative.openxion.xom.XOMMorphError;
 import com.kreative.openxion.xom.inst.XOMFile;
 import com.kreative.openxion.xom.inst.XOMList;
 
-public class XOMFolderType extends XOMSimpleDataType<XOMFile> {
+public class XOMFolderType extends XOMFSDataType {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMFolderType instance = new XOMFolderType();
 	public static final XOMListType listInstance = new XOMListType("folders", DESCRIBABILITY_OF_PLURAL_FSOBJECTS, instance);
 	
 	private XOMFolderType() {
-		super("folder", DESCRIBABILITY_OF_SINGULAR_FSOBJECTS, XOMFile.class);
+		super("folder", DESCRIBABILITY_OF_SINGULAR_FSOBJECTS);
 	}
 	
 	/*
@@ -74,7 +72,7 @@ public class XOMFolderType extends XOMSimpleDataType<XOMFile> {
 	
 	public boolean canGetInstanceByIndex(XNContext ctx, int index) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFolder", "Index", Integer.toString(index))) return false;
-		List<? extends XOMVariant> theXFiles = getMassInstance(ctx).toList(ctx);
+		List<? extends XOMVariant> theXFiles = getMassInstance(ctx).toPrimitiveList(ctx);
 		index = XIONUtil.index(1, theXFiles.size(), index, index)[0];
 		return (index >= 1 && index <= theXFiles.size());
 	}
@@ -89,7 +87,7 @@ public class XOMFolderType extends XOMSimpleDataType<XOMFile> {
 	public XOMVariant getInstanceByIndex(XNContext ctx, int index) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFolder", "Index", Integer.toString(index)))
 			throw new XNScriptError("Security settings do not allow file system access");
-		List<? extends XOMVariant> theXFiles = getMassInstance(ctx).toList(ctx);
+		List<? extends XOMVariant> theXFiles = getMassInstance(ctx).toPrimitiveList(ctx);
 		index = XIONUtil.index(1, theXFiles.size(), index, index)[0];
 		if (index >= 1 && index <= theXFiles.size()) {
 			return theXFiles.get(index-1);
@@ -100,7 +98,7 @@ public class XOMFolderType extends XOMSimpleDataType<XOMFile> {
 	public XOMVariant getInstanceByIndex(XNContext ctx, int startIndex, int endIndex) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFolder", "StartIndex", Integer.toString(startIndex), "EndIndex", Integer.toString(endIndex)))
 			throw new XNScriptError("Security settings do not allow file system access");
-		List<? extends XOMVariant> theXFiles = getMassInstance(ctx).toList(ctx);
+		List<? extends XOMVariant> theXFiles = getMassInstance(ctx).toPrimitiveList(ctx);
 		int[] indexes = XIONUtil.index(1, theXFiles.size(), startIndex, endIndex);
 		if (indexes[0] < 1) indexes[0] = 1;
 		else if (indexes[0] > theXFiles.size()) indexes[0] = theXFiles.size();
@@ -165,7 +163,7 @@ public class XOMFolderType extends XOMSimpleDataType<XOMFile> {
 	public boolean canGetChildVariantByIndex(XNContext ctx, XOMVariant parent, int index) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFolder", "Parent", parent.toTextString(ctx), "Index", Integer.toString(index))) return false;
 		if (!canGetChildMassVariant(ctx, parent)) return false;
-		List<? extends XOMVariant> theXFiles = getChildMassVariant(ctx, parent).toList(ctx);
+		List<? extends XOMVariant> theXFiles = getChildMassVariant(ctx, parent).toPrimitiveList(ctx);
 		index = XIONUtil.index(1, theXFiles.size(), index, index)[0];
 		return (index >= 1 && index <= theXFiles.size());
 	}
@@ -184,7 +182,7 @@ public class XOMFolderType extends XOMSimpleDataType<XOMFile> {
 	public XOMVariant getChildVariantByIndex(XNContext ctx, XOMVariant parent, int index) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFolder", "Parent", parent.toTextString(ctx), "Index", Integer.toString(index)))
 			throw new XNScriptError("Security settings do not allow file system access");
-		List<? extends XOMVariant> theXFiles = getChildMassVariant(ctx, parent).toList(ctx);
+		List<? extends XOMVariant> theXFiles = getChildMassVariant(ctx, parent).toPrimitiveList(ctx);
 		index = XIONUtil.index(1, theXFiles.size(), index, index)[0];
 		if (index >= 1 && index <= theXFiles.size()) {
 			return theXFiles.get(index-1);
@@ -195,7 +193,7 @@ public class XOMFolderType extends XOMSimpleDataType<XOMFile> {
 	public XOMVariant getChildVariantByIndex(XNContext ctx, XOMVariant parent, int startIndex, int endIndex) {
 		if (!ctx.allow(XNSecurityKey.FILE_SYSTEM_READ, "Operation", "GetFolder", "Parent", parent.toTextString(ctx), "StartIndex", Integer.toString(startIndex), "EndIndex", Integer.toString(endIndex)))
 			throw new XNScriptError("Security settings do not allow file system access");
-		List<? extends XOMVariant> theXFiles = getChildMassVariant(ctx, parent).toList(ctx);
+		List<? extends XOMVariant> theXFiles = getChildMassVariant(ctx, parent).toPrimitiveList(ctx);
 		int[] indexes = XIONUtil.index(1, theXFiles.size(), startIndex, endIndex);
 		if (indexes[0] < 1) indexes[0] = 1;
 		else if (indexes[0] > theXFiles.size()) indexes[0] = theXFiles.size();
@@ -248,30 +246,7 @@ public class XOMFolderType extends XOMSimpleDataType<XOMFile> {
 	 * objects in XION can be of any mix of data types (hence the term variant for XION objects).
 	 */
 	
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, instance.toTextString(ctx));
-		if (v == null) return false;
-		v = v.asPrimitive(ctx);
-		return v instanceof XOMFile && ((XOMFile)v).isFolder();
-	}
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, left.toTextString(ctx) + right.toTextString(ctx));
-		if (v == null) return false;
-		v = v.asPrimitive(ctx);
-		return v instanceof XOMFile && ((XOMFile)v).isFolder();
-	}
-	protected XOMFile makeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, instance.toTextString(ctx));
-		if (v == null) throw new XOMMorphError(typeName);
-		v = v.asPrimitive(ctx);
-		if (v instanceof XOMFile && ((XOMFile)v).isFolder()) return (XOMFile)v;
-		else throw new XOMMorphError(typeName);
-	}
-	protected XOMFile makeInstanceFromImpl(XNContext ctx, XOMVariant left, XOMVariant right) {
-		XOMVariant v = XIONUtil.parseDescriptor(ctx, left.toTextString(ctx) + right.toTextString(ctx));
-		if (v == null) throw new XOMMorphError(typeName);
-		v = v.asPrimitive(ctx);
-		if (v instanceof XOMFile && ((XOMFile)v).isFolder()) return (XOMFile)v;
-		else throw new XOMMorphError(typeName);
+	protected boolean accept(XOMFile f) {
+		return f.isFolder();
 	}
 }
