@@ -51,17 +51,6 @@ public abstract class XOMVariant implements Serializable {
 	public abstract XOMVariant asValue(XNContext ctx);
 	
 	/**
-	 * If this is a variable, returns the variable's value.
-	 * If this is a container, returns the container's contents.
-	 * Otherwise, returns this variant as given.
-	 * @param ctx the context.
-	 * @return if this is a variable, the variable's value;
-	 * if this is a container, the container's contents;
-	 * otherwise, this variant as given.
-	 */
-	public abstract XOMVariant asContents(XNContext ctx);
-	
-	/**
 	 * If this is a variable, returns the variable's value as a primitive.
 	 * If this is a container, returns the container's contents as a primitive.
 	 * Otherwise, returns this variant as given.
