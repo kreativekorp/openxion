@@ -2097,7 +2097,7 @@ public class XNStandardModule extends XNModule {
 	private static final Command c_get = new Command() {
 		public XOMVariant executeCommand(XNInterpreter interp, XNContext ctx, String commandName, List<XNExpression> parameters) {
 			if (parameters == null || parameters.isEmpty()) throw new XNScriptError("Can't understand arguments to get");
-			ctx.getVariableMap("it").setVariable(ctx, "it", interp.evaluateExpression(parameters.get(0)).asValue(ctx));
+			ctx.getVariableMap("it").setVariable(ctx, "it", interp.evaluateExpression(parameters.get(0)).asPrimitive(ctx));
 			return null;
 		}
 	};
@@ -2106,7 +2106,7 @@ public class XNStandardModule extends XNModule {
 		public XOMVariant executeCommand(XNInterpreter interp, XNContext ctx, String commandName, List<XNExpression> parameters) {
 			if (parameters == null || parameters.size() < 3) throw new XNScriptError("Can't understand arguments to let");
 			XOMVariant dest = interp.evaluateExpression(parameters.get(0)).asContainer(ctx, false);
-			XOMVariant what = interp.evaluateExpression(parameters.get(2)).asValue(ctx);
+			XOMVariant what = interp.evaluateExpression(parameters.get(2)).asPrimitive(ctx);
 			dest.putIntoContents(ctx, what);
 			return null;
 		}
@@ -2213,14 +2213,14 @@ public class XNStandardModule extends XNModule {
 			if (parameters.size() < 3) {
 				ctx.getUI().put(interp.evaluateExpression(parameters.get(0)).toTextString(ctx));
 			} else if (parameters.size() < 6) {
-				XOMVariant what = interp.evaluateExpression(parameters.get(0)).asValue(ctx);
+				XOMVariant what = interp.evaluateExpression(parameters.get(0)).asPrimitive(ctx);
 				String prep = interp.evaluateExpression(parameters.get(1)).toTextString(ctx);
 				XOMVariant dest = interp.evaluateExpression(parameters.get(2)).asContainer(ctx, false);
 				if (prep.equalsIgnoreCase("before")) dest.putBeforeContents(ctx, what);
 				else if (prep.equalsIgnoreCase("after")) dest.putAfterContents(ctx, what);
 				else dest.putIntoContents(ctx, what);
 			} else {
-				XOMVariant what = interp.evaluateExpression(parameters.get(0)).asValue(ctx);
+				XOMVariant what = interp.evaluateExpression(parameters.get(0)).asPrimitive(ctx);
 				String prep = interp.evaluateExpression(parameters.get(1)).toTextString(ctx);
 				XOMVariant dest = interp.evaluateExpression(parameters.get(2)).asContainer(ctx, false);
 				String prop = interp.evaluateExpression(parameters.get(4)).toTextString(ctx);
@@ -3905,10 +3905,10 @@ public class XNStandardModule extends XNModule {
 	private static final Function f_lconcat = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) return XOMList.EMPTY_LIST;
-			List<? extends XOMVariant> parameters = listParameter(ctx, functionName, parameter, false);
+			List<? extends XOMVariant> parameters = listParameter(ctx, functionName, parameter, true);
 			List<XOMVariant> concatenatedList = new Vector<XOMVariant>();
 			for (XOMVariant variant : parameters) {
-				concatenatedList.addAll(listParameter(ctx, functionName, variant, false));
+				concatenatedList.addAll(listParameter(ctx, functionName, variant, true));
 			}
 			return new XOMList(concatenatedList);
 		}
