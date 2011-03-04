@@ -1121,7 +1121,7 @@ public class XNInterpreter {
 							parameters.get(i) :
 								(paramValueExpr == null) ?
 										XOMEmpty.EMPTY :
-											evaluateExpression(paramValueExpr).asValue(context);
+											evaluateExpression(paramValueExpr).asPrimitive(context);
 				f.localVariables().declareVariable(context, paramName, paramDatatype, paramValue);
 			}
 		}
