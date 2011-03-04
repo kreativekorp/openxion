@@ -831,7 +831,7 @@ public class XNInterpreter {
 			else if (expr instanceof XNListExpression) {
 				List<XOMVariant> theList = new Vector<XOMVariant>();
 				for (XNExpression e : ((XNListExpression)expr).exprs) {
-					theList.add(evaluateExpression(e).asValue(context));
+					theList.add(evaluateExpression(e).asPrimitive(context));
 				}
 				return new XOMList(theList);
 			}
@@ -1029,7 +1029,7 @@ public class XNInterpreter {
 				context.pushResponder(resp);
 				XNHandlerExit exit = null;
 				try {
-					exit = evaluateUserFunction(fh, parameter.toVariantList(context));
+					exit = evaluateUserFunction(fh, parameter.toPrimitiveList(context));
 				} finally {
 					context.popResponder();
 				}
@@ -1079,7 +1079,7 @@ public class XNInterpreter {
 				context.pushResponder(resp);
 				XNHandlerExit exit = null;
 				try {
-					exit = evaluateUserFunction(mh, parameter.toVariantList(context));
+					exit = evaluateUserFunction(mh, parameter.toPrimitiveList(context));
 				} finally {
 					context.popResponder();
 				}
@@ -1562,7 +1562,7 @@ public class XNInterpreter {
 				}
 				else if (rp instanceof XNRepeatForEachParameters) {
 					String name = ((XNRepeatForEachParameters)rp).identifier;
-					List<? extends XOMVariant> list = evaluateExpression(((XNRepeatForEachParameters)rp).list).asValue(context).toVariantList(context);
+					List<? extends XOMVariant> list = evaluateExpression(((XNRepeatForEachParameters)rp).list).toVariantList(context);
 					for (XOMVariant item : list) {
 						XOMVariant dest = new XOMVariable(context.getVariableMap(name), name);
 						dest.putIntoContents(context, item);
@@ -1735,7 +1735,7 @@ public class XNInterpreter {
 						XOMVariant value =
 							(valueExpr == null) ?
 									XOMEmpty.EMPTY :
-										evaluateExpression(valueExpr).asValue(context);
+										evaluateExpression(valueExpr).asPrimitive(context);
 						context.getVariableMap(name).declareVariable(context, name, datatype, value);
 					}
 				}
@@ -1758,7 +1758,7 @@ public class XNInterpreter {
 			if (mh != null) {
 				List<XOMVariant> paramValues = new Vector<XOMVariant>();
 				for (XNExpression param : parameters) {
-					paramValues.add(evaluateExpression(param).asValue(context));
+					paramValues.add(evaluateExpression(param).asPrimitive(context));
 				}
 				context.pushResponder(resp);
 				XNHandlerExit exit = null;
@@ -1812,7 +1812,7 @@ public class XNInterpreter {
 			if (mh != null) {
 				List<XOMVariant> paramValues = new Vector<XOMVariant>();
 				for (XNExpression param : parameters) {
-					paramValues.add(evaluateExpression(param).asValue(context));
+					paramValues.add(evaluateExpression(param).asPrimitive(context));
 				}
 				context.pushResponder(resp);
 				XNHandlerExit exit = null;
@@ -1859,7 +1859,7 @@ public class XNInterpreter {
 							parameters.get(i) :
 								(paramValueExpr == null) ?
 										XOMEmpty.EMPTY :
-											evaluateExpression(paramValueExpr).asValue(context);
+											evaluateExpression(paramValueExpr).asPrimitive(context);
 				f.localVariables().declareVariable(context, paramName, paramDatatype, paramValue);
 			}
 		}
