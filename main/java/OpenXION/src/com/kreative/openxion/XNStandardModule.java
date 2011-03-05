@@ -240,6 +240,8 @@ public class XNStandardModule extends XNModule {
 		dataTypes.put("dates", XOMDateType.listInstance);
 		dataTypes.put("binary", XOMBinaryType.instance);
 		dataTypes.put("binaries", XOMBinaryType.listInstance);
+		dataTypes.put("dictionary", XOMDictionaryType.instance);
+		dataTypes.put("dictionaries", XOMDictionaryType.listInstance);
 		dataTypes.put("object", XOMUserObjectType.rootInstance);
 		dataTypes.put("objects", XOMUserObjectType.rootListInstance);
 		
@@ -250,6 +252,8 @@ public class XNStandardModule extends XNModule {
 		
 		dataTypes.put("element", XOMListChunkType.instance);
 		dataTypes.put("elements", XOMListChunkType.listInstance);
+		dataTypes.put("entry", XOMDictionaryChunkType.instance);
+		dataTypes.put("entries", XOMDictionaryChunkType.listInstance);
 		
 		dataTypes.put("char", XOMStringChunkType.characterInstance);
 		dataTypes.put("chars", XOMStringChunkType.characterListInstance);

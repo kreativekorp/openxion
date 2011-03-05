@@ -914,6 +914,7 @@ public class XNParser {
 		else if (lookNewExpression(idx)) return true;
 		else if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("if")) return true;
 		else if (lookToken(idx).kind == XNToken.SYMBOL && lookToken(idx).image.equalsIgnoreCase("(")) return true;
+		else if (lookToken(idx).kind == XNToken.SYMBOL && lookToken(idx).image.equalsIgnoreCase("{")) return true;
 		else if (lookToken(idx).kind == XNToken.QUOTED) return true;
 		else if (lookToken(idx).kind == XNToken.NUMBER) return true;
 		else if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("me")) return true;
@@ -978,6 +979,49 @@ public class XNParser {
 					return e;
 				} else {
 					throw new XNParseError(")", lookToken(1));
+				}
+			}
+		}
+		// dictionary literal, e.g. { "a" = "apple"; "b" = "raise" }
+		else if (lookToken(1).kind == XNToken.SYMBOL && lookToken(1).image.equalsIgnoreCase("{")) {
+			XNDictionaryExpression e = new XNDictionaryExpression();
+			e.openingBrace = getToken();
+			while (true) {
+				if (lookToken(1).isEOF()) {
+					throw new XNParseError("}", lookToken(1));
+				} else if (lookToken(1).kind == XNToken.LINE_TERM) {
+					consumeTokens(1);
+					continue;
+				} else if (lookToken(1).kind == XNToken.SYMBOL && lookToken(1).image.equalsIgnoreCase("}")) {
+					e.closingBrace = getToken();
+					return e;
+				} else {
+					Collection<String> myKeywords = new HashSet<String>();
+					myKeywords.add("=");
+					myKeywords.add(":");
+					myKeywords.add(";");
+					myKeywords.add("}");
+					XNExpression ke = getListExpression(myKeywords);
+					XNToken et = getToken();
+					if (!(et.image.equals("=") || et.image.equals(":")))
+						throw new XNParseError("=", et);
+					XNExpression ve = getListExpression(myKeywords);
+					e.keyExprs.add(ke);
+					e.equalSigns.add(et);
+					e.valueExprs.add(ve);
+					XNToken bt = getToken();
+					if (bt.isEOF()) {
+						throw new XNParseError("}", bt);
+					} else if (bt.kind == XNToken.LINE_TERM) {
+						continue;
+					} else if (bt.kind == XNToken.SYMBOL && bt.image.equalsIgnoreCase("}")) {
+						e.closingBrace = bt;
+						return e;
+					} else if (bt.kind == XNToken.SYMBOL && bt.image.equalsIgnoreCase(";")) {
+						continue;
+					} else {
+						throw new XNParseError("; or end of line", bt);
+					}
 				}
 			}
 		}

@@ -835,6 +835,16 @@ public class XNInterpreter {
 				}
 				return new XOMList(theList);
 			}
+			else if (expr instanceof XNDictionaryExpression) {
+				XNDictionaryExpression de = (XNDictionaryExpression)expr;
+				Map<String, XOMVariant> theMap = new LinkedHashMap<String, XOMVariant>();
+				for (int i = 0; i < de.keyExprs.size() && i < de.valueExprs.size(); i++) {
+					String k = evaluateExpression(de.keyExprs.get(i)).toTextString(context);
+					XOMVariant v = evaluateExpression(de.valueExprs.get(i)).asPrimitive(context);
+					theMap.put(k, v);
+				}
+				return new XOMDictionary(theMap);
+			}
 			else if (expr instanceof XNVariableExpression) {
 				String name = ((XNVariableExpression)expr).varname.image;
 				return new XOMVariable(context.getVariableMap(name), name);
