@@ -34,6 +34,7 @@ import com.kreative.openxion.xom.XOMMorphError;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.inst.XOMEmpty;
 import com.kreative.openxion.xom.inst.XOMList;
+import com.kreative.openxion.xom.inst.XOMReference;
 
 /**
  * XOMPrimitiveDataType handles polymorphic methods for primitive types.
@@ -81,6 +82,10 @@ public abstract class XOMNumericDataType<IT extends XOMVariant> extends XOMDataT
 				if (canMakeInstanceFrom(ctx, l.get(0), acceptEmpty))
 					return true;
 		}
+		if (instance instanceof XOMReference) {
+			if (canMakeInstanceFrom(ctx, ((XOMReference)instance).dereference(true), acceptEmpty))
+				return true;
+		}
 		if (instanceClass.isAssignableFrom(instance.getClass()))
 			return true;
 		else if (instance instanceof XOMEmpty && acceptEmpty)
@@ -111,6 +116,10 @@ public abstract class XOMNumericDataType<IT extends XOMVariant> extends XOMDataT
 			if (l.size() == 1)
 				if (canMakeInstanceFrom(ctx, l.get(0), acceptEmpty))
 					return makeInstanceFrom(ctx, l.get(0), acceptEmpty);
+		}
+		if (instance instanceof XOMReference) {
+			if (canMakeInstanceFrom(ctx, ((XOMReference)instance).dereference(true), acceptEmpty))
+				return makeInstanceFrom(ctx, ((XOMReference)instance).dereference(true), acceptEmpty);
 		}
 		if (instanceClass.isAssignableFrom(instance.getClass()))
 			return instanceClass.cast(instance);

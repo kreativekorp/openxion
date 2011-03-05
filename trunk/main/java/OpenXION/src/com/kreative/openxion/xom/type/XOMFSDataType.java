@@ -36,6 +36,7 @@ import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.inst.XOMEmpty;
 import com.kreative.openxion.xom.inst.XOMFile;
 import com.kreative.openxion.xom.inst.XOMList;
+import com.kreative.openxion.xom.inst.XOMReference;
 
 /**
  * XOMFSDataType handles polymorphic methods for file system types.
@@ -60,6 +61,10 @@ public abstract class XOMFSDataType extends XOMDataType<XOMFile> {
 			if (l.size() == 1)
 				if (canMakeInstanceFrom(ctx, l.get(0)))
 					return true;
+		}
+		if (instance instanceof XOMReference) {
+			if (canMakeInstanceFrom(ctx, ((XOMReference)instance).dereference(true)))
+				return true;
 		}
 		if (canMakeInstanceFromImpl(ctx, instance))
 			return true;
@@ -87,6 +92,10 @@ public abstract class XOMFSDataType extends XOMDataType<XOMFile> {
 			if (l.size() == 1)
 				if (canMakeInstanceFrom(ctx, l.get(0)))
 					return makeInstanceFrom(ctx, l.get(0));
+		}
+		if (instance instanceof XOMReference) {
+			if (canMakeInstanceFrom(ctx, ((XOMReference)instance).dereference(true)))
+				return makeInstanceFrom(ctx, ((XOMReference)instance).dereference(true));
 		}
 		if (canMakeInstanceFromImpl(ctx, instance))
 			return makeInstanceFromImpl(ctx, instance);

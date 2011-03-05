@@ -187,6 +187,11 @@ public class XNInterpreter {
 					} else {
 						throw new XNScriptError("Can't understand this");
 					}
+				case REFERENCE_TO:
+					return new XOMReference(evaluateExpression(a));
+				case REFERENT_OF:
+					av = evaluateExpression(a).asPrimitive(context);
+					return XOMReferenceType.instance.makeInstanceFrom(context, av).dereference(true);
 				default:
 					throw new XNScriptError("Can't understand this");
 				}

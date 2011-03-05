@@ -31,6 +31,7 @@ import java.util.List;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.xom.inst.XOMEmpty;
 import com.kreative.openxion.xom.inst.XOMList;
+import com.kreative.openxion.xom.inst.XOMReference;
 
 /**
  * XOMPrimitiveDataType handles polymorphic methods for primitive types.
@@ -62,6 +63,10 @@ public abstract class XOMPrimitiveDataType<IT extends XOMVariant> extends XOMDat
 				if (canMakeInstanceFrom(ctx, l.get(0)))
 					return true;
 		}
+		if (instance instanceof XOMReference) {
+			if (canMakeInstanceFrom(ctx, ((XOMReference)instance).dereference(true)))
+				return true;
+		}
 		if (instanceClass.isAssignableFrom(instance.getClass()))
 			return true;
 		else if (instance instanceof XOMEmpty && canMakeInstanceFromImpl(ctx))
@@ -92,6 +97,10 @@ public abstract class XOMPrimitiveDataType<IT extends XOMVariant> extends XOMDat
 			if (l.size() == 1)
 				if (canMakeInstanceFrom(ctx, l.get(0)))
 					return makeInstanceFrom(ctx, l.get(0));
+		}
+		if (instance instanceof XOMReference) {
+			if (canMakeInstanceFrom(ctx, ((XOMReference)instance).dereference(true)))
+				return makeInstanceFrom(ctx, ((XOMReference)instance).dereference(true));
 		}
 		if (instanceClass.isAssignableFrom(instance.getClass()))
 			return instanceClass.cast(instance);

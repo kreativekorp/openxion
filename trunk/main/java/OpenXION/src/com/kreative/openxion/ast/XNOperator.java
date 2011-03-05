@@ -34,6 +34,8 @@ public enum XNOperator {
 	BIT_NOT					("bitnot",							XNOperatorPrecedence.UNARY),
 	EXISTS					("there is a",						XNOperatorPrecedence.UNARY),
 	NOT_EXISTS				("there isn't a",					XNOperatorPrecedence.UNARY),
+	REFERENCE_TO			("a reference to",					XNOperatorPrecedence.UNARY),
+	REFERENT_OF				("the referent of",					XNOperatorPrecedence.UNARY),
 	EXPONENT				("^",								XNOperatorPrecedence.EXPONENT),
 	MULTIPLY				("*", 								XNOperatorPrecedence.MULTIPLY),
 	DIVIDE					("/",								XNOperatorPrecedence.MULTIPLY),
