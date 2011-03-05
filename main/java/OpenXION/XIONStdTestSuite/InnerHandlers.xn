@@ -1,0 +1,48 @@
+on myTest
+	on myTest2
+		put "Hello"
+	end myTest2
+	
+	on myTest3
+		put "Goodbye"
+	end myTest3
+	
+	myTest2
+	myTest3
+end myTest
+
+myTest
+try
+	myTest2
+catch e
+	put e
+end try
+try
+	myTest3
+catch e
+	put e
+end try
+
+function moreTest
+	function moreTest2
+		return 3
+	end moreTest2
+	
+	function moreTest3
+		return 5
+	end moreTest3
+	
+	return moreTest2() * moreTest3()
+end moreTest
+
+put moreTest()
+try
+	put moreTest2()
+catch e
+	put e
+end try
+try
+	put moreTest3()
+catch e
+	put e
+end try
