@@ -157,6 +157,8 @@ public class XNParser {
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("as") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("an")) return XNOperator.AS;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("as") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("a")) return XNOperator.AS;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("as")) return XNOperator.AS;
+		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("a") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("reference") && lookToken(idx+2).kind == XNToken.ID && lookToken(idx+2).image.equalsIgnoreCase("to")) return XNOperator.REFERENCE_TO;
+		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("a") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("ref") && lookToken(idx+2).kind == XNToken.ID && lookToken(idx+2).image.equalsIgnoreCase("to")) return XNOperator.REFERENCE_TO;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("begins") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("with")) return XNOperator.STARTS_WITH;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("between")) return XNOperator.BETWEEN;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("bitand")) return XNOperator.BIT_AND;
@@ -263,6 +265,12 @@ public class XNParser {
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("not")) return XNOperator.NOT;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("or")) return XNOperator.OR;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("quot")) return XNOperator.QUOT;
+		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("reference") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("to")) return XNOperator.REFERENCE_TO;
+		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("referent") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("of")) return XNOperator.REFERENT_OF;
+		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("referent") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("in")) return XNOperator.REFERENT_OF;
+		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("ref") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("to")) return XNOperator.REFERENCE_TO;
+		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("ref") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("of")) return XNOperator.REFERENT_OF;
+		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("ref") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("in")) return XNOperator.REFERENT_OF;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("rem")) return XNOperator.REM;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("starts") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("with")) return XNOperator.STARTS_WITH;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("there's") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("no")) return XNOperator.NOT_EXISTS;
@@ -275,6 +283,10 @@ public class XNParser {
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("there") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("is") && lookToken(idx+2).kind == XNToken.ID && lookToken(idx+2).image.equalsIgnoreCase("no")) return XNOperator.NOT_EXISTS;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("there") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("is") && lookToken(idx+2).kind == XNToken.ID && lookToken(idx+2).image.equalsIgnoreCase("an")) return XNOperator.EXISTS;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("there") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("is") && lookToken(idx+2).kind == XNToken.ID && lookToken(idx+2).image.equalsIgnoreCase("a")) return XNOperator.EXISTS;
+		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("the") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("referent") && lookToken(idx+2).kind == XNToken.ID && lookToken(idx+2).image.equalsIgnoreCase("of")) return XNOperator.REFERENT_OF;
+		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("the") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("referent") && lookToken(idx+2).kind == XNToken.ID && lookToken(idx+2).image.equalsIgnoreCase("in")) return XNOperator.REFERENT_OF;
+		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("the") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("ref") && lookToken(idx+2).kind == XNToken.ID && lookToken(idx+2).image.equalsIgnoreCase("of")) return XNOperator.REFERENT_OF;
+		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("the") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("ref") && lookToken(idx+2).kind == XNToken.ID && lookToken(idx+2).image.equalsIgnoreCase("in")) return XNOperator.REFERENT_OF;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("xor")) return XNOperator.XOR;
 		return XNOperator.NULL;
 	}
@@ -332,6 +344,8 @@ public class XNParser {
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("as") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("an")) { consumeTokens(2); return XNOperator.AS; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("as") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("a")) { consumeTokens(2); return XNOperator.AS; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("as")) { consumeTokens(1); return XNOperator.AS; }
+		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("a") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("reference") && lookToken(3).kind == XNToken.ID && lookToken(3).image.equalsIgnoreCase("to")) { consumeTokens(3); return XNOperator.REFERENCE_TO; }
+		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("a") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("ref") && lookToken(3).kind == XNToken.ID && lookToken(3).image.equalsIgnoreCase("to")) { consumeTokens(3); return XNOperator.REFERENCE_TO; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("begins") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("with")) { consumeTokens(2); return XNOperator.STARTS_WITH; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("between")) { consumeTokens(1); return XNOperator.BETWEEN; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("bitand")) { consumeTokens(1); return XNOperator.BIT_AND; }
@@ -438,6 +452,12 @@ public class XNParser {
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("not")) { consumeTokens(1); return XNOperator.NOT; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("or")) { consumeTokens(1); return XNOperator.OR; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("quot")) { consumeTokens(1); return XNOperator.QUOT; }
+		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("reference") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("to")) { consumeTokens(2); return XNOperator.REFERENCE_TO; }
+		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("referent") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("of")) { consumeTokens(2); return XNOperator.REFERENT_OF; }
+		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("referent") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("in")) { consumeTokens(2); return XNOperator.REFERENT_OF; }
+		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("ref") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("to")) { consumeTokens(2); return XNOperator.REFERENCE_TO; }
+		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("ref") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("of")) { consumeTokens(2); return XNOperator.REFERENT_OF; }
+		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("ref") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("in")) { consumeTokens(2); return XNOperator.REFERENT_OF; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("rem")) { consumeTokens(1); return XNOperator.REM; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("starts") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("with")) { consumeTokens(2); return XNOperator.STARTS_WITH; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("there's") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("no")) { consumeTokens(2); return XNOperator.NOT_EXISTS; }
@@ -450,6 +470,10 @@ public class XNParser {
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("there") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("is") && lookToken(3).kind == XNToken.ID && lookToken(3).image.equalsIgnoreCase("no")) { consumeTokens(3); return XNOperator.NOT_EXISTS; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("there") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("is") && lookToken(3).kind == XNToken.ID && lookToken(3).image.equalsIgnoreCase("an")) { consumeTokens(3); return XNOperator.EXISTS; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("there") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("is") && lookToken(3).kind == XNToken.ID && lookToken(3).image.equalsIgnoreCase("a")) { consumeTokens(3); return XNOperator.EXISTS; }
+		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("the") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("referent") && lookToken(3).kind == XNToken.ID && lookToken(3).image.equalsIgnoreCase("of")) { consumeTokens(3); return XNOperator.REFERENT_OF; }
+		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("the") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("referent") && lookToken(3).kind == XNToken.ID && lookToken(3).image.equalsIgnoreCase("in")) { consumeTokens(3); return XNOperator.REFERENT_OF; }
+		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("the") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("ref") && lookToken(3).kind == XNToken.ID && lookToken(3).image.equalsIgnoreCase("of")) { consumeTokens(3); return XNOperator.REFERENT_OF; }
+		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("the") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("ref") && lookToken(3).kind == XNToken.ID && lookToken(3).image.equalsIgnoreCase("in")) { consumeTokens(3); return XNOperator.REFERENT_OF; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("xor")) { consumeTokens(1); return XNOperator.XOR; }
 		throw new XNParseError("operator", lookToken(1));
 	}

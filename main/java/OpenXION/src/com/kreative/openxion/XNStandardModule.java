@@ -242,6 +242,8 @@ public class XNStandardModule extends XNModule {
 		dataTypes.put("binaries", XOMBinaryType.listInstance);
 		dataTypes.put("dictionary", XOMDictionaryType.instance);
 		dataTypes.put("dictionaries", XOMDictionaryType.listInstance);
+		dataTypes.put("reference", XOMReferenceType.instance);
+		dataTypes.put("references", XOMReferenceType.listInstance);
 		dataTypes.put("object", XOMUserObjectType.rootInstance);
 		dataTypes.put("objects", XOMUserObjectType.rootListInstance);
 		

@@ -28,6 +28,7 @@
 package com.kreative.openxion.xom;
 
 import com.kreative.openxion.XNContext;
+import com.kreative.openxion.xom.inst.XOMReference;
 
 /**
  * XOMContainerDataType handles polymorphic methods for container types.
@@ -45,6 +46,10 @@ public abstract class XOMContainerDataType<IT extends XOMVariant> extends XOMDat
 	
 	public final boolean canMakeInstanceFrom(XNContext ctx, XOMVariant instance) {
 		instance = instance.asValue(ctx);
+		if (instance instanceof XOMReference) {
+			if (canMakeInstanceFrom(ctx, ((XOMReference)instance).dereference(true)))
+				return true;
+		}
 		return (instanceClass.isAssignableFrom(instance.getClass()));
 	}
 	public final boolean canMakeInstanceFrom(XNContext ctx, XOMVariant left, XOMVariant right) {
@@ -52,6 +57,10 @@ public abstract class XOMContainerDataType<IT extends XOMVariant> extends XOMDat
 	}
 	public final IT makeInstanceFrom(XNContext ctx, XOMVariant instance) {
 		instance = instance.asValue(ctx);
+		if (instance instanceof XOMReference) {
+			if (canMakeInstanceFrom(ctx, ((XOMReference)instance).dereference(true)))
+				return makeInstanceFrom(ctx, ((XOMReference)instance).dereference(true));
+		}
 		if (instanceClass.isAssignableFrom(instance.getClass()))
 			return instanceClass.cast(instance);
 		else

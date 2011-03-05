@@ -53,6 +53,7 @@ import com.kreative.openxion.xom.XOMCreateError;
 import com.kreative.openxion.xom.XOMGetError;
 import com.kreative.openxion.xom.XOMMorphError;
 import com.kreative.openxion.xom.XOMVariant;
+import com.kreative.openxion.xom.inst.XOMReference;
 import com.kreative.openxion.xom.inst.XOMUserObject;
 import com.kreative.openxion.xom.inst.XOMEmpty;
 import com.kreative.openxion.xom.inst.XOMList;
@@ -416,6 +417,10 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 				if (canMakeInstanceFrom(ctx, l.get(0)))
 					return true;
 		}
+		if (instance instanceof XOMReference) {
+			if (canMakeInstanceFrom(ctx, ((XOMReference)instance).dereference(true)))
+				return true;
+		}
 		if (instance instanceof XOMEmpty)
 			return true;
 		else if (canMakeInstanceFromImpl(ctx, instance))
@@ -444,6 +449,10 @@ public class XOMUserObjectType extends XOMDataType<XOMUserObject> {
 			if (l.size() == 1)
 				if (canMakeInstanceFrom(ctx, l.get(0)))
 					return makeInstanceFrom(ctx, l.get(0));
+		}
+		if (instance instanceof XOMReference) {
+			if (canMakeInstanceFrom(ctx, ((XOMReference)instance).dereference(true)))
+				return makeInstanceFrom(ctx, ((XOMReference)instance).dereference(true));
 		}
 		if (instance instanceof XOMEmpty)
 			return XOMUserObject.NULL;

@@ -1,0 +1,14 @@
+on twist x as reference, y as string
+	put y into the referent of x
+end twist
+
+local x as string is "Hello, my name is Rebecca. But you can call me Becky."
+put x
+put a ref to x
+put a reference to char 15 of x
+twist a ref to last word of x, "Beckie."
+put x
+twist a reference to char 15 of x, "x"
+put x
+twist a reference to x, "Hello, world!"
+put x
