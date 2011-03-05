@@ -1907,6 +1907,11 @@
 		All parameter variables in HyperTalk are implicitly declared as
 		[[dt:string]] with a default value of [[cn:empty]].
 	</note>
+	<note>
+		In HyperTalk, handlers may not be nested; that is, a handler may not appear in the
+		middle of another handler. In OpenXION, handlers can be nested. The nested handlers
+		will only be accessible from within the handler in which they appear.
+	</note>
 </structure>
 
 <structure>
@@ -1957,6 +1962,11 @@
 		HyperTalk does not support [[as]] or [[is]] in the parameter list.
 		All parameter variables in HyperTalk are implicitly declared as
 		[[dt:string]] with a default value of [[cn:empty]].
+	</note>
+	<note>
+		In HyperTalk, handlers may not be nested; that is, a handler may not appear in the
+		middle of another handler. In OpenXION, handlers can be nested. The nested handlers
+		will only be accessible from within the handler in which they appear.
 	</note>
 </structure>
 
