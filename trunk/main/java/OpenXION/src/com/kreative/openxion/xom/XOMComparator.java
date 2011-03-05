@@ -134,7 +134,7 @@ public class XOMComparator implements Comparator<XOMVariant> {
 				}
 			case TYPE_NUMERIC:
 				try {
-					XOMNumber n = XOMNumberType.instance.makeInstanceFrom(ctx,o);
+					XOMNumber n = XOMNumberType.instance.makeInstanceFrom(ctx,o,false);
 					Object q = n.isUndefined() ? n.toDouble() : n.toBigDecimal();
 					map.put(o, q);
 					return q;

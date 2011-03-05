@@ -185,13 +185,13 @@ public class XOMBinaryNumericChunk extends XOMContainer {
 	
 	public void putIntoContents(XNContext ctx, XOMVariant contents) {
 		if (chunkType.isFloat()) {
-			if (XOMNumberType.instance.canMakeInstanceFrom(ctx, contents)) {
-				double d = XOMNumberType.instance.makeInstanceFrom(ctx, contents).toDouble();
+			if (XOMNumberType.instance.canMakeInstanceFrom(ctx, contents, true)) {
+				double d = XOMNumberType.instance.makeInstanceFrom(ctx, contents, true).toDouble();
 				contents = new XOMBinary(chunkType.byteArrayValueOf(d, ctx.getLittleEndian()));
 			}
 		} else {
-			if (XOMIntegerType.instance.canMakeInstanceFrom(ctx, contents)) {
-				long l = XOMIntegerType.instance.makeInstanceFrom(ctx, contents).toLong();
+			if (XOMIntegerType.instance.canMakeInstanceFrom(ctx, contents, true)) {
+				long l = XOMIntegerType.instance.makeInstanceFrom(ctx, contents, true).toLong();
 				contents = new XOMBinary(chunkType.byteArrayValueOf(l, ctx.getLittleEndian()));
 			}
 		}
@@ -213,13 +213,13 @@ public class XOMBinaryNumericChunk extends XOMContainer {
 	
 	public void putBeforeContents(XNContext ctx, XOMVariant contents) {
 		if (chunkType.isFloat()) {
-			if (XOMNumberType.instance.canMakeInstanceFrom(ctx, contents)) {
-				double d = XOMNumberType.instance.makeInstanceFrom(ctx, contents).toDouble();
+			if (XOMNumberType.instance.canMakeInstanceFrom(ctx, contents, true)) {
+				double d = XOMNumberType.instance.makeInstanceFrom(ctx, contents, true).toDouble();
 				contents = new XOMBinary(chunkType.byteArrayValueOf(d, ctx.getLittleEndian()));
 			}
 		} else {
-			if (XOMIntegerType.instance.canMakeInstanceFrom(ctx, contents)) {
-				long l = XOMIntegerType.instance.makeInstanceFrom(ctx, contents).toLong();
+			if (XOMIntegerType.instance.canMakeInstanceFrom(ctx, contents, true)) {
+				long l = XOMIntegerType.instance.makeInstanceFrom(ctx, contents, true).toLong();
 				contents = new XOMBinary(chunkType.byteArrayValueOf(l, ctx.getLittleEndian()));
 			}
 		}
@@ -241,13 +241,13 @@ public class XOMBinaryNumericChunk extends XOMContainer {
 	
 	public void putAfterContents(XNContext ctx, XOMVariant contents) {
 		if (chunkType.isFloat()) {
-			if (XOMNumberType.instance.canMakeInstanceFrom(ctx, contents)) {
-				double d = XOMNumberType.instance.makeInstanceFrom(ctx, contents).toDouble();
+			if (XOMNumberType.instance.canMakeInstanceFrom(ctx, contents, true)) {
+				double d = XOMNumberType.instance.makeInstanceFrom(ctx, contents, true).toDouble();
 				contents = new XOMBinary(chunkType.byteArrayValueOf(d, ctx.getLittleEndian()));
 			}
 		} else {
-			if (XOMIntegerType.instance.canMakeInstanceFrom(ctx, contents)) {
-				long l = XOMIntegerType.instance.makeInstanceFrom(ctx, contents).toLong();
+			if (XOMIntegerType.instance.canMakeInstanceFrom(ctx, contents, true)) {
+				long l = XOMIntegerType.instance.makeInstanceFrom(ctx, contents, true).toLong();
 				contents = new XOMBinary(chunkType.byteArrayValueOf(l, ctx.getLittleEndian()));
 			}
 		}
@@ -269,13 +269,13 @@ public class XOMBinaryNumericChunk extends XOMContainer {
 	
 	public void putIntoContents(XNContext ctx, XOMVariant contents, String property, XOMVariant pvalue) {
 		if (chunkType.isFloat()) {
-			if (XOMNumberType.instance.canMakeInstanceFrom(ctx, contents)) {
-				double d = XOMNumberType.instance.makeInstanceFrom(ctx, contents).toDouble();
+			if (XOMNumberType.instance.canMakeInstanceFrom(ctx, contents, true)) {
+				double d = XOMNumberType.instance.makeInstanceFrom(ctx, contents, true).toDouble();
 				contents = new XOMBinary(chunkType.byteArrayValueOf(d, ctx.getLittleEndian()));
 			}
 		} else {
-			if (XOMIntegerType.instance.canMakeInstanceFrom(ctx, contents)) {
-				long l = XOMIntegerType.instance.makeInstanceFrom(ctx, contents).toLong();
+			if (XOMIntegerType.instance.canMakeInstanceFrom(ctx, contents, true)) {
+				long l = XOMIntegerType.instance.makeInstanceFrom(ctx, contents, true).toLong();
 				contents = new XOMBinary(chunkType.byteArrayValueOf(l, ctx.getLittleEndian()));
 			}
 		}
@@ -297,13 +297,13 @@ public class XOMBinaryNumericChunk extends XOMContainer {
 	
 	public void putBeforeContents(XNContext ctx, XOMVariant contents, String property, XOMVariant pvalue) {
 		if (chunkType.isFloat()) {
-			if (XOMNumberType.instance.canMakeInstanceFrom(ctx, contents)) {
-				double d = XOMNumberType.instance.makeInstanceFrom(ctx, contents).toDouble();
+			if (XOMNumberType.instance.canMakeInstanceFrom(ctx, contents, true)) {
+				double d = XOMNumberType.instance.makeInstanceFrom(ctx, contents, true).toDouble();
 				contents = new XOMBinary(chunkType.byteArrayValueOf(d, ctx.getLittleEndian()));
 			}
 		} else {
-			if (XOMIntegerType.instance.canMakeInstanceFrom(ctx, contents)) {
-				long l = XOMIntegerType.instance.makeInstanceFrom(ctx, contents).toLong();
+			if (XOMIntegerType.instance.canMakeInstanceFrom(ctx, contents, true)) {
+				long l = XOMIntegerType.instance.makeInstanceFrom(ctx, contents, true).toLong();
 				contents = new XOMBinary(chunkType.byteArrayValueOf(l, ctx.getLittleEndian()));
 			}
 		}
@@ -325,13 +325,13 @@ public class XOMBinaryNumericChunk extends XOMContainer {
 	
 	public void putAfterContents(XNContext ctx, XOMVariant contents, String property, XOMVariant pvalue) {
 		if (chunkType.isFloat()) {
-			if (XOMNumberType.instance.canMakeInstanceFrom(ctx, contents)) {
-				double d = XOMNumberType.instance.makeInstanceFrom(ctx, contents).toDouble();
+			if (XOMNumberType.instance.canMakeInstanceFrom(ctx, contents, true)) {
+				double d = XOMNumberType.instance.makeInstanceFrom(ctx, contents, true).toDouble();
 				contents = new XOMBinary(chunkType.byteArrayValueOf(d, ctx.getLittleEndian()));
 			}
 		} else {
-			if (XOMIntegerType.instance.canMakeInstanceFrom(ctx, contents)) {
-				long l = XOMIntegerType.instance.makeInstanceFrom(ctx, contents).toLong();
+			if (XOMIntegerType.instance.canMakeInstanceFrom(ctx, contents, true)) {
+				long l = XOMIntegerType.instance.makeInstanceFrom(ctx, contents, true).toLong();
 				contents = new XOMBinary(chunkType.byteArrayValueOf(l, ctx.getLittleEndian()));
 			}
 		}

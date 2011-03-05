@@ -29,14 +29,13 @@ package com.kreative.openxion.xom.type;
 
 import java.math.*;
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.xom.XOMPrimitiveDataType;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMMorphError;
 import com.kreative.openxion.xom.inst.XOMComplex;
 import com.kreative.openxion.xom.inst.XOMNumber;
 import com.kreative.openxion.xom.inst.XOMInteger;
 
-public class XOMIntegerType extends XOMPrimitiveDataType<XOMInteger> {
+public class XOMIntegerType extends XOMNumericDataType<XOMInteger> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMIntegerType instance = new XOMIntegerType();
@@ -46,10 +45,7 @@ public class XOMIntegerType extends XOMPrimitiveDataType<XOMInteger> {
 		super("integer", DESCRIBABILITY_OF_PRIMITIVES, XOMInteger.class);
 	}
 	
-	protected boolean canMakeInstanceFromImpl(XNContext ctx) {
-		return true;
-	}
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
+	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance, boolean acceptEmpty) {
 		if (instance instanceof XOMNumber) {
 			try {
 				((XOMNumber)instance).toBigDecimal().toBigIntegerExact();
@@ -72,8 +68,9 @@ public class XOMIntegerType extends XOMPrimitiveDataType<XOMInteger> {
 			return false;
 		}
 	}
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, String s) {
-		if (s.equals("") || s.equalsIgnoreCase("inf") || s.equalsIgnoreCase("-inf") || s.equalsIgnoreCase("nan")) return true;
+	protected boolean canMakeInstanceFromImpl(XNContext ctx, String s, boolean acceptEmpty) {
+		if (s.equals("")) return acceptEmpty;
+		if (s.equalsIgnoreCase("inf") || s.equalsIgnoreCase("-inf") || s.equalsIgnoreCase("nan")) return true;
 		s = s.replace("''", "E-").replace("'", "E+");
 		try {
 			ctx.getNumberFormat().parseBigInteger(s);
@@ -85,7 +82,7 @@ public class XOMIntegerType extends XOMPrimitiveDataType<XOMInteger> {
 	protected XOMInteger makeInstanceFromImpl(XNContext ctx) {
 		return XOMInteger.ZERO;
 	}
-	protected XOMInteger makeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
+	protected XOMInteger makeInstanceFromImpl(XNContext ctx, XOMVariant instance, boolean acceptEmpty) {
 		if (instance instanceof XOMNumber) {
 			try {
 				BigInteger i = ((XOMNumber)instance).toBigDecimal().toBigIntegerExact();
@@ -108,8 +105,11 @@ public class XOMIntegerType extends XOMPrimitiveDataType<XOMInteger> {
 			throw new XOMMorphError(typeName);
 		}
 	}
-	protected XOMInteger makeInstanceFromImpl(XNContext ctx, String s) {
-		if (s.equals("")) return XOMInteger.ZERO;
+	protected XOMInteger makeInstanceFromImpl(XNContext ctx, String s, boolean acceptEmpty) {
+		if (s.equals("")) {
+			if (acceptEmpty) return XOMInteger.ZERO;
+			else throw new XOMMorphError(typeName);
+		}
 		else if (s.equalsIgnoreCase("inf")) return XOMInteger.POSITIVE_INFINITY;
 		else if (s.equalsIgnoreCase("-inf")) return XOMInteger.NEGATIVE_INFINITY;
 		else if (s.equalsIgnoreCase("nan")) return XOMInteger.NaN;

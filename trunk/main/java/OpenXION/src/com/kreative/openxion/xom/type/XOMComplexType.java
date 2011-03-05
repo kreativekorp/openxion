@@ -29,14 +29,13 @@ package com.kreative.openxion.xom.type;
 
 import java.math.*;
 import com.kreative.openxion.XNContext;
-import com.kreative.openxion.xom.XOMPrimitiveDataType;
 import com.kreative.openxion.xom.XOMMorphError;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.inst.XOMComplex;
 import com.kreative.openxion.xom.inst.XOMNumber;
 import com.kreative.openxion.xom.inst.XOMInteger;
 
-public class XOMComplexType extends XOMPrimitiveDataType<XOMComplex> {
+public class XOMComplexType extends XOMNumericDataType<XOMComplex> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final XOMComplexType instance = new XOMComplexType();
@@ -46,14 +45,12 @@ public class XOMComplexType extends XOMPrimitiveDataType<XOMComplex> {
 		super("complex", DESCRIBABILITY_OF_PRIMITIVES, XOMComplex.class);
 	}
 	
-	protected boolean canMakeInstanceFromImpl(XNContext ctx) {
-		return true;
-	}
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
+	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance, boolean acceptEmpty) {
 		return (instance instanceof XOMInteger) || (instance instanceof XOMNumber);
 	}
-	protected boolean canMakeInstanceFromImpl(XNContext ctx, String s) {
-		if (s.equals("") || s.equalsIgnoreCase("inf") || s.equalsIgnoreCase("-inf") || s.equalsIgnoreCase("nan")) return true;
+	protected boolean canMakeInstanceFromImpl(XNContext ctx, String s, boolean acceptEmpty) {
+		if (s.equals("")) return acceptEmpty;
+		if (s.equalsIgnoreCase("inf") || s.equalsIgnoreCase("-inf") || s.equalsIgnoreCase("nan")) return true;
 		s = s.replace("''", "E-").replace("'", "E+");
 		String[] ss = s.split(",");
 		if (ss.length < 1 || ss.length > 2) {
@@ -77,7 +74,7 @@ public class XOMComplexType extends XOMPrimitiveDataType<XOMComplex> {
 	protected XOMComplex makeInstanceFromImpl(XNContext ctx) {
 		return XOMComplex.ZERO;
 	}
-	protected XOMComplex makeInstanceFromImpl(XNContext ctx, XOMVariant instance) {
+	protected XOMComplex makeInstanceFromImpl(XNContext ctx, XOMVariant instance, boolean acceptEmpty) {
 		if (instance instanceof XOMInteger)
 			return new XOMComplex(new BigDecimal(((XOMInteger)instance).toBigInteger()), BigDecimal.ZERO);
 		else if (instance instanceof XOMNumber)
@@ -85,8 +82,11 @@ public class XOMComplexType extends XOMPrimitiveDataType<XOMComplex> {
 		else
 			throw new XOMMorphError(typeName);
 	}
-	protected XOMComplex makeInstanceFromImpl(XNContext ctx, String s) {
-		if (s.equals("")) return XOMComplex.ZERO;
+	protected XOMComplex makeInstanceFromImpl(XNContext ctx, String s, boolean acceptEmpty) {
+		if (s.equals("")) {
+			if (acceptEmpty) return XOMComplex.ZERO;
+			else throw new XOMMorphError(typeName);
+		}
 		else if (s.equalsIgnoreCase("inf")) return XOMComplex.POSITIVE_INFINITY;
 		else if (s.equalsIgnoreCase("-inf")) return XOMComplex.NEGATIVE_INFINITY;
 		else if (s.equalsIgnoreCase("nan")) return XOMComplex.NaN;

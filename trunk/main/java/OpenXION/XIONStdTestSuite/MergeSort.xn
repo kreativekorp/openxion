@@ -41,9 +41,18 @@ put MergeSort(empty)
 put MergeSort(3)
 put MergeSort(4.12)
 put MergeSort(-7)
+put MergeSort(0)
 
 -- Testing MergeSort itself
 local x as list is (5, 9, 3.14, 12, 0, -4, 18, -7.7, 1, 36, 2.4, 42.01, -99)
 put MergeSort(x)
 sort elements of x numeric
 put x
+
+-- Testing technical aspects of argument passing
+put MergeSort()
+put MergeSort(empty)
+put MergeSort(0)
+put MergeSort(1)
+put MergeSort(2,7,5)
+put MergeSort((2,7,5) as list)

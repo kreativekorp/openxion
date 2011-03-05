@@ -1,0 +1,37 @@
+put zero
+put empty
+put zero is empty
+put empty is zero
+
+local x is empty
+put x
+add 1 to x
+put x
+
+local y is zero
+put y
+add 1 to y
+put y
+
+local a as integer
+put a
+add 1 to a
+put a
+
+local b as integer is empty
+put b
+add 1 to b
+put b
+
+local c as integer is zero
+put c
+add 1 to c
+put c
+
+put p
+add 1 to p
+put p
+
+put q
+add 1 to q
+put q
