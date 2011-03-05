@@ -145,16 +145,16 @@ public class XNInterpreter {
 					else if (av instanceof XOMComplex) {
 						return ((XOMComplex)av).negate();
 					}
-					else if (XOMIntegerType.instance.canMakeInstanceFrom(context, av)) {
-						XOMInteger i = XOMIntegerType.instance.makeInstanceFrom(context, av);
+					else if (XOMIntegerType.instance.canMakeInstanceFrom(context, av, true)) {
+						XOMInteger i = XOMIntegerType.instance.makeInstanceFrom(context, av, true);
 						return i.negate();
 					}
-					else if (XOMNumberType.instance.canMakeInstanceFrom(context, av)) {
-						XOMNumber n = XOMNumberType.instance.makeInstanceFrom(context, av);
+					else if (XOMNumberType.instance.canMakeInstanceFrom(context, av, true)) {
+						XOMNumber n = XOMNumberType.instance.makeInstanceFrom(context, av, true);
 						return n.negate();
 					}
-					else if (XOMComplexType.instance.canMakeInstanceFrom(context, av)) {
-						XOMComplex c = XOMComplexType.instance.makeInstanceFrom(context, av);
+					else if (XOMComplexType.instance.canMakeInstanceFrom(context, av, true)) {
+						XOMComplex c = XOMComplexType.instance.makeInstanceFrom(context, av, true);
 						return c.negate();
 					}
 					else {
@@ -162,7 +162,7 @@ public class XNInterpreter {
 					}
 				case BIT_NOT:
 					av = evaluateExpression(a).asPrimitive(context);
-					ai = XOMIntegerType.instance.makeInstanceFrom(context, av).toBigInteger();
+					ai = XOMIntegerType.instance.makeInstanceFrom(context, av, true).toBigInteger();
 					if (ai == null) return XOMInteger.NaN;
 					return new XOMInteger(ai.not());
 				case EXISTS:
@@ -212,23 +212,23 @@ public class XNInterpreter {
 					av = evaluateExpression(a).asPrimitive(context);
 					bv = evaluateExpression(b).asPrimitive(context);
 					if (av instanceof XOMComplex && bv instanceof XOMComplex) {
-						ac = XOMComplexType.instance.makeInstanceFrom(context, av);
-						bc = XOMComplexType.instance.makeInstanceFrom(context, bv);
+						ac = XOMComplexType.instance.makeInstanceFrom(context, av, true);
+						bc = XOMComplexType.instance.makeInstanceFrom(context, bv, true);
 						return XOMComplexMath.pow(ac, bc, mc, mp);
 					}
 					else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
-						an = XOMNumberType.instance.makeInstanceFrom(context, av);
-						bn = XOMNumberType.instance.makeInstanceFrom(context, bv);
+						an = XOMNumberType.instance.makeInstanceFrom(context, av, true);
+						bn = XOMNumberType.instance.makeInstanceFrom(context, bv, true);
 						return XOMNumberMath.pow(an, bn, mc, mp);
 					}
-					else if (XOMNumberType.instance.canMakeInstanceFrom(context, av) && XOMNumberType.instance.canMakeInstanceFrom(context, bv)) {
-						an = XOMNumberType.instance.makeInstanceFrom(context, av);
-						bn = XOMNumberType.instance.makeInstanceFrom(context, bv);
+					else if (XOMNumberType.instance.canMakeInstanceFrom(context, av, true) && XOMNumberType.instance.canMakeInstanceFrom(context, bv, true)) {
+						an = XOMNumberType.instance.makeInstanceFrom(context, av, true);
+						bn = XOMNumberType.instance.makeInstanceFrom(context, bv, true);
 						return XOMNumberMath.pow(an, bn, mc, mp);
 					}
-					else if (XOMComplexType.instance.canMakeInstanceFrom(context, av) && XOMComplexType.instance.canMakeInstanceFrom(context, bv)) {
-						ac = XOMComplexType.instance.makeInstanceFrom(context, av);
-						bc = XOMComplexType.instance.makeInstanceFrom(context, bv);
+					else if (XOMComplexType.instance.canMakeInstanceFrom(context, av, true) && XOMComplexType.instance.canMakeInstanceFrom(context, bv, true)) {
+						ac = XOMComplexType.instance.makeInstanceFrom(context, av, true);
+						bc = XOMComplexType.instance.makeInstanceFrom(context, bv, true);
 						return XOMComplexMath.pow(ac, bc, mc, mp);
 					}
 					else {
@@ -238,23 +238,23 @@ public class XNInterpreter {
 					av = evaluateExpression(a).asPrimitive(context);
 					bv = evaluateExpression(b).asPrimitive(context);
 					if (av instanceof XOMComplex && bv instanceof XOMComplex) {
-						ac = XOMComplexType.instance.makeInstanceFrom(context, av);
-						bc = XOMComplexType.instance.makeInstanceFrom(context, bv);
+						ac = XOMComplexType.instance.makeInstanceFrom(context, av, true);
+						bc = XOMComplexType.instance.makeInstanceFrom(context, bv, true);
 						return XOMComplexMath.multiply(ac, bc, mc, mp);
 					}
 					else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
-						an = XOMNumberType.instance.makeInstanceFrom(context, av);
-						bn = XOMNumberType.instance.makeInstanceFrom(context, bv);
+						an = XOMNumberType.instance.makeInstanceFrom(context, av, true);
+						bn = XOMNumberType.instance.makeInstanceFrom(context, bv, true);
 						return XOMNumberMath.multiply(an, bn, mc, mp);
 					}
-					else if (XOMNumberType.instance.canMakeInstanceFrom(context, av) && XOMNumberType.instance.canMakeInstanceFrom(context, bv)) {
-						an = XOMNumberType.instance.makeInstanceFrom(context, av);
-						bn = XOMNumberType.instance.makeInstanceFrom(context, bv);
+					else if (XOMNumberType.instance.canMakeInstanceFrom(context, av, true) && XOMNumberType.instance.canMakeInstanceFrom(context, bv, true)) {
+						an = XOMNumberType.instance.makeInstanceFrom(context, av, true);
+						bn = XOMNumberType.instance.makeInstanceFrom(context, bv, true);
 						return XOMNumberMath.multiply(an, bn, mc, mp);
 					}
-					else if (XOMComplexType.instance.canMakeInstanceFrom(context, av) && XOMComplexType.instance.canMakeInstanceFrom(context, bv)) {
-						ac = XOMComplexType.instance.makeInstanceFrom(context, av);
-						bc = XOMComplexType.instance.makeInstanceFrom(context, bv);
+					else if (XOMComplexType.instance.canMakeInstanceFrom(context, av, true) && XOMComplexType.instance.canMakeInstanceFrom(context, bv, true)) {
+						ac = XOMComplexType.instance.makeInstanceFrom(context, av, true);
+						bc = XOMComplexType.instance.makeInstanceFrom(context, bv, true);
 						return XOMComplexMath.multiply(ac, bc, mc, mp);
 					}
 					else {
@@ -264,23 +264,23 @@ public class XNInterpreter {
 					av = evaluateExpression(a).asPrimitive(context);
 					bv = evaluateExpression(b).asPrimitive(context);
 					if (av instanceof XOMComplex && bv instanceof XOMComplex) {
-						ac = XOMComplexType.instance.makeInstanceFrom(context, av);
-						bc = XOMComplexType.instance.makeInstanceFrom(context, bv);
+						ac = XOMComplexType.instance.makeInstanceFrom(context, av, true);
+						bc = XOMComplexType.instance.makeInstanceFrom(context, bv, true);
 						return XOMComplexMath.divide(ac, bc, mc, mp);
 					}
 					else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
-						an = XOMNumberType.instance.makeInstanceFrom(context, av);
-						bn = XOMNumberType.instance.makeInstanceFrom(context, bv);
+						an = XOMNumberType.instance.makeInstanceFrom(context, av, true);
+						bn = XOMNumberType.instance.makeInstanceFrom(context, bv, true);
 						return XOMNumberMath.divide(an, bn, mc, mp);
 					}
-					else if (XOMNumberType.instance.canMakeInstanceFrom(context, av) && XOMNumberType.instance.canMakeInstanceFrom(context, bv)) {
-						an = XOMNumberType.instance.makeInstanceFrom(context, av);
-						bn = XOMNumberType.instance.makeInstanceFrom(context, bv);
+					else if (XOMNumberType.instance.canMakeInstanceFrom(context, av, true) && XOMNumberType.instance.canMakeInstanceFrom(context, bv, true)) {
+						an = XOMNumberType.instance.makeInstanceFrom(context, av, true);
+						bn = XOMNumberType.instance.makeInstanceFrom(context, bv, true);
 						return XOMNumberMath.divide(an, bn, mc, mp);
 					}
-					else if (XOMComplexType.instance.canMakeInstanceFrom(context, av) && XOMComplexType.instance.canMakeInstanceFrom(context, bv)) {
-						ac = XOMComplexType.instance.makeInstanceFrom(context, av);
-						bc = XOMComplexType.instance.makeInstanceFrom(context, bv);
+					else if (XOMComplexType.instance.canMakeInstanceFrom(context, av, true) && XOMComplexType.instance.canMakeInstanceFrom(context, bv, true)) {
+						ac = XOMComplexType.instance.makeInstanceFrom(context, av, true);
+						bc = XOMComplexType.instance.makeInstanceFrom(context, bv, true);
 						return XOMComplexMath.divide(ac, bc, mc, mp);
 					}
 					else {
@@ -290,23 +290,23 @@ public class XNInterpreter {
 					av = evaluateExpression(a).asPrimitive(context);
 					bv = evaluateExpression(b).asPrimitive(context);
 					if (av instanceof XOMComplex && bv instanceof XOMComplex) {
-						ac = XOMComplexType.instance.makeInstanceFrom(context, av);
-						bc = XOMComplexType.instance.makeInstanceFrom(context, bv);
+						ac = XOMComplexType.instance.makeInstanceFrom(context, av, true);
+						bc = XOMComplexType.instance.makeInstanceFrom(context, bv, true);
 						return XOMComplexMath.divide(ac, bc, mc, mp).trunc();
 					}
 					else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
-						an = XOMNumberType.instance.makeInstanceFrom(context, av);
-						bn = XOMNumberType.instance.makeInstanceFrom(context, bv);
+						an = XOMNumberType.instance.makeInstanceFrom(context, av, true);
+						bn = XOMNumberType.instance.makeInstanceFrom(context, bv, true);
 						return XOMNumberMath.divide(an, bn, mc, mp).trunc();
 					}
-					else if (XOMNumberType.instance.canMakeInstanceFrom(context, av) && XOMNumberType.instance.canMakeInstanceFrom(context, bv)) {
-						an = XOMNumberType.instance.makeInstanceFrom(context, av);
-						bn = XOMNumberType.instance.makeInstanceFrom(context, bv);
+					else if (XOMNumberType.instance.canMakeInstanceFrom(context, av, true) && XOMNumberType.instance.canMakeInstanceFrom(context, bv, true)) {
+						an = XOMNumberType.instance.makeInstanceFrom(context, av, true);
+						bn = XOMNumberType.instance.makeInstanceFrom(context, bv, true);
 						return XOMNumberMath.divide(an, bn, mc, mp).trunc();
 					}
-					else if (XOMComplexType.instance.canMakeInstanceFrom(context, av) && XOMComplexType.instance.canMakeInstanceFrom(context, bv)) {
-						ac = XOMComplexType.instance.makeInstanceFrom(context, av);
-						bc = XOMComplexType.instance.makeInstanceFrom(context, bv);
+					else if (XOMComplexType.instance.canMakeInstanceFrom(context, av, true) && XOMComplexType.instance.canMakeInstanceFrom(context, bv, true)) {
+						ac = XOMComplexType.instance.makeInstanceFrom(context, av, true);
+						bc = XOMComplexType.instance.makeInstanceFrom(context, bv, true);
 						return XOMComplexMath.divide(ac, bc, mc, mp).trunc();
 					}
 					else {
@@ -316,23 +316,23 @@ public class XNInterpreter {
 					av = evaluateExpression(a).asPrimitive(context);
 					bv = evaluateExpression(b).asPrimitive(context);
 					if (av instanceof XOMComplex && bv instanceof XOMComplex) {
-						ac = XOMComplexType.instance.makeInstanceFrom(context, av);
-						bc = XOMComplexType.instance.makeInstanceFrom(context, bv);
+						ac = XOMComplexType.instance.makeInstanceFrom(context, av, true);
+						bc = XOMComplexType.instance.makeInstanceFrom(context, bv, true);
 						return XOMComplexMath.subtract(ac, XOMComplexMath.multiply(bc, XOMComplexMath.divide(ac, bc, mc, mp).trunc(), mc, mp), mc, mp);
 					}
 					else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
-						an = XOMNumberType.instance.makeInstanceFrom(context, av);
-						bn = XOMNumberType.instance.makeInstanceFrom(context, bv);
+						an = XOMNumberType.instance.makeInstanceFrom(context, av, true);
+						bn = XOMNumberType.instance.makeInstanceFrom(context, bv, true);
 						return XOMNumberMath.subtract(an, XOMNumberMath.multiply(bn, XOMNumberMath.divide(an, bn, mc, mp).trunc(), mc, mp), mc, mp);
 					}
-					else if (XOMNumberType.instance.canMakeInstanceFrom(context, av) && XOMNumberType.instance.canMakeInstanceFrom(context, bv)) {
-						an = XOMNumberType.instance.makeInstanceFrom(context, av);
-						bn = XOMNumberType.instance.makeInstanceFrom(context, bv);
+					else if (XOMNumberType.instance.canMakeInstanceFrom(context, av, true) && XOMNumberType.instance.canMakeInstanceFrom(context, bv, true)) {
+						an = XOMNumberType.instance.makeInstanceFrom(context, av, true);
+						bn = XOMNumberType.instance.makeInstanceFrom(context, bv, true);
 						return XOMNumberMath.subtract(an, XOMNumberMath.multiply(bn, XOMNumberMath.divide(an, bn, mc, mp).trunc(), mc, mp), mc, mp);
 					}
-					else if (XOMComplexType.instance.canMakeInstanceFrom(context, av) && XOMComplexType.instance.canMakeInstanceFrom(context, bv)) {
-						ac = XOMComplexType.instance.makeInstanceFrom(context, av);
-						bc = XOMComplexType.instance.makeInstanceFrom(context, bv);
+					else if (XOMComplexType.instance.canMakeInstanceFrom(context, av, true) && XOMComplexType.instance.canMakeInstanceFrom(context, bv, true)) {
+						ac = XOMComplexType.instance.makeInstanceFrom(context, av, true);
+						bc = XOMComplexType.instance.makeInstanceFrom(context, bv, true);
 						return XOMComplexMath.subtract(ac, XOMComplexMath.multiply(bc, XOMComplexMath.divide(ac, bc, mc, mp).trunc(), mc, mp), mc, mp);
 					}
 					else {
@@ -342,23 +342,23 @@ public class XNInterpreter {
 					av = evaluateExpression(a).asPrimitive(context);
 					bv = evaluateExpression(b).asPrimitive(context);
 					if (av instanceof XOMComplex && bv instanceof XOMComplex) {
-						ac = XOMComplexType.instance.makeInstanceFrom(context, av);
-						bc = XOMComplexType.instance.makeInstanceFrom(context, bv);
+						ac = XOMComplexType.instance.makeInstanceFrom(context, av, true);
+						bc = XOMComplexType.instance.makeInstanceFrom(context, bv, true);
 						return XOMComplexMath.divide(ac, bc, mc, mp).floor();
 					}
 					else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
-						an = XOMNumberType.instance.makeInstanceFrom(context, av);
-						bn = XOMNumberType.instance.makeInstanceFrom(context, bv);
+						an = XOMNumberType.instance.makeInstanceFrom(context, av, true);
+						bn = XOMNumberType.instance.makeInstanceFrom(context, bv, true);
 						return XOMNumberMath.divide(an, bn, mc, mp).floor();
 					}
-					else if (XOMNumberType.instance.canMakeInstanceFrom(context, av) && XOMNumberType.instance.canMakeInstanceFrom(context, bv)) {
-						an = XOMNumberType.instance.makeInstanceFrom(context, av);
-						bn = XOMNumberType.instance.makeInstanceFrom(context, bv);
+					else if (XOMNumberType.instance.canMakeInstanceFrom(context, av, true) && XOMNumberType.instance.canMakeInstanceFrom(context, bv, true)) {
+						an = XOMNumberType.instance.makeInstanceFrom(context, av, true);
+						bn = XOMNumberType.instance.makeInstanceFrom(context, bv, true);
 						return XOMNumberMath.divide(an, bn, mc, mp).floor();
 					}
-					else if (XOMComplexType.instance.canMakeInstanceFrom(context, av) && XOMComplexType.instance.canMakeInstanceFrom(context, bv)) {
-						ac = XOMComplexType.instance.makeInstanceFrom(context, av);
-						bc = XOMComplexType.instance.makeInstanceFrom(context, bv);
+					else if (XOMComplexType.instance.canMakeInstanceFrom(context, av, true) && XOMComplexType.instance.canMakeInstanceFrom(context, bv, true)) {
+						ac = XOMComplexType.instance.makeInstanceFrom(context, av, true);
+						bc = XOMComplexType.instance.makeInstanceFrom(context, bv, true);
 						return XOMComplexMath.divide(ac, bc, mc, mp).floor();
 					}
 					else {
@@ -368,23 +368,23 @@ public class XNInterpreter {
 					av = evaluateExpression(a).asPrimitive(context);
 					bv = evaluateExpression(b).asPrimitive(context);
 					if (av instanceof XOMComplex && bv instanceof XOMComplex) {
-						ac = XOMComplexType.instance.makeInstanceFrom(context, av);
-						bc = XOMComplexType.instance.makeInstanceFrom(context, bv);
+						ac = XOMComplexType.instance.makeInstanceFrom(context, av, true);
+						bc = XOMComplexType.instance.makeInstanceFrom(context, bv, true);
 						return XOMComplexMath.subtract(ac, XOMComplexMath.multiply(bc, XOMComplexMath.divide(ac, bc, mc, mp).floor(), mc, mp), mc, mp);
 					}
 					else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
-						an = XOMNumberType.instance.makeInstanceFrom(context, av);
-						bn = XOMNumberType.instance.makeInstanceFrom(context, bv);
+						an = XOMNumberType.instance.makeInstanceFrom(context, av, true);
+						bn = XOMNumberType.instance.makeInstanceFrom(context, bv, true);
 						return XOMNumberMath.subtract(an, XOMNumberMath.multiply(bn, XOMNumberMath.divide(an, bn, mc, mp).floor(), mc, mp), mc, mp);
 					}
-					else if (XOMNumberType.instance.canMakeInstanceFrom(context, av) && XOMNumberType.instance.canMakeInstanceFrom(context, bv)) {
-						an = XOMNumberType.instance.makeInstanceFrom(context, av);
-						bn = XOMNumberType.instance.makeInstanceFrom(context, bv);
+					else if (XOMNumberType.instance.canMakeInstanceFrom(context, av, true) && XOMNumberType.instance.canMakeInstanceFrom(context, bv, true)) {
+						an = XOMNumberType.instance.makeInstanceFrom(context, av, true);
+						bn = XOMNumberType.instance.makeInstanceFrom(context, bv, true);
 						return XOMNumberMath.subtract(an, XOMNumberMath.multiply(bn, XOMNumberMath.divide(an, bn, mc, mp).floor(), mc, mp), mc, mp);
 					}
-					else if (XOMComplexType.instance.canMakeInstanceFrom(context, av) && XOMComplexType.instance.canMakeInstanceFrom(context, bv)) {
-						ac = XOMComplexType.instance.makeInstanceFrom(context, av);
-						bc = XOMComplexType.instance.makeInstanceFrom(context, bv);
+					else if (XOMComplexType.instance.canMakeInstanceFrom(context, av, true) && XOMComplexType.instance.canMakeInstanceFrom(context, bv, true)) {
+						ac = XOMComplexType.instance.makeInstanceFrom(context, av, true);
+						bc = XOMComplexType.instance.makeInstanceFrom(context, bv, true);
 						return XOMComplexMath.subtract(ac, XOMComplexMath.multiply(bc, XOMComplexMath.divide(ac, bc, mc, mp).floor(), mc, mp), mc, mp);
 					}
 					else {
@@ -394,23 +394,23 @@ public class XNInterpreter {
 					av = evaluateExpression(a).asPrimitive(context);
 					bv = evaluateExpression(b).asPrimitive(context);
 					if (av instanceof XOMComplex && bv instanceof XOMComplex) {
-						ac = XOMComplexType.instance.makeInstanceFrom(context, av);
-						bc = XOMComplexType.instance.makeInstanceFrom(context, bv);
+						ac = XOMComplexType.instance.makeInstanceFrom(context, av, true);
+						bc = XOMComplexType.instance.makeInstanceFrom(context, bv, true);
 						return XOMComplexMath.add(ac, bc, mc, mp);
 					}
 					else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
-						an = XOMNumberType.instance.makeInstanceFrom(context, av);
-						bn = XOMNumberType.instance.makeInstanceFrom(context, bv);
+						an = XOMNumberType.instance.makeInstanceFrom(context, av, true);
+						bn = XOMNumberType.instance.makeInstanceFrom(context, bv, true);
 						return XOMNumberMath.add(an, bn, mc, mp);
 					}
-					else if (XOMNumberType.instance.canMakeInstanceFrom(context, av) && XOMNumberType.instance.canMakeInstanceFrom(context, bv)) {
-						an = XOMNumberType.instance.makeInstanceFrom(context, av);
-						bn = XOMNumberType.instance.makeInstanceFrom(context, bv);
+					else if (XOMNumberType.instance.canMakeInstanceFrom(context, av, true) && XOMNumberType.instance.canMakeInstanceFrom(context, bv, true)) {
+						an = XOMNumberType.instance.makeInstanceFrom(context, av, true);
+						bn = XOMNumberType.instance.makeInstanceFrom(context, bv, true);
 						return XOMNumberMath.add(an, bn, mc, mp);
 					}
-					else if (XOMComplexType.instance.canMakeInstanceFrom(context, av) && XOMComplexType.instance.canMakeInstanceFrom(context, bv)) {
-						ac = XOMComplexType.instance.makeInstanceFrom(context, av);
-						bc = XOMComplexType.instance.makeInstanceFrom(context, bv);
+					else if (XOMComplexType.instance.canMakeInstanceFrom(context, av, true) && XOMComplexType.instance.canMakeInstanceFrom(context, bv, true)) {
+						ac = XOMComplexType.instance.makeInstanceFrom(context, av, true);
+						bc = XOMComplexType.instance.makeInstanceFrom(context, bv, true);
 						return XOMComplexMath.add(ac, bc, mc, mp);
 					}
 					else {
@@ -420,23 +420,23 @@ public class XNInterpreter {
 					av = evaluateExpression(a).asPrimitive(context);
 					bv = evaluateExpression(b).asPrimitive(context);
 					if (av instanceof XOMComplex && bv instanceof XOMComplex) {
-						ac = XOMComplexType.instance.makeInstanceFrom(context, av);
-						bc = XOMComplexType.instance.makeInstanceFrom(context, bv);
+						ac = XOMComplexType.instance.makeInstanceFrom(context, av, true);
+						bc = XOMComplexType.instance.makeInstanceFrom(context, bv, true);
 						return XOMComplexMath.subtract(ac, bc, mc, mp);
 					}
 					else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
-						an = XOMNumberType.instance.makeInstanceFrom(context, av);
-						bn = XOMNumberType.instance.makeInstanceFrom(context, bv);
+						an = XOMNumberType.instance.makeInstanceFrom(context, av, true);
+						bn = XOMNumberType.instance.makeInstanceFrom(context, bv, true);
 						return XOMNumberMath.subtract(an, bn, mc, mp);
 					}
-					else if (XOMNumberType.instance.canMakeInstanceFrom(context, av) && XOMNumberType.instance.canMakeInstanceFrom(context, bv)) {
-						an = XOMNumberType.instance.makeInstanceFrom(context, av);
-						bn = XOMNumberType.instance.makeInstanceFrom(context, bv);
+					else if (XOMNumberType.instance.canMakeInstanceFrom(context, av, true) && XOMNumberType.instance.canMakeInstanceFrom(context, bv, true)) {
+						an = XOMNumberType.instance.makeInstanceFrom(context, av, true);
+						bn = XOMNumberType.instance.makeInstanceFrom(context, bv, true);
 						return XOMNumberMath.subtract(an, bn, mc, mp);
 					}
-					else if (XOMComplexType.instance.canMakeInstanceFrom(context, av) && XOMComplexType.instance.canMakeInstanceFrom(context, bv)) {
-						ac = XOMComplexType.instance.makeInstanceFrom(context, av);
-						bc = XOMComplexType.instance.makeInstanceFrom(context, bv);
+					else if (XOMComplexType.instance.canMakeInstanceFrom(context, av, true) && XOMComplexType.instance.canMakeInstanceFrom(context, bv, true)) {
+						ac = XOMComplexType.instance.makeInstanceFrom(context, av, true);
+						bc = XOMComplexType.instance.makeInstanceFrom(context, bv, true);
 						return XOMComplexMath.subtract(ac, bc, mc, mp);
 					}
 					else {
@@ -445,43 +445,43 @@ public class XNInterpreter {
 				case SHIFT_LEFT:
 					av = evaluateExpression(a).asPrimitive(context);
 					bv = evaluateExpression(b).asPrimitive(context);
-					ai = XOMIntegerType.instance.makeInstanceFrom(context, av).toBigInteger();
-					bi = XOMIntegerType.instance.makeInstanceFrom(context, bv).toBigInteger();
+					ai = XOMIntegerType.instance.makeInstanceFrom(context, av, true).toBigInteger();
+					bi = XOMIntegerType.instance.makeInstanceFrom(context, bv, true).toBigInteger();
 					if (ai == null || bi == null) return XOMInteger.NaN;
 					return new XOMInteger(ai.shiftLeft(bi.intValue()));
 				case SHIFT_RIGHT_SIGNED:
 					av = evaluateExpression(a).asPrimitive(context);
 					bv = evaluateExpression(b).asPrimitive(context);
-					ai = XOMIntegerType.instance.makeInstanceFrom(context, av).toBigInteger();
-					bi = XOMIntegerType.instance.makeInstanceFrom(context, bv).toBigInteger();
+					ai = XOMIntegerType.instance.makeInstanceFrom(context, av, true).toBigInteger();
+					bi = XOMIntegerType.instance.makeInstanceFrom(context, bv, true).toBigInteger();
 					if (ai == null || bi == null) return XOMInteger.NaN;
 					return new XOMInteger(ai.shiftRight(bi.intValue()));
 				case SHIFT_RIGHT_UNSIGNED:
 					av = evaluateExpression(a).asPrimitive(context);
 					bv = evaluateExpression(b).asPrimitive(context);
-					ai = XOMIntegerType.instance.makeInstanceFrom(context, av).toBigInteger();
-					bi = XOMIntegerType.instance.makeInstanceFrom(context, bv).toBigInteger();
+					ai = XOMIntegerType.instance.makeInstanceFrom(context, av, true).toBigInteger();
+					bi = XOMIntegerType.instance.makeInstanceFrom(context, bv, true).toBigInteger();
 					if (ai == null || bi == null) return XOMInteger.NaN;
 					return new XOMInteger(ai.shiftRight(bi.intValue()));
 				case BIT_AND:
 					av = evaluateExpression(a).asPrimitive(context);
 					bv = evaluateExpression(b).asPrimitive(context);
-					ai = XOMIntegerType.instance.makeInstanceFrom(context, av).toBigInteger();
-					bi = XOMIntegerType.instance.makeInstanceFrom(context, bv).toBigInteger();
+					ai = XOMIntegerType.instance.makeInstanceFrom(context, av, true).toBigInteger();
+					bi = XOMIntegerType.instance.makeInstanceFrom(context, bv, true).toBigInteger();
 					if (ai == null || bi == null) return XOMInteger.NaN;
 					return new XOMInteger(ai.and(bi));
 				case BIT_XOR:
 					av = evaluateExpression(a).asPrimitive(context);
 					bv = evaluateExpression(b).asPrimitive(context);
-					ai = XOMIntegerType.instance.makeInstanceFrom(context, av).toBigInteger();
-					bi = XOMIntegerType.instance.makeInstanceFrom(context, bv).toBigInteger();
+					ai = XOMIntegerType.instance.makeInstanceFrom(context, av, true).toBigInteger();
+					bi = XOMIntegerType.instance.makeInstanceFrom(context, bv, true).toBigInteger();
 					if (ai == null || bi == null) return XOMInteger.NaN;
 					return new XOMInteger(ai.xor(bi));
 				case BIT_OR:
 					av = evaluateExpression(a).asPrimitive(context);
 					bv = evaluateExpression(b).asPrimitive(context);
-					ai = XOMIntegerType.instance.makeInstanceFrom(context, av).toBigInteger();
-					bi = XOMIntegerType.instance.makeInstanceFrom(context, bv).toBigInteger();
+					ai = XOMIntegerType.instance.makeInstanceFrom(context, av, true).toBigInteger();
+					bi = XOMIntegerType.instance.makeInstanceFrom(context, bv, true).toBigInteger();
 					if (ai == null || bi == null) return XOMInteger.NaN;
 					return new XOMInteger(ai.or(bi));
 				case STR_CONCAT:
@@ -860,7 +860,7 @@ public class XNInterpreter {
 				if (expr instanceof XNVariantIdDescriptor) {
 					XNExpression idExpression = ((XNVariantIdDescriptor)expr).id;
 					XOMVariant idVar = evaluateExpression(idExpression).asPrimitive(context);
-					XOMInteger idInt = XOMIntegerType.instance.makeInstanceFrom(context, idVar);
+					XOMInteger idInt = XOMIntegerType.instance.makeInstanceFrom(context, idVar, true);
 					if (parent != null) {
 						return dataType.getChildVariantByID(context, parent, idInt.toInt());
 					} else {
@@ -870,8 +870,8 @@ public class XNInterpreter {
 					XNExpression startExpr = ((XNVariantIndexNameDescriptor)expr).start;
 					XNExpression endExpr = ((XNVariantIndexNameDescriptor)expr).end;
 					if (startExpr != null && endExpr != null) {
-						int start = XOMIntegerType.instance.makeInstanceFrom(context, evaluateExpression(startExpr).asPrimitive(context)).toInt();
-						int end = XOMIntegerType.instance.makeInstanceFrom(context, evaluateExpression(endExpr).asPrimitive(context)).toInt();
+						int start = XOMIntegerType.instance.makeInstanceFrom(context, evaluateExpression(startExpr).asPrimitive(context), true).toInt();
+						int end = XOMIntegerType.instance.makeInstanceFrom(context, evaluateExpression(endExpr).asPrimitive(context), true).toInt();
 						if (parent != null) {
 							return dataType.getChildVariantByIndex(context, parent, start, end);
 						} else {
@@ -879,8 +879,8 @@ public class XNInterpreter {
 						}
 					} else if (startExpr != null) {
 						XOMVariant idxNameVar = evaluateExpression(startExpr).asPrimitive(context);
-						if (!idxNameVar.toTextString(context).equals("") && XOMIntegerType.instance.canMakeInstanceFrom(context, idxNameVar)) {
-							int index = XOMIntegerType.instance.makeInstanceFrom(context, idxNameVar).toInt();
+						if (!idxNameVar.toTextString(context).equals("") && XOMIntegerType.instance.canMakeInstanceFrom(context, idxNameVar, true)) {
+							int index = XOMIntegerType.instance.makeInstanceFrom(context, idxNameVar, true).toInt();
 							if (parent != null) {
 								return dataType.getChildVariantByIndex(context, parent, index);
 							} else {
@@ -896,8 +896,8 @@ public class XNInterpreter {
 						}
 					} else if (endExpr != null) {
 						XOMVariant idxNameVar = evaluateExpression(endExpr).asPrimitive(context);
-						if (!idxNameVar.toTextString(context).equals("") && XOMIntegerType.instance.canMakeInstanceFrom(context, idxNameVar)) {
-							int index = XOMIntegerType.instance.makeInstanceFrom(context, idxNameVar).toInt();
+						if (!idxNameVar.toTextString(context).equals("") && XOMIntegerType.instance.canMakeInstanceFrom(context, idxNameVar, true)) {
+							int index = XOMIntegerType.instance.makeInstanceFrom(context, idxNameVar, true).toInt();
 							if (parent != null) {
 								return dataType.getChildVariantByIndex(context, parent, index);
 							} else {
@@ -974,7 +974,7 @@ public class XNInterpreter {
 						return evaluateBuiltInFunction(fc.identifier, fc.modifier, argument);
 					}
 				} else {
-					XOMVariant ret = evaluateFunction(fc.identifier, fc.modifier, argument);
+					XOMVariant ret = evaluateFunction(fc.identifier, fc.modifier, fc.argument, argument);
 					return (ret == null) ? XOMEmpty.EMPTY : ret;
 				}
 			}
@@ -993,8 +993,8 @@ public class XNInterpreter {
 	
 	public int compareVariants(XOMVariant av, XOMVariant bv) throws NaNComparisonException {
 		if (av instanceof XOMNumber && bv instanceof XOMNumber) {
-			XOMNumber an = XOMNumberType.instance.makeInstanceFrom(context, av);
-			XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(context, bv);
+			XOMNumber an = XOMNumberType.instance.makeInstanceFrom(context, av, false);
+			XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(context, bv, false);
 			if (an.isNaN() || bn.isNaN()) throw new NaNComparisonException();
 			return XOMNumberMath.compare(an, bn);
 		}
@@ -1003,9 +1003,9 @@ public class XNInterpreter {
 			XOMDate bd = XOMDateType.instance.makeInstanceFrom(context, bv);
 			return ad.toCalendar().compareTo(bd.toCalendar());
 		}
-		else if (XOMNumberType.instance.canMakeInstanceFrom(context, av) && XOMNumberType.instance.canMakeInstanceFrom(context, bv)) {
-			XOMNumber an = XOMNumberType.instance.makeInstanceFrom(context, av);
-			XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(context, bv);
+		else if (XOMNumberType.instance.canMakeInstanceFrom(context, av, false) && XOMNumberType.instance.canMakeInstanceFrom(context, bv, false)) {
+			XOMNumber an = XOMNumberType.instance.makeInstanceFrom(context, av, false);
+			XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(context, bv, false);
 			if (an.isNaN() || bn.isNaN()) throw new NaNComparisonException();
 			return XOMNumberMath.compare(an, bn);
 		}
@@ -1019,7 +1019,7 @@ public class XNInterpreter {
 		}
 	}
 	
-	private XOMVariant evaluateFunction(String functionName, XNModifier modifier, XOMVariant parameter) {
+	private XOMVariant evaluateFunction(String functionName, XNModifier modifier, XNExpression paramExpr, XOMVariant parameter) {
 		XNResponder resp = context.getFirstResponder();
 		
 		// try local declarations first
@@ -1029,7 +1029,13 @@ public class XNInterpreter {
 				context.pushResponder(resp);
 				XNHandlerExit exit = null;
 				try {
-					exit = evaluateUserFunction(fh, parameter.toPrimitiveList(context));
+					List<XOMVariant> params = new ArrayList<XOMVariant>();
+					if (paramExpr instanceof XNListExpression) {
+						params.addAll(parameter.toPrimitiveList(context));
+					} else {
+						params.add(parameter.asPrimitive(context));
+					}
+					exit = evaluateUserFunction(fh, params);
 				} finally {
 					context.popResponder();
 				}
@@ -1074,12 +1080,18 @@ public class XNInterpreter {
 			}
 
 			// try global declarations
-			XNFunctionHandler mh = context.getGlobalUserFunction(functionName);
-			if (mh != null) {
+			XNFunctionHandler fh = context.getGlobalUserFunction(functionName);
+			if (fh != null) {
 				context.pushResponder(resp);
 				XNHandlerExit exit = null;
 				try {
-					exit = evaluateUserFunction(mh, parameter.toPrimitiveList(context));
+					List<XOMVariant> params = new ArrayList<XOMVariant>();
+					if (paramExpr instanceof XNListExpression) {
+						params.addAll(parameter.toPrimitiveList(context));
+					} else {
+						params.add(parameter.asPrimitive(context));
+					}
+					exit = evaluateUserFunction(fh, params);
 				} finally {
 					context.popResponder();
 				}
@@ -1102,7 +1114,7 @@ public class XNInterpreter {
 		return evaluateBuiltInFunction(functionName, modifier, parameter);
 	}
 	
-	private XNHandlerExit evaluateUserFunction(XNFunctionHandler handler, List<? extends XOMVariant> parameters) {
+	private XNHandlerExit evaluateUserFunction(XNFunctionHandler handler, List<XOMVariant> parameters) {
 		XNStackFrame f = new XNStackFrame(handler.name, parameters);
 		if (handler.parameters != null) {
 			for (int i = 0; i < handler.parameters.size(); i++) {
@@ -1420,7 +1432,7 @@ public class XNInterpreter {
 				String ordinalName = ((XNOrdinalDeclaration)stat).identifier;
 				XNExpression evalue = ((XNOrdinalDeclaration)stat).value;
 				if (!context.hasOrdinal(ordinalName)) {
-					XOMInteger i = XOMIntegerType.instance.makeInstanceFrom(context, evaluateExpression(evalue).asPrimitive(context));
+					XOMInteger i = XOMIntegerType.instance.makeInstanceFrom(context, evaluateExpression(evalue).asPrimitive(context), true);
 					context.addUserOrdinal(ordinalName, i.toInt());
 				}
 				return XNHandlerExit.ended();
@@ -1450,7 +1462,7 @@ public class XNInterpreter {
 						infinite = true;
 						countInt = Integer.MAX_VALUE;
 					} else {
-						XOMNumber i = XOMNumberType.instance.makeInstanceFrom(context, countVar);
+						XOMNumber i = XOMNumberType.instance.makeInstanceFrom(context, countVar, true);
 						if (i.isZero() || i.getSign() == XOMInteger.SIGN_POSITIVE) {
 							if (i.isInfinite()) {
 								infinite = true;
@@ -1515,7 +1527,7 @@ public class XNInterpreter {
 					XOMNumber step =
 						(((XNRepeatWithParameters)rp).stepvalue == null) ?
 								(((XNRepeatWithParameters)rp).toToken.image.toLowerCase().contains("down") ? XOMNumber.ONE.negate() : XOMNumber.ONE) :
-									XOMNumberType.instance.makeInstanceFrom(context, evaluateExpression(((XNRepeatWithParameters)rp).stepvalue).asPrimitive(context));
+									XOMNumberType.instance.makeInstanceFrom(context, evaluateExpression(((XNRepeatWithParameters)rp).stepvalue).asPrimitive(context), true);
 					dest.putIntoContents(context, start);
 					while (true) {
 						try {
@@ -1544,13 +1556,13 @@ public class XNInterpreter {
 						MathContext mc = context.getMathContext();
 						MathProcessor mp = context.getMathProcessor();
 						if (dest instanceof XOMNumber && step instanceof XOMNumber) {
-							XOMNumber destn = XOMNumberType.instance.makeInstanceFrom(context, dest);
-							XOMNumber stepn = XOMNumberType.instance.makeInstanceFrom(context, step);
+							XOMNumber destn = XOMNumberType.instance.makeInstanceFrom(context, dest, true);
+							XOMNumber stepn = XOMNumberType.instance.makeInstanceFrom(context, step, true);
 							dest.putIntoContents(context, XOMNumberMath.add(destn, stepn, mc, mp));
 						}
-						else if (XOMNumberType.instance.canMakeInstanceFrom(context, dest) && XOMNumberType.instance.canMakeInstanceFrom(context, step)) {
-							XOMNumber destn = XOMNumberType.instance.makeInstanceFrom(context, dest);
-							XOMNumber stepn = XOMNumberType.instance.makeInstanceFrom(context, step);
+						else if (XOMNumberType.instance.canMakeInstanceFrom(context, dest, true) && XOMNumberType.instance.canMakeInstanceFrom(context, step, true)) {
+							XOMNumber destn = XOMNumberType.instance.makeInstanceFrom(context, dest, true);
+							XOMNumber stepn = XOMNumberType.instance.makeInstanceFrom(context, step, true);
 							dest.putIntoContents(context, XOMNumberMath.add(destn, stepn, mc, mp));
 						}
 						else {

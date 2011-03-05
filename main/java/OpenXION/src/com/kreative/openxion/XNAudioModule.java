@@ -356,7 +356,7 @@ public class XNAudioModule extends XNModule {
 				}
 			} else {
 				String inst = interp.evaluateExpression(parameters.get(0)).toTextString(ctx);
-				float tempo = (float)XOMNumberType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(parameters.get(2)).asPrimitive(ctx)).toDouble();
+				float tempo = (float)XOMNumberType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(parameters.get(2)).asPrimitive(ctx), true).toDouble();
 				StringBuffer notes = new StringBuffer();
 				for (int i = 3; i < parameters.size(); i++) {
 					notes.append(" ");
@@ -432,9 +432,9 @@ public class XNAudioModule extends XNModule {
 			if (parameters == null || parameters.size() == 0 || parameters.size() > 4) {
 				throw new XNScriptError("Can't understand arguments to tone");
 			}
-			float f = (float)XOMNumberType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(parameters.get(0)).asPrimitive(ctx)).toDouble();
+			float f = (float)XOMNumberType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(parameters.get(0)).asPrimitive(ctx), true).toDouble();
 			if (parameters.size() > 2) {
-				double d = XOMNumberType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(parameters.get(2))).toDouble();
+				double d = XOMNumberType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(parameters.get(2)), true).toDouble();
 				String type = (parameters.size() > 3) ? interp.evaluateExpression(parameters.get(3)).toTextString(ctx) : "ticks";
 				type = type.toLowerCase();
 				if (type.startsWith("sec")) {
@@ -600,7 +600,7 @@ public class XNAudioModule extends XNModule {
 		}
 		public void setProperty(XNContext ctx, String propertyName, XOMVariant value) {
 			if (mgr.supportsAudioDial()) {
-				dialingVolume = (float)XOMNumberType.instance.makeInstanceFrom(ctx, value).toDouble() * mgr.getAudioDialer().getMaximumAmplitude() / 7f;
+				dialingVolume = (float)XOMNumberType.instance.makeInstanceFrom(ctx, value, true).toDouble() * mgr.getAudioDialer().getMaximumAmplitude() / 7f;
 			}
 		}
 	};
@@ -621,7 +621,7 @@ public class XNAudioModule extends XNModule {
 		}
 		public void setProperty(XNContext ctx, String propertyName, XOMVariant value) {
 			if (mgr.supportsModemDial()) {
-				dialingTime = XOMIntegerType.instance.makeInstanceFrom(ctx, value).toLong() * 1000L / 60L;
+				dialingTime = XOMIntegerType.instance.makeInstanceFrom(ctx, value, true).toLong() * 1000L / 60L;
 			}
 		}
 	};
@@ -667,7 +667,7 @@ public class XNAudioModule extends XNModule {
 		}
 		public void setProperty(XNContext ctx, String propertyName, XOMVariant value) {
 			if (mgr.supportsPlay()) {
-				mgr.setPlayerChannel(XOMIntegerType.instance.makeInstanceFrom(ctx, value).toInt()-1);
+				mgr.setPlayerChannel(XOMIntegerType.instance.makeInstanceFrom(ctx, value, true).toInt()-1);
 			}
 		}
 	};
@@ -688,7 +688,7 @@ public class XNAudioModule extends XNModule {
 		}
 		public void setProperty(XNContext ctx, String propertyName, XOMVariant value) {
 			if (mgr.supportsTone()) {
-				toneVolume = (float)XOMNumberType.instance.makeInstanceFrom(ctx, value).toDouble() * mgr.getToner().getMaximumAmplitude() / 7f;
+				toneVolume = (float)XOMNumberType.instance.makeInstanceFrom(ctx, value, true).toDouble() * mgr.getToner().getMaximumAmplitude() / 7f;
 			}
 		}
 	};
@@ -709,7 +709,7 @@ public class XNAudioModule extends XNModule {
 		}
 		public void setProperty(XNContext ctx, String propertyName, XOMVariant value) {
 			if (mgr.supportsTone()) {
-				mgr.setTonerChannel(XOMIntegerType.instance.makeInstanceFrom(ctx, value).toInt()-1);
+				mgr.setTonerChannel(XOMIntegerType.instance.makeInstanceFrom(ctx, value, true).toInt()-1);
 			}
 		}
 	};

@@ -406,7 +406,7 @@ public class XNExtendedModule extends XNModule {
 						String from = null;
 						if (parameters.size() > 2) {
 							XOMVariant v = interp.evaluateExpression(parameters.get(2)).asPrimitive(ctx);
-							XOMInteger i = XOMIntegerType.instance.makeInstanceFrom(ctx, v);
+							XOMInteger i = XOMIntegerType.instance.makeInstanceFrom(ctx, v, true);
 							param = i.toInt();
 						}
 						if (parameters.size() > 4) {
@@ -1014,12 +1014,12 @@ public class XNExtendedModule extends XNModule {
 			case BINT: return xo.toTextString(ctx);
 			case OINT: return xo.toTextString(ctx);
 			case HINT: return xo.toTextString(ctx);
-			case UINT: return XOMIntegerType.instance.makeInstanceFrom(ctx, xo).toBigInteger();
-			case SINT: return XOMIntegerType.instance.makeInstanceFrom(ctx, xo).toBigInteger();
-			case UFIXED: return XOMNumberType.instance.makeInstanceFrom(ctx, xo).toBigDecimal();
-			case SFIXED: return XOMNumberType.instance.makeInstanceFrom(ctx, xo).toBigDecimal();
-			case FLOAT: return XOMNumberType.instance.makeInstanceFrom(ctx, xo).toNumber();
-			case COMPLEX: return XOMComplexType.instance.makeInstanceFrom(ctx, xo).toNumbers();
+			case UINT: return XOMIntegerType.instance.makeInstanceFrom(ctx, xo, true).toBigInteger();
+			case SINT: return XOMIntegerType.instance.makeInstanceFrom(ctx, xo, true).toBigInteger();
+			case UFIXED: return XOMNumberType.instance.makeInstanceFrom(ctx, xo, true).toBigDecimal();
+			case SFIXED: return XOMNumberType.instance.makeInstanceFrom(ctx, xo, true).toBigDecimal();
+			case FLOAT: return XOMNumberType.instance.makeInstanceFrom(ctx, xo, true).toNumber();
+			case COMPLEX: return XOMComplexType.instance.makeInstanceFrom(ctx, xo, true).toNumbers();
 			case CHAR: return xo.toTextString(ctx);
 			case PSTRING: return xo.toTextString(ctx);
 			case CSTRING: return xo.toTextString(ctx);
@@ -1090,7 +1090,7 @@ public class XNExtendedModule extends XNModule {
 			if (s.length() == 0) return XOMString.EMPTY_STRING;
 			String d = l.get(1).toTextString(ctx);
 			String[] flds = s.split(d);
-			int n = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(2)).toInt();
+			int n = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(2), true).toInt();
 			if (n < 1 || n > flds.length) return XOMString.EMPTY_STRING;
 			else return new XOMString(flds[n-1]);
 		}
