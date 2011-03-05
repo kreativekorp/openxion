@@ -31,6 +31,7 @@ import java.util.*;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.XNScriptError;
 import com.kreative.openxion.ast.XNModifier;
+import com.kreative.openxion.xom.inst.XOMDictionary;
 import com.kreative.openxion.xom.inst.XOMEmpty;
 import com.kreative.openxion.xom.inst.XOMString;
 import com.kreative.openxion.xom.inst.XOMBinary;
@@ -137,6 +138,9 @@ public final class XOMVariable extends XOMVariant {
 			List<XOMVariant> toSort = new Vector<XOMVariant>();
 			if (v instanceof XOMList) {
 				toSort.addAll(v.toPrimitiveList(ctx));
+			} else if (v instanceof XOMDictionary) {
+				for (String s : ((XOMDictionary)v).toMap().keySet())
+					toSort.add(new XOMString(s));
 			} else if (v instanceof XOMBinary) {
 				for (byte b : ((XOMBinary)v).toByteArray())
 					toSort.add(new XOMBinary(new byte[]{b}));
@@ -147,6 +151,12 @@ public final class XOMVariable extends XOMVariant {
 			Collections.sort(toSort, cmp);
 			if (v instanceof XOMList) {
 				vm.setVariable(ctx, name, new XOMList(toSort));
+			} else if (v instanceof XOMDictionary) {
+				Map<String, XOMVariant> oldMap = ((XOMDictionary)v).toMap();
+				Map<String, XOMVariant> newMap = new LinkedHashMap<String, XOMVariant>();
+				for (XOMVariant key : toSort)
+					newMap.put(key.toTextString(ctx), oldMap.get(key.toTextString(ctx)));
+				vm.setVariable(ctx, name, new XOMDictionary(newMap));
 			} else if (v instanceof XOMBinary) {
 				byte[] b = new byte[toSort.size()];
 				for (int i = 0; i < b.length; i++) {

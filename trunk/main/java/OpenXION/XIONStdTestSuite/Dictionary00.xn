@@ -1,0 +1,73 @@
+put {}
+put {
+
+}
+
+put {
+
+
+} into x
+put x
+
+local d as dictionary
+put d
+
+local e as dictionary is empty
+put e
+
+local f as dictionary is {}
+put f
+
+put { "a" = "apple"; "b" = "raise" }
+put {
+	"a" = "apple"
+	"b" = "raise"
+}
+put { "a" = "apple"
+	"b" = "raise"
+}
+put {
+	"a" = "apple"
+	"b" = "raise" }
+put { a = apple; b = raise }
+put { a = "apple"; b = "raise" }
+
+
+put { "a": "apple"; "b" : "raise" }
+put { a: apple; b : raise }
+put { a: "apple"; b : "raise" }
+
+
+put { "a" = "apple"; "b" = "raise" } into d
+put "A is for" && entry "a" of d
+put "B is for" && entry "b" of d
+
+put "Kreative Software" into entry "c" of d
+put "C is for" && entry "c" of d
+
+put "Entertainment" into word 2 of entry "c" of d
+put entry "c" of d
+put " Services" after last char of entry "c" of d
+put entry "c" of d
+put d
+
+delete entry "c" of d
+put d
+
+put "Hello" into entry 1 of d
+put "World" into entry 2 of d
+put entry 1 of d && entry 2 of d
+put d
+
+repeat for each k in keys of d
+	put k && entry k of d
+end repeat
+
+repeat for each v in values of d
+	put v
+end repeat
+
+put the number of d
+
+put (the value of (d as string)) is d
+put (the value of "{a:apple;b:raise}") is { "a" = "apple"; "b" = "raise" }

@@ -37,11 +37,13 @@ import com.kreative.openxion.XNLexer;
 import com.kreative.openxion.XNParser;
 import com.kreative.openxion.XNInterpreter;
 import com.kreative.openxion.XNToken;
+import com.kreative.openxion.ast.XNDictionaryExpression;
 import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.ast.XNExpression;
 import com.kreative.openxion.ast.XNVariantDescriptor;
 import com.kreative.openxion.xom.XOMVariable;
 import com.kreative.openxion.xom.XOMVariant;
+import com.kreative.openxion.xom.inst.XOMDictionary;
 
 /**
  * The XIONUtil utility class contains miscellaneous methods used
@@ -94,6 +96,52 @@ public class XIONUtil {
 			XNToken tk2 = lexer.getToken();
 			if (tk1.kind == XNToken.ID && tk2.isEOF()) {
 				return new XOMVariable(ctx.getVariableMap(tk1.image), tk1.image);
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	public static boolean canParseDictionary(XNContext ctx, String s) {
+		try {
+			XNLexer lexer = new XNLexer(s, new StringReader(s));
+			XNParser parser = new XNParser(ctx, lexer);
+			if (parser.lookListExpression(1, null)) {
+				XNExpression expr = parser.getListExpression(null);
+				if (expr instanceof XNDictionaryExpression) {
+					if (parser.getToken().isEOF()) {
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	public static XOMDictionary parseDictionary(XNContext ctx, String s) {
+		try {
+			XNLexer lexer = new XNLexer(s, new StringReader(s));
+			XNParser parser = new XNParser(ctx, lexer);
+			if (parser.lookListExpression(1, null)) {
+				XNExpression expr = parser.getListExpression(null);
+				if (expr instanceof XNDictionaryExpression) {
+					if (parser.getToken().isEOF()) {
+						return (XOMDictionary)(new XNInterpreter(ctx).evaluateExpression(expr));
+					} else {
+						return null;
+					}
+				} else {
+					return null;
+				}
 			} else {
 				return null;
 			}
