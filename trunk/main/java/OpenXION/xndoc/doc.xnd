@@ -502,6 +502,40 @@
 </operator>
 
 <operator>
+	<name dialects="xn1,oxnb13">a reference to</name>
+	<name dialects="xn1,oxnb13">reference to</name>
+	<name dialects="xn1,oxnb13">a ref to</name>
+	<name dialects="xn1,oxnb13">ref to</name>
+	<precedence>unary</precedence>
+	<syntax>[[*]] {factor}</syntax>
+	<syntax-note>
+		{Factor} yields a descriptor.
+	</syntax-note>
+	<description-short>References</description-short>
+	<description>
+		The [[*]] operator evaluates to a [[dt:reference]] to a variant.
+	</description>
+	<see-also>[[dt:reference]]</see-also>
+</operator>
+
+<operator>
+	<name dialects="xn1,oxnb13">the referent of</name>
+	<name dialects="xn1,oxnb13">referent of</name>
+	<name dialects="xn1,oxnb13">the ref of</name>
+	<name dialects="xn1,oxnb13">ref of</name>
+	<precedence>unary</precedence>
+	<syntax>[[*]] {factor}</syntax>
+	<syntax-note>
+		{Factor} yields a descriptor.
+	</syntax-note>
+	<description-short>References</description-short>
+	<description>
+		The [[*]] operator takes a [[dt:reference]] and evaluates to its referent.
+	</description>
+	<see-also>[[dt:reference]]</see-also>
+</operator>
+
+<operator>
 	<name dialects="xn1,oxnb1,oxnb11,oxnb12,oxnb13,hyp">^</name>
 	<name dialects="xn1,oxnb1,oxnb11,oxnb12,oxnb13">**</name>
 	<precedence>exponentiation</precedence>
@@ -1681,7 +1715,7 @@
 </structure>
 
 <structure>
-	<name dialects="xn1,oxnb1,oxnb11,oxnb12">to get contents</name>
+	<name dialects="oxnb1,oxnb11,oxnb12">to get contents</name>
 	<syntax>[[to get contents]]\\[[  ]]{statementList}\\[[end get]]</syntax>
 	<description>
 		The [[*]] handler defines the behavior of a user-defined object when its contents
@@ -1706,7 +1740,7 @@
 </structure>
 
 <structure>
-	<name dialects="xn1,oxnb1,oxnb11,oxnb12">to put contents</name>
+	<name dialects="oxnb1,oxnb11,oxnb12">to put contents</name>
 	<syntax>[[to put ]]{variableName}[[ into contents]]\\[[  ]]{statementList}\\[[end put]]</syntax>
 	<syntax>[[to put ]]{variableName}[[ before contents]]\\[[  ]]{statementList}\\[[end put]]</syntax>
 	<syntax>[[to put ]]{variableName}[[ after contents]]\\[[  ]]{statementList}\\[[end put]]</syntax>
@@ -1865,12 +1899,8 @@
 	</description>
 	<description>
 		The default data type of a parameter if none is specified is [[dt:string]].
-		Other data types, particularly [[dt:variant]], behave in a manner
+		Other data types, particularly [[dt:variant]], may behave in a manner
 		incompatible with HyperTalk, but that may be desirable.
-		Specifically, passing a container to a handler with a parameter
-		declared as [[dt:variant]] will pass the container itself to the handler,
-		while passing a container to a handler with a parameter declared as
-		[[dt:string]] will pass only that container's {contents}.
 	</description>
 	<note>
 		HyperTalk does not support [[as]] or [[is]] in the parameter list.
@@ -1915,12 +1945,8 @@
 	</description>
 	<description>
 		The default data type of a parameter if none is specified is [[dt:string]].
-		Other data types, particularly [[dt:variant]], behave in a manner
+		Other data types, particularly [[dt:variant]], may behave in a manner
 		incompatible with HyperTalk, but that may be desirable.
-		Specifically, passing a container to a handler with a parameter
-		declared as [[dt:variant]] will pass the container itself to the handler,
-		while passing a container to a handler with a parameter declared as
-		[[dt:string]] will pass only that container's {contents}.
 	</description>
 	<note>
 		User-defined functions are always followed by parentheses.
@@ -2366,12 +2392,8 @@
 	</note>
 	<note>
 		The default data type if none is specified is [[dt:string]].
-		Other data types, particularly [[dt:variant]], behave in a manner
+		Other data types, particularly [[dt:variant]], may behave in a manner
 		incompatible with HyperTalk, but that may be desirable.
-		Specifically, [[cm:put]]ting a container into a variable declared as
-		[[dt:variant]] will put the container itself into the variable,
-		while [[cm:put]]ting a container into a variable declared as
-		[[dt:string]] will put the {contents} into the variable.
 	</note>
 	<note>
 		The initial value of a variable, if not specified, is [[cn:empty]].
@@ -2416,12 +2438,8 @@
 	</note>
 	<note>
 		The default data type if none is specified is [[dt:string]].
-		Other data types, particularly [[dt:variant]], behave in a manner
+		Other data types, particularly [[dt:variant]], may behave in a manner
 		incompatible with HyperTalk, but that may be desirable.
-		Specifically, [[cm:put]]ting a container into a variable declared as
-		[[dt:variant]] will put the container itself into the variable,
-		while [[cm:put]]ting a container into a variable declared as
-		[[dt:string]] will put the {contents} into the variable.
 	</note>
 	<note>
 		The initial value of a variable, if not specified, is [[cn:empty]].
@@ -2467,12 +2485,8 @@
 	</note>
 	<note>
 		The default data type if none is specified is [[dt:string]].
-		Other data types, particularly [[dt:variant]], behave in a manner
+		Other data types, particularly [[dt:variant]], may behave in a manner
 		incompatible with HyperTalk, but that may be desirable.
-		Specifically, [[cm:put]]ting a container into a variable declared as
-		[[dt:variant]] will put the container itself into the variable,
-		while [[cm:put]]ting a container into a variable declared as
-		[[dt:string]] will put the {contents} into the variable.
 	</note>
 	<note>
 		The initial value of a variable, if not specified, is [[cn:empty]].
@@ -2512,12 +2526,8 @@
 	</note>
 	<note>
 		The default data type if none is specified is [[dt:string]].
-		Other data types, particularly [[dt:variant]], behave in a manner
+		Other data types, particularly [[dt:variant]], may behave in a manner
 		incompatible with HyperTalk, but that may be desirable.
-		Specifically, [[cm:put]]ting a container into a variable declared as
-		[[dt:variant]] will put the container itself into the variable,
-		while [[cm:put]]ting a container into a variable declared as
-		[[dt:string]] will put the {contents} into the variable.
 	</note>
 	<note>
 		The initial value of a variable, if not specified, is [[cn:empty]].
@@ -4476,12 +4486,8 @@
 		The [[dt:string]] data type is the default when no other data type is
 		specified in a variable declaration or parameter list or when a variable
 		is used without being previously declared.
-		Other data types, particularly [[dt:variant]], behave in a manner
+		Other data types, particularly [[dt:variant]], may behave in a manner
 		incompatible with HyperTalk, but that may be desirable.
-		Specifically, [[cm:put]]ting a container into a variable declared as
-		[[dt:variant]] will put the container itself into the variable,
-		while [[cm:put]]ting a container into a variable declared as
-		[[dt:string]] will put the {contents} into the variable.
 	</note>
 </datatype>
 
@@ -4967,6 +4973,143 @@
 	<description>
 		The [[dt:binaries]] data type represents a [[dt:list]] that consists
 		entirely of [[dt:binary]]s.
+	</description>
+	<note>
+		In order to use lists properly, you must declare your variables to be a kind of list.
+		If a list is put into a variable that is undeclared, or declared to be a type other
+		than a kind of list, the list will be converted to a single string. For example:\\
+		\\
+		[[put (1,2,3,4) into steve]]\\
+		[[put the number of elements in steve]]\\
+		\\
+		will print [[1]] because [[steve]] has only one element: the string [["1,2,3,4"]].
+		However, this example:\\
+		\\
+		[[local steve as numbers]]\\
+		[[put (1,2,3,4) into steve]]\\
+		[[put the number of elements in steve]]\\
+		\\
+		will print [[4]] because [[steve]] has 4 elements: the numbers [[1]], [[2]], [[3]], and [[4]].
+	</note>
+</datatype>
+
+<datatype>
+	<name dialects="xn1,oxn13">dictionary</name>
+	<description>
+		The [[dt:dictionary]] data type represents a map of [[dt:string]]s to [[dt:variant]]s.
+		In XION code and in [[dt:string]] form, a [[dt:dictionary]] looks like:\\
+		\\
+		[[{]]\\
+		[[  "4" = "Steve"]]\\
+		[[  "1" = "Bill"]]\\
+		[[  "3" = "Andy"]]\\
+		[[  "2" = "Dan"]]\\
+		[[}]]
+	</description>
+	<description>
+		In this example, the {keys} are the strings [["4"]], [["1"]], [["3"]], and [["2"]],
+		and the {values} are the strings [["Steve"]], [["Bill"]], [["Andy"]], and [["Dan"]].
+		Keys must always be [[dt:string]]s. Values may be any kind of [[dt:variant]].
+	</description>
+	<description>
+		A [[dt:dictionary]] is manipulated using the [[dt:entry]] chunk type.
+		In this example, [[entry "2"]] of this [[dt:dictionary]] evaluates to [["Dan"]].
+		An ordinal or numeric index on an [[dt:entry]] is used as a key, not as an index;
+		[[entry 4]] of this [[dt:dictionary]] evaluates to [["Steve"]] even though [["Steve"]]
+		appears first in the [[dt:dictionary]].
+	</description>
+	<description>
+		You can iterate over the keys and values of a [[dt:dictionary]] using the [[pr:keys]]
+		and [[pr:values]] properties of a [[dt:dictionary]].
+	</description>
+	<properties>keys, values</properties>
+</datatype>
+
+<datatype>
+	<name dialects="xn1,oxn13">dictionaries</name>
+	<description>
+		The [[dt:dictionaries]] data type represents a [[dt:list]] that consists
+		entirely of [[dt:dictionary]]s.
+	</description>
+	<note>
+		In order to use lists properly, you must declare your variables to be a kind of list.
+		If a list is put into a variable that is undeclared, or declared to be a type other
+		than a kind of list, the list will be converted to a single string. For example:\\
+		\\
+		[[put (1,2,3,4) into steve]]\\
+		[[put the number of elements in steve]]\\
+		\\
+		will print [[1]] because [[steve]] has only one element: the string [["1,2,3,4"]].
+		However, this example:\\
+		\\
+		[[local steve as numbers]]\\
+		[[put (1,2,3,4) into steve]]\\
+		[[put the number of elements in steve]]\\
+		\\
+		will print [[4]] because [[steve]] has 4 elements: the numbers [[1]], [[2]], [[3]], and [[4]].
+	</note>
+</datatype>
+
+<datatype>
+	<name dialects="xn1,oxn13">entry</name>
+	<description>
+		The [[*]] data type is a chunk type of [[dt:dictionary]]
+		that represents an entry in the dictionary.
+	</description>
+	<descriptors>
+		child-index, child-ordinal, child-name
+	</descriptors>
+	<note>
+		Accessing a [[*]] chunk that refers to an entry not in the dictionary returns [[cn:empty]].
+		Modifying a [[*]] chunk that refers to an entry not in the dictionary adds a new entry to the parent [[dt:dictionary]].
+	</note>
+</datatype>
+
+<datatype>
+	<name dialects="xn1,oxn13">entries</name>
+	<description>
+		The [[dt:entries]] data type represents a [[dt:list]] that consists
+		entirely of [[dt:entry]]s.
+	</description>
+</datatype>
+
+<datatype>
+	<name dialects="xn1,oxn13">reference</name>
+	<description>
+		The [[dt:reference]] data type is a non-container data type that points to
+		a [[dt:variant]] that may or may not be a container. In [[dt:string]] form,
+		a [[dt:reference]] appears as a descriptor or XION literal.
+	</description>
+	<description>
+		A [[dt:reference]] is used to freely pass around a container.
+		When an attempt is made to put a container into a variable,
+		[[dt:list]], [[dt:dictionary]], or other container,
+		or to pass a container as a parameter to a message or function handler,
+		the container's contents are passed instead. In order to
+		pass around the container, a reference must be created.
+	</description>
+	<script>
+		The following example illustrates using references to change a string.
+		In this example, we want to pass in the {container} [[last word of greeting]].
+		However, if we were to naively pass in [[last word of greeting]], the actual
+		last word, [["Becky."]], would be passed in instead. So instead we pass in
+		a reference.
+		\\\\[[on tweak what as reference, newValue as string\\
+		  put newValue into the referent of what\\
+		end tweak\\
+		\\
+		local greeting as string\\
+		put "Hello, my name is Rebecca. But you can call me Becky." into greeting\\
+		tweak (a reference to last word of greeting), "Beckie."]]
+	</script>
+	<see-also>[[op:a reference to]], [[op:the referent of]]</see-also>
+</datatype>
+
+<datatype>
+	<name dialects="xn1,oxn13">references</name>
+	<description>
+		The [[dt:references]] data type represents a [[dt:list]] that consists
+		entirely of [[dt:reference]]s.
 	</description>
 	<note>
 		In order to use lists properly, you must declare your variables to be a kind of list.
@@ -6615,6 +6758,26 @@
 		The [[*]] property determines the brightness or value of a color.
 		The value is specified as a [[dt:number]] between 0.0 and 1.0, inclusive.
 		A value of 0.0 is black while a value of 1.0 is a full color.
+	</description>
+</property>
+
+<property>
+	<name dialects="xn1,oxn13">keys</name>
+	<applies-to>[[dt:Dictionary]]s</applies-to>
+	<syntax>the [[*]] of {dict}</syntax>
+	<syntax-note>{Dict} yields a [[dt:dictionary]].</syntax-note>
+	<description>
+		The [[*]] property yields a [[dt:list]] of all the keys in a [[dt:dictionary]].
+	</description>
+</property>
+
+<property>
+	<name dialects="xn1,oxn13">values</name>
+	<applies-to>[[dt:Dictionary]]s</applies-to>
+	<syntax>the [[*]] of {dict}</syntax>
+	<syntax-note>{Dict} yields a [[dt:dictionary]].</syntax-note>
+	<description>
+		The [[*]] property yields a [[dt:list]] of all the values in a [[dt:dictionary]].
 	</description>
 </property>
 
