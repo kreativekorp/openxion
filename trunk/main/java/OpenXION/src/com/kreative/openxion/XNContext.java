@@ -196,17 +196,18 @@ public class XNContext implements Serializable, Cloneable {
 	 * global variables, and environment as this XNContext.
 	 * @return a forked XNContext.
 	 */
-	public XNContext fork() {
-		return new XNContext(this);
+	public XNContext fork(boolean withStack) {
+		return new XNContext(this, withStack);
 	}
-	private XNContext(XNContext parent) {
+	private XNContext(XNContext parent, boolean withStack) {
 		this.ui = parent.ui;
 		this.security = parent.security;
 		this.parent = parent;
 		initLanguageConstructs(parent);
 		initRuntime(parent);
 		initEnvironment(parent);
-		initStack();
+		if (withStack) initStack(parent);
+		else initStack();
 	}
 	
 	/**
@@ -214,11 +215,12 @@ public class XNContext implements Serializable, Cloneable {
 	 * and environment back into the XNContext this XNContext
 	 * was originally forked from.
 	 */
-	public void join() {
+	public void join(boolean withStack) {
 		if (parent != null) {
 			parent.initLanguageConstructs(this);
 			parent.initRuntime(this);
 			parent.initEnvironment(this);
+			if (withStack) parent.initStack(this);
 		}
 	}
 	
@@ -363,6 +365,14 @@ public class XNContext implements Serializable, Cloneable {
 		responderStack = new Stack<XNResponder>();
 		callStack = new Stack<XNStackFrame>();
 		result = null;
+	}
+	
+	private void initStack(XNContext parent) {
+		initStack();
+		firstResponder = parent.firstResponder;
+		responderStack.addAll(parent.responderStack);
+		callStack.addAll(parent.callStack);
+		result = parent.result;
 	}
 	
 	/* LANGUAGE CONSTRUCTS */
