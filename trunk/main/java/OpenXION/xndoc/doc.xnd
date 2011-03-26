@@ -13327,6 +13327,158 @@
 </function>
 
 <function>
+	<name dialects="oxne13">ygnDecode</name>
+	<syntax>the [[*]] of {text}</syntax>
+	<syntax>the [[*]] of ({text}, {collapseBackslashes})</syntax>
+	<syntax>[[*]]({text})</syntax>
+	<syntax>[[*]]({text}, {collapseBackslashes})</syntax>
+	<syntax-note>{Text} yields a [[dt:string]]. {CollapseBackslashes} yields a [[dt:boolean]].</syntax-note>
+	<description>
+		The [[*]] function decodes sequences of the forms [[=X{hex}=]] and [[={L}=]]
+		in the specified string and returns the decoded string.
+	</description>
+	<description>
+		A sequence of the form [[=X{hex}=]], where {hex} is a hexadecimal integer
+		using capital letters representing a Unicode code point, is decoded as
+		the character at that code point.
+	</description>
+	<description>
+		A sequence of the form [[={L}=]], where {L} is a single capital letter,
+		is decoded as one of the following symbols:
+		\\\\
+		::TABLE
+		[[=A=]] :: apostrophe
+		........
+		[[=B=]] :: backslash
+		........
+		[[=C=]] :: colon
+		........
+		[[=D=]] :: dollar sign
+		........
+		[[=E=]] :: equals sign
+		........
+		[[=F=]] :: slash (mnemonic: "fraction")
+		........
+		[[=G=]] :: greater-than
+		........
+		[[=H=]] :: question mark (mnemonic: "help")
+		........
+		[[=I=]] :: opening bracket
+		........
+		[[=J=]] :: closing bracket
+		........
+		[[=K=]] :: semicolon
+		........
+		[[=L=]] :: less-than
+		........
+		[[=M=]] :: ampersand
+		........
+		[[=N=]] :: plus sign
+		........
+		[[=O=]] :: pound sign (mnemonic: "octothorpe")
+		........
+		[[=P=]] :: percent
+		........
+		[[=Q=]] :: quotation mark
+		........
+		[[=R=]] :: caret (mnemonic: "raise")
+		........
+		[[=S=]] :: asterisk (mnemonic: "star")
+		........
+		[[=T=]] :: tilde
+		........
+		[[=U=]] :: underscore
+		........
+		[[=V=]] :: vertical bar
+		........
+		[[=W=]] :: grave accent (mnemonic: "which," as in [[`which gcc` hello.c]])
+		........
+		[[=X=]] :: exclamation point
+		........
+		[[=Y=]] :: opening brace
+		........
+		[[=Z=]] :: closing brace
+		ELBAT::
+	</description>
+	<description>
+		If {collapseBackslashes} is [[cn:true]], any [[=B=]] sequences
+		immediately preceding a [[=B=]], [[=A=]], or [[=Q=]] sequence are ignored.
+	</description>
+	<see-also>[[fn:ygnEncode]], [[fn:urlEncode]], [[fn:urlDecode]], [[fn:htmlEncode]], [[fn:htmlDecode]]</see-also>
+</function>
+
+<function>
+	<name dialects="oxne13">ygnEncode</name>
+	<syntax>the [[*]] of {text}</syntax>
+	<syntax>the [[*]] of ({text}, {level})</syntax>
+	<syntax>the [[*]] of ({text}, {level}, {collapseBackslashes})</syntax>
+	<syntax>[[*]]({text})</syntax>
+	<syntax>[[*]]({text}, {level})</syntax>
+	<syntax>[[*]]({text}, {level}, {collapseBackslashes})</syntax>
+	<syntax-note>{Text} yields a [[dt:string]]. {Level} yields an [[dt:integer]]. {CollapseBackslashes} yields a [[dt:boolean]].</syntax-note>
+	<description>
+		The [[*]] function encodes backslashes, apostrophes, quotation marks, and equals signs
+		in the specified string as the sequences [[=B=]], [[=A=]], [[=Q=]], and [[=E=]], respectively,
+		and returns the encoded string.
+	</description>
+	<description>
+		If {level} is zero or greater, the [[*]] function also encodes percent signs, underscores,
+		question marks, and asterisks as the sequences [[=P=]], [[=U=]], [[=H=]], and [[=S=]], respectively,
+		effectively masking off commonly-used and SQL-specific wildcard characters.
+	</description>
+	<description>
+		If {level} is one or greater, the [[*]] function also encodes less-than signs, greater-than signs,
+		and ampersands as the sequences [[=L=]], [[=G=]], and [[=M=]], respectively,
+		effectively masking off XML tag characters.
+	</description>
+	<description>
+		If {level} is two or greater, the [[*]] function also encodes the following symbols thusly:
+		\\\\
+		::TABLE
+		exclamation point :: [[=X=]]
+		........
+		pound sign :: [[=O=]] (mnemonic: "octothorpe")
+		........
+		dollar sign :: [[=D=]]
+		........
+		plus sign :: [[=N=]]
+		........
+		slash :: [[=F=]] (mnemonic: "fraction")
+		........
+		colon :: [[=C=]]
+		........
+		semicolon :: [[=K=]]
+		........
+		opening bracket :: [[=I=]]
+		........
+		closing bracket :: [[=J=]]
+		........
+		caret :: [[=R=]] (mnemonic: "raise")
+		........
+		grave accent :: [[=W=]] (mnemonic: "which," as in [[`which gcc` hello.c]])
+		........
+		opening brace :: [[=Y=]]
+		........
+		closing brace :: [[=Z=]]
+		........
+		vertical bar :: [[=V=]]
+		........
+		tilde :: [[=T=]]
+		ELBAT::
+	</description>
+	<description>
+		Finally, if {level} is three or greater, the [[*]] function also encodes control characters
+		and non-ASCII characters as the sequence [[=X{hex}=]], where {hex} is a hexadecimal integer
+		using capital letters representing the Unicode code point of the character.
+	</description>
+	<description>
+		If {collapseBackslashes} is [[cn:true]], any backslashes
+		immediately preceding a backslash, apostrophe, or quotation mark are ignored.
+	</description>
+	<see-also>[[fn:ygnDecode]], [[fn:urlEncode]], [[fn:urlDecode]], [[fn:htmlEncode]], [[fn:htmlDecode]]</see-also>
+</function>
+
+<function>
 	<name dialects="oxna12,oxna13,hyp">serialPorts</name>
 	<syntax>the [[*]]</syntax>
 	<syntax>[[*]]()</syntax>
