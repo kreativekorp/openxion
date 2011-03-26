@@ -12300,6 +12300,115 @@
 </function>
 
 <function>
+	<name dialects="oxne13">atob</name>
+	<syntax>the atob of {text}</syntax>
+	<syntax>the atob of ({text}, {algorithm})</syntax>
+	<syntax>atob({text})</syntax>
+	<syntax>atob({text}, {algorithm})</syntax>
+	<syntax-note>
+		{Text} yields a [[dt:string]].
+		{Algorithm} yields the name of an ASCII-to-binary decoding algorithm.
+	</syntax-note>
+	<description>
+		The [[*]] function decodes ASCII {text} back into binary data using the specified {algorithm}.
+		If the {algorithm} is not specified, [[base64]] is the default.
+	</description>
+	<description>
+		The [[*]] function supports the following {algorithm}s:
+		\\\\
+		::TABLE
+		[[b64]], [[base64]] ::
+		The Base64 encoding scheme.
+		Must provide the raw text without headers or footers.
+		Whitespace is ignored.
+		........
+		[[uu]], [[uud]], [[uudecode]] ::
+		The [[uuencode]]/[[uudecode]] encoding scheme.
+		Headers and footers are optional; if the header is provided, the footer must be as well, and vice versa.
+		........
+		[[xx]], [[xxd]], [[xxdecode]] ::
+		The [[xxencode]]/[[xxdecode]] encoding scheme.
+		Headers and footers are optional; if the header is provided, the footer must be as well, and vice versa.
+		........
+		[[hqx]], [[binhex]] ::
+		The encoding scheme used by BinHex, including run-length encoding.
+		The beginning and ending colons are optional.
+		Must provide the raw text without headers.
+		Returns the raw binary data as encoded (separating out metadata, forks, and CRCs must be done manually).
+		........
+		[[a85]], [[ascii85]] ::
+		The ASCII85 encoding scheme.
+		The [[&lt;~]] and [[~&gt;]] markers are optional.
+		The [[y]] character for a string of four spaces is supported.
+		........
+		[[k85]], [[kreative85]] ::
+		A variant of the ASCII85 encoding scheme that uses a different alphabet.
+		Must provide the raw text without markers.
+		........
+		[[l85]], [[legacy85]] ::
+		Something Resplendence calls Base85.
+		Don't use this.
+		ELBAT::
+	</description>
+	<see-also>[[fn:btoa]]</see-also>
+</function>
+
+<function>
+	<name dialects="oxne13">btoa</name>
+	<syntax>the btoa of {data}</syntax>
+	<syntax>the btoa of ({data}, {algorithm})</syntax>
+	<syntax>btoa({data})</syntax>
+	<syntax>btoa({data}, {algorithm})</syntax>
+	<syntax-note>
+		{Data} yields a [[dt:binary]].
+		{Algorithm} yields the name of a binary-to-ASCII encoding algorithm.
+	</syntax-note>
+	<description>
+		The [[*]] function encodes binary {data} into ASCII text using the specified {algorithm}.
+		If the {algorithm} is not specified, [[base64]] is the default.
+	</description>
+	<description>
+		The [[*]] function supports the following {algorithm}s:
+		\\\\
+		::TABLE
+		[[b64]], [[base64]] ::
+		The Base64 encoding scheme.
+		Does not produce any headers, footers, or line breaks; they must be added manually.
+		........
+		[[uu]], [[uue]], [[uuencode]] ::
+		The [[uuencode]]/[[uudecode]] encoding scheme.
+		Produces line breaks every 45 bytes.
+		Does not produce any headers or footers; they must be added manually.
+		........
+		[[xx]], [[xxe]], [[xxencode]] ::
+		The [[xxencode]]/[[xxdecode]] encoding scheme.
+		Produces line breaks every 45 bytes.
+		Does not produce any headers or footers; they must be added manually.
+		........
+		[[hqx]], [[binhex]] ::
+		The encoding scheme used by BinHex, including run-length encoding.
+		Produces the beginning and ending colons.
+		Does not produce any headers; they must be added manually.
+		Assumes binary data is already structured appropriately (metadata, resource fork, and CRCs must be added manually).
+		........
+		[[a85]], [[ascii85]] ::
+		The ASCII85 encoding scheme.
+		Produces the [[&lt;~]] and [[~&gt;]] markers.
+		Does not produce the [[y]] character for a string of four spaces.
+		........
+		[[k85]], [[kreative85]] ::
+		A variant of the ASCII85 encoding scheme that uses a different alphabet.
+		Does not produce any markers.
+		........
+		[[l85]], [[legacy85]] ::
+		Something Resplendence calls Base85.
+		Don't use this.
+		ELBAT::
+	</description>
+	<see-also>[[fn:atob]]</see-also>
+</function>
+
+<function>
 	<name dialects="oxne1,oxne11,oxne12,oxne13,hyp">heapSpace</name>
 	<syntax>the heapSpace</syntax>
 	<syntax>heapSpace()</syntax>
@@ -14266,7 +14375,7 @@
 		{{{{Binary Data}}}}
 		\\\\
 		::TABLE
-		[[fn:pack]] :: [[fn:unpack]]
+		[[fn:atob]] :: [[fn:btoa]] :: [[fn:pack]] :: [[fn:unpack]]
 		ELBAT::
 		\\\\
 		{{{{Sound}}}}

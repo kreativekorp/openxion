@@ -39,6 +39,7 @@ import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.ast.XNStringExpression;
 import com.kreative.openxion.binpack.*;
 import com.kreative.openxion.io.XOMURLIOManager;
+import com.kreative.openxion.util.Base64;
 import com.kreative.openxion.util.EndlessInputStream;
 import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.xom.XOMVariant;
@@ -82,6 +83,8 @@ public class XNExtendedModule extends XNModule {
 		commandParsers.put("sql", p_sql);
 		commands.put("sql", c_sql);
 		
+		functions.put("atob", f_atob);
+		functions.put("btoa", f_btoa);
 		functions.put("heapspace", f_heapspace);
 		functions.put("htmldecode", f_htmldecode);
 		functions.put("htmlencode", f_htmlencode);
@@ -599,6 +602,54 @@ public class XNExtendedModule extends XNModule {
 			return l;
 		}
 	}
+	
+	private static final Function f_atob = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 1, 2, true);
+			String e = (l.size() > 1) ? l.get(1).toTextString(ctx) : "base64";
+			String a = l.get(0).toTextString(ctx);
+			if (e.equalsIgnoreCase("b64") || e.equalsIgnoreCase("base64"))
+				return new XOMBinary(Base64.decodeBase64(a));
+			else if (e.equalsIgnoreCase("uu") || e.equalsIgnoreCase("uud") || e.equalsIgnoreCase("uudecode"))
+				return new XOMBinary(Base64.decodeUU(a));
+			else if (e.equalsIgnoreCase("xx") || e.equalsIgnoreCase("xxd") || e.equalsIgnoreCase("xxdecode"))
+				return new XOMBinary(Base64.decodeXX(a));
+			else if (e.equalsIgnoreCase("hqx") || e.equalsIgnoreCase("binhex"))
+				return new XOMBinary(Base64.decodeBinHex(a));
+			else if (e.equalsIgnoreCase("a85") || e.equalsIgnoreCase("ascii85"))
+				return new XOMBinary(Base64.decodeASCII85(a));
+			else if (e.equalsIgnoreCase("k85") || e.equalsIgnoreCase("kreative85"))
+				return new XOMBinary(Base64.decodeKreative85(a));
+			else if (e.equalsIgnoreCase("l85") || e.equalsIgnoreCase("legacy85"))
+				return new XOMBinary(Base64.decodeLegacy85(a));
+			else
+				return XOMEmpty.EMPTY;
+		}
+	};
+	
+	private static final Function f_btoa = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 1, 2, true);
+			String e = (l.size() > 1) ? l.get(1).toTextString(ctx) : "base64";
+			byte[] b = XOMBinaryType.instance.makeInstanceFrom(ctx, l.get(0)).toByteArray();
+			if (e.equalsIgnoreCase("b64") || e.equalsIgnoreCase("base64"))
+				return new XOMString(Base64.encodeBase64(b));
+			else if (e.equalsIgnoreCase("uu") || e.equalsIgnoreCase("uue") || e.equalsIgnoreCase("uuencode"))
+				return new XOMString(Base64.encodeUU(b));
+			else if (e.equalsIgnoreCase("xx") || e.equalsIgnoreCase("xxe") || e.equalsIgnoreCase("xxencode"))
+				return new XOMString(Base64.encodeXX(b));
+			else if (e.equalsIgnoreCase("hqx") || e.equalsIgnoreCase("binhex"))
+				return new XOMString(Base64.encodeBinHex(b));
+			else if (e.equalsIgnoreCase("a85") || e.equalsIgnoreCase("ascii85"))
+				return new XOMString(Base64.encodeASCII85(b));
+			else if (e.equalsIgnoreCase("k85") || e.equalsIgnoreCase("kreative85"))
+				return new XOMString(Base64.encodeKreative85(b));
+			else if (e.equalsIgnoreCase("l85") || e.equalsIgnoreCase("legacy85"))
+				return new XOMString(Base64.encodeLegacy85(b));
+			else
+				return XOMEmpty.EMPTY;
+		}
+	};
 	
 	private static final Function f_heapspace = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
