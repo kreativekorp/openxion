@@ -102,6 +102,8 @@ public class XNExtendedModule extends XNModule {
 		functions.put("urlencode", f_urlencode);
 		functions.put("vmname", f_vmname);
 		functions.put("vmversion", f_vmversion);
+		functions.put("ygndecode", f_ygndecode);
+		functions.put("ygnencode", f_ygnencode);
 		
 		versions.put("extendedmodule", new Version(XNExtendedModule.MODULE_NAME, XNExtendedModule.MODULE_VERSION));
 		versions.put("java", new Version(System.getProperty("java.runtime.name"), System.getProperty("java.runtime.version")));
@@ -583,6 +585,15 @@ public class XNExtendedModule extends XNModule {
 	private static List<? extends XOMVariant> listParameter(XNContext ctx, String functionName, XOMVariant parameter, int np, boolean primitive) {
 		List<? extends XOMVariant> l = (parameter == null) ? new Vector<XOMVariant>() : primitive ? parameter.toPrimitiveList(ctx) : parameter.toVariantList(ctx);
 		if (l.size() != np) {
+			throw new XNScriptError("Can't understand arguments to "+functionName);
+		} else {
+			return l;
+		}
+	}
+	
+	private static List<? extends XOMVariant> listParameter(XNContext ctx, String functionName, XOMVariant parameter, int min, int max, boolean primitive) {
+		List<? extends XOMVariant> l = (parameter == null) ? new Vector<XOMVariant>() : primitive ? parameter.toPrimitiveList(ctx) : parameter.toVariantList(ctx);
+		if (l.size() < min || l.size() > max) {
 			throw new XNScriptError("Can't understand arguments to "+functionName);
 		} else {
 			return l;
@@ -1271,6 +1282,149 @@ public class XNExtendedModule extends XNModule {
 			if (!ctx.allow(XNSecurityKey.SYSTEM_INFO, "Function", functionName))
 				throw new XNScriptError("Security settings do not allow vmVersion");
 			return new XOMString(System.getProperty("java.vm.version"));
+		}
+	};
+	
+	private static final Function f_ygndecode = new Function() {
+		private final Pattern XPATT = Pattern.compile("^=X([0-9A-F]+)=");
+		private final Pattern BPATT = Pattern.compile("^(=B=)*=([ABQ])=");
+		private final Pattern LPATT = Pattern.compile("^=([A-Z])=");
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 1, 2, true);
+			boolean backslash = (l.size() > 1) ? (XOMBooleanType.instance.makeInstanceFrom(ctx, l.get(1)).toBoolean()) : false;
+			String in = l.get(0).toTextString(ctx);
+			StringBuffer out = new StringBuffer();
+			while (in.length() > 0) {
+				int a = in.indexOf('=');
+				if (a < 0) {
+					out.append(in);
+					in = "";
+					break;
+				} else {
+					out.append(in.substring(0, a));
+					in = in.substring(a);
+					Matcher m;
+					if ((m = XPATT.matcher(in)).find() && m.start() == 0) {
+						String ent = m.group(1);
+						in = in.substring(m.end());
+						out.append(Character.toChars(Integer.parseInt(ent, 16)));
+					}
+					else if (backslash && (m = BPATT.matcher(in)).find() && m.start() == 0) {
+						char ent = m.group(2).charAt(0);
+						in = in.substring(m.end());
+						switch (ent) {
+						case 'B': out.append('\\'); break;
+						case 'A': out.append('\''); break;
+						case 'Q': out.append('\"'); break;
+						}
+					}
+					else if ((m = LPATT.matcher(in)).find() && m.start() == 0) {
+						char ent = m.group(1).charAt(0);
+						in = in.substring(m.end());
+						switch (ent) {
+						case 'B': out.append('\\'); break; // Backslash - escape character
+						case 'A': out.append('\''); break; // Apostrophe - delimits strings
+						case 'Q': out.append('\"'); break; // Quote - delimits strings
+						case 'E': out.append('='); break; // Equals - escape character
+						// LEVEL 0
+						case 'P': out.append('%'); break; // Percent - SQL wildcard
+						case 'U': out.append('_'); break; // Underscore - SQL wildcard
+						case 'H': out.append('?'); break; // Huh - generic wildcard
+						case 'S': out.append('*'); break; // Star - generic wildcard
+						// LEVEL 1
+						case 'L': out.append('<'); break; // Lessthan - HTML tag character
+						case 'G': out.append('>'); break; // Greaterthan - HTML tag character
+						case 'M': out.append('&'); break; // Mpersand - HTML entity character
+						// LEVEL 2
+						case 'X': out.append('!'); break; // Xclamation
+						case 'O': out.append('#'); break; // Octothorpe
+						case 'D': out.append('$'); break; // Dollar
+						case 'N': out.append('+'); break;
+						case 'F': out.append('/'); break; // Fraction
+						case 'C': out.append(':'); break; // Colon 
+						case 'K': out.append(';'); break; // Kindalikeacolon
+						case 'I': out.append('['); break;
+						case 'J': out.append(']'); break;
+						case 'R': out.append('^'); break; // Raise
+						case 'W': out.append('`'); break; // Which
+						case 'Y': out.append('{'); break;
+						case 'V': out.append('|'); break; // Verticalbar
+						case 'Z': out.append('}'); break;
+						case 'T': out.append('~'); break; // Tilde
+						}
+					}
+					else {
+						out.append(in.substring(0, 1));
+						in = in.substring(1);
+					}
+				}
+			}
+			return new XOMString(out.toString());
+		}
+	};
+	
+	private static final Function f_ygnencode = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 1, 3, true);
+			boolean backslash = (l.size() > 2) ? (XOMBooleanType.instance.makeInstanceFrom(ctx, l.get(2)).toBoolean()) : false;
+			int level = (l.size() > 1) ? (XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(1), true).toInt()) : 0;
+			String in = l.get(0).toTextString(ctx);
+			CharacterIterator it = new StringCharacterIterator(in);
+			StringBuffer out = new StringBuffer();
+			for (char ch = it.first(); ch != CharacterIterator.DONE; ch = it.next()) {
+				if (backslash && ch == '\\') {
+					while (ch == '\\') {
+						ch = it.next();
+					}
+					if (ch == CharacterIterator.DONE) {
+						out.append("=B="); break;
+					} else if (ch != '\'' && ch != '\"') {
+						out.append("=B=");
+					}
+				}
+				switch (ch) {
+				case '\\': out.append("=B="); break; // Backslash - escape character
+				case '\'': out.append("=A="); break; // Apostrophe - delimits strings
+				case '\"': out.append("=Q="); break; // Quote - delimits strings
+				case '=': out.append("=E="); break; // Equals - escape character
+				// LEVEL 0
+				case '%': if (level >= 0) out.append("=P="); else out.append(ch); break; // Percent - SQL wildcard
+				case '_': if (level >= 0) out.append("=U="); else out.append(ch); break; // Underscore - SQL wildcard
+				case '?': if (level >= 0) out.append("=H="); else out.append(ch); break; // Huh - generic wildcard
+				case '*': if (level >= 0) out.append("=S="); else out.append(ch); break; // Star - generic wildcard
+				// LEVEL 1
+				case '<': if (level >= 1) out.append("=L="); else out.append(ch); break; // Lessthan - HTML tag character
+				case '>': if (level >= 1) out.append("=G="); else out.append(ch); break; // Greaterthan - HTML tag character
+				case '&': if (level >= 1) out.append("=M="); else out.append(ch); break; // Mpersand - HTML entity character
+				// LEVEL 2
+				case '!': if (level >= 2) out.append("=X="); else out.append(ch); break; // Xclamation
+				case '#': if (level >= 2) out.append("=O="); else out.append(ch); break; // Octothorpe
+				case '$': if (level >= 2) out.append("=D="); else out.append(ch); break; // Dollar
+				case '+': if (level >= 2) out.append("=N="); else out.append(ch); break;
+				case '/': if (level >= 2) out.append("=F="); else out.append(ch); break; // Fraction
+				case ':': if (level >= 2) out.append("=C="); else out.append(ch); break; // Colon 
+				case ';': if (level >= 2) out.append("=K="); else out.append(ch); break; // Kindalikeacolon
+				case '[': if (level >= 2) out.append("=I="); else out.append(ch); break;
+				case ']': if (level >= 2) out.append("=J="); else out.append(ch); break;
+				case '^': if (level >= 2) out.append("=R="); else out.append(ch); break; // Raise
+				case '`': if (level >= 2) out.append("=W="); else out.append(ch); break; // Which
+				case '{': if (level >= 2) out.append("=Y="); else out.append(ch); break;
+				case '|': if (level >= 2) out.append("=V="); else out.append(ch); break; // Verticalbar
+				case '}': if (level >= 2) out.append("=Z="); else out.append(ch); break;
+				case '~': if (level >= 2) out.append("=T="); else out.append(ch); break; // Tilde
+				// LEVEL 3
+				default:
+					if (level >= 3 && (ch < 32 || ch >= 127)) {
+						out.append("=X");
+						out.append(Integer.toHexString((int)ch).toUpperCase());
+						out.append("=");
+					} else {
+						out.append(ch);
+					}
+					break;
+				}
+			}
+			return new XOMString(out.toString());
 		}
 	};
 	
