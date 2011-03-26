@@ -14239,6 +14239,8 @@
 		[[fn:htmlEncode]]  :: [[fn:htmlDecode]]
 		.......................................
 		[[fn:urlEncode]]   :: [[fn:urlDecode]]
+		.......................................
+		[[fn:ygnEncode]]   :: [[fn:ygnDecode]]
 		ELBAT::
 		\\\\
 		{{{{{Other Functions}}}}}
