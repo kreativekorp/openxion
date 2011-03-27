@@ -39,6 +39,10 @@ import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.ast.XNStringExpression;
 import com.kreative.openxion.binpack.*;
 import com.kreative.openxion.io.XOMURLIOManager;
+import com.kreative.openxion.tr.Matchor;
+import com.kreative.openxion.tr.Multiplexor;
+import com.kreative.openxion.tr.TrPattern;
+import com.kreative.openxion.tr.Transformor;
 import com.kreative.openxion.util.Base64;
 import com.kreative.openxion.util.EndlessInputStream;
 import com.kreative.openxion.util.XIONUtil;
@@ -100,6 +104,15 @@ public class XNExtendedModule extends XNModule {
 		functions.put("regreplace", f_regreplace);
 		functions.put("regreplaceall", f_regreplaceall);
 		functions.put("regrinstr", f_regrinstr);
+		functions.put("trcountfields", f_trcountfields);
+		functions.put("trexplode", f_trexplode);
+		functions.put("trinstr", f_trinstr);
+		functions.put("trmatch", f_trmatch);
+		functions.put("trnthfield", f_trnthfield);
+		functions.put("troffset", f_troffset);
+		functions.put("trreplace", f_trreplace);
+		functions.put("trreplaceall", f_trreplaceall);
+		functions.put("trrinstr", f_trrinstr);
 		functions.put("unpack", f_unpack);
 		functions.put("urldecode", f_urldecode);
 		functions.put("urlencode", f_urlencode);
@@ -1201,6 +1214,195 @@ public class XNExtendedModule extends XNModule {
 			int i = 0;
 			while (m.find()) i = m.start()+1;
 			return new XOMInteger(i);
+		}
+	};
+	
+	private static final Function f_trcountfields = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
+			String s = l.get(0).toTextString(ctx);
+			if (s.length() == 0) return XOMInteger.ZERO;
+			String d = l.get(1).toTextString(ctx);
+			Matchor m = TrPattern.compile(d, false).matchor();
+			return new XOMInteger(m.split(s).length);
+		}
+	};
+	
+	private static final Function f_trexplode = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
+			String s = l.get(0).toTextString(ctx);
+			if (s.length() == 0) return XOMString.EMPTY_STRING;
+			String d = l.get(1).toTextString(ctx);
+			Matchor m = TrPattern.compile(d, false).matchor();
+			String[] flds = m.split(s);
+			List<XOMVariant> vlds = new Vector<XOMVariant>();
+			for (String fld : flds) {
+				vlds.add(new XOMString(fld));
+			}
+			return new XOMList(vlds);
+		}
+	};
+	
+	private static final Function f_trinstr = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
+			String s = l.get(0).toTextString(ctx);
+			String d = l.get(1).toTextString(ctx);
+			Matchor m = TrPattern.compile(d, false).matchor();
+			return new XOMInteger(m.findIn(s)+1);
+		}
+	};
+	
+	private static final Function f_trmatch = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
+			String s = l.get(0).toTextString(ctx);
+			String d = l.get(1).toTextString(ctx);
+			Matchor m = TrPattern.compile(d, false).matchor();
+			return m.matchesAll(s) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
+		}
+	};
+	
+	private static final Function f_trnthfield = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 3, true);
+			String s = l.get(0).toTextString(ctx);
+			if (s.length() == 0) return XOMString.EMPTY_STRING;
+			String d = l.get(1).toTextString(ctx);
+			Matchor m = TrPattern.compile(d, false).matchor();
+			String[] flds = m.split(s);
+			int n = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(2), true).toInt();
+			if (n < 1 || n > flds.length) return XOMString.EMPTY_STRING;
+			else return new XOMString(flds[n-1]);
+		}
+	};
+	
+	private static final Function f_troffset = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
+			String s = l.get(1).toTextString(ctx);
+			String d = l.get(0).toTextString(ctx);
+			Matchor m = TrPattern.compile(d, false).matchor();
+			return new XOMInteger(m.findIn(s)+1);
+		}
+	};
+	
+	private static final Function f_trreplace = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 3, 4, true);
+			String str = l.get(0).toTextString(ctx);
+			String a1 = l.get(1).toTextString(ctx);
+			String a2 = l.get(2).toTextString(ctx);
+			String a3 = (l.size() > 3) ? l.get(3).toTextString(ctx) : "";
+			Transformor tx;
+			if (a1.startsWith("-")) {
+				boolean c = a1.contains("c");
+				boolean d = a1.contains("d");
+				boolean s = a1.contains("s");
+				if (d) {
+					if (s) {
+						if (l.size() != 4)
+							throw new XNScriptError("Can't understand arguments to "+functionName);
+						TrPattern a = TrPattern.compile(a2, c);
+						TrPattern b = TrPattern.compile(a3, false);
+						tx = new Multiplexor(a.deletor(), b.squeezor());
+					} else {
+						if (l.size() != 3)
+							throw new XNScriptError("Can't understand arguments to "+functionName);
+						TrPattern a = TrPattern.compile(a2, c);
+						tx = a.deletor();
+					}
+				} else {
+					if (s) {
+						if (l.size() == 3) {
+							TrPattern a = TrPattern.compile(a2, c);
+							tx = a.squeezor();
+						} else {
+							TrPattern a = TrPattern.compile(a2, c);
+							TrPattern b = TrPattern.compile(a3, false);
+							tx = new Multiplexor(TrPattern.translator(a, b), b.squeezor());
+						}
+					} else {
+						if (l.size() != 4)
+							throw new XNScriptError("Can't understand arguments to "+functionName);
+						TrPattern a = TrPattern.compile(a2, c);
+						TrPattern b = TrPattern.compile(a3, false);
+						tx = TrPattern.translator(a, b);
+					}
+				}
+			} else {
+				if (l.size() != 3)
+					throw new XNScriptError("Can't understand arguments to "+functionName);
+				TrPattern a = TrPattern.compile(a1, false);
+				TrPattern b = TrPattern.compile(a2, false);
+				tx = TrPattern.translator(a, b);
+			}
+			return new XOMString(tx.transformFirst(str));
+		}
+	};
+	
+	private static final Function f_trreplaceall = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 3, 4, true);
+			String str = l.get(0).toTextString(ctx);
+			String a1 = l.get(1).toTextString(ctx);
+			String a2 = l.get(2).toTextString(ctx);
+			String a3 = (l.size() > 3) ? l.get(3).toTextString(ctx) : "";
+			Transformor tx;
+			if (a1.startsWith("-")) {
+				boolean c = a1.contains("c");
+				boolean d = a1.contains("d");
+				boolean s = a1.contains("s");
+				if (d) {
+					if (s) {
+						if (l.size() != 4)
+							throw new XNScriptError("Can't understand arguments to "+functionName);
+						TrPattern a = TrPattern.compile(a2, c);
+						TrPattern b = TrPattern.compile(a3, false);
+						tx = new Multiplexor(a.deletor(), b.squeezor());
+					} else {
+						if (l.size() != 3)
+							throw new XNScriptError("Can't understand arguments to "+functionName);
+						TrPattern a = TrPattern.compile(a2, c);
+						tx = a.deletor();
+					}
+				} else {
+					if (s) {
+						if (l.size() == 3) {
+							TrPattern a = TrPattern.compile(a2, c);
+							tx = a.squeezor();
+						} else {
+							TrPattern a = TrPattern.compile(a2, c);
+							TrPattern b = TrPattern.compile(a3, false);
+							tx = new Multiplexor(TrPattern.translator(a, b), b.squeezor());
+						}
+					} else {
+						if (l.size() != 4)
+							throw new XNScriptError("Can't understand arguments to "+functionName);
+						TrPattern a = TrPattern.compile(a2, c);
+						TrPattern b = TrPattern.compile(a3, false);
+						tx = TrPattern.translator(a, b);
+					}
+				}
+			} else {
+				if (l.size() != 3)
+					throw new XNScriptError("Can't understand arguments to "+functionName);
+				TrPattern a = TrPattern.compile(a1, false);
+				TrPattern b = TrPattern.compile(a2, false);
+				tx = TrPattern.translator(a, b);
+			}
+			return new XOMString(tx.transformAll(str));
+		}
+	};
+	
+	private static final Function f_trrinstr = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
+			String s = l.get(0).toTextString(ctx);
+			String d = l.get(1).toTextString(ctx);
+			Matchor m = TrPattern.compile(d, false).matchor();
+			return new XOMInteger(m.findLastIn(s)+1);
 		}
 	};
 	
