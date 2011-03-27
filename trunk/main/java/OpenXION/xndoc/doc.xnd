@@ -9319,7 +9319,10 @@
 		For a case-sensitive version of this function, see [[fn:csCountFields]].
 		For a regular expression-based version of this function, see [[fn:regCountFields]].
 	</description>
-	<see-also>[[fn:csCountFields]], [[fn:regCountFields]], [[fn:nthField]], [[fn:csNthField]], [[fn:regNthField]]</see-also>
+	<see-also>
+		[[fn:csCountFields]], [[fn:regCountFields]], [[fn:trCountFields]],
+		[[fn:nthField]], [[fn:csNthField]], [[fn:regNthField]], [[fn:trNthField]]
+	</see-also>
 </function>
 
 <function>
@@ -9396,7 +9399,10 @@
 		For a case-insensitive version of this function, see [[fn:countFields]].
 		For a regular expression-based version of this function, see [[fn:regCountFields]].
 	</description>
-	<see-also>[[fn:countFields]], [[fn:regCountFields]], [[fn:nthField]], [[fn:csNthField]], [[fn:regNthField]]</see-also>
+	<see-also>
+		[[fn:countFields]], [[fn:regCountFields]], [[fn:trCountFields]],
+		[[fn:nthField]], [[fn:csNthField]], [[fn:regNthField]], [[fn:trNthField]]
+	</see-also>
 </function>
 
 <function>
@@ -9413,7 +9419,7 @@
 		For a case-insensitive version of this function, see [[fn:explode]].
 		For a regular expression-based version of this function, see [[fn:regExplode]].
 	</description>
-	<see-also>[[fn:explode]], [[fn:regExplode]], [[fn:implode]]</see-also>
+	<see-also>[[fn:explode]], [[fn:regExplode]], [[fn:trExplode]], [[fn:implode]]</see-also>
 </function>
 
 <function>
@@ -9435,9 +9441,9 @@
 		This function is similar to [[fn:csOffset]], but the arguments are in reverse order.
 	</note>
 	<see-also>
-		[[fn:instr]], [[fn:regInstr]],
-		[[fn:offset]], [[fn:csOffset]], [[fn:regOffset]],
-		[[fn:rinstr]], [[fn:csRinstr]], [[fn:regRinstr]]
+		[[fn:instr]], [[fn:regInstr]], [[fn:trInstr]],
+		[[fn:offset]], [[fn:csOffset]], [[fn:regOffset]], [[fn:trOffset]],
+		[[fn:rinstr]], [[fn:csRinstr]], [[fn:regRinstr]], [[fn:trRinstr]]
 	</see-also>
 </function>
 
@@ -9459,7 +9465,10 @@
 		For a case-insensitive version of this function, see [[fn:nthField]].
 		For a regular expression-based version of this function, see [[fn:regNthField]].
 	</description>
-	<see-also>[[fn:nthField]], [[fn:regNthField]], [[fn:countFields]], [[fn:csCountFields]], [[fn:regCountFields]]</see-also>
+	<see-also>
+		[[fn:nthField]], [[fn:regNthField]], [[fn:trNthField]],
+		[[fn:countFields]], [[fn:csCountFields]], [[fn:regCountFields]], [[fn:trCountFields]]
+	</see-also>
 </function>
 
 <function>
@@ -9481,9 +9490,9 @@
 		This function is similar to [[fn:csInstr]], but the arguments are in reverse order.
 	</note>
 	<see-also>
-		[[fn:offset]], [[fn:regOffset]],
-		[[fn:instr]], [[fn:csInstr]], [[fn:regInstr]],
-		[[fn:rinstr]], [[fn:csRinstr]], [[fn:regRinstr]]
+		[[fn:offset]], [[fn:regOffset]], [[fn:trOffset]],
+		[[fn:instr]], [[fn:csInstr]], [[fn:regInstr]], [[fn:trInstr]],
+		[[fn:rinstr]], [[fn:csRinstr]], [[fn:regRinstr]], [[fn:trRinstr]]
 	</see-also>
 </function>
 
@@ -9502,7 +9511,7 @@
 		For a case-insensitive version of this function, see [[fn:replace]].
 		For a regular expression-based version of this function, see [[fn:regReplace]].
 	</description>
-	<see-also>[[fn:csReplaceAll]], [[fn:replace]], [[fn:regReplace]]</see-also>
+	<see-also>[[fn:csReplaceAll]], [[fn:replace]], [[fn:regReplace]], [[fn:trReplace]]</see-also>
 </function>
 
 <function>
@@ -9520,7 +9529,7 @@
 		For a case-insensitive version of this function, see [[fn:replaceAll]].
 		For a regular expression-based version of this function, see [[fn:regReplaceAll]].
 	</description>
-	<see-also>[[fn:csReplace]], [[fn:replaceAll]], [[fn:regReplaceAll]]</see-also>
+	<see-also>[[fn:csReplace]], [[fn:replaceAll]], [[fn:regReplaceAll]], [[fn:trReplaceAll]]</see-also>
 </function>
 
 <function>
@@ -9539,9 +9548,9 @@
 		For a regular expression-based version of this function, see [[fn:regRinstr]].
 	</description>
 	<see-also>
-		[[fn:rinstr]], [[fn:regRinstr]],
-		[[fn:instr]], [[fn:csInstr]], [[fn:regInstr]],
-		[[fn:offset]], [[fn:csOffset]], [[fn:regOffset]]
+		[[fn:rinstr]], [[fn:regRinstr]], [[fn:trRinstr]],
+		[[fn:instr]], [[fn:csInstr]], [[fn:regInstr]], [[fn:trInstr]],
+		[[fn:offset]], [[fn:csOffset]], [[fn:regOffset]], [[fn:trOffset]]
 	</see-also>
 </function>
 
@@ -9561,7 +9570,7 @@
 		For a case-insensitive version of this function, see [[fn:strcmp]].
 		For a regular expression-based version of this function, see [[fn:regMatch]].
 	</description>
-	<see-also>[[fn:strcmp]], [[fn:regMatch]]</see-also>
+	<see-also>[[fn:strcmp]], [[fn:regMatch]], [[fn:trMatch]]</see-also>
 </function>
 
 <function>
@@ -9792,7 +9801,7 @@
 		For a case-sensitive version of this function, see [[fn:csExplode]].
 		For a regular expression-based version of this function, see [[fn:regExplode]].
 	</description>
-	<see-also>[[fn:csExplode]], [[fn:regExplode]], [[fn:implode]]</see-also>
+	<see-also>[[fn:csExplode]], [[fn:regExplode]], [[fn:trExplode]], [[fn:implode]]</see-also>
 </function>
 
 <function>
@@ -10157,7 +10166,10 @@
 		The [[*]] function returns the string concatenation of all of its arguments,
 		with the specified {delimiter} between each argument.
 	</description>
-	<see-also>[[fn:concat]], [[fn:concatsp]], [[fn:explode]], [[fn:csExplode]], [[fn:regExplode]]</see-also>
+	<see-also>
+		[[fn:concat]], [[fn:concatsp]],
+		[[fn:explode]], [[fn:csExplode]], [[fn:regExplode]], [[fn:trExplode]]
+	</see-also>
 </function>
 
 <function>
@@ -10221,9 +10233,9 @@
 		This function is similar to [[fn:offset]], but the arguments are in reverse order.
 	</note>
 	<see-also>
-		[[fn:csInstr]], [[fn:regInstr]],
-		[[fn:offset]], [[fn:csOffset]], [[fn:regOffset]],
-		[[fn:rinstr]], [[fn:csRinstr]], [[fn:regRinstr]]
+		[[fn:csInstr]], [[fn:regInstr]], [[fn:trInstr]],
+		[[fn:offset]], [[fn:csOffset]], [[fn:regOffset]], [[fn:trOffset]],
+		[[fn:rinstr]], [[fn:csRinstr]], [[fn:regRinstr]], [[fn:trRinstr]]
 	</see-also>
 </function>
 
@@ -10665,7 +10677,10 @@
 		For a case-sensitive version of this function, see [[fn:csNthField]].
 		For a regular expression-based version of this function, see [[fn:regNthField]].
 	</description>
-	<see-also>[[fn:csNthField]], [[fn:regNthField]], [[fn:countFields]], [[fn:csCountFields]], [[fn:regCountFields]]</see-also>
+	<see-also>
+		[[fn:csNthField]], [[fn:regNthField]], [[fn:trNthField]],
+		[[fn:countFields]], [[fn:csCountFields]], [[fn:regCountFields]], [[fn:trCountFields]]
+	</see-also>
 </function>
 
 <function>
@@ -10758,9 +10773,9 @@
 		This function is similar to [[fn:instr]], but the arguments are in reverse order.
 	</note>
 	<see-also>
-		[[fn:csOffset]], [[fn:regOffset]],
-		[[fn:instr]], [[fn:csInstr]], [[fn:regInstr]],
-		[[fn:rinstr]], [[fn:csRinstr]], [[fn:regRinstr]]
+		[[fn:csOffset]], [[fn:regOffset]], [[fn:trOffset]],
+		[[fn:instr]], [[fn:csInstr]], [[fn:regInstr]], [[fn:trInstr]],
+		[[fn:rinstr]], [[fn:csRinstr]], [[fn:regRinstr]], [[fn:trRinstr]]
 	</see-also>
 </function>
 
@@ -11071,7 +11086,7 @@
 		For a case-sensitive version of this function, see [[fn:csReplace]].
 		For a regular expression-based version of this function, see [[fn:regReplace]].
 	</description>
-	<see-also>[[fn:replaceAll]], [[fn:csReplace]], [[fn:regReplace]]</see-also>
+	<see-also>[[fn:replaceAll]], [[fn:csReplace]], [[fn:regReplace]], [[fn:trReplace]]</see-also>
 </function>
 
 <function>
@@ -11089,7 +11104,7 @@
 		For a case-sensitive version of this function, see [[fn:csReplaceAll]].
 		For a regular expression-based version of this function, see [[fn:regReplaceAll]].
 	</description>
-	<see-also>[[fn:replace]], [[fn:csReplaceAll]], [[fn:regReplaceAll]]</see-also>
+	<see-also>[[fn:replace]], [[fn:csReplaceAll]], [[fn:regReplaceAll]], [[fn:trReplaceAll]]</see-also>
 </function>
 
 <function>
@@ -11177,9 +11192,9 @@
 		For a regular expression-based version of this function, see [[fn:regRinstr]].
 	</description>
 	<see-also>
-		[[fn:csRinstr]], [[fn:regRinstr]],
-		[[fn:instr]], [[fn:csInstr]], [[fn:regInstr]],
-		[[fn:offset]], [[fn:csOffset]], [[fn:regOffset]]
+		[[fn:csRinstr]], [[fn:regRinstr]], [[fn:trRinstr]],
+		[[fn:instr]], [[fn:csInstr]], [[fn:regInstr]], [[fn:trInstr]],
+		[[fn:offset]], [[fn:csOffset]], [[fn:regOffset]], [[fn:trOffset]]
 	</see-also>
 </function>
 
@@ -11697,7 +11712,7 @@
 		For a case-sensitive version of this function, see [[fn:csStrcmp]].
 		For a regular expression-based version of this function, see [[fn:regMatch]].
 	</description>
-	<see-also>[[fn:csStrcmp]], [[fn:regMatch]]</see-also>
+	<see-also>[[fn:csStrcmp]], [[fn:regMatch]], [[fn:trMatch]]</see-also>
 </function>
 
 <function>
@@ -12922,7 +12937,10 @@
 		The {delimiter} is a regular expression.
 		For a literal version of this function, see [[fn:countFields]] or [[fn:csCountFields]].
 	</description>
-	<see-also>[[fn:countFields]], [[fn:csCountFields]], [[fn:nthField]], [[fn:csNthField]], [[fn:regNthField]]</see-also>
+	<see-also>
+		[[fn:countFields]], [[fn:csCountFields]], [[fn:trCountFields]],
+		[[fn:nthField]], [[fn:csNthField]], [[fn:regNthField]], [[fn:trNthField]]
+	</see-also>
 </function>
 
 <function>
@@ -12938,7 +12956,7 @@
 		The {delimiter} is a regular expression.
 		For a literal version of this function, see [[fn:explode]] or [[fn:csExplode]].
 	</description>
-	<see-also>[[fn:explode]], [[fn:csExplode]], [[fn:implode]]</see-also>
+	<see-also>[[fn:explode]], [[fn:csExplode]], [[fn:trExplode]], [[fn:implode]]</see-also>
 </function>
 
 <function>
@@ -12959,9 +12977,9 @@
 		This function is similar to [[fn:regOffset]], but the arguments are in reverse order.
 	</note>
 	<see-also>
-		[[fn:instr]], [[fn:csInstr]],
-		[[fn:offset]], [[fn:csOffset]], [[fn:regOffset]],
-		[[fn:rinstr]], [[fn:csRinstr]], [[fn:regRinstr]]
+		[[fn:instr]], [[fn:csInstr]], [[fn:trInstr]],
+		[[fn:offset]], [[fn:csOffset]], [[fn:regOffset]], [[fn:trOffset]],
+		[[fn:rinstr]], [[fn:csRinstr]], [[fn:regRinstr]], [[fn:trRinstr]]
 	</see-also>
 </function>
 
@@ -12979,7 +12997,7 @@
 		{Pattern} is a regular expression.
 		For a literal version of this function, see [[fn:strcmp]] or [[fn:csStrcmp]].
 	</description>
-	<see-also>[[fn:strcmp]], [[fn:csStrcmp]]</see-also>
+	<see-also>[[fn:strcmp]], [[fn:csStrcmp]], [[fn:trMatch]]</see-also>
 </function>
 
 <function>
@@ -13003,7 +13021,10 @@
 		The {delimiter} is a regular expression.
 		For a literal version of this function, see [[fn:nthField]] or [[fn:csNthField]].
 	</description>
-	<see-also>[[fn:nthField]], [[fn:csNthField]], [[fn:countFields]], [[fn:csCountFields]], [[fn:regCountFields]]</see-also>
+	<see-also>
+		[[fn:nthField]], [[fn:csNthField]], [[fn:trNthField]],
+		[[fn:countFields]], [[fn:csCountFields]], [[fn:regCountFields]], [[fn:trCountFields]]
+	</see-also>
 </function>
 
 <function>
@@ -13024,9 +13045,9 @@
 		This function is similar to [[fn:regInstr]], but the arguments are in reverse order.
 	</note>
 	<see-also>
-		[[fn:offset]], [[fn:csOffset]],
-		[[fn:instr]], [[fn:csInstr]], [[fn:regInstr]],
-		[[fn:rinstr]], [[fn:csRinstr]], [[fn:regRinstr]]
+		[[fn:offset]], [[fn:csOffset]], [[fn:trOffset]],
+		[[fn:instr]], [[fn:csInstr]], [[fn:regInstr]], [[fn:trInstr]],
+		[[fn:rinstr]], [[fn:csRinstr]], [[fn:regRinstr]], [[fn:trRinstr]]
 	</see-also>
 </function>
 
@@ -13051,7 +13072,7 @@
 		expression rather than literal backslashes or dollar signs.
 		For a literal version of this function, see [[fn:replace]] or [[fn:csReplace]].
 	</description>
-	<see-also>[[fn:regReplaceAll]], [[fn:replace]], [[fn:csReplace]]</see-also>
+	<see-also>[[fn:regReplaceAll]], [[fn:replace]], [[fn:csReplace]], [[fn:trReplace]]</see-also>
 </function>
 
 <function>
@@ -13075,7 +13096,7 @@
 		expression rather than literal backslashes or dollar signs.
 		For a literal version of this function, see [[fn:replaceAll]] or [[fn:csReplaceAll]].
 	</description>
-	<see-also>[[fn:regReplace]], [[fn:replaceAll]], [[fn:csReplaceAll]]</see-also>
+	<see-also>[[fn:regReplace]], [[fn:replaceAll]], [[fn:csReplaceAll]], [[fn:trReplaceAll]]</see-also>
 </function>
 
 <function>
@@ -13093,9 +13114,292 @@
 		For a literal version of this function, see [[fn:rinstr]] or [[fn:csRinstr]].
 	</description>
 	<see-also>
-		[[fn:rinstr]], [[fn:csRinstr]],
+		[[fn:rinstr]], [[fn:csRinstr]], [[fn:trRinstr]],
+		[[fn:instr]], [[fn:csInstr]], [[fn:regInstr]], [[fn:trInstr]],
+		[[fn:offset]], [[fn:csOffset]], [[fn:regOffset]], [[fn:trOffset]]
+	</see-also>
+</function>
+
+<function>
+	<name dialects="oxne13">trCountFields</name>
+	<syntax>the trCountFields of ({string}, {delimiter})</syntax>
+	<syntax>trCountFields({string}, {delimiter})</syntax>
+	<syntax-note>{String} yields any [[dt:string]]. {Delimiter} yields a [[dt:string]] describing a set of characters.</syntax-note>
+	<description>
+		The [[*]] function returns the number of chunks in the specified {string}
+		delimited by any of the characters in the specified {delimiter},
+		not including any trailing empty chunks.
+	</description>
+	<description>
+		{Delimiter} describes a set of characters, not a string.
+		A range of characters can be specified by putting a hyphen
+		between two characters; to match a literal hyphen, put a
+		hyphen at the beginning or end. For example, the following
+		pattern matches all numbers and basic Latin letters, as well
+		as hyphens: [[A-Za-z0-9-]]
+	</description>
+	<see-also>
+		[[fn:countFields]], [[fn:csCountFields]], [[fn:trCountFields]],
+		[[fn:nthField]], [[fn:csNthField]], [[fn:regNthField]], [[fn:trNthField]]
+	</see-also>
+</function>
+
+<function>
+	<name dialects="oxne13">trExplode</name>
+	<syntax>the trExplode of ({string}, {delimiter})</syntax>
+	<syntax>trExplode({string}, {delimiter})</syntax>
+	<syntax-note>{String} yields any [[dt:string]]. {Delimiter} yields a [[dt:string]] describing a set of characters.</syntax-note>
+	<description>
+		The [[*]] function returns a [[dt:list]] of the chunks in the specified {string}
+		delimited by any of the characters in the specified {delimiter},
+		not including any trailing empty chunks.
+	</description>
+	<description>
+		{Delimiter} describes a set of characters, not a string.
+		A range of characters can be specified by putting a hyphen
+		between two characters; to match a literal hyphen, put a
+		hyphen at the beginning or end. For example, the following
+		pattern matches all numbers and basic Latin letters, as well
+		as hyphens: [[A-Za-z0-9-]]
+	</description>
+	<see-also>[[fn:explode]], [[fn:csExplode]], [[fn:regExplode]], [[fn:implode]]</see-also>
+</function>
+
+<function>
+	<name dialects="oxne13">trInstr</name>
+	<syntax>the trInstr of ({haystack}, {needle})</syntax>
+	<syntax>trInstr({haystack}, {needle})</syntax>
+	<syntax-note>{Haystack} yields any [[dt:string]]. {Needle} yields a [[dt:string]] describing a set of characters.</syntax-note>
+	<description>
+		The [[*]] function returns the index of the first appearance of
+		any of the characters in {needle} in the string {haystack}, starting at 1.
+		If none of the characters in {needle} can be found in {haystack},
+		[[cn:zero]] is returned.
+	</description>
+	<description>
+		{Needle} describes a set of characters, not a string.
+		A range of characters can be specified by putting a hyphen
+		between two characters; to match a literal hyphen, put a
+		hyphen at the beginning or end. For example, the following
+		pattern matches all numbers and basic Latin letters, as well
+		as hyphens: [[A-Za-z0-9-]]
+	</description>
+	<note>
+		This function is similar to [[fn:trOffset]], but the arguments are in reverse order.
+	</note>
+	<see-also>
 		[[fn:instr]], [[fn:csInstr]], [[fn:regInstr]],
-		[[fn:offset]], [[fn:csOffset]], [[fn:regOffset]]
+		[[fn:offset]], [[fn:csOffset]], [[fn:regOffset]], [[fn:trOffset]],
+		[[fn:rinstr]], [[fn:csRinstr]], [[fn:regRinstr]], [[fn:trRinstr]]
+	</see-also>
+</function>
+
+<function>
+	<name dialects="oxne13">trMatch</name>
+	<syntax>the trMatch of ({expression}, {pattern})</syntax>
+	<syntax>trMatch({expression}, {pattern})</syntax>
+	<syntax-note>{Expression} yields a [[dt:string]]. {Pattern} yields a string describing a set of characters.</syntax-note>
+	<description>
+		The [[*]] function returns [[cn:true]] if and only if
+		the specified {expression} consists solely of characters
+		in the specified {pattern}.
+	</description>
+	<description>
+		{Pattern} describes a set of characters, not a string.
+		A range of characters can be specified by putting a hyphen
+		between two characters; to match a literal hyphen, put a
+		hyphen at the beginning or end. For example, the following
+		pattern matches all numbers and basic Latin letters, as well
+		as hyphens: [[A-Za-z0-9-]]
+	</description>
+	<see-also>[[fn:strcmp]], [[fn:csStrcmp]], [[fn:regMatch]]</see-also>
+</function>
+
+<function>
+	<name dialects="oxne13">trNthField</name>
+	<syntax>the trNthField of ({string}, {delimiter}, {index})</syntax>
+	<syntax>trNthField({string}, {delimiter}, {index})</syntax>
+	<syntax-note>
+		{String} yields any [[dt:string]].
+		{Delimiter} yields a [[dt:string]] describing a set of characters.
+		{Index} yields an [[dt:integer]].
+	</syntax-note>
+	<description>
+		The [[*]] function returns a chunk of the specified {string}
+		delimited by any of the characters in the specified {delimiter},
+		not including any trailing empty chunks. {Index} starts at 1.
+	</description>
+	<description>
+		{Delimiter} describes a set of characters, not a string.
+		A range of characters can be specified by putting a hyphen
+		between two characters; to match a literal hyphen, put a
+		hyphen at the beginning or end. For example, the following
+		pattern matches all numbers and basic Latin letters, as well
+		as hyphens: [[A-Za-z0-9-]]
+	</description>
+	<description>
+		If {index} is less than 1 or greater than [[fn:trCountFields]][[({string}, {delimiter})]],
+		[[cn:empty]] is returned.
+	</description>
+	<see-also>
+		[[fn:nthField]], [[fn:csNthField]], [[fn:regNthField]],
+		[[fn:countFields]], [[fn:csCountFields]], [[fn:regCountFields]], [[fn:trCountFields]]
+	</see-also>
+</function>
+
+<function>
+	<name dialects="oxne13">trOffset</name>
+	<syntax>the trOffset of ({needle}, {haystack})</syntax>
+	<syntax>trOffset({needle}, {haystack})</syntax>
+	<syntax-note>{Haystack} yields any [[dt:string]]. {Needle} yields a [[dt:string]] describing a set of characters.</syntax-note>
+	<description>
+		The [[*]] function returns the index of the first appearance of
+		any of the characters in {needle} in the string {haystack}, starting at 1.
+		If none of the characters in {needle} can be found in {haystack},
+		[[cn:zero]] is returned.
+	</description>
+	<description>
+		{Needle} describes a set of characters, not a string.
+		A range of characters can be specified by putting a hyphen
+		between two characters; to match a literal hyphen, put a
+		hyphen at the beginning or end. For example, the following
+		pattern matches all numbers and basic Latin letters, as well
+		as hyphens: [[A-Za-z0-9-]]
+	</description>
+	<note>
+		This function is similar to [[fn:trInstr]], but the arguments are in reverse order.
+	</note>
+	<see-also>
+		[[fn:offset]], [[fn:csOffset]], [[fn:regOffset]],
+		[[fn:instr]], [[fn:csInstr]], [[fn:regInstr]], [[fn:trInstr]],
+		[[fn:rinstr]], [[fn:csRinstr]], [[fn:regRinstr]], [[fn:trRinstr]]
+	</see-also>
+</function>
+
+<function>
+	<name dialects="oxne13">trReplace</name>
+	<syntax>the trReplace of ({haystack}, {needle}, {noodle})</syntax>
+	<syntax>the trReplace of ({haystack}, {options}, {needle})</syntax>
+	<syntax>the trReplace of ({haystack}, {options}, {needle}, {noodle})</syntax>
+	<syntax>trReplace({haystack}, {needle}, {noodle})</syntax>
+	<syntax>trReplace({haystack}, {options}, {needle})</syntax>
+	<syntax>trReplace({haystack}, {options}, {needle}, {noodle})</syntax>
+	<syntax-note>
+		{Haystack} yields any [[dt:string]].
+		{Options} yields a [[dt:string]] starting with a hyphen.
+		{Needle} and {noodle} yields [[dt:string]]s describing sets of characters.
+	</syntax-note>
+	<description>
+		In its basic form, the [[*]] function returns the string {haystack}
+		with the first occurrence of any of the characters in {needle}
+		replaced with the corresponding character in {noodle}.
+	</description>
+	<description>
+		If {options} contains [[s]] but not [[d]], then {noodle} is optional.
+		If {noodle} is specified, the first occurrence of any of the characters in {needle} is
+		replaced with the corresponding character in {noodle}, then any consecutive
+		occurrences of that character are removed.
+		If {noodle} is not specified, the first run of consecutive occurrences of
+		any one character in {needle} are replaced with a single occurrence.
+	</description>
+	<description>
+		If {options} contains [[d]] but not [[s]], only {needle} must be specified.
+		The first occurrence of any character in {needle} is removed from {haystack}.
+	</description>
+	<description>
+		If {options} contains both [[d]] and [[s]], both {needle} and {noodle} must be specified.
+		The first occurrence of any character in {needle} is removed from {haystack}.
+		The first run of consecutive occurrences of any one character in {noodle}
+		are replaced with a single occurrence.
+	</description>
+	<description>
+		If {options} contains the character [[c]], the complement of {needle}
+		is taken, so that characters not in {needle} will be matched instead.
+	</description>
+	<description>
+		{Needle} and {noodle} describe sets of characters, not strings.
+		A range of characters can be specified by putting a hyphen
+		between two characters; to match a literal hyphen, put a
+		hyphen at the beginning or end. For example, the following
+		pattern matches all numbers and basic Latin letters, as well
+		as hyphens: [[A-Za-z0-9-]]
+	</description>
+	<see-also>[[fn:trReplaceAll]], [[fn:replace]], [[fn:csReplace]], [[fn:regReplace]]</see-also>
+</function>
+
+<function>
+	<name dialects="oxne13">trReplaceAll</name>
+	<syntax>the trReplaceAll of ({haystack}, {needle}, {noodle})</syntax>
+	<syntax>the trReplaceAll of ({haystack}, {options}, {needle})</syntax>
+	<syntax>the trReplaceAll of ({haystack}, {options}, {needle}, {noodle})</syntax>
+	<syntax>trReplaceAll({haystack}, {needle}, {noodle})</syntax>
+	<syntax>trReplaceAll({haystack}, {options}, {needle})</syntax>
+	<syntax>trReplaceAll({haystack}, {options}, {needle}, {noodle})</syntax>
+	<syntax-note>
+		{Haystack} yields any [[dt:string]].
+		{Options} yields a [[dt:string]] starting with a hyphen.
+		{Needle} and {noodle} yields [[dt:string]]s describing sets of characters.
+	</syntax-note>
+	<description>
+		In its basic form, the [[*]] function returns the string {haystack}
+		with every occurrence of any of the characters in {needle}
+		replaced with the corresponding character in {noodle}.
+	</description>
+	<description>
+		If {options} contains [[s]] but not [[d]], then {noodle} is optional.
+		If {noodle} is specified, every occurrence of any of the characters in {needle} is
+		replaced with the corresponding character in {noodle}, then multiple consecutive
+		occurrences of any one character in {noodle} are replaced with a single occurrence.
+		If {noodle} is not specified, multiple consecutive occurrences of any one character
+		in {needle} are replaced with a single occurrence.
+	</description>
+	<description>
+		If {options} contains [[d]] but not [[s]], only {needle} must be specified.
+		Every occurrence of any character in {needle} is removed from {haystack}.
+	</description>
+	<description>
+		If {options} contains both [[d]] and [[s]], both {needle} and {noodle} must be specified.
+		Every occurrence of any character in {needle} is removed from {haystack}.
+		Multiple consecutive occurrences of any one character in {noodle} are replaced with a single occurrence.
+	</description>
+	<description>
+		If {options} contains the character [[c]], the complement of {needle}
+		is taken, so that characters not in {needle} will be matched instead.
+	</description>
+	<description>
+		{Needle} and {noodle} describe sets of characters, not strings.
+		A range of characters can be specified by putting a hyphen
+		between two characters; to match a literal hyphen, put a
+		hyphen at the beginning or end. For example, the following
+		pattern matches all numbers and basic Latin letters, as well
+		as hyphens: [[A-Za-z0-9-]]
+	</description>
+	<see-also>[[fn:trReplace]], [[fn:replaceAll]], [[fn:csReplaceAll]], [[fn:regReplaceAll]]</see-also>
+</function>
+
+<function>
+	<name dialects="oxne13">trRinstr</name>
+	<syntax>the trRinstr of ({haystack}, {needle})</syntax>
+	<syntax>trRinstr({haystack}, {needle})</syntax>
+	<syntax-note>{Haystack} yields any [[dt:string]]. {Needle} yields a [[dt:string]] describing a set of characters.</syntax-note>
+	<description>
+		The [[*]] function returns the index of the last appearance of
+		any of the characters in {needle} in the string {haystack}, starting at 1.
+		If none of the characters in {needle} can be found in {haystack},
+		[[cn:zero]] is returned.
+	</description>
+	<description>
+		{Needle} describes a set of characters, not a string.
+		A range of characters can be specified by putting a hyphen
+		between two characters; to match a literal hyphen, put a
+		hyphen at the beginning or end. For example, the following
+		pattern matches all numbers and basic Latin letters, as well
+		as hyphens: [[A-Za-z0-9-]]
+	</description>
+	<see-also>
+		[[fn:rinstr]], [[fn:csRinstr]], [[fn:regRinstr]],
+		[[fn:instr]], [[fn:csInstr]], [[fn:regInstr]], [[fn:trInstr]],
+		[[fn:offset]], [[fn:csOffset]], [[fn:regOffset]], [[fn:trOffset]]
 	</see-also>
 </function>
 
@@ -14295,37 +14599,37 @@
 		{{{{String Manipulation}}}}
 		\\\\
 		::TABLE
-		[[fn:len]]         :: [[fn:length]]        :: [[fn:reverse]]
-		...................................................................
-		[[fn:concat]]      :: [[fn:concatsp]]      :: [[fn:implode]]
-		...................................................................
-		[[fn:strcmp]]      :: [[fn:csStrcmp]]      :: [[fn:regMatch]]
-		...................................................................
-		[[fn:offset]]      :: [[fn:csOffset]]      :: [[fn:regOffset]]
-		...................................................................
-		[[fn:instr]]       :: [[fn:csInstr]]       :: [[fn:regInstr]]
-		...................................................................
-		[[fn:rinstr]]      :: [[fn:csRinstr]]      :: [[fn:regRinstr]]
-		...................................................................
-		[[fn:countFields]] :: [[fn:csCountFields]] :: [[fn:regCountFields]]
-		...................................................................
-		[[fn:nthField]]    :: [[fn:csNthField]]    :: [[fn:regNthField]]
-		...................................................................
-		[[fn:explode]]     :: [[fn:csExplode]]     :: [[fn:regExplode]]
-		...................................................................
-		[[fn:replace]]     :: [[fn:csReplace]]     :: [[fn:regReplace]]
-		...................................................................
-		[[fn:replaceAll]]  :: [[fn:csReplaceAll]]  :: [[fn:regReplaceAll]]
-		...................................................................
-		[[fn:left]]        :: [[fn:center]]        :: [[fn:right]]
-		...................................................................
-		[[fn:mid]]         :: [[fn:substr]]        :: [[fn:substring]]
-		...................................................................
-		[[fn:lpad]]        :: [[fn:cpad]]          :: [[fn:rpad]]
-		...................................................................
-		[[fn:trim]]        :: [[fn:ltrim]]         :: [[fn:rtrim]]
-		...................................................................
-		[[fn:ucase]]       :: [[fn:tcase]]         :: [[fn:lcase]]
+		[[fn:len]]         :: [[fn:length]]        :: [[fn:reverse]]        ::  
+		...........................................................................................
+		[[fn:concat]]      :: [[fn:concatsp]]      :: [[fn:implode]]        ::  
+		...........................................................................................
+		[[fn:strcmp]]      :: [[fn:csStrcmp]]      :: [[fn:regMatch]]       :: [[fn:trMatch]]
+		...........................................................................................
+		[[fn:offset]]      :: [[fn:csOffset]]      :: [[fn:regOffset]]      :: [[fn:trOffset]]
+		...........................................................................................
+		[[fn:instr]]       :: [[fn:csInstr]]       :: [[fn:regInstr]]       :: [[fn:trInstr]]
+		...........................................................................................
+		[[fn:rinstr]]      :: [[fn:csRinstr]]      :: [[fn:regRinstr]]      :: [[fn:trRinstr]]
+		...........................................................................................
+		[[fn:countFields]] :: [[fn:csCountFields]] :: [[fn:regCountFields]] :: [[fn:trCountFields]]
+		...........................................................................................
+		[[fn:nthField]]    :: [[fn:csNthField]]    :: [[fn:regNthField]]    :: [[fn:trNthField]]
+		...........................................................................................
+		[[fn:explode]]     :: [[fn:csExplode]]     :: [[fn:regExplode]]     :: [[fn:trExplode]]
+		...........................................................................................
+		[[fn:replace]]     :: [[fn:csReplace]]     :: [[fn:regReplace]]     :: [[fn:trReplace]]
+		...........................................................................................
+		[[fn:replaceAll]]  :: [[fn:csReplaceAll]]  :: [[fn:regReplaceAll]]  :: [[fn:trReplaceAll]]
+		...........................................................................................
+		[[fn:left]]        :: [[fn:center]]        :: [[fn:right]]          ::  
+		...........................................................................................
+		[[fn:mid]]         :: [[fn:substr]]        :: [[fn:substring]]      ::  
+		...........................................................................................
+		[[fn:lpad]]        :: [[fn:cpad]]          :: [[fn:rpad]]           ::  
+		...........................................................................................
+		[[fn:trim]]        :: [[fn:ltrim]]         :: [[fn:rtrim]]          ::  
+		...........................................................................................
+		[[fn:ucase]]       :: [[fn:tcase]]         :: [[fn:lcase]]          ::  
 		ELBAT::
 		\\\\
 		{{{{Text Encoding}}}}
