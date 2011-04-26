@@ -1,25 +1,81 @@
 #summary Information about the latest release version of OpenXION.
 
-= OpenXION 1.2 is out! =
+= OpenXION 1.3 is out! =
+
+OpenXION 1.3 is the latest release version of OpenXION, the reference implementation of XION, the open scripting language based on !HyperTalk. Version 1.3 introduces several new features and fixes major issues with lists and containers.
+
+= Repeat Lastly =
+
+Use the `lastly` construction in repeat blocks to execute code when the loop terminates normally.
+
+{{{
+-- the following prints "done" because the loop terminates normally
+repeat with x = 1 to 10
+  put x
+lastly
+  put "done"
+end repeat
+}}}
+
+{{{
+-- the following does not print "done" because the loop terminates abnormally
+repeat with x = 1 to 10
+  put x
+  if x is 5 then exit repeat
+lastly
+  put "done"
+end repeat
+}}}
+
+= Dictionaries =
+
+Use dictionaries to map strings to values. Use braces to indicate dictionary literals. Use the `entry` chunk type to manipulate dictionaries.
+
+{{{
+local d as dictionary
+put {
+  "a" = "apple"
+  "b" = "raise"
+} into d
+put entry "a" of d
+put "kreative" into entry "c" of d
+put d
+}}}
+
+= References =
+
+Use references to pass containers around without using string literals or the value function.
+
+= ASCII-to-Binary and Binary-to-ASCII =
+
+Use the `atob` and `btoa` functions to encode and decode data in Base64, ASCII85, and other encodings.
+
+= Translate Characters =
+
+Use the `trReplace` and `trReplaceAll` functions to perform `tr` substitutions.
+
+----
+
+== OpenXION 1.2 is out! ==
 
 OpenXION 1.2 is the latest release version of OpenXION, the reference implementation of XION, the open scripting language based on !HyperTalk. Version 1.2 is packed full of exciting new features. Here are just some of them.
 
-= Make History =
+== Make History ==
 
 Install JLine alongside OpenXION, and now you can get complete line editing and command history functionality! Also, you can record the statements you enter and save them to a script file for later.
 
-= Connect to Databases =
+== Connect to Databases ==
 
 Use the new sql command to connect to and query databases. Congratulations, OpenXION, you're now capable of running e-commerce and social networking applications!
 
-= Time to Play! =
+== Time to Play! ==
 
 OpenXION now includes the dial, play, and speak commands familiar to !HyperTalk users, as well as a brand-new tone command and several related functions and properties. The speak command will work with either the built-in Mac OS speech synthesizer or JSAPI. The dial with modem command will work with either RXTX or the Java Communications API.
 
-= Binary Distributions for Windows =
+== Binary Distributions for Windows ==
 
 Version 1.2 is the first to provide a complete binary distribution package for Windows. Now you can use and install XION from your command prompt right out of the box. In addition, all distribution archives now include detailed instructions on how to use and install OpenXION.
 
-= The Show Must Go On =
+== The Show Must Go On ==
 
 Version 1.2 fixes several major bugs, including show-stopping issues with list representation that prevented mathematical functions and nested lists from working.
