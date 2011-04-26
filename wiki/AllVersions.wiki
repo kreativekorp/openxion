@@ -14,4 +14,4 @@ Source code and compiled binaries of version 0.9 of OpenXION are available at th
 
 = Bleeding Edge =
 
-Version 1.3 of OpenXION is currently being developed. See the [https://code.google.com/p/openxion/source/checkout Source] tab.
+See the [https://code.google.com/p/openxion/source/checkout Source] tab.
