@@ -56,4 +56,4 @@ Use the `trReplace` and `trReplaceAll` functions to perform `tr` substitutions.
 
 ----
 
-[ReleaseNotes1.2]
+[ReleaseNotes12]
