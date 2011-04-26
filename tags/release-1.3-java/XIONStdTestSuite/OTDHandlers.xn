@@ -1,0 +1,47 @@
+object type steve pl steves
+	to create
+		put "Hey Steve!"
+	end create
+	To Delete
+		put "I'll get you hey steve, if it's the last thing I doooooo!"
+	end Delete
+	
+	
+	on thisMakesNoSense
+		put "You said it."
+	end thisMakesNoSense
+	
+	To Get Contents
+		return "There's also been some rumors about us cancelling HyperCard..."
+	end get 
+	to get SnappyResponse
+		return "...which is complete bullshit."
+	end Get
+	To Get address
+		return "1 Infinite Loop, Cupertino, CA"
+	END GET
+	
+	to set address to Y
+		put "Y me?"
+	end set
+	To Set SnappyResponse to whatever
+		put "...which is complete " && whatever
+	end SET
+	
+	function salary
+		return 1000000
+	end salary
+END STEVE
+
+local jobs as steve
+put a new steve into jobs
+tell jobs to thisMakesNoSense
+put the contents of jobs
+put the snappyResponse of jobs
+put the address of jobs
+set the address of jobs to "Redmond, WA"
+set the snappyRESPONSE of JOBS to "truth"
+tell jobs
+	put salary()
+end tell
+delete jobs

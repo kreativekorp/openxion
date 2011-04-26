@@ -1,0 +1,439 @@
+local sh as string is "hello"
+local std as string is "Hello, my name is Rebecca. But you can call me Beckie."
+local lt1 as string is "red\ngreen\nblue\ncyan\nmagenta\nyellow"
+local lt2 as string is "\nred\n\ngreen\n\nblue\n\ncyan\n\nmagenta\n\n\n\nyellow\n\n"
+local tmp as string
+put sh
+put std
+put lt1
+put lt2
+put sh into tmp
+delete char 0 of tmp
+put 0 & tmp
+put sh into tmp
+delete char 1 of tmp
+put 1 & tmp
+put sh into tmp
+delete char 2 of tmp
+put 2 & tmp
+put sh into tmp
+delete char 3 of tmp
+put 3 & tmp
+put sh into tmp
+delete char 4 of tmp
+put 4 & tmp
+put sh into tmp
+delete char 5 of tmp
+put 5 & tmp
+put sh into tmp
+delete char 6 of tmp
+put 6 & tmp
+put sh into tmp
+delete char 7 of tmp
+put 7 & tmp
+put sh into tmp
+delete char -7 of tmp
+put -7 & tmp
+put sh into tmp
+delete char -6 of tmp
+put -6 & tmp
+put sh into tmp
+delete char -5 of tmp
+put -5 & tmp
+put sh into tmp
+delete char -4 of tmp
+put -4 & tmp
+put sh into tmp
+delete char -3 of tmp
+put -3 & tmp
+put sh into tmp
+delete char -2 of tmp
+put -2 & tmp
+put sh into tmp
+delete char -1 of tmp
+put -1 & tmp
+put sh into tmp
+delete char 0 of tmp
+put 0 & tmp
+put sh into tmp
+delete middle character of tmp
+put tmp
+put sh into tmp
+delete last character of tmp
+put tmp
+put sh into tmp
+delete chars 0 to 6 of tmp
+put tmp
+put sh into tmp
+delete chars 1 to 5 of tmp
+put tmp
+put sh into tmp
+delete chars 2 to 4 of tmp
+put tmp
+put sh into tmp
+delete chars 1 to -1 of tmp
+put tmp
+put sh into tmp
+delete chars 2 to -2 of tmp
+put tmp
+put sh into tmp
+delete chars -6 to -1 of tmp
+put tmp
+put sh into tmp
+delete chars -5 to -1 of tmp
+put tmp
+put sh into tmp
+delete chars -4 to -2 of tmp
+put tmp
+put sh into tmp
+delete first to middle chars of tmp
+put tmp
+put sh into tmp
+delete middle to fifth chars of tmp
+put tmp
+put sh into tmp
+delete middle to last chars of tmp
+put tmp
+put sh into tmp
+delete char 0 to 3 of tmp
+put tmp
+put sh into tmp
+delete char 3 to 10 of tmp
+put tmp
+put lt1 into tmp
+delete line 0 of tmp
+put 0 & tmp
+put lt1 into tmp
+delete line 1 of tmp
+put 1 & tmp
+put lt1 into tmp
+delete line 2 of tmp
+put 2 & tmp
+put lt1 into tmp
+delete line 3 of tmp
+put 3 & tmp
+put lt1 into tmp
+delete line 4 of tmp
+put 4 & tmp
+put lt1 into tmp
+delete line 5 of tmp
+put 5 & tmp
+put lt1 into tmp
+delete line 6 of tmp
+put 6 & tmp
+put lt1 into tmp
+delete line 7 of tmp
+put 7 & tmp
+put lt1 into tmp
+delete line -7 of tmp
+put -7 & tmp
+put lt1 into tmp
+delete line -6 of tmp
+put -6 & tmp
+put lt1 into tmp
+delete line -5 of tmp
+put -5 & tmp
+put lt1 into tmp
+delete line -4 of tmp
+put -4 & tmp
+put lt1 into tmp
+delete line -3 of tmp
+put -3 & tmp
+put lt1 into tmp
+delete line -2 of tmp
+put -2 & tmp
+put lt1 into tmp
+delete line -1 of tmp
+put -1 & tmp
+put lt1 into tmp
+delete line 0 of tmp
+put 0 & tmp
+put lt1 into tmp
+delete middle line of tmp
+put tmp
+put lt1 into tmp
+delete last line of tmp
+put tmp
+put lt1 into tmp
+delete lines 0 to 7 of tmp
+put tmp
+put lt1 into tmp
+delete lines 1 to 6 of tmp
+put tmp
+put lt1 into tmp
+delete lines 2 to 5 of tmp
+put tmp
+put lt1 into tmp
+delete lines -7 to -1 of tmp
+put tmp
+put lt1 into tmp
+delete lines -6 to -1 of tmp
+put tmp
+put lt1 into tmp
+delete lines -5 to -2 of tmp
+put tmp
+put lt1 into tmp
+delete first to middle lines of tmp
+put tmp
+put lt1 into tmp
+delete middle to last lines of tmp
+put tmp
+put lt1 into tmp
+delete lines 0 to 2 of tmp
+put tmp
+put lt1 into tmp
+delete lines 5 to 10 of tmp
+put tmp
+put "---LT2"
+put lt2 into tmp
+delete paragraph 7 of tmp
+put tmp
+put lt2 into tmp
+delete paragraph 6 of tmp
+put tmp
+put lt2 into tmp
+delete paragraph 5 of tmp
+put tmp
+put lt2 into tmp
+delete paragraph 4 of tmp
+put tmp
+put lt2 into tmp
+delete paragraph 3 of tmp
+put tmp
+put lt2 into tmp
+delete paragraph 2 of tmp
+put tmp
+put lt2 into tmp
+delete paragraph 1 of tmp
+put tmp
+put lt2 into tmp
+delete paragraph 0 of tmp
+put tmp
+put lt2 into tmp
+delete middle paragraph of tmp
+put tmp
+put lt2 into tmp
+delete paragraph -1 of tmp
+put tmp
+put lt2 into tmp
+delete paragraph -2 of tmp
+put tmp
+put lt2 into tmp
+delete paragraph -7 of tmp
+put tmp
+put lt2 into tmp
+delete paragraph -8 of tmp
+put tmp
+put lt2 into tmp
+delete paragraph -9 of tmp
+put tmp
+put std into tmp
+delete item 0 of tmp
+put tmp
+put std into tmp
+delete item 1 of tmp
+put tmp
+put std into tmp
+delete item 2 of tmp
+put tmp
+put std into tmp
+delete item 3 of tmp
+put tmp
+put std into tmp
+delete items 1 to 2 of tmp
+put tmp
+put std into tmp
+delete item -100 of tmp
+put tmp
+put std into tmp
+delete item 100 of tmp
+put tmp
+put std into tmp
+delete items -100 to 1 of tmp
+put tmp
+put std into tmp
+delete items 2 to 100 of tmp
+put tmp
+put std into tmp
+delete sentence 0 of tmp
+put tmp
+put std into tmp
+delete sentence 1 of tmp
+put tmp
+put std into tmp
+delete sentence 2 of tmp
+put tmp
+put std into tmp
+delete sentence 3 of tmp
+put tmp
+put std into tmp
+delete sentences 1 to 2 of tmp
+put tmp
+put std into tmp
+delete sentence -100 of tmp
+put tmp
+put std into tmp
+delete sentence 100 of tmp
+put tmp
+put std into tmp
+delete sentences -100 to 1 of tmp
+put tmp
+put std into tmp
+delete sentences 2 to 100 of tmp
+put tmp
+put std into tmp
+delete word 0 of tmp
+put 0 & tmp
+put std into tmp
+delete word 1 of tmp
+put 1 & tmp
+put std into tmp
+delete word 2 of tmp
+put 2 & tmp
+put std into tmp
+delete word 3 of tmp
+put 3 & tmp
+put std into tmp
+delete word 4 of tmp
+put 4 & tmp
+put std into tmp
+delete word 5 of tmp
+put 5 & tmp
+put std into tmp
+delete word 6 of tmp
+put 6 & tmp
+put std into tmp
+delete word 7 of tmp
+put 7 & tmp
+put std into tmp
+delete word 8 of tmp
+put 8 & tmp
+put std into tmp
+delete word 9 of tmp
+put 9 & tmp
+put std into tmp
+delete word 10 of tmp
+put 10 & tmp
+put std into tmp
+delete word 11 of tmp
+put 11 & tmp
+put std into tmp
+delete word 12 of tmp
+put 12 & tmp
+put std into tmp
+delete word 0 of tmp
+put 0 & tmp
+put std into tmp
+delete word -1 of tmp
+put -1 & tmp
+put std into tmp
+delete word -2 of tmp
+put -2 & tmp
+put std into tmp
+delete word -3 of tmp
+put -3 & tmp
+put std into tmp
+delete word -4 of tmp
+put -4 & tmp
+put std into tmp
+delete word -5 of tmp
+put -5 & tmp
+put std into tmp
+delete word -6 of tmp
+put -6 & tmp
+put std into tmp
+delete word -7 of tmp
+put -7 & tmp
+put std into tmp
+delete word -8 of tmp
+put -8 & tmp
+put std into tmp
+delete word -9 of tmp
+put -9 & tmp
+put std into tmp
+delete word -10 of tmp
+put -10 & tmp
+put std into tmp
+delete word -11 of tmp
+put -11 & tmp
+put std into tmp
+delete word -12 of tmp
+put -12 & tmp
+put std into tmp
+delete middle word of tmp
+put tmp
+put std into tmp
+delete last word of tmp
+put tmp
+put lt2 into tmp
+delete middle word of tmp
+put tmp
+put lt2 into tmp
+delete last word of tmp
+put tmp
+put std into tmp
+delete word 0 to 3 of tmp
+put tmp
+put std into tmp
+delete word 1 to 6 of tmp
+put tmp
+put std into tmp
+delete word 2 to 5 of tmp
+put tmp
+put std into tmp
+delete word 1 to -1 of tmp
+put tmp
+put std into tmp
+delete word 2 to -2 of tmp
+put tmp
+put std into tmp
+delete word -6 to -1 of tmp
+put tmp
+put std into tmp
+delete word -5 to -2 of tmp
+put tmp
+put std into tmp
+delete word -2 to -1 of tmp
+put tmp
+put std into tmp
+delete first to middle words of tmp
+put tmp
+put std into tmp
+delete middle to last words of tmp
+put tmp
+put std into tmp
+delete middle to sixth words of tmp
+put tmp
+put "  Hello World " into tmp
+delete word 0 of tmp
+put tmp
+put "  Hello World " into tmp
+delete word 1 of tmp
+put tmp
+put "  Hello World " into tmp
+delete word 2 of tmp
+put tmp
+put "  Hello World " into tmp
+delete word 3 of tmp
+put tmp
+put "  Hello World " into tmp
+delete word 4 of tmp
+put tmp
+put "  Hello World " into tmp
+delete word 5 of tmp
+put tmp
+put "  Hello World " into tmp
+delete word -1 of tmp
+put tmp
+put "  Hello World " into tmp
+delete word -2 of tmp
+put tmp
+put "  Hello World " into tmp
+delete word -3 of tmp
+put tmp
+put "  Hello World " into tmp
+delete word -4 of tmp
+put tmp
+put "  Hello World " into tmp
+delete word -5 of tmp
+put tmp

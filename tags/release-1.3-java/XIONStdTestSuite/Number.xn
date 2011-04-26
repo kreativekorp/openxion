@@ -1,0 +1,16 @@
+object type foo pl foos
+	-- nothing
+end foo
+
+put the number of (5,6,7,8)
+put the number of elements in (5,6,7,8)
+put the number of words in "a b c d e"
+put the number of words 2 to 4 of "a b c d e"
+
+create foo "steve"
+create foo "bill"
+create foo "andy"
+put the number of foo "andy"
+put the number of foo "bill"
+put the number of foo "steve"
+put the number of foos

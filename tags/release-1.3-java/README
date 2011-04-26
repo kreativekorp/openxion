@@ -1,0 +1,163 @@
+Welcome to OpenXION!
+
+OpenXION is an implementation of the XION Scripting Language, an open standard
+in the xTalk family of languages. It is based heavily upon HyperTalk, the
+language used by HyperCard. It is similar to the languages used by SuperCard,
+MetaCard, and Runtime Revolution. The xTalk languages are distinguished by
+their English-like syntax, making them easy to learn and easy to read, write,
+debug, and maintain.
+
+
+Downloading OpenXION
+
+The most recent release version of OpenXION can be downloaded from the
+following URL:
+
+	http://code.google.com/p/openxion/downloads/list
+
+If you are on a Windows system, look for a file called OpenXION-x.x-distwin.zip
+where x.x is the most recent version number.
+
+If you are on a Mac OS X or other Unix- or Linux-based system, look for a file
+called OpenXION-x.x-dist.zip where x.x is the most recent version number.
+
+This file contains everything you need to use OpenXION. All you need to do is
+unzip it to a directory of your choice.
+
+
+Launching OpenXION
+
+You can use OpenXION without any formal installation procedure. Just cd to the
+directory where the archive was unzipped, then run the xion command.
+
+On Windows:
+	xion
+
+On other systems:
+	./xion
+
+You will get a > prompt. Enter any XION statement to execute it, or any XION
+expression to evaluate it. To exit OpenXION, at the > prompt enter:
+
+	exit
+
+For a list of command line options, run the xion command with the --help
+option.
+
+On Windows:
+	xion --help
+
+On other systems:
+	./xion --help
+
+To execute an XION script file, run the xion command with the name of the
+script file.
+
+On Windows:
+	xion hello.xn
+
+On other systems:
+	./xion hello.xn
+
+
+Installing OpenXION
+
+If you would like to use OpenXION from anywhere on your system, as opposed to
+just the directory where you unzipped it, simply run the install command with
+administrator privileges.
+
+On Windows:
+	runas /user:Administrator cmd
+	install
+	exit
+
+On other systems:
+	sudo ./install
+
+On Windows systems, the jars and xion, xiondoc, and xe commands are installed
+in C:\Windows\System32. On other systems, the jars are installed in /usr/lib
+and the xion, xiondoc, and xe commands are installed in /usr/bin. You can then
+delete the unzipped directory.
+
+
+Installing OpenXION from Source
+
+If you would like to use the bleeding-edge version of OpenXION, you may
+download, run, and install OpenXION from the svn repository. The instructions
+here assume Mac OS X or another Unix- or Linux-based system. If you are on
+Windows, you're on your own. The first step is probably to use Cygwin to do
+this; good luck with that.
+
+Use this command to anonymously check out the latest project source code:
+
+	svn co http://openxion.googlecode.com/svn/trunk/main/java/OpenXION/ openxion
+
+To compile OpenXION, cd to the checked-out directory, then run make:
+
+	make
+
+This will generate everything: the jar files, the various tgz files available
+on the Downloads page, the Javadocs, the XIONDocs, and the distributable zips.
+
+To install OpenXION, run make install with administrator privileges:
+
+	sudo make install
+
+The jars will be installed in /usr/lib and the xion, xiondoc, and xe commands
+will be installed in /usr/bin.
+
+
+Getting Started with OpenXION
+
+To get started with OpenXION, follow the tutorial on openxion.org:
+
+	http://www.openxion.org/tutorial.html
+
+
+Frequently Asked Questions about OpenXION
+
+The FAQ page on openxion.org answers many of the questions you may have about
+OpenXION:
+
+	http://www.openxion.org/faq.html
+
+For a brief history of OpenXION, see the history wiki page:
+
+	http://code.google.com/p/openxion/wiki/History
+
+Much less interesting questions are answered here.
+
+
+What file extension do I use for XION Scripts?
+
+OpenXION doesn't care, but .xn is the file extension most often used.
+
+
+How do I spell/capitalize XION, OpenXION, or XIONDoc?
+
+Exactly as seen here.
+
+
+How do I pronounce XION, OpenXION, or XIONDoc?
+
+XION is pronounced EK-shun.
+
+OpenXION is pronounced OH-pen-EK-shun.
+
+XIONDoc is pronounced EK-shun-dock.
+
+Programmers have a history of creating words with ambiguous or counterintuitive
+pronunciation just to mess with people. Observe GIF, Linux, Mac OS X. In the
+event of an XION pronunciation holy war, take whatever side you want, but I'm
+siding with EK-shun.
+
+
+What does XION stand for?
+
+Officially, XION does not stand for anything.
+
+Unofficially, you may think of it as standing for Xtalk ImplementatiON.
+
+Officially, the file extension .xn is just a shortening of XION.
+
+Unofficially, the file extension .xn stands for eXtremely Numerous.

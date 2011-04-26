@@ -1,0 +1,58 @@
+function Merge leftList as list, rightList as list
+	local mergedList as list
+	repeat while leftList is not empty and rightList is not empty
+		if first element of leftList <= first element of rightList then
+			put first element of leftList after mergedList
+			delete first element of leftList
+		else
+			put first element of rightList after mergedList
+			delete first element of rightList
+		end if
+	end repeat
+	repeat while leftList is not empty
+		put first element of leftList after mergedList
+		delete first element of leftList
+	end repeat
+	repeat while rightList is not empty
+		put first element of rightList after mergedList
+		delete first element of rightList
+	end repeat
+	return mergedList
+end Merge
+
+function MergeSort unsortedList as list
+	if unsortedList is empty then return unsortedList
+	if the number of elements in unsortedList is one then return unsortedList
+	local middleElement as integer is (the number of elements in unsortedList) div 2
+	local leftList as list is MergeSort(elements 1 through middleElement of unsortedList)
+	local rightList as list is MergeSort(elements middleElement+1 through -1 of unsortedList)
+	return Merge(leftList, rightList)
+end MergeSort
+
+-- Testing functionality of Merge
+put Merge((1,2,3,4),(5,6,7,8))
+put Merge((2,4,6,8),(1,3,5,7))
+put Merge((0,3,6,9),(2,4,8,16))
+put Merge((10,12,14,16),(3,5,7,9))
+put Merge((5,6,10,11),(2,3,8,9))
+
+-- Testing base cases of MergeSort
+put MergeSort(empty)
+put MergeSort(3)
+put MergeSort(4.12)
+put MergeSort(-7)
+put MergeSort(0)
+
+-- Testing MergeSort itself
+local x as list is (5, 9, 3.14, 12, 0, -4, 18, -7.7, 1, 36, 2.4, 42.01, -99)
+put MergeSort(x)
+sort elements of x numeric
+put x
+
+-- Testing technical aspects of argument passing
+put MergeSort()
+put MergeSort(empty)
+put MergeSort(0)
+put MergeSort(1)
+put MergeSort(2,7,5)
+put MergeSort((2,7,5) as list)

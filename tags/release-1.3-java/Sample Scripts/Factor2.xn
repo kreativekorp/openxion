@@ -1,0 +1,18 @@
+#!/usr/bin/xion
+
+function factor theNumber
+	put empty into theFactors
+	repeat with theDivisor = 1 to the sqrt of theNumber
+		if theNumber mod theDivisor is zero then
+			put ", " & theDivisor & "*" & (theNumber/theDivisor) after theFactors
+		end if
+	end repeat
+	delete chars 1 to 2 of theFactors
+	return theFactors
+end factor
+
+repeat
+	ask "Number to factor:"
+	if it is empty or the result is "Cancel" then exit repeat
+	else put factor(it)
+end repeat

@@ -1,0 +1,263 @@
+object type impedor pl impedors
+	to create
+		shared frequency as number is 2*pi/60
+	end create
+	to get frequency
+		shared frequency as number
+		return frequency
+	end get
+	to set frequency to x
+		shared frequency as number
+		put x into frequency
+	end set
+	to get impedence
+		return (0,0) as complex
+	end get
+end impedor
+
+object type resistor pl resistors extends impedor
+	to create
+		shared frequency as number is 2*pi/60
+		shared resistance as number is zero
+	end create
+	to get resistance
+		shared resistance as number
+		return resistance
+	end get
+	to set resistance to x
+		shared resistance as number
+		put x into resistance
+	end set
+	to get impedence
+		shared resistance as number
+		return (resistance,0) as complex
+	end get
+end resistor
+
+object type inductor pl inductors extends impedor
+	to create
+		shared frequency as number is 2*pi/60
+		shared inductance as number is zero
+	end create
+	to get inductance
+		shared inductance as number
+		return inductance
+	end get
+	to set inductance to x
+		shared inductance as number
+		put x into inductance
+	end set
+	to get impedence
+		shared frequency as number
+		shared inductance as number
+		return (0,frequency * inductance) as complex
+	end get
+end inductor
+
+object type capacitor pl capacitors extends impedor
+	to create
+		shared frequency as number is 2*pi/60
+		shared capacitance as number is zero
+	end create
+	to get capacitance
+		shared capacitance as number
+		return capacitance
+	end get
+	to set capacitance to x
+		shared capacitance as number
+		put x into capacitance
+	end set
+	to get impedence
+		shared frequency as number
+		shared capacitance as number
+		return (0,-1/(frequency * capacitance)) as complex
+	end get
+end capacitor
+
+object type impedor network pl impedor networks extends impedor
+	to create
+		shared frequency as number is 2*pi/60
+		shared components as impedors is empty
+	end create
+	to get components
+		shared components as impedors
+		return components
+	end get
+	to set components to x
+		shared components as impedors
+		put x into components
+	end set
+	on insert x as impedor
+		shared components as impedors
+		put x after components
+	end insert
+end impedor network
+
+object type series network pl series networks extends impedor network
+	to get impedence
+		shared components as impedors
+		local componentValues as complexes
+		local x as impedor
+		repeat for each x in components
+			put the impedence of x after componentValues
+		end repeat
+		return the sum of componentValues
+	end get
+end series network
+
+object type parallel network pl parallel networks extends impedor network
+	to get impedence
+		shared components as impedors
+		local componentValues as complexes
+		local x as impedor
+		repeat for each x in components
+			put the impedence of x after componentValues
+		end repeat
+		return the rsr of componentValues
+	end get
+end parallel network
+
+function sciNot x as number
+	if x < 0 then return "-" & sciNot(abs(x))
+	else if x >= 1'12 then return round(x / 1'12) & "T"
+	else if x >= 1'9 then return round(x / 1'9) & "G"
+	else if x >= 1'6 then return round(x / 1'6) & "M"
+	else if x >= 1'3 then return round(x / 1'3) & "k"
+	else if x >= 1'0 then return round(x / 1'0)
+	else if x >= 1''3 then return round(x / 1''3) & "m"
+	else if x >= 1''6 then return round(x / 1''6) & "µ"
+	else if x >= 1''9 then return round(x / 1''9) & "n"
+	else if x >= 1''12 then return round(x / 1''12) & "p"
+	else return "0"
+end sciNot
+
+function makeDiagram x as impedor
+	-- here we assume that the diagram will always have the same number of characters on each line
+	if x is a resistor then
+		return "--/\\/\\/--" & newline & cpad(sciNot(the resistance of x) & "Ω", 9)
+	else if x is an inductor then
+		return "--∂∂∂∂∂--" & newline & cpad(sciNot(the inductance of x) & "H", 9)
+	else if x is a capacitor then
+		return "---| |---" & newline & cpad(sciNot(the capacitance of x) & "F", 9)
+	else if x is a series network then
+		local diagram as string
+		local component as impedor
+		local componentDiagram as string
+		local maxLength as integer
+		repeat for each component in the components of x
+			put makeDiagram(component) into componentDiagram
+			put zero into maxLength
+			repeat for each l in the lines of diagram
+				put max(maxLength, the length of l) into maxLength
+			end repeat
+			repeat with i = 1 to the number of lines in componentDiagram
+				put (rpad(line i of diagram, maxLength) & line i of componentDiagram) into line i of diagram
+			end repeat
+			put zero into maxLength
+			repeat for each l in the lines of diagram
+				put max(maxLength, the length of l) into maxLength
+			end repeat
+			repeat with i = 1 to the number of lines in diagram
+				put (rpad(line i of diagram, maxLength)) into line i of diagram
+			end repeat
+		end repeat
+		return diagram
+	else if x is a parallel network then
+		local diagram as string
+		local component as impedor
+		local componentDiagram as string
+		local maxLength as integer
+		repeat for each component in the components of x
+			put makeDiagram(component) into componentDiagram
+			put the number of lines in diagram into maxLength
+			put componentDiagram into line (maxLength+1) of diagram
+		end repeat
+		put zero into maxLength
+		repeat for each l in the lines of diagram
+			put max(maxLength, the length of l) into maxLength
+		end repeat
+		repeat with i = 1 to the number of lines in diagram
+			put "|" & (rpad(line i of diagram, maxLength)) & "|" into line i of diagram
+		end repeat
+		return diagram
+	end if
+end makeDiagram
+
+on edit x as impedor network
+	local tmp as impedor
+	repeat
+		put "Editing Circuit:"
+		put makeDiagram(x)
+		put "Equivalent Impedence:" && the impedence of x
+		answer list "Select a component to add:" with ("Resistor","Inductor","Capacitor","Parallel Network","Series Network","Finished Editing")
+		if it is "Resistor" then
+			ask "Enter resistance in ohms:"
+			if it is empty or the result is "Cancel" then
+				next repeat
+			else
+				put it into r
+				put a new resistor into tmp
+				set the resistance of tmp to r
+				tell x to insert tmp
+			end if
+		else if it is "Inductor" then
+			ask "Enter inductance in henries:"
+			if it is empty or the result is "Cancel" then
+				next repeat
+			else
+				put it into i
+				put a new inductor into tmp
+				set the inductance of tmp to i
+				tell x to insert tmp
+			end if
+		else if it is "Capacitor" then
+			ask "Enter capacitance in farads:"
+			if it is empty or the result is "Cancel" then
+				next repeat
+			else
+				put it into c
+				put a new capacitor into tmp
+				set the capacitance of tmp to c
+				tell x to insert tmp
+			end if
+		else if it is "Parallel Network" then
+			put a new parallel network into tmp
+			tell x to insert tmp
+			edit tmp
+		else if it is "Series Network" then
+			put a new series network into tmp
+			tell x to insert tmp
+			edit tmp
+		else
+			exit repeat
+		end if
+	end repeat
+end edit
+
+on test236 x as impedor network
+	local tmp as impedor
+	put a new resistor into tmp
+	set the resistance of tmp to 2
+	tell x to insert tmp
+	put a new resistor into tmp
+	set the resistance of tmp to 3
+	tell x to insert tmp
+	put a new resistor into tmp
+	set the resistance of tmp to 6
+	tell x to insert tmp
+	put the impedence of x
+end test236
+
+on test41 x as impedor network
+	local tmp as impedor
+	put a new resistor into tmp
+	set the resistance of tmp to 4
+	tell x to insert tmp
+	put a new parallel network into tmp
+	tell x to insert tmp
+	test236 tmp
+	put the impedence of x
+end test41
+
+test41 a new series network
+test41 a new series network

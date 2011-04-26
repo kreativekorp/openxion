@@ -1,0 +1,209 @@
+put the numberFormat into nf
+set the numberFormat to "0.######"
+put zero
+put 0.00715
+put 0.0715
+put 0.715
+put 7.15
+put 71.5
+put 715
+put 7150
+set the numberFormat to "0.##"
+put zero
+put 0.00715
+put 0.0715
+put 0.715
+put 7.15
+put 71.5
+put 715
+put 7150
+set the numberFormat to "0.#"
+put zero
+put 0.00715
+put 0.0715
+put 0.715
+put 7.15
+put 71.5
+put 715
+put 7150
+set the numberFormat to "0.000000"
+put zero
+put 0.00715
+put 0.0715
+put 0.715
+put 7.15
+put 71.5
+put 715
+put 7150
+set the numberFormat to "0.00"
+put zero
+put 0.00715
+put 0.0715
+put 0.715
+put 7.15
+put 71.5
+put 715
+put 7150
+set the numberFormat to "0.0"
+put zero
+put 0.00715
+put 0.0715
+put 0.715
+put 7.15
+put 71.5
+put 715
+put 7150
+set the numberFormat to "0.00##"
+put zero
+put 0.00715
+put 0.0715
+put 0.715
+put 7.15
+put 71.5
+put 715
+put 7150
+set the numberFormat to "0.0#"
+put zero
+put 0.00715
+put 0.0715
+put 0.715
+put 7.15
+put 71.5
+put 715
+put 7150
+set the numberFormat to "0"
+put zero
+put 0.00715
+put 0.0715
+put 0.715
+put 7.15
+put 71.5
+put 715
+put 7150
+set the numberFormat to "0.###E0"
+put zero
+put 0.00715
+put 0.0715
+put 0.715
+put 7.15
+put 71.5
+put 715
+put 7150
+set the numberFormat to "0.#E0"
+put zero
+put 0.00715
+put 0.0715
+put 0.715
+put 7.15
+put 71.5
+put 715
+put 7150
+set the numberFormat to "0.#E00"
+put zero
+put 0.00715
+put 0.0715
+put 0.715
+put 7.15
+put 71.5
+put 715
+put 7150
+set the numberFormat to "0.000E0"
+put zero
+put 0.00715
+put 0.0715
+put 0.715
+put 7.15
+put 71.5
+put 715
+put 7150
+set the numberFormat to "0.##E0<-3>3"
+put zero
+put 0.00715
+put 0.0715
+put 0.715
+put 7.15
+put 71.5
+put 715
+put 7150
+set the numberFormat to "0.##E0<-2>2"
+put zero
+put 0.00715
+put 0.0715
+put 0.715
+put 7.15
+put 71.5
+put 715
+put 7150
+set the numberFormat to "0.##E0<-1>1"
+put zero
+put 0.00715
+put 0.0715
+put 0.715
+put 7.15
+put 71.5
+put 715
+put 7150
+set the numberFormat to "0.###'0"
+put zero
+put 0.00715
+put 0.0715
+put 0.715
+put 7.15
+put 71.5
+put 715
+put 7150
+set the numberFormat to "0.#'0"
+put zero
+put 0.00715
+put 0.0715
+put 0.715
+put 7.15
+put 71.5
+put 715
+put 7150
+set the numberFormat to "0.#'00"
+put zero
+put 0.00715
+put 0.0715
+put 0.715
+put 7.15
+put 71.5
+put 715
+put 7150
+set the numberFormat to "0.000'0"
+put zero
+put 0.00715
+put 0.0715
+put 0.715
+put 7.15
+put 71.5
+put 715
+put 7150
+set the numberFormat to "0.##'0<-3>3"
+put zero
+put 0.00715
+put 0.0715
+put 0.715
+put 7.15
+put 71.5
+put 715
+put 7150
+set the numberFormat to "0.##'0<-2>2"
+put zero
+put 0.00715
+put 0.0715
+put 0.715
+put 7.15
+put 71.5
+put 715
+put 7150
+set the numberFormat to "0.##'0<-1>1"
+put zero
+put 0.00715
+put 0.0715
+put 0.715
+put 7.15
+put 71.5
+put 715
+put 7150
+set the numberFormat to nf
