@@ -10,6 +10,7 @@ Source code and compiled binaries of version 0.9 of OpenXION are available at th
 || 1.0 || [http://openxion.googlecode.com/files/OpenXION-1.0.jar OpenXION-1.0.jar] || || r3 ||
 || 1.1 || [http://openxion.googlecode.com/files/OpenXION-1.1-dist.zip OpenXION-1.1-dist.zip] || || r34 ||
 || 1.2 || [http://openxion.googlecode.com/files/OpenXION-1.2-dist.zip OpenXION-1.2-dist.zip] || [http://openxion.googlecode.com/files/OpenXION-1.2-distwin.zip OpenXION-1.2-distwin.zip] || r99 ||
+|| 1.3 || [http://openxion.googlecode.com/files/OpenXION-1.3-dist.zip OpenXION-1.3-dist.zip] || [http://openxion.googlecode.com/files/OpenXION-1.3-distwin.zip OpenXION-1.3-distwin.zip] || r156 ||
 
 = Bleeding Edge =
 
