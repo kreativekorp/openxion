@@ -61,7 +61,7 @@ public class XNAudioModule extends XNModule {
 	private static final long serialVersionUID = 33L;
 	
 	public static final String MODULE_NAME = "OpenXION Audio Module";
-	public static final String MODULE_VERSION = "1.2";
+	public static final String MODULE_VERSION = "1.3";
 	
 	private static XNAudioModule instance = null;
 	public static final synchronized XNAudioModule instance() {
