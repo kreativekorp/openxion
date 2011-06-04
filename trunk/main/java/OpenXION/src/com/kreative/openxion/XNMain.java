@@ -62,6 +62,7 @@ public class XNMain {
 			int testsTotal = 0;
 			int testsPassed = 0;
 			int testsFailed = 0;
+			long testTime = System.currentTimeMillis();
 			for (String arg : args) {
 				if (processOptions && arg.startsWith("-")) {
 					if (arg.equals("-i")) {
@@ -224,7 +225,11 @@ public class XNMain {
 				}
 			}
 			if (testsTotal > 0) {
-				ui.println("PASSED: "+testsPassed+"/"+testsTotal+"  FAILED: "+testsFailed+"/"+testsTotal);
+				ui.println(
+					"PASSED: " + testsPassed + "/" + testsTotal + 
+					"  FAILED: " + testsFailed + "/" + testsTotal +
+					"  TIME: " + (System.currentTimeMillis() - testTime) + " ms"
+				);
 			}
 			if (!somethingOfConsequenceHappened) {
 				shell(ui, interp, ctx, stackTrace);
