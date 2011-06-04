@@ -28,6 +28,7 @@
 package com.kreative.openxion;
 
 import java.io.*;
+import java.lang.management.ManagementFactory;
 import java.math.*;
 import java.security.*;
 import java.text.*;
@@ -53,8 +54,6 @@ public class XNStandardModule extends XNModule {
 	
 	public static final String MODULE_NAME = "OpenXION Standard Module";
 	public static final String MODULE_VERSION = "1.3";
-	
-	private static final GregorianCalendar TICKS_REF = new GregorianCalendar(2011,GregorianCalendar.APRIL,26);
 	
 	private static XNStandardModule instance = null;
 	public static final synchronized XNStandardModule instance() {
@@ -5017,9 +5016,8 @@ public class XNStandardModule extends XNModule {
 	private static final Function f_ticks = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			assertEmptyParameter(functionName, parameter);
-			GregorianCalendar now = new GregorianCalendar();
-			long l = now.getTime().getTime() - TICKS_REF.getTime().getTime();
-			return new XOMInteger(l * 60L / 1000L);
+			long uptime = ManagementFactory.getRuntimeMXBean().getUptime();
+			return new XOMInteger(uptime * 60L / 1000L);
 		}
 	};
 	
