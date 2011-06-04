@@ -136,9 +136,9 @@ Spans are fragments of text that are formatted.
 
 Can contain literal text and further spans.
 
-`<b>` - bold text
+`<b>` or `<strong>` - bold text
 
-`<i>` - italic text
+`<i>` or `<em>` - italic text
 
 `<u>` - underlined text
 
