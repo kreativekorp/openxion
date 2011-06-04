@@ -1,0 +1,8 @@
+0
+0
+mylist: 
+mylists: 
+mylist: word01,1 Elements in mylist=2
+mylists: (word01,1) Elements in mylists=1
+mylist: word02,2 Elements in mylist=2
+mylists: (word01,1),(word02,2) Elements in mylists=2

@@ -261,7 +261,7 @@ public class XOMListChunk extends XOMContainer implements XOMListContainer {
 			List<? extends XOMVariant> right = ci.parentContent.subList(ci.endElementIndex, ci.chunkCount);
 			Vector<XOMVariant> v = new Vector<XOMVariant>();
 			v.addAll(left);
-			v.addAll(contents.toPrimitiveList(ctx));
+			v.add(contents.asPrimitive(ctx));
 			v.addAll(right);
 			parent.putIntoContents(ctx, new XOMList(v));
 		}
@@ -282,7 +282,7 @@ public class XOMListChunk extends XOMContainer implements XOMListContainer {
 			List<? extends XOMVariant> right = ci.parentContent.subList(ci.startElementIndex, ci.chunkCount);
 			Vector<XOMVariant> v = new Vector<XOMVariant>();
 			v.addAll(left);
-			v.addAll(contents.toPrimitiveList(ctx));
+			v.add(contents.asPrimitive(ctx));
 			v.addAll(right);
 			parent.putIntoContents(ctx, new XOMList(v));
 		}
@@ -303,7 +303,7 @@ public class XOMListChunk extends XOMContainer implements XOMListContainer {
 			List<? extends XOMVariant> right = ci.parentContent.subList(ci.endElementIndex, ci.chunkCount);
 			Vector<XOMVariant> v = new Vector<XOMVariant>();
 			v.addAll(left);
-			v.addAll(contents.toPrimitiveList(ctx));
+			v.add(contents.asPrimitive(ctx));
 			v.addAll(right);
 			parent.putIntoContents(ctx, new XOMList(v));
 		}
@@ -324,7 +324,7 @@ public class XOMListChunk extends XOMContainer implements XOMListContainer {
 			List<? extends XOMVariant> right = ci.parentContent.subList(ci.endElementIndex, ci.chunkCount);
 			Vector<XOMVariant> v = new Vector<XOMVariant>();
 			v.addAll(left);
-			v.addAll(contents.toPrimitiveList(ctx));
+			v.add(contents.asPrimitive(ctx));
 			v.addAll(right);
 			parent.putIntoContents(ctx, new XOMList(v), property, pvalue);
 		}
@@ -345,7 +345,7 @@ public class XOMListChunk extends XOMContainer implements XOMListContainer {
 			List<? extends XOMVariant> right = ci.parentContent.subList(ci.startElementIndex, ci.chunkCount);
 			Vector<XOMVariant> v = new Vector<XOMVariant>();
 			v.addAll(left);
-			v.addAll(contents.toPrimitiveList(ctx));
+			v.add(contents.asPrimitive(ctx));
 			v.addAll(right);
 			parent.putIntoContents(ctx, new XOMList(v), property, pvalue);
 		}
@@ -366,7 +366,7 @@ public class XOMListChunk extends XOMContainer implements XOMListContainer {
 			List<? extends XOMVariant> right = ci.parentContent.subList(ci.endElementIndex, ci.chunkCount);
 			Vector<XOMVariant> v = new Vector<XOMVariant>();
 			v.addAll(left);
-			v.addAll(contents.toPrimitiveList(ctx));
+			v.add(contents.asPrimitive(ctx));
 			v.addAll(right);
 			parent.putIntoContents(ctx, new XOMList(v), property, pvalue);
 		}
@@ -403,7 +403,7 @@ public class XOMListChunk extends XOMContainer implements XOMListContainer {
 			List<? extends XOMVariant> right = ci.parentContent.subList(e, ci.chunkCount);
 			Vector<XOMVariant> v = new Vector<XOMVariant>();
 			v.addAll(left);
-			v.addAll(contents.toPrimitiveList(ctx));
+			v.add(contents.asPrimitive(ctx));
 			v.addAll(right);
 			parent.putIntoContents(ctx, new XOMList(v));
 		}
@@ -427,7 +427,7 @@ public class XOMListChunk extends XOMContainer implements XOMListContainer {
 			List<? extends XOMVariant> right = ci.parentContent.subList(s, ci.chunkCount);
 			Vector<XOMVariant> v = new Vector<XOMVariant>();
 			v.addAll(left);
-			v.addAll(contents.toPrimitiveList(ctx));
+			v.add(contents.asPrimitive(ctx));
 			v.addAll(right);
 			parent.putIntoContents(ctx, new XOMList(v));
 		}
@@ -451,7 +451,7 @@ public class XOMListChunk extends XOMContainer implements XOMListContainer {
 			List<? extends XOMVariant> right = ci.parentContent.subList(e, ci.chunkCount);
 			Vector<XOMVariant> v = new Vector<XOMVariant>();
 			v.addAll(left);
-			v.addAll(contents.toPrimitiveList(ctx));
+			v.add(contents.asPrimitive(ctx));
 			v.addAll(right);
 			parent.putIntoContents(ctx, new XOMList(v));
 		}
@@ -476,7 +476,7 @@ public class XOMListChunk extends XOMContainer implements XOMListContainer {
 			List<? extends XOMVariant> right = ci.parentContent.subList(e, ci.chunkCount);
 			Vector<XOMVariant> v = new Vector<XOMVariant>();
 			v.addAll(left);
-			v.addAll(contents.toPrimitiveList(ctx));
+			v.add(contents.asPrimitive(ctx));
 			v.addAll(right);
 			parent.putIntoContents(ctx, new XOMList(v), property, pvalue);
 		}
@@ -500,7 +500,7 @@ public class XOMListChunk extends XOMContainer implements XOMListContainer {
 			List<? extends XOMVariant> right = ci.parentContent.subList(s, ci.chunkCount);
 			Vector<XOMVariant> v = new Vector<XOMVariant>();
 			v.addAll(left);
-			v.addAll(contents.toPrimitiveList(ctx));
+			v.add(contents.asPrimitive(ctx));
 			v.addAll(right);
 			parent.putIntoContents(ctx, new XOMList(v), property, pvalue);
 		}
@@ -524,7 +524,7 @@ public class XOMListChunk extends XOMContainer implements XOMListContainer {
 			List<? extends XOMVariant> right = ci.parentContent.subList(e, ci.chunkCount);
 			Vector<XOMVariant> v = new Vector<XOMVariant>();
 			v.addAll(left);
-			v.addAll(contents.toPrimitiveList(ctx));
+			v.add(contents.asPrimitive(ctx));
 			v.addAll(right);
 			parent.putIntoContents(ctx, new XOMList(v), property, pvalue);
 		}
