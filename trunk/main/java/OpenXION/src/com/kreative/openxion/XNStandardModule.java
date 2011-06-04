@@ -53,7 +53,7 @@ public class XNStandardModule extends XNModule {
 	private static final long serialVersionUID = 2L;
 	
 	public static final String MODULE_NAME = "OpenXION Standard Module";
-	public static final String MODULE_VERSION = "1.3";
+	public static final String MODULE_VERSION = "1.3.1";
 	
 	private static XNStandardModule instance = null;
 	public static final synchronized XNStandardModule instance() {
