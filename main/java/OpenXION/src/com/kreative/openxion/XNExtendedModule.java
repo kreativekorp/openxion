@@ -66,7 +66,7 @@ public class XNExtendedModule extends XNModule {
 	private static final long serialVersionUID = 3L;
 	
 	public static final String MODULE_NAME = "OpenXION Extended Module";
-	public static final String MODULE_VERSION = "1.3";
+	public static final String MODULE_VERSION = "1.3.1";
 	
 	private static XNExtendedModule instance = null;
 	public static final synchronized XNExtendedModule instance() {
