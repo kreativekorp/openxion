@@ -172,6 +172,26 @@ Can contain literal text and further spans.
 
 `<a>` - A hyperlink. Must have an `href` attribute for the link destination. This can be an external URL, or another term. A link to another term looks like `cm:put` or `fn:atan2` or whatever. Links to other terms are rendered in monospace font. The content is optional; if it is empty, the URL or name of the term will be rendered instead.
 
+`<if>` - Conditional text. Must have a `dialect`, `module`, or `library` attribute to determine which dialects, modules, libraries, and versions of same will have this text in their documentation. In addition to literal text and spans, can contain `<else>` tags for the negation of the condition.
+
+The format of the `dialect`, `module`, and `library` attributes is a comma-delimited list of dialect, module, or library names, each of which may have a version number range appended, which would look like this:
+
+{{{
+    oxn           : all versions of OpenXION
+    oxn 1.3       : OpenXION 1.3 only
+    oxn 1.3+      : OpenXION 1.3 and all later versions
+    oxn +1.3      : all versions after, but not including, OpenXION 1.3
+    oxn 1.3-      : OpenXION 1.3 and all earlier versions
+    oxn -1.3      : all versions before, but not including, OpenXION 1.3
+    oxn 1.0-1.2   : OpenXION versions 1.0 through 1.2, including both 1.0 and 1.2
+    oxn +1.0-1.2  : OpenXION versions 1.0 through 1.2, excluding 1.0 but including 1.2
+    oxn 1.0--1.2  : OpenXION versions 1.0 through 1.2, including 1.0 but excluding 1.2
+    oxn +1.0--1.2 : OpenXION versions 1.0 through 1.2, excluding both 1.0 and 1.2
+    oxn 1.3*      : equivalent to 1.3--1.4; OpenXION 1.3 or later, but not OpenXION 1.4 or later
+}}}
+
+`<else>` - Valid only inside an `<if>` tag; text that will appear if the condition is false.
+
 `<br/>` - A line break.
 
 `<dia/>` or `<mod/>` or `<lib/>` - The name of this dialect, module, or library.
@@ -183,7 +203,6 @@ Can contain literal text and further spans.
 = XIONDoc 1.3 DTD =
 
 {{{
-
 <!--
 	This is the XIONDoc 1.3 DTD.
 	XIONDoc 1.3 replaces XIONDoc 1.2's horrible mishmash
@@ -202,7 +221,8 @@ Can contain literal text and further spans.
 <!ENTITY % verbatim  "( #PCDATA )"><!-- actually CDATA, but that would make it not XML -->
 <!ENTITY % plain     "( #PCDATA )">
 <!ENTITY % syntactic "( #PCDATA | mv | opt | ch | me )*">
-<!ENTITY % formatted "( #PCDATA | img | b | strong | i | em | u | s | sup | sub | big | small | c | tt | code | span | a | br | dia | mod | lib | ver | me )*">
+<!ENTITY % formatted "( #PCDATA | img | b | strong | i | em | u | s | sup | sub | big | small | c | tt | code | span | a | if | br | dia | mod | lib | ver | me )*">
+<!ENTITY % condition "( #PCDATA | img | b | strong | i | em | u | s | sup | sub | big | small | c | tt | code | span | a | if | else | br | dia | mod | lib | ver | me )*">
 <!ENTITY % blockseq  "( scr | syn | ul | ol | table | p | h1 | h2 | h3 | h4 | h5 | h6 | img )*">
 
 <!ELEMENT xiondoc ( summary | description | dialect | module | library | article | structure | keyword | event | command | function | datatype | property | operator | constant | ordinal | iomethod | iomanager | extlang | version )*>
@@ -347,6 +367,13 @@ Can contain literal text and further spans.
 <!ATTLIST span style CDATA #IMPLIED>
 <!ELEMENT a %formatted;>
 <!ATTLIST a href CDATA #IMPLIED>
+<!ELEMENT if %condition;>
+<!ATTLIST if
+	dialect CDATA #IMPLIED
+	module CDATA #IMPLIED
+	library CDATA #IMPLIED
+>
+<!ELEMENT else %formatted;>
 <!ELEMENT br EMPTY>
 <!ELEMENT dia EMPTY>
 <!ELEMENT mod EMPTY>
