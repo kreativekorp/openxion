@@ -136,6 +136,10 @@ Specified with the `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, or `<h6>` tag.
 
 Can contain literal text and spans.
 
+== Horizontal Rule Blocks ==
+
+Specified with the `<hr/>` tag.
+
 == Image Blocks ==
 
 Specified with the `<img/>` tag.
@@ -223,7 +227,7 @@ The format of the `dialect`, `module`, and `library` attributes is a comma-delim
 <!ENTITY % syntactic "( #PCDATA | mv | opt | ch | me )*">
 <!ENTITY % formatted "( #PCDATA | img | b | strong | i | em | u | s | sup | sub | big | small | c | tt | code | span | a | if | br | dia | mod | lib | ver | me )*">
 <!ENTITY % condition "( #PCDATA | img | b | strong | i | em | u | s | sup | sub | big | small | c | tt | code | span | a | if | else | br | dia | mod | lib | ver | me )*">
-<!ENTITY % blockseq  "( scr | syn | ul | ol | table | p | h1 | h2 | h3 | h4 | h5 | h6 | img )*">
+<!ENTITY % blockseq  "( scr | syn | ul | ol | table | p | h1 | h2 | h3 | h4 | h5 | h6 | hr | img )*">
 
 <!ELEMENT xiondoc ( summary | description | dialect | module | library | article | structure | keyword | event | command | function | datatype | property | operator | constant | ordinal | iomethod | iomanager | extlang | version )*>
 
@@ -337,6 +341,9 @@ The format of the `dialect`, `module`, and `library` attributes is a comma-delim
 <!ATTLIST h5 indent CDATA #IMPLIED>
 <!ELEMENT h6 %formatted;>
 <!ATTLIST h6 indent CDATA #IMPLIED>
+
+<!-- HR BLOCKS -->
+<!ELEMENT hr EMPTY>
 
 <!-- IMAGES -->
 <!ELEMENT img EMPTY>
