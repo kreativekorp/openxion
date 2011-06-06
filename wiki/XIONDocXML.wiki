@@ -227,10 +227,10 @@ The format of the `dialect`, `module`, and `library` attributes is a comma-delim
 
 <!ELEMENT xiondoc ( summary | description | dialect | module | library | article | structure | keyword | event | command | function | datatype | property | operator | constant | ordinal | iomethod | iomanager | extlang | version )*>
 
-<!ELEMENT dialect ( name+, title, versions, summary?, description?, article* )>
-<!ELEMENT module  ( name+, title, versions, summary?, description?, article* )>
-<!ELEMENT library ( name+, title, versions, summary?, description?, article* )>
-<!ELEMENT article ( name+, title,           summary,                content  )>
+<!ELEMENT dialect ( name, title, versions, summary?, description?, article* )>
+<!ELEMENT module  ( name, title, versions, summary?, description?, article* )>
+<!ELEMENT library ( name, title, versions, summary?, description?, article* )>
+<!ELEMENT article ( name, title,           summary,                content  )>
 
 <!-- TERMS -->
 <!ELEMENT structure ( name+,                                syntax, examples?, description,                          scripts?, notes?, security?, compatibility?, see-also? )>
