@@ -102,6 +102,8 @@ The `<ch>` tag can contain `<ci>` tags. It represents an alternation, and is ren
 
 The `<ci>` tag can contain anything the `<syn>` tag can contain. It represents an alternative inside a `<ch>` tag.
 
+The `<br/>` tag represents a line break in the term's syntax, a common occurrence among control structures. Each line of a syntax block alternates between unindented and indented.
+
 The `<me/>` tag represents the name of the term.
 
 == List Blocks ==
@@ -224,7 +226,7 @@ The format of the `dialect`, `module`, and `library` attributes is a comma-delim
 
 <!ENTITY % verbatim  "( #PCDATA )"><!-- actually CDATA, but that would make it not XML -->
 <!ENTITY % plain     "( #PCDATA )">
-<!ENTITY % syntactic "( #PCDATA | mv | opt | ch | me )*">
+<!ENTITY % syntactic "( #PCDATA | mv | opt | ch | br | me )*">
 <!ENTITY % formatted "( #PCDATA | img | b | strong | i | em | u | s | sup | sub | big | small | c | tt | code | span | a | if | br | dia | mod | lib | ver | me )*">
 <!ENTITY % condition "( #PCDATA | img | b | strong | i | em | u | s | sup | sub | big | small | c | tt | code | span | a | if | else | br | dia | mod | lib | ver | me )*">
 <!ENTITY % blockseq  "( scr | syn | ul | ol | table | p | h1 | h2 | h3 | h4 | h5 | h6 | hr | img )*">
