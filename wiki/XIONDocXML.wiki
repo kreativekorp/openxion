@@ -130,7 +130,7 @@ Specified with the `<p>` tag.
 
 Can contain literal text and spans. Cannot contain blocks. (HTML allows such a thing, but we don't, to make things simpler.)
 
-There is no `<blockquote>`. Instead, use `<p indent="1">`.
+There is no `<blockquote>` per se. You can use the `<blockquote>` tag, but the parser will turn it into a paragraph indented one further level.
 
 == Heading Blocks ==
 
@@ -229,7 +229,7 @@ The format of the `dialect`, `module`, and `library` attributes is a comma-delim
 <!ENTITY % syntactic "( #PCDATA | mv | opt | ch | br | me )*">
 <!ENTITY % formatted "( #PCDATA | img | b | strong | i | em | u | s | sup | sub | big | small | c | tt | code | span | a | if | br | dia | mod | lib | ver | me )*">
 <!ENTITY % condition "( #PCDATA | img | b | strong | i | em | u | s | sup | sub | big | small | c | tt | code | span | a | if | else | br | dia | mod | lib | ver | me )*">
-<!ENTITY % blockseq  "( scr | syn | ul | ol | table | p | h1 | h2 | h3 | h4 | h5 | h6 | hr | img )*">
+<!ENTITY % blockseq  "( scr | syn | ul | ol | table | p | blockquote | h1 | h2 | h3 | h4 | h5 | h6 | hr | img )*">
 
 <!ELEMENT xiondoc ( summary | description | dialect | module | library | article | structure | keyword | event | command | function | datatype | property | operator | constant | ordinal | iomethod | iomanager | extlang | version )*>
 
@@ -329,6 +329,8 @@ The format of the `dialect`, `module`, and `library` attributes is a comma-delim
 <!-- PARAGRAPH BLOCKS -->
 <!ELEMENT p %formatted;>
 <!ATTLIST p indent CDATA #IMPLIED>
+<!ELEMENT blockquote %formatted;>
+<!ATTLIST blockquote indent CDATA #IMPLIED>
 
 <!-- HEADING BLOCKS -->
 <!ELEMENT h1 %formatted;>
