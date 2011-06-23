@@ -28,6 +28,8 @@
 package com.kreative.openxion.util;
 
 import java.io.*;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.text.*;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -44,6 +46,8 @@ import com.kreative.openxion.ast.XNVariantDescriptor;
 import com.kreative.openxion.xom.XOMVariable;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.inst.XOMDictionary;
+import com.kreative.openxion.xom.inst.XOMList;
+import com.kreative.openxion.xom.inst.XOMString;
 
 /**
  * The XIONUtil utility class contains miscellaneous methods used
@@ -470,6 +474,93 @@ public class XIONUtil {
 		StringBuffer theString = new StringBuffer(theData.length*2);
 		for (byte b : theData) theString.append(LOOKUP_HEX[b & 0xFF]);
 		return theString.toString();
+	}
+	
+	/* * * * * * * * * *
+	 * WWW CGI SUPPORT *
+	 * * * * * * * * * */
+	
+	@SuppressWarnings("deprecation")
+	public static String urlQueryEncode(XNContext ctx, Map<String, XOMVariant> queryMap, String textEncoding) {
+		StringBuffer queryString = new StringBuffer();
+		boolean first = true;
+		for (Map.Entry<String, XOMVariant> e : queryMap.entrySet()) {
+			if (first) first = false;
+			else queryString.append('&');
+			String key = e.getKey();
+			try {
+				key = URLEncoder.encode(key, textEncoding);
+			} catch (UnsupportedEncodingException uee) {
+				key = URLEncoder.encode(key);
+			}
+			XOMVariant value = e.getValue();
+			if (value instanceof XOMList) {
+				boolean second = true;
+				for (XOMVariant v : ((XOMList)value).toVariantList(ctx)) {
+					if (second) second = false;
+					else queryString.append('&');
+					String valueString = v.toTextString(ctx);
+					try {
+						valueString = URLEncoder.encode(valueString, textEncoding);
+					} catch (UnsupportedEncodingException uee) {
+						valueString = URLEncoder.encode(valueString);
+					}
+					queryString.append(key);
+					queryString.append("[]");
+					queryString.append('=');
+					queryString.append(valueString);
+				}
+			} else {
+				String valueString = value.toTextString(ctx);
+				try {
+					valueString = URLEncoder.encode(valueString, textEncoding);
+				} catch (UnsupportedEncodingException uee) {
+					valueString = URLEncoder.encode(valueString);
+				}
+				queryString.append(key);
+				queryString.append('=');
+				queryString.append(valueString);
+			}
+		}
+		return queryString.toString();
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static Map<String, XOMVariant> urlQueryDecode(XNContext ctx, String queryString, String textEncoding) {
+		String[] queryPairs = queryString.split("&");
+		SortedMap<String, XOMVariant> queryMap = new TreeMap<String, XOMVariant>();
+		for (String queryPair : queryPairs) {
+			String[] keyValue = queryPair.split("=", 2);
+			String key = (keyValue.length > 0) ? keyValue[0] : "";
+			String value = (keyValue.length > 1) ? keyValue[1] : "";
+			try {
+				key = URLDecoder.decode(key, textEncoding);
+				value = URLDecoder.decode(value, textEncoding);
+			} catch (UnsupportedEncodingException uee) {
+				key = URLDecoder.decode(key);
+				value = URLDecoder.decode(value);
+			}
+			if (key.length() > 0) {
+				if (key.endsWith("[]")) {
+					key = key.substring(0, key.length()-2);
+					if (queryMap.containsKey(key)) {
+						if (queryMap.get(key) instanceof XOMList) {
+							List<XOMVariant> l = new Vector<XOMVariant>();
+							l.addAll(((XOMList)queryMap.get(key)).toVariantList(ctx));
+							l.add(new XOMString(value));
+							queryMap.put(key, new XOMList(l));
+						} else {
+							queryMap.put(key, new XOMList(queryMap.get(key), new XOMString(value)));
+						}
+					} else {
+						queryMap.put(key, new XOMString(value));
+					}
+				} else {
+					queryMap.put(key, new XOMString(value));
+				}
+			}
+		}
+		return queryMap;
 	}
 	
 	/* * * * * * * * * * * * * * * *

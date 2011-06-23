@@ -12513,6 +12513,22 @@
 </function>
 
 <function>
+	<name dialects="oxne131">getenv</name>
+	<syntax>the getenv</syntax>
+	<syntax>getenv()</syntax>
+	<syntax>the getenv of {factor}</syntax>
+	<syntax>getenv({expression})</syntax>
+	<syntax-note>{Factor} and {expression} yield [[dt:string]]s.</syntax-note>
+	<description>
+		The [[*]] function returns the value of the specified environment variable.
+	</description>
+	<security>
+		To use this function, OpenXION's security settings must allow the [[SYSTEM_INFO]] security key.
+		If the required security key is denied, a script error will be triggered.
+	</security>
+</function>
+
+<function>
 	<name dialects="oxne1,oxne11,oxne12,oxne13,oxne131,hyp">heapSpace</name>
 	<syntax>the heapSpace</syntax>
 	<syntax>heapSpace()</syntax>
@@ -13767,7 +13783,7 @@
 		The decoding of sequences for non-ASCII characters is determined by
 		the text encoding specified by the [[pr:textEncoding]] property.
 	</description>
-	<see-also>[[fn:urlEncode]], [[fn:htmlEncode]], [[fn:htmlDecode]]</see-also>
+	<see-also>[[fn:urlEncode]], [[fn:urlQueryDecode]], [[fn:urlQueryEncode]], [[fn:htmlEncode]], [[fn:htmlDecode]]</see-also>
 </function>
 
 <function>
@@ -13787,7 +13803,39 @@
 		The encoding for non-ASCII characters is determined by the text encoding
 		specified by the [[pr:textEncoding]] property.
 	</description>
-	<see-also>[[fn:urlDecode]], [[fn:htmlEncode]], [[fn:htmlDecode]]</see-also>
+	<see-also>[[fn:urlDecode]], [[fn:urlQueryEncode]], [[fn:urlQueryDecode]], [[fn:htmlEncode]], [[fn:htmlDecode]]</see-also>
+</function>
+
+<function>
+	<name dialects="oxne131">urlQueryDecode</name>
+	<syntax>the [[*]] of {factor}</syntax>
+	<syntax>[[*]]({expression})</syntax>
+	<syntax-note>{Factor} and {expression} yield [[dt:string]]s.</syntax-note>
+	<description>
+		The [[*]] function takes a URL query string and produces a [[dt:dictionary]]
+		with corresponding keys and values.
+	</description>
+	<description>
+		The decoding of sequences for non-ASCII characters is determined by
+		specified by the [[pr:textEncoding]] property.
+	</description>
+	<see-also>[[fn:urlQueryEncode]], [[fn:urlDecode]], [[fn:urlEncode]]</see-also>
+</function>
+
+<function>
+	<name dialects="oxne131">urlQueryEncode</name>
+	<syntax>the [[*]] of {factor}</syntax>
+	<syntax>[[*]]({expression})</syntax>
+	<syntax-note>{Factor} and {expression} yield [[dt:dictionary]]s.</syntax-note>
+	<description>
+		The [[*]] function takes a [[dt:dictionary]] and produces a URL query string
+		with corresponding keys and values.
+	</description>
+	<description>
+		The encoding for non-ASCII characters is determined by the text encoding
+		specified by the [[pr:textEncoding]] property.
+	</description>
+	<see-also>[[fn:urlQueryDecode]], [[fn:urlEncode]], [[fn:urlDecode]]</see-also>
 </function>
 
 <function>

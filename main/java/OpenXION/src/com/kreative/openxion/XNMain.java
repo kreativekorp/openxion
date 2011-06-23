@@ -30,7 +30,14 @@ package com.kreative.openxion;
 import java.io.*;
 import java.util.*;
 import com.kreative.openxion.ast.XNStatement;
+import com.kreative.openxion.util.XIONUtil;
+import com.kreative.openxion.xom.inst.XOMBoolean;
+import com.kreative.openxion.xom.inst.XOMDictionary;
+import com.kreative.openxion.xom.inst.XOMInteger;
 import com.kreative.openxion.xom.inst.XOMString;
+import com.kreative.openxion.xom.type.XOMBooleanType;
+import com.kreative.openxion.xom.type.XOMDictionaryType;
+import com.kreative.openxion.xom.type.XOMIntegerType;
 import com.kreative.openxion.xom.type.XOMStringType;
 
 /**
@@ -84,6 +91,17 @@ public class XNMain {
 						somethingOfConsequenceHappened = true;
 						version(ui);
 					}
+					else if (arg.equals("-V")) {
+						for (Map.Entry<String,String> e : System.getenv().entrySet()) {
+							ctx.globalVariables().declareVariable(
+									ctx,
+									e.getKey(),
+									XOMStringType.instance,
+									new XOMString(e.getValue())
+							);
+						}
+					}
+					else if (arg.equals("-W")) setCGIVariables(ctx);
 					else if (arg.equals("-p")) ui.setFancyPrompts(false);
 					else if (arg.equals("-P")) ui.setFancyPrompts(true);
 					else if (arg.equals("-r")) ctx.reset();
@@ -440,7 +458,9 @@ public class XNMain {
 		ui.println("  -T                  instead of printing output, print file name and");
 		ui.println("                      diff of output against .out file (testing mode)");
 		ui.println("                      (-s allow recommended with this option)");
+		ui.println("  -V                  import environment variables as XION globals");
 		ui.println("  -v, --version       print OpenXION, Java, and OS version numbers");
+		ui.println("  -W                  import CGI environment variables as XION globals");
 		ui.println("  --                  treat remaining arguments as file names");
 	}
 	
@@ -473,6 +493,109 @@ public class XNMain {
 		ui.println(System.getProperty("java.runtime.name") + " " + System.getProperty("java.runtime.version"));
 		ui.println(System.getProperty("java.vm.name") + " " + System.getProperty("java.vm.version"));
 		ui.println(System.getProperty("os.name") + " " + System.getProperty("os.version"));
+	}
+	
+	private static void setCGIVariables(XNContext ctx) {
+		String contentLength = System.getenv("CONTENT_LENGTH");
+		XOMInteger contentLengthX = (contentLength == null || contentLength.length() == 0) ? XOMInteger.ZERO : new XOMInteger(Integer.parseInt(contentLength));
+		ctx.globalVariables().declareVariable(ctx, "contentLength", XOMIntegerType.instance, contentLengthX);
+		
+		String documentRoot = System.getenv("DOCUMENT_ROOT");
+		XOMString documentRootX = (documentRoot == null) ? XOMString.EMPTY_STRING : new XOMString(documentRoot);
+		ctx.globalVariables().declareVariable(ctx, "documentRoot", XOMStringType.instance, documentRootX);
+		
+		String httpCookie = System.getenv("HTTP_COOKIE");
+		XOMString httpCookieX = (httpCookie == null) ? XOMString.EMPTY_STRING : new XOMString(httpCookie);
+		ctx.globalVariables().declareVariable(ctx, "httpCookie", XOMStringType.instance, httpCookieX);
+		
+		String httpHost = System.getenv("HTTP_HOST");
+		XOMString httpHostX = (httpHost == null) ? XOMString.EMPTY_STRING : new XOMString(httpHost);
+		ctx.globalVariables().declareVariable(ctx, "httpHost", XOMStringType.instance, httpHostX);
+		
+		String httpReferrer = System.getenv("HTTP_REFERER");
+		XOMString httpReferrerX = (httpReferrer == null) ? XOMString.EMPTY_STRING : new XOMString(httpReferrer);
+		ctx.globalVariables().declareVariable(ctx, "httpReferrer", XOMStringType.instance, httpReferrerX);
+		
+		String httpUserAgent = System.getenv("HTTP_USER_AGENT");
+		XOMString httpUserAgentX = (httpUserAgent == null) ? XOMString.EMPTY_STRING : new XOMString(httpUserAgent);
+		ctx.globalVariables().declareVariable(ctx, "httpUserAgent", XOMStringType.instance, httpUserAgentX);
+		
+		String https = System.getenv("HTTPS");
+		XOMBoolean httpsX = (https != null && https.length() > 0) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
+		ctx.globalVariables().declareVariable(ctx, "https", XOMBooleanType.instance, httpsX);
+		
+		String path = System.getenv("PATH");
+		XOMString pathX = (path == null) ? XOMString.EMPTY_STRING : new XOMString(path);
+		ctx.globalVariables().declareVariable(ctx, "path", XOMStringType.instance, pathX);
+		
+		String pathInfo = System.getenv("PATH_INFO");
+		XOMString pathInfoX = (pathInfo == null) ? XOMString.EMPTY_STRING : new XOMString(pathInfo);
+		ctx.globalVariables().declareVariable(ctx, "pathInfo", XOMStringType.instance, pathInfoX);
+		
+		String pathTranslated = System.getenv("PATH_TRANSLATED");
+		XOMString pathTranslatedX = (pathTranslated == null) ? XOMString.EMPTY_STRING : new XOMString(pathTranslated);
+		ctx.globalVariables().declareVariable(ctx, "pathTranslated", XOMStringType.instance, pathTranslatedX);
+		
+		String queryString = System.getenv("QUERY_STRING");
+		XOMString queryStringX = (queryString == null) ? XOMString.EMPTY_STRING : new XOMString(queryString);
+		ctx.globalVariables().declareVariable(ctx, "queryString", XOMStringType.instance, queryStringX);
+		
+		String remoteAddr = System.getenv("REMOTE_ADDR");
+		XOMString remoteAddrX = (remoteAddr == null) ? XOMString.EMPTY_STRING : new XOMString(remoteAddr);
+		ctx.globalVariables().declareVariable(ctx, "remoteAddr", XOMStringType.instance, remoteAddrX);
+		
+		String remoteHost = System.getenv("REMOTE_HOST");
+		XOMString remoteHostX = (remoteHost == null) ? XOMString.EMPTY_STRING : new XOMString(remoteHost);
+		ctx.globalVariables().declareVariable(ctx, "remoteHost", XOMStringType.instance, remoteHostX);
+		
+		String remotePort = System.getenv("REMOTE_PORT");
+		XOMInteger remotePortX = (remotePort == null || remotePort.length() == 0) ? XOMInteger.ZERO : new XOMInteger(Integer.parseInt(remotePort));
+		ctx.globalVariables().declareVariable(ctx, "remotePort", XOMIntegerType.instance, remotePortX);
+		
+		String remoteUser = System.getenv("REMOTE_USER");
+		XOMString remoteUserX = (remoteUser == null) ? XOMString.EMPTY_STRING : new XOMString(remoteUser);
+		ctx.globalVariables().declareVariable(ctx, "remoteUser", XOMStringType.instance, remoteUserX);
+		
+		String requestMethod = System.getenv("REQUEST_METHOD");
+		XOMString requestMethodX = (requestMethod == null) ? XOMString.EMPTY_STRING : new XOMString(requestMethod);
+		ctx.globalVariables().declareVariable(ctx, "requestMethod", XOMStringType.instance, requestMethodX);
+		
+		String requestURI = System.getenv("REQUEST_URI");
+		XOMString requestURIX = (requestURI == null) ? XOMString.EMPTY_STRING : new XOMString(requestURI);
+		ctx.globalVariables().declareVariable(ctx, "requestURI", XOMStringType.instance, requestURIX);
+		
+		String scriptFileName = System.getenv("SCRIPT_FILENAME");
+		XOMString scriptFileNameX = (scriptFileName == null) ? XOMString.EMPTY_STRING : new XOMString(scriptFileName);
+		ctx.globalVariables().declareVariable(ctx, "scriptFileName", XOMStringType.instance, scriptFileNameX);
+		
+		String scriptName = System.getenv("SCRIPT_NAME");
+		XOMString scriptNameX = (scriptName == null) ? XOMString.EMPTY_STRING : new XOMString(scriptName);
+		ctx.globalVariables().declareVariable(ctx, "scriptName", XOMStringType.instance, scriptNameX);
+		
+		String serverAdmin = System.getenv("SERVER_ADMIN");
+		XOMString serverAdminX = (serverAdmin == null) ? XOMString.EMPTY_STRING : new XOMString(serverAdmin);
+		ctx.globalVariables().declareVariable(ctx, "serverAdmin", XOMStringType.instance, serverAdminX);
+		
+		String serverName = System.getenv("SERVER_NAME");
+		XOMString serverNameX = (serverName == null) ? XOMString.EMPTY_STRING : new XOMString(serverName);
+		ctx.globalVariables().declareVariable(ctx, "serverName", XOMStringType.instance, serverNameX);
+		
+		String serverPort = System.getenv("SERVER_PORT");
+		XOMInteger serverPortX = (serverPort == null || serverPort.length() == 0) ? XOMInteger.ZERO : new XOMInteger(Integer.parseInt(serverPort));
+		ctx.globalVariables().declareVariable(ctx, "serverPort", XOMIntegerType.instance, serverPortX);
+		
+		String serverSoftware = System.getenv("SERVER_SOFTWARE");
+		XOMString serverSoftwareX = (serverSoftware == null) ? XOMString.EMPTY_STRING : new XOMString(serverSoftware);
+		ctx.globalVariables().declareVariable(ctx, "serverSoftware", XOMStringType.instance, serverSoftwareX);
+		
+		XOMDictionary get = (queryString == null) ? XOMDictionary.EMPTY_DICTIONARY : new XOMDictionary(XIONUtil.urlQueryDecode(ctx, queryString, ctx.getTextEncoding()));
+		ctx.globalVariables().declareVariable(ctx, "get", XOMDictionaryType.instance, get);
+		
+		StringBuffer postString = new StringBuffer();
+		Scanner postScanner = new Scanner(System.in);
+		while (postScanner.hasNextLine()) postString.append(postScanner.nextLine());
+		XOMDictionary post = new XOMDictionary(XIONUtil.urlQueryDecode(ctx, postString.toString(), ctx.getTextEncoding()));
+		ctx.globalVariables().declareVariable(ctx, "post", XOMDictionaryType.instance, post);
 	}
 	
 	private static File getEnvironFile() {
