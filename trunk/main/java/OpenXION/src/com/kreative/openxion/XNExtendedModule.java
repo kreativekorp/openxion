@@ -89,6 +89,7 @@ public class XNExtendedModule extends XNModule {
 		
 		functions.put("atob", f_atob);
 		functions.put("btoa", f_btoa);
+		functions.put("getenv", f_getenv);
 		functions.put("heapspace", f_heapspace);
 		functions.put("htmldecode", f_htmldecode);
 		functions.put("htmlencode", f_htmlencode);
@@ -116,6 +117,8 @@ public class XNExtendedModule extends XNModule {
 		functions.put("unpack", f_unpack);
 		functions.put("urldecode", f_urldecode);
 		functions.put("urlencode", f_urlencode);
+		functions.put("urlquerydecode", f_urlquerydecode);
+		functions.put("urlqueryencode", f_urlqueryencode);
 		functions.put("vmname", f_vmname);
 		functions.put("vmversion", f_vmversion);
 		functions.put("ygndecode", f_ygndecode);
@@ -661,6 +664,29 @@ public class XNExtendedModule extends XNModule {
 				return new XOMString(Base64.encodeLegacy85(b));
 			else
 				return XOMEmpty.EMPTY;
+		}
+	};
+	
+	private static final Function f_getenv = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			if (parameter == null) throw new XNScriptError("Can't understand arguments to getenv");
+			else {
+				String var = parameter.toTextString(ctx);
+				if (!ctx.allow(XNSecurityKey.SYSTEM_INFO, "Function", functionName, "Variable", var))
+					throw new XNScriptError("Security settings do not allow getenv");
+				if (var.length() == 0) {
+					Collection<String> varc = System.getenv().keySet();
+					List<String> varl = new Vector<String>();
+					varl.addAll(varc);
+					Collections.sort(varl, String.CASE_INSENSITIVE_ORDER);
+					List<XOMString> varx = new Vector<XOMString>();
+					for (String v : varl) varx.add(new XOMString(v));
+					return new XOMList(varx);
+				} else {
+					String val = System.getenv(var);
+					return (val == null) ? XOMString.EMPTY_STRING : new XOMString(val);
+				}
+			}
 		}
 	};
 	
@@ -1516,6 +1542,29 @@ public class XNExtendedModule extends XNModule {
 				return new XOMString(URLEncoder.encode(parameter.toTextString(ctx), ctx.getTextEncoding()));
 			} catch (UnsupportedEncodingException uee) {
 				return new XOMString(URLEncoder.encode(parameter.toTextString(ctx)));
+			}
+		}
+	};
+	
+	private static final Function f_urlquerydecode = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			if (parameter == null) throw new XNScriptError("Can't understand arguments to urlquerydecode");
+			else {
+				String queryString = parameter.toTextString(ctx);
+				Map<String, XOMVariant> queryMap = XIONUtil.urlQueryDecode(ctx, queryString, ctx.getTextEncoding());
+				return new XOMDictionary(queryMap);
+			}
+		}
+	};
+	
+	private static final Function f_urlqueryencode = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			if (parameter == null || !XOMDictionaryType.instance.canMakeInstanceFrom(ctx, parameter)) {
+				throw new XNScriptError("Can't understand arguments to urlqueryencode");
+			} else {
+				XOMDictionary dict = XOMDictionaryType.instance.makeInstanceFrom(ctx, parameter);
+				String queryString = XIONUtil.urlQueryEncode(ctx, dict.toMap(), ctx.getTextEncoding());
+				return new XOMString(queryString);
 			}
 		}
 	};
