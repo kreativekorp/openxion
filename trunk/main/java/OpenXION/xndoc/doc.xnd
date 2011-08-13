@@ -915,8 +915,24 @@
 </operator>
 
 <operator>
-	<name dialects="xn1,oxnb1,oxnb11,oxnb12,oxnb13,oxnb131">::</name>
-	<name dialects="xn1,oxnb1,oxnb11,oxnb12,oxnb13,oxnb131">:</name>
+	<name dialects="xn1,oxnb131">::</name>
+	<name dialects="xn1,oxnb131">:</name>
+	<precedence>list concatenation</precedence>
+	<syntax>{expression} [[*]] {expression}</syntax>
+	<description-short>Construction of lists</description-short>
+	<description>
+		The [[*]] operator evaluates to the list on the left with the variant
+		on the right appended. If the left expression is a single value
+		rather than a list, it will be converted to a list of one value.
+	</description>
+	<see-also>[[op:,]], [[op:@]]</see-also>
+</operator>
+
+<operator>
+	<name dialects="oxnb1,oxnb11,oxnb12,oxnb13">::</name>
+	<name dialects="oxnb1,oxnb11,oxnb12,oxnb13">:</name>
+	<name dialects="xn1,oxnb131">@@</name>
+	<name dialects="xn1,oxnb131">@</name>
 	<precedence>list concatenation</precedence>
 	<syntax>{expression} [[*]] {expression}</syntax>
 	<description-short>Concatenation for lists</description-short>
@@ -925,7 +941,7 @@
 		If either given value is a single value rather than a list,
 		it will be converted to a list of one value before being concatenated.
 	</description>
-	<see-also>[[op:,]]</see-also>
+	<see-also>[[op:,]], [[op::]]</see-also>
 </operator>
 
 <operator>
@@ -1769,7 +1785,7 @@
 		the elements that will eventually be put into the list. The expression
 		will evaluate to the constructed list.
 	</description>
-	<see-also>[[op::]]</see-also>
+	<see-also>[[op::]], [[op:@]]</see-also>
 </operator>
 
 <structure>
