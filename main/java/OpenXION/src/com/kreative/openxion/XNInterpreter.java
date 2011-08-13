@@ -1041,7 +1041,7 @@ public class XNInterpreter {
 		}
 	}
 	
-	private XOMVariant evaluateFunction(String functionName, XNModifier modifier, XNExpression paramExpr, XOMVariant parameter) {
+	protected XOMVariant evaluateFunction(String functionName, XNModifier modifier, XNExpression paramExpr, XOMVariant parameter) {
 		XNResponder resp = context.getFirstResponder();
 		
 		// try local declarations first

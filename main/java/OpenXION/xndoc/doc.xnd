@@ -9926,6 +9926,22 @@
 </function>
 
 <function>
+	<name dialects="xn1,oxn131">filter</name>
+	<syntax>the [[*]] of ({list}, {functionName})</syntax>
+	<syntax>[[*]]({list}, {functionName})</syntax>
+	<syntax-note>{List} yields a [[dt:list]]. {FunctionName} yields the name of a function.</syntax-note>
+	<example>put filter((1,2,inf,NaN,-7), "isFinite") -- prints 1,2,-7</example>
+	<description>
+		The [[*]] function applies the specified {functionName} to each item
+		in the specified {list} and returns a list of the values for which
+		the function returned [[cn:true]]. The function must return either
+		[[cn:true]] or [[cn:false]] for each item in the {list}; otherwise,
+		a script error will be triggered.
+	</description>
+	<see-also>[[fn:map]], [[fn:reduce]]</see-also>
+</function>
+
+<function>
 	<name dialects="xn1,oxn1,oxn11,oxn12,oxn13,oxn131">floor</name>
 	<syntax>the floor of {factor}</syntax>
 	<syntax>floor({expression})</syntax>
@@ -10669,6 +10685,19 @@
 </function>
 
 <function>
+	<name dialects="xn1,oxn131">map</name>
+	<syntax>the [[*]] of ({list}, {functionName})</syntax>
+	<syntax>[[*]]({list}, {functionName})</syntax>
+	<syntax-note>{List} yields a [[dt:list]]. {FunctionName} yields the name of a function.</syntax-note>
+	<example>put map((1,4,9,16,25), "sqrt") -- prints 1,2,3,4,5</example>
+	<description>
+		The [[*]] function applies the specified {functionName} to each item
+		in the specified {list} and returns a list of the return values.
+	</description>
+	<see-also>[[fn:filter]], [[fn:reduce]]</see-also>
+</function>
+
+<function>
 	<name dialects="xn1,oxn1,oxn11,oxn12,oxn13,oxn131,hyp">max</name>
 	<name dialects="xn1,oxn1,oxn11,oxn12,oxn13,oxn131">maximum</name>
 	<syntax>the [[*]] of {factor}</syntax>
@@ -11173,6 +11202,40 @@
 		If the argument is a [[dt:complex]], the real part of the argument is returned as a [[dt:number]].
 	</description>
 	<see-also>[[fn:Im]]</see-also>
+</function>
+
+<function>
+	<name dialects="xn1,oxn131">reduce</name>
+	<syntax>the [[*]] of ({list}, {functionName})</syntax>
+	<syntax>the [[*]] of ({list}, {functionName}, {initialValue})</syntax>
+	<syntax>[[*]]({list}, {functionName})</syntax>
+	<syntax>[[*]]({list}, {functionName}, {initialValue})</syntax>
+	<syntax-note>
+		{List} yields a [[dt:list]].
+		{FunctionName} yields the name of a function.
+		{InitialValue} yields any [[dt:variant]].
+	</syntax-note>
+	<example>put reduce((1,2,3,4,5), "sum") -- prints 15</example>
+	<example>put reduce((1,2,3,4,5), "product", 1) -- prints 120</example>
+	<description>
+		First, the [[*]] function sets the {initialValue}, or [[cn:empty]]
+		if {initialValue} is not specified, to be its current value.
+		Then, for each item in the {list}, the [[*]] function evaluates
+		the specified {functionName} with the current value and the item
+		from the {list} as its two arguments. The return value of the
+		function becomes the new current value. Finally, the [[*]] function
+		returns its current value.
+	</description>
+	<note>
+		The first time the [[*]] function evaluates the specified
+		{functionName}, the first parameter will be the {initialValue}
+		and the second parameter will be the first item in the {list}.
+		To start with the first and second items in the {list}, do
+		something like the following:
+		\\\\[[local myList as list is (1,2,3,4,5)\\
+		put reduce(tail(myList), "product", head(myList))]]
+	</note>
+	<see-also>[[fn:map]], [[fn:filter]]</see-also>
 </function>
 
 <function>
@@ -14822,11 +14885,11 @@
 		{{{{List Manipulation}}}}
 		\\\\
 		::TABLE
-		[[fn:head]]    :: [[fn:tail]]
-		.................................
-		[[fn:lconcat]] :: [[fn:lreverse]]
-		.................................
-		[[fn:llength]] :: [[fn:number]]
+		[[fn:head]]    :: [[fn:tail]]     :: [[fn:number]]
+		...................................................
+		[[fn:lconcat]] :: [[fn:lreverse]] :: [[fn:llength]]
+		...................................................
+		[[fn:map]]     :: [[fn:filter]]   :: [[fn:reduce]]
 		ELBAT::
 		\\\\
 		{{{{Binary Data}}}}
