@@ -109,8 +109,10 @@ public class XNParser {
 		if (lookToken(idx).kind == XNToken.SYMBOL && lookToken(idx).image.equalsIgnoreCase("^")) return XNOperator.EXPONENT;
 		if (lookToken(idx).kind == XNToken.SYMBOL && lookToken(idx).image.equalsIgnoreCase("-")) return unary ? XNOperator.UNARY_SUBTRACT : XNOperator.SUBTRACT;
 		if (lookToken(idx).kind == XNToken.SYMBOL && lookToken(idx).image.equalsIgnoreCase(",")) return XNOperator.LIST;
-		if (lookToken(idx).kind == XNToken.SYMBOL && lookToken(idx).image.equalsIgnoreCase(":") && lookToken(idx+1).kind == XNToken.SYMBOL && lookToken(idx+1).image.equalsIgnoreCase(":")) return XNOperator.LIST_CONCAT;
-		if (lookToken(idx).kind == XNToken.SYMBOL && lookToken(idx).image.equalsIgnoreCase(":")) return XNOperator.LIST_CONCAT;
+		if (lookToken(idx).kind == XNToken.SYMBOL && lookToken(idx).image.equalsIgnoreCase(":") && lookToken(idx+1).kind == XNToken.SYMBOL && lookToken(idx+1).image.equalsIgnoreCase(":")) return XNOperator.LIST_APPEND;
+		if (lookToken(idx).kind == XNToken.SYMBOL && lookToken(idx).image.equalsIgnoreCase(":")) return XNOperator.LIST_APPEND;
+		if (lookToken(idx).kind == XNToken.SYMBOL && lookToken(idx).image.equalsIgnoreCase("@") && lookToken(idx+1).kind == XNToken.SYMBOL && lookToken(idx+1).image.equalsIgnoreCase("@")) return XNOperator.LIST_CONCAT;
+		if (lookToken(idx).kind == XNToken.SYMBOL && lookToken(idx).image.equalsIgnoreCase("@")) return XNOperator.LIST_CONCAT;
 		if (lookToken(idx).kind == XNToken.SYMBOL && lookToken(idx).image.equalsIgnoreCase("!") && lookToken(idx+1).kind == XNToken.SYMBOL && lookToken(idx+1).image.equalsIgnoreCase("=") && lookToken(idx+2).kind == XNToken.SYMBOL && lookToken(idx+2).image.equalsIgnoreCase("=")) return XNOperator.NOT_STRICT_EQUAL;
 		if (lookToken(idx).kind == XNToken.SYMBOL && lookToken(idx).image.equalsIgnoreCase("!") && lookToken(idx+1).kind == XNToken.SYMBOL && lookToken(idx+1).image.equalsIgnoreCase("=")) return XNOperator.NOT_EQUAL;
 		if (lookToken(idx).kind == XNToken.SYMBOL && lookToken(idx).image.equalsIgnoreCase("!")) return XNOperator.NOT;
@@ -296,8 +298,10 @@ public class XNParser {
 		if (lookToken(1).kind == XNToken.SYMBOL && lookToken(1).image.equalsIgnoreCase("^")) { consumeTokens(1); return XNOperator.EXPONENT; }
 		if (lookToken(1).kind == XNToken.SYMBOL && lookToken(1).image.equalsIgnoreCase("-")) { consumeTokens(1); return unary ? XNOperator.UNARY_SUBTRACT : XNOperator.SUBTRACT; }
 		if (lookToken(1).kind == XNToken.SYMBOL && lookToken(1).image.equalsIgnoreCase(",")) { consumeTokens(1); return XNOperator.LIST; }
-		if (lookToken(1).kind == XNToken.SYMBOL && lookToken(1).image.equalsIgnoreCase(":") && lookToken(2).kind == XNToken.SYMBOL && lookToken(2).image.equalsIgnoreCase(":")) { consumeTokens(2); return XNOperator.LIST_CONCAT; }
-		if (lookToken(1).kind == XNToken.SYMBOL && lookToken(1).image.equalsIgnoreCase(":")) { consumeTokens(1); return XNOperator.LIST_CONCAT; }
+		if (lookToken(1).kind == XNToken.SYMBOL && lookToken(1).image.equalsIgnoreCase(":") && lookToken(2).kind == XNToken.SYMBOL && lookToken(2).image.equalsIgnoreCase(":")) { consumeTokens(2); return XNOperator.LIST_APPEND; }
+		if (lookToken(1).kind == XNToken.SYMBOL && lookToken(1).image.equalsIgnoreCase(":")) { consumeTokens(1); return XNOperator.LIST_APPEND; }
+		if (lookToken(1).kind == XNToken.SYMBOL && lookToken(1).image.equalsIgnoreCase("@") && lookToken(2).kind == XNToken.SYMBOL && lookToken(2).image.equalsIgnoreCase("@")) { consumeTokens(2); return XNOperator.LIST_CONCAT; }
+		if (lookToken(1).kind == XNToken.SYMBOL && lookToken(1).image.equalsIgnoreCase("@")) { consumeTokens(1); return XNOperator.LIST_CONCAT; }
 		if (lookToken(1).kind == XNToken.SYMBOL && lookToken(1).image.equalsIgnoreCase("!") && lookToken(2).kind == XNToken.SYMBOL && lookToken(2).image.equalsIgnoreCase("=") && lookToken(3).kind == XNToken.SYMBOL && lookToken(3).image.equalsIgnoreCase("=")) { consumeTokens(3); return XNOperator.NOT_STRICT_EQUAL; }
 		if (lookToken(1).kind == XNToken.SYMBOL && lookToken(1).image.equalsIgnoreCase("!") && lookToken(2).kind == XNToken.SYMBOL && lookToken(2).image.equalsIgnoreCase("=")) { consumeTokens(2); return XNOperator.NOT_EQUAL; }
 		if (lookToken(1).kind == XNToken.SYMBOL && lookToken(1).image.equalsIgnoreCase("!")) { consumeTokens(1); return XNOperator.NOT; }

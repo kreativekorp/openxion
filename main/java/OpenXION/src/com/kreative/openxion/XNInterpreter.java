@@ -501,6 +501,13 @@ public class XNInterpreter {
 					as = av.toTextString(context);
 					bs = bv.toTextString(context);
 					return new XOMString(as + " " + bs);
+				case LIST_APPEND:
+					av = evaluateExpression(a).asPrimitive(context);
+					bv = evaluateExpression(b).asPrimitive(context);
+					al = av.toPrimitiveList(context);
+					Vector<XOMVariant> realbl = new Vector<XOMVariant>();
+					realbl.add(bv);
+					return new XOMList(al, realbl);
 				case LIST_CONCAT:
 					av = evaluateExpression(a).asPrimitive(context);
 					bv = evaluateExpression(b).asPrimitive(context);
