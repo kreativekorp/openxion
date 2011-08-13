@@ -442,6 +442,7 @@ public class XNStandardModule extends XNModule {
 		functions.put("explode",f_explode);
 		functions.put("fact",f_fact);
 		functions.put("factorial",f_fact);
+		functions.put("filter",f_filter);
 		functions.put("floor",f_floor);
 		functions.put("frac",f_frac);
 		functions.put("gamma",f_gamma);
@@ -484,6 +485,7 @@ public class XNStandardModule extends XNModule {
 		functions.put("lpad",f_lpad);
 		functions.put("lreverse",f_lreverse);
 		functions.put("ltrim",f_ltrim);
+		functions.put("map",f_map);
 		functions.put("max",f_max);
 		functions.put("maximum",f_max);
 		functions.put("mid",f_mid);
@@ -522,6 +524,7 @@ public class XNStandardModule extends XNModule {
 		functions.put("randomdecimal",f_randomdecimal);
 		functions.put("randomrange",f_randomrange);
 		functions.put("re",f_re);
+		functions.put("reduce",f_reduce);
 		functions.put("replace",f_replace);
 		functions.put("replaceall",f_replaceall);
 		functions.put("result",f_result);
@@ -3643,6 +3646,22 @@ public class XNStandardModule extends XNModule {
 		}
 	};
 	
+	private static final Function f_filter = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> parameters = listParameter(ctx, functionName, parameter, 2, true);
+			List<? extends XOMVariant> sourceList = listParameter(ctx, functionName, parameters.get(0), true);
+			List<XOMVariant> destList = new Vector<XOMVariant>();
+			String appliedFunctionName = parameters.get(1).toTextString(ctx);
+			XNInterpreter interp = new XNInterpreter(ctx);
+			for (XOMVariant sourceValue : sourceList) {
+				XOMVariant destValue = interp.evaluateFunction(appliedFunctionName, modifier, null, sourceValue);
+				XOMBoolean destBoolean = XOMBooleanType.instance.makeInstanceFrom(ctx, destValue);
+				if (destBoolean.toBoolean()) destList.add(sourceValue);
+			}
+			return new XOMList(destList);
+		}
+	};
+	
 	private static final Function f_floor = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			parameter = anyNumericParameter(ctx, functionName, parameter);
@@ -4078,6 +4097,21 @@ public class XNStandardModule extends XNModule {
 		}
 	};
 	
+	private static final Function f_map = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> parameters = listParameter(ctx, functionName, parameter, 2, true);
+			List<? extends XOMVariant> sourceList = listParameter(ctx, functionName, parameters.get(0), true);
+			List<XOMVariant> destList = new Vector<XOMVariant>();
+			String appliedFunctionName = parameters.get(1).toTextString(ctx);
+			XNInterpreter interp = new XNInterpreter(ctx);
+			for (XOMVariant sourceValue : sourceList) {
+				XOMVariant destValue = interp.evaluateFunction(appliedFunctionName, modifier, null, sourceValue);
+				destList.add(destValue);
+			}
+			return new XOMList(destList);
+		}
+	};
+	
 	private static final Function f_max = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			List<? extends XOMVariant> numbers = anyNumericListParameter(ctx, functionName, parameter);
@@ -4496,6 +4530,25 @@ public class XNStandardModule extends XNModule {
 			else if (parameter instanceof XOMNumber) return parameter;
 			else if (parameter instanceof XOMComplex) return ((XOMComplex)parameter).Re();
 			else throw new XOMMorphError("number");
+		}
+	};
+	
+	private static final Function f_reduce = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> parameters = listParameter(ctx, functionName, parameter, 2, 3, true);
+			List<? extends XOMVariant> sourceList = listParameter(ctx, functionName, parameters.get(0), true);
+			XOMVariant currentValue = (parameters.size() > 2) ? parameters.get(2).asPrimitive(ctx) : XOMEmpty.EMPTY;
+			String appliedFunctionName = parameters.get(1).toTextString(ctx);
+			List<XOMVariant> appliedFunctionArguments = new Vector<XOMVariant>();
+			XNInterpreter interp = new XNInterpreter(ctx);
+			XNListExpression dummyExpression = new XNListExpression(new XNEmptyExpression(null, 0, 0));
+			for (XOMVariant sourceValue : sourceList) {
+				appliedFunctionArguments.add(currentValue);
+				appliedFunctionArguments.add(sourceValue);
+				currentValue = interp.evaluateFunction(appliedFunctionName, modifier, dummyExpression, new XOMList(appliedFunctionArguments));
+				appliedFunctionArguments.clear();
+			}
+			return currentValue;
 		}
 	};
 	

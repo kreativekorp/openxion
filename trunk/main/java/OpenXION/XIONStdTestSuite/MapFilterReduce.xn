@@ -1,0 +1,39 @@
+function square x
+	return x*x
+end square
+
+function cube x
+	return x*x*x
+end cube
+
+function isEven x
+	return x mod two is zero
+end isEven
+
+function isOdd x
+	return x mod two is not zero
+end isOdd
+
+function myCat x,y
+	return x && colon && y
+end myCat
+
+put map((1,2,3,4,5), "square")
+put map((1,2,3,4,5), "cube")
+put map((1,4,9,16,25), "sqrt")
+put map((1,8,27,64,125), "cbrt")
+
+put filter((3,7,8,9,12,13,0,2,3,3,4,8,11),"isEven")
+put filter((3,7,8,9,12,13,0,2,3,3,4,8,11),"isOdd")
+put filter((NaN, NaN, inf, 5, inf, 13, 14, -inf, -4, NaN, 7, 8), "isFinite")
+
+put reduce((1,2,3,4,5), "sum")
+put reduce((1,2,3,4,5), "sum", 0)
+put reduce((1,2,3,4,5), "sum", 1)
+put reduce((1,2,3,4,5), "product")
+put reduce((1,2,3,4,5), "product", 0)
+put reduce((1,2,3,4,5), "product", 1)
+put reduce((1,2,3,4,5), "myCat")
+
+local x as list is (1,2,3,4,5)
+put reduce(tail(x), "myCat", head(x))
