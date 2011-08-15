@@ -10059,6 +10059,98 @@
 </function>
 
 <function>
+	<name dialects="xn1,oxn14">'</name>
+	<name dialects="xn1,oxn14">format</name>
+	<syntax>the [[*]] of ({format}, {parameter}, {parameter}, ...)</syntax>
+	<syntax>[[*]]({format}, {parameter}, {parameter}, ...)</syntax>
+	<syntax-note>{Format} yields a format [[dt:string]]. {Parameter} yields any [[dt:variant]].</syntax-note>
+	<example>[[*]]("Hello, ^1!", "World")</example>
+	<example>[[*]]("^{^1?no items|one item|^1 items}", myCount)</example>
+	<description>
+		The [[*]] function returns a string produced from the given {format}
+		string using the given {parameter}s.
+	</description>
+	<description>
+		Sequences in the {format} string starting with the ^ character are
+		replaced with {parameter}s, conditional text, or special characters
+		as described below.
+	</description>
+	<description>
+		A ^ character followed by an integer is replaced with a parameter.
+		The parameter after the format string is parameter 1.
+		The parameter number may be followed by a lowercase {n} and a
+		minimum string length; a lowercase {m} and a maximum string length;
+		a lowercase {l} and a character for left padding; or a lowercase
+		{r} and a character for right padding. Optionally, the sequence can
+		end with one of the following format specifiers:
+		\\\\
+		::TABLE
+		s :: a string (the default)
+		...........................
+		l :: a list, delimited by commas
+		...........................
+		L :: a list, delimited by a comma followed by a space
+		...........................
+		i :: an integer, using the current [[pr:numberFormat]]
+		...........................
+		I :: an integer, using the local number format
+		...........................
+		n :: a number, using the current [[pr:numberFormat]]
+		...........................
+		N :: a number, using the local number format
+		...........................
+		o :: an octal number
+		...........................
+		h :: a hexadecimal number, in lowercase
+		...........................
+		H :: a hexadecimal number, in uppercase
+		...........................
+		c :: a complex, using the current [[pr:numberFormat]]
+		...........................
+		C :: a complex, using the local number format
+		...........................
+		d :: a date
+		...........................
+		t :: a time
+		...........................
+		b :: a binary, without spacing between bytes
+		...........................
+		B :: a binary, with spacing between bytes
+		ELBAT::
+		\\\\
+		Finally, if the sequence will be followed by a digit or letter,
+		a tilde (~) can be used to indicate the end of the sequence.
+	</description>
+	<description>
+		A ^ character followed by an opening brace is replaced with
+		conditional text. The opening brace must be followed by an expression
+		using only parameter numbers preceded by ^, string and number literals,
+		and operators named using only symbols. A question mark (?) separates
+		the expression from a list of alternatives. Each alternative is a
+		format string of its own. The first alternative corresponds to a value
+		of true or zero, the second alternative to a value of false or one,
+		the third alternative to a value of two, and so on; the last
+		alternative is chosen if the value is greater than the number of
+		alternatives. Alternatives are delimited using vertical bars (|).
+		Finally, a closing brace indicates the end of the list of alternatives.
+	</description>
+	<description>
+		Finally, the special sequences [[^}]], [[^|]], and [[^^]]
+		are replaced with a literal closing brace, vertical bar, or caret,
+		respectively.
+	</description>
+	<note>
+		Currently, there is no difference between the [[fn:']] and
+		[[fn:format]] functions. However, the [[fn:']] function is
+		intended to be used with strings that should be localized,
+		while the [[fn:format]] function is intended to be used with
+		non-localizable strings. Future versions of OpenXION may
+		support localization of format strings passed to the [[fn:']]
+		function.
+	</note>
+</function>
+
+<function>
 	<name dialects="xn1,oxn1,oxn11,oxn12,oxn13,oxn14">frac</name>
 	<syntax>the [[*]] of {factor}</syntax>
 	<syntax>[[*]]({expression})</syntax>
@@ -14846,6 +14938,8 @@
 		[[fn:trim]]        :: [[fn:ltrim]]         :: [[fn:rtrim]]          ::  
 		...........................................................................................
 		[[fn:ucase]]       :: [[fn:tcase]]         :: [[fn:lcase]]          ::  
+		...........................................................................................
+		[[fn:']]           :: [[fn:format]]        ::                       ::  
 		ELBAT::
 		\\\\
 		{{{{Text Encoding}}}}

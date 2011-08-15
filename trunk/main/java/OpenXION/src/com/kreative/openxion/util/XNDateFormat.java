@@ -119,4 +119,24 @@ public enum XNDateFormat {
 			default: return SecondsDateFormat.instance;
 		}
 	}
+	
+	public XNDateFormat dateEquivalent() {
+		switch (this) {
+		case SHORT_TIME: case SHORT_DATE: return SHORT_DATE;
+		case ABBREV_TIME: case ABBREV_DATE: return ABBREV_DATE;
+		case LONG_TIME: case LONG_DATE: return LONG_DATE;
+		case ENGLISH_TIME: case ENGLISH_DATE: return ENGLISH_DATE;
+		default: return LONG_DATE;
+		}
+	}
+	
+	public XNDateFormat timeEquivalent() {
+		switch (this) {
+		case SHORT_TIME: case SHORT_DATE: return SHORT_TIME;
+		case ABBREV_TIME: case ABBREV_DATE: return ABBREV_TIME;
+		case LONG_TIME: case LONG_DATE: return LONG_TIME;
+		case ENGLISH_TIME: case ENGLISH_DATE: return ENGLISH_TIME;
+		default: return LONG_TIME;
+		}
+	}
 }
