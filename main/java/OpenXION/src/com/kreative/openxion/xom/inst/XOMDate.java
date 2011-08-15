@@ -90,6 +90,14 @@ public class XOMDate extends XOMValue {
 		throw new XOMMorphError("date");
 	}
 	
+	public XOMDate dateEquivalent() {
+		return new XOMDate(theFormat.dateEquivalent(), theDate);
+	}
+	
+	public XOMDate timeEquivalent() {
+		return new XOMDate(theFormat.timeEquivalent(), theDate);
+	}
+	
 	public GregorianCalendar toCalendar() {
 		return theDate;
 	}

@@ -35,6 +35,7 @@ import java.text.*;
 import java.util.*;
 
 import com.kreative.openxion.ast.*;
+import com.kreative.openxion.format.FormatString;
 import com.kreative.openxion.io.*;
 import com.kreative.openxion.math.*;
 import com.kreative.openxion.util.*;
@@ -359,6 +360,7 @@ public class XNStandardModule extends XNModule {
 		commands.put("wait",c_wait);
 		commands.put("write",c_write);
 		
+		functions.put("'",f_format);
 		functions.put("\u03B3",f_gamma);
 		functions.put("\u03B2",f_beta);
 		functions.put("abs",f_abs);
@@ -444,6 +446,7 @@ public class XNStandardModule extends XNModule {
 		functions.put("factorial",f_fact);
 		functions.put("filter",f_filter);
 		functions.put("floor",f_floor);
+		functions.put("format",f_format);
 		functions.put("frac",f_frac);
 		functions.put("gamma",f_gamma);
 		functions.put("gcd",f_gcd);
@@ -3669,6 +3672,19 @@ public class XNStandardModule extends XNModule {
 			else if (parameter instanceof XOMNumber) return ((XOMNumber)parameter).floor();
 			else if (parameter instanceof XOMComplex) return ((XOMComplex)parameter).floor();
 			else throw new XOMMorphError("number");
+		}
+	};
+	
+	private static final Function f_format = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> parameters = listParameter(ctx, functionName, parameter, true);
+			if (parameters.isEmpty()) {
+				throw new XNScriptError("Can't understand arguments to "+functionName); 
+			} else {
+				String pattern = parameters.get(0).toTextString(ctx);
+				FormatString formatString = FormatString.compile(ctx, pattern);
+				return new XOMString(formatString.format(ctx, parameters));
+			}
 		}
 	};
 	

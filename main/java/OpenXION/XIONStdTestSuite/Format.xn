@@ -1,0 +1,72 @@
+on greet gender, n
+  put format("^{^1=male?He|^{^1=female?She|They}} gave you ^{^2=0?no widgets|^{^2=1?one widget|^{^2>9000?OVER 9000 widgets|^2 widgets}}}.", gender, n)
+end greet
+
+greet male, 0
+greet male, 1
+greet male, 2
+greet male, 9000
+greet male, 9001
+
+greet female, 0
+greet female, 1
+greet female, 2
+greet female, 9000
+greet female, 9001
+
+greet other, 0
+greet other, 1
+greet other, 2
+greet other, 9000
+greet other, 9001
+
+on greet2 gender, n
+  put format("^{ ^1 = male ?He|^{ ^1 = female ?She|They}} gave you ^{ ^2 = 0 ?no widgets|^{ ^2 = 1 ?one widget|^{ ^2 > 9000 ?OVER 9000 widgets|^2 widgets}}}.", gender, n)
+end greet2
+
+greet2 male, 0
+greet2 male, 1
+greet2 male, 2
+greet2 male, 9000
+greet2 male, 9001
+
+greet2 female, 0
+greet2 female, 1
+greet2 female, 2
+greet2 female, 9000
+greet2 female, 9001
+
+greet2 other, 0
+greet2 other, 1
+greet2 other, 2
+greet2 other, 9000
+greet2 other, 9001
+
+on greet3 gender, n
+  put format("^{^1=male?He|^{^1=female?She|They}} gave you ^{^2?no widgets|one widget|^{^2>9000?OVER 9000 widgets|^2 widgets}}.", gender, n)
+end greet3
+
+greet3 male, 0
+greet3 male, 1
+greet3 male, 2
+greet3 male, 9000
+greet3 male, 9001
+
+greet3 female, 0
+greet3 female, 1
+greet3 female, 2
+greet3 female, 9000
+greet3 female, 9001
+
+greet3 other, 0
+greet3 other, 1
+greet3 other, 2
+greet3 other, 9000
+greet3 other, 9001
+
+put format("^{0?^}}")
+put format("^{0?^^}")
+put format("^{0?^^}}")
+put format("^^{0?^}}")
+put format("^^{0?^^}")
+put format("^^{0?^^}}")
