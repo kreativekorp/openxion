@@ -58,14 +58,14 @@
 
 <!-- TERM SECTIONS -->
 <!ELEMENT applies-to %plain;>
+<!ELEMENT descriptors %plain;>
+<!ELEMENT properties %plain;>
 <!ELEMENT precedence %plain;>
 <!ELEMENT description-short %plain;>
 <!ELEMENT type %plain;>
 <!ELEMENT value %plain;>
 <!ELEMENT syntax %blockseq;>
 <!ELEMENT examples %blockseq;>
-<!ELEMENT descriptors %plain;>
-<!ELEMENT properties %plain;>
 <!ELEMENT scripts %blockseq;>
 <!ELEMENT notes %blockseq;>
 <!ELEMENT security %blockseq;>
