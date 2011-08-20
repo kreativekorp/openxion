@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2009-2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2011 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -21,22 +21,39 @@
  * other provisions required by the LGPL License. If you do not delete
  * the provisions above, a recipient may use your version of this file
  * under either the MPL or the LGPL License.
- * @since XIONDoc 1.0
+ * @since XIONDoc 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  */
 
-package com.kreative.xiondoc;
+package com.kreative.xiondoc.xdom;
 
-import java.io.File;
-import java.io.IOException;
-import com.kreative.xiondoc.xdom.DocumentationSet;
+import java.util.TreeSet;
 
 /**
- * An XIONDocReader produces a DocumentationSet for a given type of input.
- * @since XIONDoc 1.0
+ * A list of version numbers.
+ * Used to record the list of versions of a certain dialect, module, or library.
+ * @since XIONDoc 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  */
-public interface XIONDocReader {
-	public String derive(File f) throws IOException;
-	public void read(String xnd, DocumentationSet d) throws IOException;
+public class VersionNumberList extends TreeSet<VersionNumber> {
+	private static final long serialVersionUID = 1L;
+	
+	public VersionNumberList() {
+		// nothing
+	}
+	
+	public VersionNumberList(String versions) {
+		for (String version : versions.split(",")) {
+			this.add(new VersionNumber(version));
+		}
+	}
+	
+	public String toString() {
+		StringBuffer s = new StringBuffer();
+		for (VersionNumber v : this) {
+			if (s.length() > 0) s.append(',');
+			s.append(v.toString());
+		}
+		return s.toString();
+	}
 }

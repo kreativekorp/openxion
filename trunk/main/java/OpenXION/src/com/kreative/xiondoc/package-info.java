@@ -1,5 +1,5 @@
 /**
- * XIONDoc 1.0 is a documentation generator for XNModules and XION dialects.
+ * XIONDoc 1.3 is a documentation generator for XNModules and XION dialects.
  * The documentation for one or more XNModules or dialects is stored in an XND file
  * and processed with this tool to create a directory of HTML files with a
  * standardized structure and format for XION documentation.
@@ -26,7 +26,7 @@
  * other provisions required by the LGPL License. If you do not delete
  * the provisions above, a recipient may use your version of this file
  * under either the MPL or the LGPL License.
- * @since OpenXION 1.0
+ * @since XIONDoc 1.0
  * @author Rebecca G. Bettencourt, Kreative Software
  */
 package com.kreative.xiondoc;

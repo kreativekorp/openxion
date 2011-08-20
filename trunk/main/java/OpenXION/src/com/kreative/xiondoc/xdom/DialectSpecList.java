@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2009-2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2011 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -21,22 +21,56 @@
  * other provisions required by the LGPL License. If you do not delete
  * the provisions above, a recipient may use your version of this file
  * under either the MPL or the LGPL License.
- * @since XIONDoc 1.0
+ * @since XIONDoc 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  */
 
-package com.kreative.xiondoc;
+package com.kreative.xiondoc.xdom;
 
-import java.io.File;
-import java.io.IOException;
-import com.kreative.xiondoc.xdom.DocumentationSet;
+import java.util.HashSet;
 
 /**
- * An XIONDocReader produces a DocumentationSet for a given type of input.
- * @since XIONDoc 1.0
+ * A list of dialects and versions of those dialects.
+ * Used when specifying which dialects and versions of those dialects support a given term.
+ * @since XIONDoc 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  */
-public interface XIONDocReader {
-	public String derive(File f) throws IOException;
-	public void read(String xnd, DocumentationSet d) throws IOException;
+public class DialectSpecList extends HashSet<DialectSpec> {
+	private static final long serialVersionUID = 1L;
+	
+	public DialectSpecList() {
+		// nothing
+	}
+	
+	public DialectSpecList(String spec) {
+		DialectSpec last = null;
+		for (String subspec : spec.split(",")) {
+			subspec = subspec.trim();
+			if (subspec.length() > 0) {
+				if (last == null || Character.isLetter(subspec.charAt(0))) {
+					add(last = new DialectSpec(subspec));
+				} else {
+					add(last = new DialectSpec(last.getName(), new VersionNumberRange(subspec)));
+				}
+			}
+		}
+	}
+	
+	public boolean matches(String dialectName, VersionNumber dialectVersion) {
+		for (DialectSpec spec : this) {
+			if (spec.matches(dialectName, dialectVersion)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public String toString() {
+		StringBuffer s = new StringBuffer();
+		for (DialectSpec spec : this) {
+			if (s.length() > 0) s.append(", ");
+			s.append(spec.toString());
+		}
+		return s.toString();
+	}
 }

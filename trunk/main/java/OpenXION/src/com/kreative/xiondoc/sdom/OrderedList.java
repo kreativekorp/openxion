@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2009-2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2011 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -21,22 +21,55 @@
  * other provisions required by the LGPL License. If you do not delete
  * the provisions above, a recipient may use your version of this file
  * under either the MPL or the LGPL License.
- * @since XIONDoc 1.0
+ * @since XIONDoc 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  */
 
-package com.kreative.xiondoc;
+package com.kreative.xiondoc.sdom;
 
-import java.io.File;
-import java.io.IOException;
-import com.kreative.xiondoc.xdom.DocumentationSet;
+import java.util.Vector;
 
 /**
- * An XIONDocReader produces a DocumentationSet for a given type of input.
- * @since XIONDoc 1.0
+ * A numbered list.
+ * The border property determines whether there are lines visible between items in the list.
+ * The content is a list of list items or nested lists.
+ * @since XIONDoc 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  */
-public interface XIONDocReader {
-	public String derive(File f) throws IOException;
-	public void read(String xnd, DocumentationSet d) throws IOException;
+public class OrderedList extends Vector<ListOrListItem> implements Block, ListOrListItem {
+	private static final long serialVersionUID = 1L;
+	
+	private int indent;
+	private int border;
+	
+	public OrderedList() {
+		this.indent = 0;
+		this.border = 0;
+	}
+	
+	public OrderedList(int indent) {
+		this.indent = indent;
+		this.border = 0;
+	}
+	
+	public OrderedList(int indent, int border) {
+		this.indent = indent;
+		this.border = border;
+	}
+	
+	public int getIndent() {
+		return this.indent;
+	}
+	
+	public void setIndent(int indent) {
+		this.indent = indent;
+	}
+	
+	public int getBorder() {
+		return this.border;
+	}
+	
+	public void setBorder(int border) {
+		this.border = border;
+	}
 }

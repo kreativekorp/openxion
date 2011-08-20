@@ -21,14 +21,21 @@
  * other provisions required by the LGPL License. If you do not delete
  * the provisions above, a recipient may use your version of this file
  * under either the MPL or the LGPL License.
- * @since OpenXION 1.0
+ * @since XIONDoc 1.0
  * @author Rebecca G. Bettencourt, Kreative Software
  */
 
 package com.kreative.xiondoc;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import com.kreative.xiondoc.xdom.DocumentationSet;
 
+/**
+ * An XIONDocWriter produces the final output from a DocumentationSet.
+ * @since XIONDoc 1.0
+ * @author Rebecca G. Bettencourt, Kreative Software
+ */
 public interface XIONDocWriter {
 	public File derive(String path) throws IOException;
 	public void write(DocumentationSet d, File f) throws IOException;

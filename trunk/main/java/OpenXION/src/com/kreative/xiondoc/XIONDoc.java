@@ -21,17 +21,25 @@
  * other provisions required by the LGPL License. If you do not delete
  * the provisions above, a recipient may use your version of this file
  * under either the MPL or the LGPL License.
- * @since OpenXION 1.0
+ * @since XIONDoc 1.0
  * @author Rebecca G. Bettencourt, Kreative Software
  */
 
 package com.kreative.xiondoc;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import com.kreative.xiondoc.xdom.DocumentationSet;
 
+/**
+ * This is the main class that provides the command line interface to XIONDoc.
+ * @since XIONDoc 1.0
+ * @author Rebecca G. Bettencourt, Kreative Software
+ */
 public class XIONDoc {
 	public static final String XIONDOC_NAME = "XIONDoc";
-	public static final String XIONDOC_VERSION = "1.2";
+	public static final String XIONDOC_VERSION = "1.3";
 	
 	public static void main(String[] args) {
 		if (args.length == 0) {
@@ -39,7 +47,7 @@ public class XIONDoc {
 		} else {
 			boolean processOptions = true;
 			String textEncoding = "UTF-8";
-			XIONDocReader reader = new XNDReader();
+			XIONDocReader reader = new XMLReader();
 			XIONDocWriter writer = new HTMLDWriter();
 			File outputFile = null;
 			DocumentationSet outputSet = null;
@@ -143,7 +151,7 @@ public class XIONDoc {
 		System.out.println("  -o outputfile   generate a single unified documentation set at the given path");
 		System.out.println("                  (default is to generate a documentation set for each file)");
 		System.out.println("  -R classname    use the specified documentation reader");
-		System.out.println("                  (default is com.kreative.xiondoc.XNDReader)");
+		System.out.println("                  (default is com.kreative.xiondoc.XMLReader)");
 		System.out.println("  -v              print XIONDoc, Java, and OS version numbers");
 		System.out.println("  -W classname    use the specified documentation writer");
 		System.out.println("                  (default is com.kreative.xiondoc.HTMLDWriter)");
