@@ -28,20 +28,20 @@
 <!ELEMENT article ( name, title,           summary,                content  )>
 
 <!-- TERMS -->
-<!ELEMENT structure ( name+,                                syntax, examples?, description,                          scripts?, notes?, security?, compatibility?, see-also? )>
-<!ELEMENT keyword   ( name+, applies-to?,                   syntax, examples?, description,                          scripts?, notes?, security?, compatibility?, see-also? )>
-<!ELEMENT event     ( name+,                                syntax, examples?, description,                          scripts?, notes?, security?, compatibility?, see-also? )>
-<!ELEMENT command   ( name+,                                syntax, examples?, description,                          scripts?, notes?, security?, compatibility?, see-also? )>
-<!ELEMENT function  ( name+,                                syntax, examples?, description,                          scripts?, notes?, security?, compatibility?, see-also? )>
-<!ELEMENT datatype  ( name+,                                syntax, examples?, description, descriptors, properties, scripts?, notes?, security?, compatibility?, see-also? )>
-<!ELEMENT property  ( name+, applies-to,                    syntax, examples?, description,                          scripts?, notes?, security?, compatibility?, see-also? )>
-<!ELEMENT operator  ( name+, precedence, description-short, syntax, examples?, description,                          scripts?, notes?, security?, compatibility?, see-also? )>
-<!ELEMENT constant  ( name+, type, value,                           examples?, description,                          scripts?, notes?, security?, compatibility?, see-also? )>
-<!ELEMENT ordinal   ( name+,       value,                           examples?, description,                          scripts?, notes?, security?, compatibility?, see-also? )>
-<!ELEMENT iomethod  ( name+,                                        examples?, description,                          scripts?, notes?, security?, compatibility?, see-also? )>
-<!ELEMENT iomanager ( name+,                                        examples?, description,                          scripts?, notes?, security?, compatibility?, see-also? )>
-<!ELEMENT extlang   ( name+,                                        examples?, description,                          scripts?, notes?, security?, compatibility?, see-also? )>
-<!ELEMENT version   ( name+,                                        examples?, description,                          scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT structure ( name+,                                syntax, examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT keyword   ( name+, applies-to?,                   syntax, examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT event     ( name+,                                syntax, examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT command   ( name+,                                syntax, examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT function  ( name+,                                syntax, examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT datatype  ( name+, descriptors, properties,       syntax, examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT property  ( name+, applies-to,                    syntax, examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT operator  ( name+, precedence, description-short, syntax, examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT constant  ( name+, type, value,                           examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT ordinal   ( name+,       value,                           examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT iomethod  ( name+,                                        examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT iomanager ( name+,                                        examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT extlang   ( name+,                                        examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT version   ( name+,                                        examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
 
 <!-- SECTIONS -->
 <!ELEMENT name %plain;>
