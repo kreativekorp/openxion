@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2009-2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2011 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -21,22 +21,17 @@
  * other provisions required by the LGPL License. If you do not delete
  * the provisions above, a recipient may use your version of this file
  * under either the MPL or the LGPL License.
- * @since XIONDoc 1.0
+ * @since XIONDoc 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  */
 
-package com.kreative.xiondoc;
-
-import java.io.File;
-import java.io.IOException;
-import com.kreative.xiondoc.xdom.DocumentationSet;
+package com.kreative.xiondoc.sdom;
 
 /**
- * An XIONDocReader produces a DocumentationSet for a given type of input.
- * @since XIONDoc 1.0
+ * The version number of the dialect we're generating documentation for.
+ * @since XIONDoc 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  */
-public interface XIONDocReader {
-	public String derive(File f) throws IOException;
-	public void read(String xnd, DocumentationSet d) throws IOException;
+public class DialectVersion implements Span {
+	private static final long serialVersionUID = 1L;
 }

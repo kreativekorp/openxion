@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2009-2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2011 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -21,22 +21,58 @@
  * other provisions required by the LGPL License. If you do not delete
  * the provisions above, a recipient may use your version of this file
  * under either the MPL or the LGPL License.
- * @since XIONDoc 1.0
+ * @since XIONDoc 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  */
 
-package com.kreative.xiondoc;
+package com.kreative.xiondoc.xdom;
 
-import java.io.File;
-import java.io.IOException;
-import com.kreative.xiondoc.xdom.DocumentationSet;
+import java.io.Serializable;
 
 /**
- * An XIONDocReader produces a DocumentationSet for a given type of input.
- * @since XIONDoc 1.0
+ * The name of a term, along with a list of the dialects, modules, and libraries that support it.
+ * Support is tied to the name because it is the name that is recognized or not.
+ * Used to record the names of a term.
+ * @since XIONDoc 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  */
-public interface XIONDocReader {
-	public String derive(File f) throws IOException;
-	public void read(String xnd, DocumentationSet d) throws IOException;
+public class TermName implements Serializable, Comparable<TermName> {
+	private static final long serialVersionUID = 1L;
+	
+	private String name;
+	private DialectSpecList dialects;
+	
+	public TermName(String name, DialectSpecList dialects) {
+		this.name = name;
+		this.dialects = dialects;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public DialectSpecList getDialects() {
+		return this.dialects;
+	}
+	
+	public String toString() {
+		return name;
+	}
+	
+	public int compareTo(TermName other) {
+		return this.name.compareToIgnoreCase(other.name);
+	}
+	
+	public boolean equals(Object o) {
+		if (o instanceof TermName) {
+			TermName other = (TermName)o;
+			return this.name.equalsIgnoreCase(other.name) && this.dialects.equals(other.dialects);
+		} else {
+			return false;
+		}
+	}
+	
+	public int hashCode() {
+		return this.name.toLowerCase().hashCode() ^ this.dialects.hashCode();
+	}
 }

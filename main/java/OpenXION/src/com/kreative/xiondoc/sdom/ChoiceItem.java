@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2009-2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2011 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -21,58 +21,20 @@
  * other provisions required by the LGPL License. If you do not delete
  * the provisions above, a recipient may use your version of this file
  * under either the MPL or the LGPL License.
- * @since OpenXION 1.0
+ * @since XIONDoc 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  */
 
-package com.kreative.xiondoc;
+package com.kreative.xiondoc.sdom;
 
-public class Article implements Comparable<Article> {
-	private String code;
-	private String title;
-	private String summary;
-	private String content;
-	
-	public Article(String code, String title, String summary, String content) {
-		this.code = code;
-		this.title = title;
-		this.summary = summary;
-		this.content = content;
-	}
-	
-	public String getCode() {
-		return code;
-	}
-	
-	public String getTitle() {
-		return title;
-	}
-	
-	public String getSummary() {
-		return summary;
-	}
-	
-	public String getContent() {
-		return content;
-	}
-	
-	public String toString() {
-		return title;
-	}
-	
-	public boolean equals(Object o) {
-		if (o instanceof Article) {
-			Article other = (Article)o;
-			return this.code.equalsIgnoreCase(other.code) && this.title.equalsIgnoreCase(other.title) && this.content.equalsIgnoreCase(other.content);
-		}
-		return false;
-	}
-	
-	public int compareTo(Article other) {
-		return this.title.compareToIgnoreCase(other.title);
-	}
-	
-	public int hashCode() {
-		return code.toLowerCase().hashCode() ^ title.toLowerCase().hashCode() ^ content.toLowerCase().hashCode();
-	}
+import java.util.Vector;
+
+/**
+ * An alternative in the syntax of an XION term.
+ * The content is XION syntactic elements.
+ * @since XIONDoc 1.3
+ * @author Rebecca G. Bettencourt, Kreative Software
+ */
+public class ChoiceItem extends Vector<Syntactic> {
+	private static final long serialVersionUID = 1L;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2009-2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2011 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -21,7 +21,7 @@
  * other provisions required by the LGPL License. If you do not delete
  * the provisions above, a recipient may use your version of this file
  * under either the MPL or the LGPL License.
- * @since XIONDoc 1.0
+ * @since XIONDoc 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  */
 
@@ -29,14 +29,48 @@ package com.kreative.xiondoc;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
 import com.kreative.xiondoc.xdom.DocumentationSet;
 
 /**
- * An XIONDocReader produces a DocumentationSet for a given type of input.
- * @since XIONDoc 1.0
+ * This is the XIONDocReader that reads XIONDoc 1.3's pure XML format.
+ * @since XIONDoc 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  */
-public interface XIONDocReader {
-	public String derive(File f) throws IOException;
-	public void read(String xnd, DocumentationSet d) throws IOException;
+public class XMLReader implements XIONDocReader {
+	private XMLXDOMParser p = new XMLXDOMParser(true);
+	
+	public String derive(File f) {
+		String fn = f.getAbsolutePath();
+		while (fn.endsWith(".xnd") || fn.endsWith(".xml")) {
+			fn = fn.substring(0, fn.length()-4);
+		}
+		return fn;
+	}
+	
+	public void read(String xnd, DocumentationSet d) throws IOException {
+		try {
+			System.out.println("Parsing XML document...");
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			factory.setValidating(true); // make sure the XML is valid
+			factory.setExpandEntityReferences(false); // don't allow custom entities
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document document = builder.parse(new InputSource(new StringReader(xnd)));
+			System.out.println("Traversing XML document...");
+			p.parseDocument(document, d);
+		} catch (ParserConfigurationException pce) {
+			throw new IOException(pce.getMessage());
+		} catch (SAXException pce) {
+			throw new IOException(pce.getMessage());
+		}
+	}
 }
