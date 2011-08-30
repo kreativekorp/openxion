@@ -65,7 +65,8 @@ public class DialectSpec implements Serializable {
 	}
 	
 	public boolean matches(String dialectName, VersionNumber dialectVersion) {
-		return this.name.equalsIgnoreCase(dialectName) && this.versions.contains(dialectVersion);
+		return (dialectName == null || this.name.equalsIgnoreCase(dialectName))
+			&& (dialectVersion == null || this.versions.contains(dialectVersion));
 	}
 	
 	public String toString() {

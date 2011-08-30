@@ -280,7 +280,7 @@ public class HTMLXDOMGenerator {
 			for (TermSpec termSpec : synonyms) {
 				if (first) first = false;
 				else out.print(", ");
-				out.print("<code><a href=\"../" + htmlencode(fnencode(termSpec.getType().getCode()) + "/" + fnencode(termSpec.getName())) + "\">" + htmlencode(termSpec.getName()) + "</a></code>");
+				out.print("<code><a href=\"../" + htmlencode(fnencode(termSpec.getType().getCode()) + "/" + fnencode(termSpec.getName())) + ".html\">" + htmlencode(termSpec.getName()) + "</a></code>");
 			}
 			out.println("</p>");
 		}
@@ -291,7 +291,7 @@ public class HTMLXDOMGenerator {
 			for (TermSpec termSpec : term.seeAlso()) {
 				if (first) first = false;
 				else out.print(", ");
-				out.print("<code><a href=\"../" + htmlencode(fnencode(termSpec.getType().getCode()) + "/" + fnencode(termSpec.getName())) + "\">" + htmlencode(termSpec.getName()) + "</a></code>");
+				out.print("<code><a href=\"../" + htmlencode(fnencode(termSpec.getType().getCode()) + "/" + fnencode(termSpec.getName())) + ".html\">" + htmlencode(termSpec.getName()) + "</a></code>");
 			}
 			out.println("</p>");
 		}
