@@ -256,9 +256,14 @@ public class HTMLSDOMGenerator {
 		}
 		else if (syn instanceof TermName) {
 			if (this.currentTermName != null) {
-				out.append("<span class=\"keyword\">");
-				out.append(htmlencode(this.currentTermName, true));
-				out.append("</span>");
+				String[] words = this.currentTermName.trim().split("\\s+");
+				for (String word : words) {
+					if (word.length() > 0) {
+						out.append("<span class=\"keyword\">");
+						out.append(htmlencode(word, true));
+						out.append("</span>");
+					}
+				}
 			}
 		}
 		return indented;
