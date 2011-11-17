@@ -29,6 +29,7 @@ package com.kreative.xiondoc;
 
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.kreative.xiondoc.sdom.*;
@@ -99,10 +100,7 @@ public class HTMLSDOMGenerator {
 		}
 		else if (block instanceof Syntax) {
 			out.append("<p class=\"block syntax indent" + indent + "\">");
-			boolean indented = false;
-			for (Syntactic syn : (Syntax)block) {
-				indented = generateSyntacticHTML(out, syn, indented);
-			}
+			generateSyntaxHTML(out, (Syntax)block, false);
 			out.append("</p>");
 		}
 		else if (block instanceof UnorderedList) {
@@ -194,6 +192,16 @@ public class HTMLSDOMGenerator {
 		}
 	}
 	
+	private boolean generateSyntaxHTML(StringBuffer out, List<Syntactic> block, boolean indented) {
+		boolean first = true;
+		for (Syntactic syn : block) {
+			if (first) first = false;
+			else out.append(' ');
+			indented = generateSyntacticHTML(out, syn, indented);
+		}
+		return indented;
+	}
+	
 	private boolean generateSyntacticHTML(StringBuffer out, Syntactic syn, boolean indented) {
 		if (syn instanceof Keyword) {
 			out.append("<span class=\"keyword\">");
@@ -213,18 +221,14 @@ public class HTMLSDOMGenerator {
 				for (ChoiceItem ci : (Choice)((Optional)syn).get(0)) {
 					if (first) first = false;
 					else out.append("<span class=\"metasymbol\">|</span>");
-					for (Syntactic subsyn : ci) {
-						generateSyntacticHTML(out, subsyn, indented);
-					}
+					indented = generateSyntaxHTML(out, ci, indented);
 				}
 				out.append("<span class=\"metasymbol\">]</span>");
 				out.append("</span>");
 			} else {
 				out.append("<span class=\"optional\">");
 				out.append("<span class=\"metasymbol\">[</span>");
-				for (Syntactic subsyn : (Optional)syn) {
-					generateSyntacticHTML(out, subsyn, indented);
-				}
+				indented = generateSyntaxHTML(out, (Optional)syn, indented);
 				out.append("<span class=\"metasymbol\">]</span>");
 				out.append("</span>");
 			}
@@ -236,9 +240,7 @@ public class HTMLSDOMGenerator {
 			for (ChoiceItem ci : (Choice)syn) {
 				if (first) first = false;
 				else out.append("<span class=\"metasymbol\">|</span>");
-				for (Syntactic subsyn : ci) {
-					generateSyntacticHTML(out, subsyn, indented);
-				}
+				indented = generateSyntaxHTML(out, ci, indented);
 			}
 			out.append("<span class=\"metasymbol\">)</span>");
 			out.append("</span>");
@@ -248,6 +250,7 @@ public class HTMLSDOMGenerator {
 			if (indented) {
 				return false;
 			} else {
+				out.append(' ');
 				out.append("<span class=\"syntaxindent\">");
 				out.append("&nbsp;&nbsp;");
 				out.append("</span>");
@@ -257,8 +260,11 @@ public class HTMLSDOMGenerator {
 		else if (syn instanceof TermName) {
 			if (this.currentTermName != null) {
 				String[] words = this.currentTermName.trim().split("\\s+");
+				boolean first = true;
 				for (String word : words) {
 					if (word.length() > 0) {
+						if (first) first = false;
+						else out.append(' ');
 						out.append("<span class=\"keyword\">");
 						out.append(htmlencode(word, true));
 						out.append("</span>");
