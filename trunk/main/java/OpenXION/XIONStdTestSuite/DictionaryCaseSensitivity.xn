@@ -1,0 +1,10 @@
+local x as dictionary
+put x
+put 1 into entry "A" of x
+put x
+put 2 into entry "a" of x
+put x
+put 3 into entry "B" of x
+put x
+put 4 into entry "b" of x
+put x

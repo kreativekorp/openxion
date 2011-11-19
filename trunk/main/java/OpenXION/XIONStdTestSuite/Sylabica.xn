@@ -1,0 +1,55 @@
+local vowels as list is ("", "Y", "YQ", "E", "EQ", "EX", "AX", "A", "O", "OX", "U")
+local consonants as list is ("", "P", "B", "F", "V", "T", "CX", "D", "DZX", "S", "SX", "Z", "ZX", "K", "C", "G", "DZ", "CH", "SQ", "H", "ZQ", "CQ", "DZQ", "M", "N", "R", "RQ", "LX", "L", "J")
+
+if the number of vowels is not 11 then throw "Bad Vowels!"
+if the number of consonants is not 30 then throw "Bad Consonants!"
+
+local bitmap as string is empty
+put "0 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0" into line 1 of bitmap
+put "1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1" into line 2 of bitmap
+put "1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1" into line 3 of bitmap
+put "1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1" into line 4 of bitmap
+put "1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1" into line 5 of bitmap
+put "1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1" into line 6 of bitmap
+put "1 1 1 1 0 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0" into line 7 of bitmap
+put "1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1" into line 8 of bitmap
+put "1 1 1 1 0 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0" into line 9 of bitmap
+put "1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1" into line 10 of bitmap
+put "1 1 1 1 0 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0" into line 11 of bitmap
+put "1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1" into line 12 of bitmap
+put "1 1 1 1 0 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0" into line 13 of bitmap
+put "1 1 1 1 1 1 1 1 1 1 1 1 0 1 0 0 1 1 1 1 1 1" into line 14 of bitmap
+put "1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1" into line 15 of bitmap
+put "1 1 1 1 1 1 1 1 1 1 1 1 0 1 0 0 1 1 1 1 1 1" into line 16 of bitmap
+put "1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1" into line 17 of bitmap
+put "1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1" into line 18 of bitmap
+put "1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1" into line 19 of bitmap
+put "1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1" into line 20 of bitmap
+put "1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1" into line 21 of bitmap
+put "1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1" into line 22 of bitmap
+put "1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1" into line 23 of bitmap
+put "1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1" into line 24 of bitmap
+put "1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1" into line 25 of bitmap
+put "1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1" into line 26 of bitmap
+put "1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1" into line 27 of bitmap
+put "1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1" into line 28 of bitmap
+put "1 1 1 1 0 1 1 1 1 1 1 1 0 1 1 0 1 1 1 1 1 1" into line 29 of bitmap
+put "1 1 1 1 0 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0" into line 30 of bitmap
+
+local x as string
+if the number of lines in bitmap is not 30 then throw "Bad Bitmap!"
+repeat for each x in lines of bitmap
+	if the number of words in x is not 22 then throw "Bad Bitmap!"
+end repeat
+
+local c as integer, i as integer, v as integer, codepoint as integer
+repeat with c = 0 to 29
+	repeat with i = 0 to 1
+		repeat with v = 0 to 10
+			if word i*11 + v + 1 of line c+1 of bitmap is 1 then
+				put bc("F16B0",16,10) + 22*c + 11*i + v into codepoint
+				put hex(codepoint) & ";" & "SYLABICA SYLLABLE" && (element c+1 of consonants) & (if i=1 then "I" else empty) & (element v+1 of vowels) & ";" & "Lo"
+			end if
+		end repeat
+	end repeat
+end repeat
