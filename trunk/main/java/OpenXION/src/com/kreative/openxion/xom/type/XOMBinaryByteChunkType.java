@@ -28,8 +28,10 @@
 package com.kreative.openxion.xom.type;
 
 import com.kreative.openxion.XNContext;
+import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.xom.XOMContainerDataType;
 import com.kreative.openxion.xom.XOMVariant;
+import com.kreative.openxion.xom.inst.XOMBinary;
 import com.kreative.openxion.xom.inst.XOMBinaryByteChunk;
 
 public class XOMBinaryByteChunkType extends XOMContainerDataType<XOMBinaryByteChunk> {
@@ -43,16 +45,32 @@ public class XOMBinaryByteChunkType extends XOMContainerDataType<XOMBinaryByteCh
 	}
 	
 	public boolean canGetChildMassVariant(XNContext ctx, XOMVariant parent) {
-		return true;
+		if (XOMBinaryType.instance.canMakeInstanceFrom(ctx, parent)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	public XOMVariant getChildMassVariant(XNContext ctx, XOMVariant parent) {
 		return new XOMBinaryByteChunk(parent, 0, -1);
 	}
 	public boolean canGetChildVariantByIndex(XNContext ctx, XOMVariant parent, int index) {
-		return true;
+		if (XOMBinaryType.instance.canMakeInstanceFrom(ctx, parent)) {
+			XOMBinary value = XOMBinaryType.instance.makeInstanceFrom(ctx, parent);
+			index = XIONUtil.index(0, value.toByteArray().length-1, index, index)[0];
+			return (index >= 0 && index < value.toByteArray().length);
+		} else {
+			return false;
+		}
 	}
 	public boolean canGetChildVariantByIndex(XNContext ctx, XOMVariant parent, int startIndex, int endIndex) {
-		return true;
+		if (XOMBinaryType.instance.canMakeInstanceFrom(ctx, parent)) {
+			XOMBinary value = XOMBinaryType.instance.makeInstanceFrom(ctx, parent);
+			int[] index = XIONUtil.index(0, value.toByteArray().length-1, startIndex, endIndex);
+			return (index[0] >= 0 && index[1] < value.toByteArray().length);
+		} else {
+			return false;
+		}
 	}
 	public XOMVariant getChildVariantByIndex(XNContext ctx, XOMVariant parent, int index) {
 		return new XOMBinaryByteChunk(parent, index, index);

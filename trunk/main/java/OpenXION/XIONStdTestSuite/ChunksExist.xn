@@ -1,0 +1,57 @@
+local x as string is "Hello World"
+
+put there is a word 0 of x
+put there is a word 1 of x
+put there is a word 2 of x
+put there is a word 3 of x
+
+put word 0 of x
+put word 1 of x
+put word 2 of x
+put word 3 of x
+
+put there is a zeroth word of x
+put there is a first word of x
+put there is a second word of x
+put there is a third word of x
+put there is a last word of x
+
+local y as binary is "01234567"
+
+put there is a byte 0 of y
+put there is a byte 1 of y
+put there is a byte 2 of y
+put there is a byte 3 of y
+put there is a byte 4 of y
+
+put byte 0 of y
+put byte 1 of y
+put byte 2 of y
+put byte 3 of y
+put byte 4 of y
+
+put there is a zeroth byte of y
+put there is a first byte of y
+put there is a second byte of y
+put there is a third byte of y
+put there is a fourth byte of y
+put there is a last byte of y
+
+put there is a shortInt 0 of y
+put there is a shortInt 1 of y
+put there is a shortInt 2 of y
+put there is a shortInt 3 of y
+put there is a shortInt 4 of y
+
+put shortInt 0 of y
+put shortInt 1 of y
+put shortInt 2 of y
+put shortInt 3 of y
+put shortInt 4 of y
+
+put there is a zeroth shortInt of y
+put there is a first shortInt of y
+put there is a second shortInt of y
+put there is a third shortInt of y
+put there is a fourth shortInt of y
+put there is a last shortInt of y

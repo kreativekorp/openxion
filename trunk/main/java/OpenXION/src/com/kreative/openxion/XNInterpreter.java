@@ -167,23 +167,13 @@ public class XNInterpreter {
 					return new XOMInteger(ai.not());
 				case EXISTS:
 					if (a instanceof XNVariantDescriptor) {
-						try {
-							evaluateExpression(a);
-							return XOMBoolean.TRUE;
-						} catch (XOMGetError ge) {
-							return XOMBoolean.FALSE;
-						}
+						return variantExists((XNVariantDescriptor)a) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
 					} else {
 						throw new XNScriptError("Can't understand this");
 					}
 				case NOT_EXISTS:
 					if (a instanceof XNVariantDescriptor) {
-						try {
-							evaluateExpression(a);
-							return XOMBoolean.FALSE;
-						} catch (XOMGetError ge) {
-							return XOMBoolean.TRUE;
-						}
+						return variantExists((XNVariantDescriptor)a) ? XOMBoolean.FALSE : XOMBoolean.TRUE;
 					} else {
 						throw new XNScriptError("Can't understand this");
 					}
@@ -1197,6 +1187,114 @@ public class XNInterpreter {
 			return (ret == null) ? XOMEmpty.EMPTY : ret;
 		} else {
 			throw new XNScriptError("Can't understand "+functionName);
+		}
+	}
+	
+	private boolean variantExists(XNVariantDescriptor expr) {
+		XNDataType dataTypeObj = expr.datatype;
+		String dataTypeStr = dataTypeObj.toNameString();
+		XOMDataType<? extends XOMVariant> dataType = context.getDataType(dataTypeStr);
+		XNExpression parentExpression = expr.parentVariant;
+		XOMVariant parent = (parentExpression == null) ? null : evaluateExpression(parentExpression);
+		if (expr instanceof XNVariantIdDescriptor) {
+			XNExpression idExpression = ((XNVariantIdDescriptor)expr).id;
+			XOMVariant idVar = evaluateExpression(idExpression).asPrimitive(context);
+			XOMInteger idInt = XOMIntegerType.instance.makeInstanceFrom(context, idVar, true);
+			if (parent != null) {
+				return dataType.canGetChildVariantByID(context, parent, idInt.toInt());
+			} else {
+				return dataType.canGetInstanceByID(context, idInt.toInt());
+			}
+		} else if (expr instanceof XNVariantIndexNameDescriptor) {
+			XNExpression startExpr = ((XNVariantIndexNameDescriptor)expr).start;
+			XNExpression endExpr = ((XNVariantIndexNameDescriptor)expr).end;
+			if (startExpr != null && endExpr != null) {
+				int start = XOMIntegerType.instance.makeInstanceFrom(context, evaluateExpression(startExpr).asPrimitive(context), true).toInt();
+				int end = XOMIntegerType.instance.makeInstanceFrom(context, evaluateExpression(endExpr).asPrimitive(context), true).toInt();
+				if (parent != null) {
+					return dataType.canGetChildVariantByIndex(context, parent, start, end);
+				} else {
+					return dataType.canGetInstanceByIndex(context, start, end);
+				}
+			} else if (startExpr != null) {
+				XOMVariant idxNameVar = evaluateExpression(startExpr).asPrimitive(context);
+				if (!idxNameVar.toTextString(context).equals("") && XOMIntegerType.instance.canMakeInstanceFrom(context, idxNameVar, true)) {
+					int index = XOMIntegerType.instance.makeInstanceFrom(context, idxNameVar, true).toInt();
+					if (parent != null) {
+						return dataType.canGetChildVariantByIndex(context, parent, index);
+					} else {
+						return dataType.canGetInstanceByIndex(context, index);
+					}
+				} else {
+					String name = idxNameVar.toTextString(context);
+					if (parent != null) {
+						return dataType.canGetChildVariantByName(context, parent, name);
+					} else {
+						return dataType.canGetInstanceByName(context, name);
+					}
+				}
+			} else if (endExpr != null) {
+				XOMVariant idxNameVar = evaluateExpression(endExpr).asPrimitive(context);
+				if (!idxNameVar.toTextString(context).equals("") && XOMIntegerType.instance.canMakeInstanceFrom(context, idxNameVar, true)) {
+					int index = XOMIntegerType.instance.makeInstanceFrom(context, idxNameVar, true).toInt();
+					if (parent != null) {
+						return dataType.canGetChildVariantByIndex(context, parent, index);
+					} else {
+						return dataType.canGetInstanceByIndex(context, index);
+					}
+				} else {
+					String name = idxNameVar.toTextString(context);
+					if (parent != null) {
+						return dataType.canGetChildVariantByName(context, parent, name);
+					} else {
+						return dataType.canGetInstanceByName(context, name);
+					}
+				}
+			} else {
+				throw new XNScriptError("Can't understand this");
+			}
+		} else if (expr instanceof XNVariantMassDescriptor) {
+			if (parent != null) {
+				return dataType.canGetChildMassVariant(context, parent);
+			} else {
+				return dataType.canGetMassInstance(context);
+			}
+		} else if (expr instanceof XNVariantOrdinalDescriptor) {
+			XNToken startOrdinal = ((XNVariantOrdinalDescriptor)expr).startOrdinal;
+			XNToken endOrdinal = ((XNVariantOrdinalDescriptor)expr).endOrdinal;
+			if (startOrdinal != null && endOrdinal != null) {
+				int start = context.getOrdinal(startOrdinal.image);
+				int end = context.getOrdinal(endOrdinal.image);
+				if (parent != null) {
+					return dataType.canGetChildVariantByIndex(context, parent, start, end);
+				} else {
+					return dataType.canGetInstanceByIndex(context, start, end);
+				}
+			} else if (startOrdinal != null) {
+				int start = context.getOrdinal(startOrdinal.image);
+				if (parent != null) {
+					return dataType.canGetChildVariantByIndex(context, parent, start);
+				} else {
+					return dataType.canGetInstanceByIndex(context, start);
+				}
+			} else if (endOrdinal != null) {
+				int end = context.getOrdinal(endOrdinal.image);
+				if (parent != null) {
+					return dataType.canGetChildVariantByIndex(context, parent, end);
+				} else {
+					return dataType.canGetInstanceByIndex(context, end);
+				}
+			} else {
+				throw new XNScriptError("Can't understand this");
+			}
+		} else if (expr instanceof XNVariantSingletonDescriptor) {
+			if (parent != null) {
+				return dataType.canGetChildSingletonVariant(context, parent);
+			} else {
+				return dataType.canGetSingletonInstance(context);
+			}
+		} else {
+			throw new XNScriptError("Can't understand this");
 		}
 	}
 	
