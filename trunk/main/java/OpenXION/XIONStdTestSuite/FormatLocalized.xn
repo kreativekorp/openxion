@@ -1,0 +1,7 @@
+put format("Message ^1 Default", 1)
+put format("Message ^1 Default", 2)
+put format("Message ^1 Default", 3)
+
+put '("Message ^1 Default", 1)
+put '("Message ^1 Default", 2)
+put '("Message ^1 Default", 3)

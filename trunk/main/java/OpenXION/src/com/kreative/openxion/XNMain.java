@@ -29,7 +29,8 @@ package com.kreative.openxion;
 
 import java.io.*;
 import java.util.*;
-import com.kreative.openxion.ast.XNStatement;
+
+import com.kreative.openxion.ast.XNStringExpression;
 import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.xom.inst.XOMBoolean;
 import com.kreative.openxion.xom.inst.XOMDictionary;
@@ -83,6 +84,7 @@ public class XNMain {
 					else if (arg.equals("-E")) lastOption = Option.TEXT_ENCODING;
 					else if (arg.equals("-D")) lastOption = Option.VARIABLE;
 					else if (arg.equals("-s")) lastOption = Option.SECURITY_PROFILE;
+					else if (arg.equals("-M")) lastOption = Option.MESSAGE_FILE;
 					else if (arg.equals("-h") || arg.equals("-help") || arg.equals("--help")) {
 						somethingOfConsequenceHappened = true;
 						help(ui);
@@ -125,10 +127,7 @@ public class XNMain {
 							
 							try {
 								ctx.reset();
-								XNLexer lex = new XNLexer(new File(arg), new InputStreamReader(new FileInputStream(arg), textEncoding));
-								XNParser par = new XNParser(ctx, lex);
-								List<XNStatement> program = par.parse();
-								interp.executeScript(program);
+								interp.executeScriptFile(new File(arg), textEncoding);
 							} catch (IOException e) {
 								captureStream.println("Could not read script file: "+arg);
 								if (stackTrace) e.printStackTrace();
@@ -160,10 +159,7 @@ public class XNMain {
 							else testsPassed++;
 						} else {
 							try {
-								XNLexer lex = new XNLexer(new File(arg), new InputStreamReader(new FileInputStream(arg), textEncoding));
-								XNParser par = new XNParser(ctx, lex);
-								List<XNStatement> program = par.parse();
-								interp.executeScript(program);
+								interp.executeScriptFile(new File(arg), textEncoding);
 							} catch (IOException e) {
 								System.err.println("Could not read script file: "+arg);
 								if (stackTrace) e.printStackTrace();
@@ -238,6 +234,66 @@ public class XNMain {
 							}
 						}
 						break;
+					case MESSAGE_FILE:
+						somethingOfConsequenceHappened = true;
+						try {
+							File scriptFile = new File(arg);
+							File messageFile = XIONUtil.getMessageFile(scriptFile);
+							File translatedMessageFile = XIONUtil.getTranslatedMessageFile(scriptFile);
+							File localMessageFile = XIONUtil.getLocalMessageFile(scriptFile);
+							XNMessageExtractor extractor = new XNMessageExtractor(ctx, textEncoding);
+							Map<String,List<XNStringExpression>> messageMap = extractor.extractFromFile(scriptFile, textEncoding);
+							Map<String,String> messages = XIONUtil.getMessagesFromMessageFile(messageFile, textEncoding);
+							Map<String,String> translatedMessages = XIONUtil.getMessagesFromMessageFile(translatedMessageFile, textEncoding);
+							Map<String,String> localMessages = XIONUtil.getMessagesFromMessageFile(localMessageFile, textEncoding);
+							PrintWriter messagesOut = new PrintWriter(new OutputStreamWriter(new FileOutputStream(messageFile), textEncoding), true);
+							PrintWriter translatedMessagesOut = new PrintWriter(new OutputStreamWriter(new FileOutputStream(translatedMessageFile), textEncoding), true);
+							PrintWriter localMessagesOut = new PrintWriter(new OutputStreamWriter(new FileOutputStream(localMessageFile), textEncoding), true);
+							for (Map.Entry<String,List<XNStringExpression>> e : messageMap.entrySet()) {
+								String messageID = e.getKey();
+								List<XNStringExpression> messageList = e.getValue();
+
+								messagesOut.println();
+								translatedMessagesOut.println();
+								localMessagesOut.println();
+								
+								for (XNStringExpression message : messageList) {
+									messagesOut.println("# " + scriptFile.getName() + ", line " + message.getBeginLine() + ":");
+									translatedMessagesOut.println("# " + scriptFile.getName() + ", line " + message.getBeginLine() + ":");
+									localMessagesOut.println("# " + scriptFile.getName() + ", line " + message.getBeginLine() + ":");
+								}
+								
+								messagesOut.println(XIONUtil.quote(messageID));
+								if (messages.containsKey(messageID)) {
+									messagesOut.println(XIONUtil.quote(messages.get(messageID)));
+								} else {
+									messagesOut.println("# NOT TRANSLATED");
+									messagesOut.println(XIONUtil.quote(messageID));
+								}
+								
+								translatedMessagesOut.println(XIONUtil.quote(messageID));
+								if (translatedMessages.containsKey(messageID)) {
+									translatedMessagesOut.println(XIONUtil.quote(translatedMessages.get(messageID)));
+								} else {
+									translatedMessagesOut.println("# NOT TRANSLATED");
+									translatedMessagesOut.println(XIONUtil.quote(messageID));
+								}
+								
+								localMessagesOut.println(XIONUtil.quote(messageID));
+								if (localMessages.containsKey(messageID)) {
+									localMessagesOut.println(XIONUtil.quote(localMessages.get(messageID)));
+								} else {
+									localMessagesOut.println("# NOT TRANSLATED");
+									localMessagesOut.println(XIONUtil.quote(messageID));
+								}
+							}
+							messagesOut.close();
+							translatedMessagesOut.close();
+							localMessagesOut.close();
+						} catch (IOException ioe) {
+							System.err.println("Could not create message file: "+arg);
+						}
+						break;
 					}
 					lastOption = Option.SCRIPT_FILE;
 				}
@@ -264,7 +320,8 @@ public class XNMain {
 		MODULE,
 		TEXT_ENCODING,
 		VARIABLE,
-		SECURITY_PROFILE
+		SECURITY_PROFILE,
+		MESSAGE_FILE
 	}
 	
 	private static void shell(XNStdInOutUI ui, XNInterpreter interp, XNContext ctx, boolean stackTrace) {
@@ -446,6 +503,7 @@ public class XNMain {
 		ui.println("  -f programfile      execute the specified script file");
 		ui.println("  -h, --help          print help screen");
 		ui.println("  -i                  start an interactive shell");
+		ui.println("  -M programfile      generate a message file for localization");
 		ui.println("  -m classname        load an XNModule with the specified class name");
 		ui.println("  -P                  use fancy prompts simulating dialog boxes (default)");
 		ui.println("  -p                  use simple, more traditional prompts");
