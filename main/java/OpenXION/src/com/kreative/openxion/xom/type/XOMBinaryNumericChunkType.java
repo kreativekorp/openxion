@@ -29,8 +29,10 @@ package com.kreative.openxion.xom.type;
 
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.util.BinaryNumericChunkType;
+import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.xom.XOMContainerDataType;
 import com.kreative.openxion.xom.XOMVariant;
+import com.kreative.openxion.xom.inst.XOMBinary;
 import com.kreative.openxion.xom.inst.XOMBinaryNumericChunk;
 
 public class XOMBinaryNumericChunkType extends XOMContainerDataType<XOMBinaryNumericChunk> {
@@ -59,7 +61,13 @@ public class XOMBinaryNumericChunkType extends XOMContainerDataType<XOMBinaryNum
 	}
 	
 	public boolean canGetChildVariantByIndex(XNContext ctx, XOMVariant parent, int index) {
-		return true;
+		if (XOMBinaryType.instance.canMakeInstanceFrom(ctx, parent)) {
+			XOMBinary value = XOMBinaryType.instance.makeInstanceFrom(ctx, parent);
+			index = XIONUtil.index(0, value.toByteArray().length-ct.length(), index, index)[0];
+			return (index >= 0 && index <= value.toByteArray().length-ct.length());
+		} else {
+			return false;
+		}
 	}
 	public XOMVariant getChildVariantByIndex(XNContext ctx, XOMVariant parent, int index) {
 		return new XOMBinaryNumericChunk(parent, ct, index);

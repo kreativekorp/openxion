@@ -30,6 +30,7 @@ package com.kreative.openxion.xom.type;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.util.StringChunkType;
 import com.kreative.openxion.util.StringChunkEx;
+import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.xom.XOMContainerDataType;
 import com.kreative.openxion.xom.XOMGetError;
 import com.kreative.openxion.xom.XOMVariant;
@@ -69,10 +70,22 @@ public class XOMStringChunkType extends XOMContainerDataType<XOMStringChunk> {
 		return new XOMStringChunk(parent, ct, 1, -1);
 	}
 	public boolean canGetChildVariantByIndex(XNContext ctx, XOMVariant parent, int index) {
-		return true;
+		String s = parent.toTextString(ctx);
+		char id = ctx.getItemDelimiter();
+		char cd = ctx.getColumnDelimiter();
+		char rd = ctx.getRowDelimiter();
+		int n = StringChunkEx.count(s, ct, id, cd, rd);
+		index = XIONUtil.index(1, n, index, index)[0];
+		return (index > 0 && index <= n);
 	}
 	public boolean canGetChildVariantByIndex(XNContext ctx, XOMVariant parent, int startIndex, int endIndex) {
-		return true;
+		String s = parent.toTextString(ctx);
+		char id = ctx.getItemDelimiter();
+		char cd = ctx.getColumnDelimiter();
+		char rd = ctx.getRowDelimiter();
+		int n = StringChunkEx.count(s, ct, id, cd, rd);
+		int[] index = XIONUtil.index(1, n, startIndex, endIndex);
+		return (index[0] > 0 && index[1] <= n);
 	}
 	public XOMVariant getChildVariantByIndex(XNContext ctx, XOMVariant parent, int index) {
 		return new XOMStringChunk(parent, ct, index, index);

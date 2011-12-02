@@ -103,7 +103,7 @@ public class XOMDictionaryChunk extends XOMContainer {
 		}
 		else if (parent.canGetContents(ctx)) {
 			Map<String,XOMVariant> m = XOMDictionaryType.instance.makeInstanceFrom(ctx, parent).toMap();
-			return m.get(key);
+			return m.containsKey(key) ? m.get(key) : XOMEmpty.EMPTY;
 		}
 		else {
 			throw new XNScriptError("Can't understand this");
@@ -238,7 +238,7 @@ public class XOMDictionaryChunk extends XOMContainer {
 		}
 		else {
 			Map<String,XOMVariant> m = XOMDictionaryType.instance.makeInstanceFrom(ctx, parent).toMap();
-			return m.get(key).canGetProperty(ctx, property);
+			return m.containsKey(key) && m.get(key).canGetProperty(ctx, property);
 		}
 	}
 	
@@ -249,6 +249,7 @@ public class XOMDictionaryChunk extends XOMContainer {
 		}
 		else {
 			Map<String,XOMVariant> m = XOMDictionaryType.instance.makeInstanceFrom(ctx, parent).toMap();
+			if (!m.containsKey(key)) throw new XNScriptError("Can't get that property");
 			return m.get(key).getProperty(ctx, modifier, property);
 		}
 	}
@@ -259,7 +260,7 @@ public class XOMDictionaryChunk extends XOMContainer {
 		}
 		else {
 			Map<String,XOMVariant> m = XOMDictionaryType.instance.makeInstanceFrom(ctx, parent).toMap();
-			return m.get(key).canSetProperty(ctx, property);
+			return m.containsKey(key) && m.get(key).canSetProperty(ctx, property);
 		}
 	}
 	
@@ -270,6 +271,7 @@ public class XOMDictionaryChunk extends XOMContainer {
 		}
 		else {
 			Map<String,XOMVariant> m = XOMDictionaryType.instance.makeInstanceFrom(ctx, parent).toMap();
+			if (!m.containsKey(key)) throw new XNScriptError("Can't set that property");
 			m.get(key).setProperty(ctx, property, value);
 		}
 	}

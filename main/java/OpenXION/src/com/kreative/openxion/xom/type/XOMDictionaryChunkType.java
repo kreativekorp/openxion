@@ -30,6 +30,7 @@ package com.kreative.openxion.xom.type;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.xom.XOMContainerDataType;
 import com.kreative.openxion.xom.XOMVariant;
+import com.kreative.openxion.xom.inst.XOMDictionary;
 import com.kreative.openxion.xom.inst.XOMDictionaryChunk;
 
 public class XOMDictionaryChunkType extends XOMContainerDataType<XOMDictionaryChunk> {
@@ -43,10 +44,20 @@ public class XOMDictionaryChunkType extends XOMContainerDataType<XOMDictionaryCh
 	}
 	
 	public boolean canGetChildVariantByIndex(XNContext ctx, XOMVariant parent, int index) {
-		return true;
+		if (XOMDictionaryType.instance.canMakeInstanceFrom(ctx, parent)) {
+			XOMDictionary dictionary = XOMDictionaryType.instance.makeInstanceFrom(ctx, parent);
+			return (dictionary.toMap().containsKey(Integer.toString(index)));
+		} else {
+			return false;
+		}
 	}
 	public boolean canGetChildVariantByName(XNContext ctx, XOMVariant parent, String name) {
-		return true;
+		if (XOMDictionaryType.instance.canMakeInstanceFrom(ctx, parent)) {
+			XOMDictionary dictionary = XOMDictionaryType.instance.makeInstanceFrom(ctx, parent);
+			return (dictionary.toMap().containsKey(name));
+		} else {
+			return false;
+		}
 	}
 	public XOMVariant getChildVariantByIndex(XNContext ctx, XOMVariant parent, int index) {
 		return new XOMDictionaryChunk(parent, Integer.toString(index));
