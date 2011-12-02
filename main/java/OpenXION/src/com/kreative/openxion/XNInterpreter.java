@@ -1302,29 +1302,21 @@ public class XNInterpreter {
 	 * COMMANDS & STATEMENTS *
 	 * * * * * * * * * * * * */
 	
+	public void executeScriptFile(File file, String textEncoding) throws IOException {
+		if (file == null) return;
+		context.addMessages(XIONUtil.getMessagesForScriptFile(file, textEncoding));
+		XNLexer lexer = new XNLexer(file, new InputStreamReader(new FileInputStream(file), textEncoding));
+		XNParser parser = new XNParser(context, lexer);
+		List<XNStatement> program = parser.parse();
+		executeScript(program);
+	}
+	
 	public void executeScriptString(String s) {
 		if (s == null) return;
 		XNLexer lexer = new XNLexer(s, new StringReader(s));
 		XNParser parser = new XNParser(context, lexer);
-		List<XNStatement> stats = parser.parse();
-		try {
-			XNHandlerExit exit = executeStatements(stats);
-			switch (exit.status()) {
-			case RETURNED:
-				context.setResult((exit.returnValue() == null) ? XOMEmpty.EMPTY : exit.returnValue());
-				break;
-			case EXITED:
-				if (exit.blockTypeValue() != null) {
-					throw new XNScriptError("Found exit "+exit.blockTypeValue()+" outside a "+exit.blockTypeValue()+" block");
-				}
-				if (exit.errorValue() != null) {
-					throw new XNScriptError(exit.errorValue().toTextString(context));
-				}
-				break;
-			case NEXTED:
-				throw new XNScriptError("Found next "+exit.blockTypeValue()+" outside a "+exit.blockTypeValue()+" block");
-			}
-		} catch (XNExitedToInterpreterException exex) {}
+		List<XNStatement> program = parser.parse();
+		executeScript(program);
 	}
 	
 	public void executeScript(List<XNStatement> stats) {
@@ -1508,10 +1500,7 @@ public class XNInterpreter {
 					if (!(is.once && context.hasIncludedScript(file.getAbsolutePath()))) {
 						context.addIncludedScript(file.getAbsolutePath());
 						try {
-							XNLexer lex = new XNLexer(file, new InputStreamReader(new FileInputStream(file), context.getTextEncoding()));
-							XNParser par = new XNParser(context, lex);
-							List<XNStatement> program = par.parse();
-							executeScript(program);
+							executeScriptFile(file, context.getTextEncoding());
 						} catch (IOException ioe) {
 							if (is.require) {
 								throw new XNScriptError("Cannot read required include " + path);

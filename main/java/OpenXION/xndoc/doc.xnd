@@ -10139,15 +10139,14 @@
 		are replaced with a literal closing brace, vertical bar, or caret,
 		respectively.
 	</description>
-	<note>
-		Currently, there is no difference between the [[fn:']] and
-		[[fn:format]] functions. However, the [[fn:']] function is
-		intended to be used with strings that should be localized,
-		while the [[fn:format]] function is intended to be used with
-		non-localizable strings. Future versions of OpenXION may
-		support localization of format strings passed to the [[fn:']]
-		function.
-	</note>
+	<description>
+		The [[fn:']] form of this function is used with strings that should
+		be localized. By running OpenXION with the [[-M]] parameter, a
+		message file will be generated for your language and locale.
+		By editing the message file, you or other people can translate your
+		script's messages into other languages without having to modify
+		the script itself.
+	</description>
 </function>
 
 <function>

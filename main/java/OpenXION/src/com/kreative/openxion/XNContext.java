@@ -261,6 +261,7 @@ public class XNContext implements Serializable, Cloneable {
 	private String lineEnding;
 	private MathContext mc;
 	private MathProcessor mp;
+	private Map<String,String> messages;
 	
 	/* CALL STACK */
 	private XNResponder firstResponder;
@@ -340,6 +341,7 @@ public class XNContext implements Serializable, Cloneable {
 		lineEnding = "\n";
 		mc = new MathContext(100, RoundingMode.HALF_EVEN);
 		mp = FastMath.instance;
+		messages = new HashMap<String,String>();
 	}
 	
 	private void initEnvironment(XNContext parent) {
@@ -356,6 +358,7 @@ public class XNContext implements Serializable, Cloneable {
 		lineEnding = parent.lineEnding;
 		mc = parent.mc;
 		mp = parent.mp;
+		messages = parent.messages;
 	}
 	
 	/* CALL STACK */
@@ -685,6 +688,14 @@ public class XNContext implements Serializable, Cloneable {
 	
 	public void setMathProcessor(MathProcessor mp) {
 		this.mp = mp;
+	}
+	
+	public String getMessage(String messageID) {
+		return messages.containsKey(messageID) ? messages.get(messageID) : messageID;
+	}
+	
+	public void addMessages(Map<String,String> m) {
+		messages.putAll(m);
 	}
 	
 	/* CALL STACK */

@@ -62,6 +62,29 @@ import com.kreative.openxion.xom.inst.XOMString;
 public class XIONUtil {
 	private XIONUtil() {}
 	
+	/* * * * * * * * * * * * *
+	 * MISC STRING FUNCTIONS *
+	 * * * * * * * * * * * * */
+	
+	public static String toTitleCase(String oldstr) {
+		StringBuffer newstr = new StringBuffer(oldstr.length());
+		CharacterIterator ci = new StringCharacterIterator(oldstr);
+		for (char pch = ' ', ch = ci.first(); ch != CharacterIterator.DONE; pch = ch, ch = ci.next()) {
+			if (!Character.isLetter(pch)) newstr.append(Character.toTitleCase(ch));
+			else newstr.append(Character.toLowerCase(ch));
+		}
+		return newstr.toString();
+	}
+	
+	public static String reverseString(String s) {
+		StringBuffer sr = new StringBuffer();
+		CharacterIterator ci = new StringCharacterIterator(s);
+		for (char ch = ci.last(); ch != CharacterIterator.DONE; ch = ci.previous()) {
+			sr.append(ch);
+		}
+		return sr.toString();
+	}
+	
 	/* * * * * *
 	 * PARSING *
 	 * * * * * */
@@ -561,6 +584,96 @@ public class XIONUtil {
 			}
 		}
 		return queryMap;
+	}
+	
+	/* * * * * * * * * * * *
+	 * STRING LOCALIZATION *
+	 * * * * * * * * * * * */
+	
+	public static File getAuxiliaryFile(File scriptFile, String extension) {
+		String scriptPath = scriptFile.getAbsolutePath();
+		int extensionCase = 0;
+		if (scriptPath.endsWith(".xn")) {
+			scriptPath = scriptPath.substring(0, scriptPath.length()-3);
+			extensionCase = 0;
+		} else if (scriptPath.endsWith(".Xn")) {
+			scriptPath = scriptPath.substring(0, scriptPath.length()-3);
+			extensionCase = 1;
+		} else if (scriptPath.endsWith(".XN")) {
+			scriptPath = scriptPath.substring(0, scriptPath.length()-3);
+			extensionCase = 2;
+		} else if (scriptPath.endsWith(".xN")) {
+			scriptPath = scriptPath.substring(0, scriptPath.length()-3);
+			extensionCase = 3;
+		}
+		if (!extension.startsWith(".")) {
+			scriptPath += ".";
+		}
+		switch (extensionCase) {
+		case 0: scriptPath += extension.toLowerCase(); break;
+		case 1: scriptPath += toTitleCase(extension); break;
+		case 2: scriptPath += extension.toUpperCase(); break;
+		case 3: scriptPath += reverseString(toTitleCase(reverseString(extension))); break;
+		}
+		return new File(scriptPath);
+	}
+	
+	public static File getMessageFile(File scriptFile) {
+		return getAuxiliaryFile(scriptFile, "xnm");
+	}
+	
+	public static File getTranslatedMessageFile(File scriptFile) {
+		String lang;
+		try {
+			lang = System.getProperty("user.language");
+		} catch (Exception e) {
+			lang = "en";
+		}
+		return getAuxiliaryFile(scriptFile, "xnm." + lang + ".xnm");
+	}
+	
+	public static File getLocalMessageFile(File scriptFile) {
+		String lang;
+		String reg;
+		try {
+			lang = System.getProperty("user.language");
+			reg = System.getProperty("user.country");
+		} catch (Exception e) {
+			lang = "en";
+			reg = "US";
+		}
+		return getAuxiliaryFile(scriptFile, "xnm." + lang + "." + reg + ".xnm");
+	}
+	
+	public static Map<String,String> getMessagesFromMessageFile(File messageFile, String textEncoding) {
+		Map<String,String> messages = new HashMap<String,String>();
+		try {
+			Scanner scanner = new Scanner(messageFile, textEncoding);
+			while (scanner.hasNextLine()) {
+				String messageID = scanner.nextLine().trim();
+				if (messageID.length() > 0 && !messageID.startsWith("#")) {
+					while (scanner.hasNextLine()) {
+						String localMessage = scanner.nextLine().trim();
+						if (localMessage.length() > 0 && !localMessage.startsWith("#")) {
+							messages.put(unquote(messageID, textEncoding), unquote(localMessage, textEncoding));
+							break;
+						}
+					}
+				}
+			}
+			scanner.close();
+		} catch (IOException e) {
+			// ignored
+		}
+		return messages;
+	}
+	
+	public static Map<String,String> getMessagesForScriptFile(File scriptFile, String textEncoding) {
+		Map<String,String> messages = new HashMap<String,String>();
+		messages.putAll(getMessagesFromMessageFile(getMessageFile(scriptFile), textEncoding));
+		messages.putAll(getMessagesFromMessageFile(getTranslatedMessageFile(scriptFile), textEncoding));
+		messages.putAll(getMessagesFromMessageFile(getLocalMessageFile(scriptFile), textEncoding));
+		return messages;
 	}
 	
 	/* * * * * * * * * * * * * * * *

@@ -3682,6 +3682,7 @@ public class XNStandardModule extends XNModule {
 				throw new XNScriptError("Can't understand arguments to "+functionName); 
 			} else {
 				String pattern = parameters.get(0).toTextString(ctx);
+				if (functionName.equals("'")) pattern = ctx.getMessage(pattern);
 				FormatString formatString = FormatString.compile(ctx, pattern);
 				return new XOMString(formatString.format(ctx, parameters));
 			}
@@ -4598,13 +4599,7 @@ public class XNStandardModule extends XNModule {
 	private static final Function f_reverse = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) throw new XNScriptError("Can't understand arguments to reverse");
-			String s = parameter.toTextString(ctx);
-			StringBuffer sr = new StringBuffer();
-			CharacterIterator ci = new StringCharacterIterator(s);
-			for (char ch = ci.last(); ch != CharacterIterator.DONE; ch = ci.previous()) {
-				sr.append(ch);
-			}
-			return new XOMString(sr.toString());
+			else return new XOMString(XIONUtil.reverseString(parameter.toTextString(ctx)));
 		}
 	};
 	
@@ -5058,16 +5053,7 @@ public class XNStandardModule extends XNModule {
 	private static final Function f_tcase = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) throw new XNScriptError("Can't understand arguments to tcase");
-			else {
-				String oldstr = parameter.toTextString(ctx);
-				StringBuffer newstr = new StringBuffer(oldstr.length());
-				CharacterIterator ci = new StringCharacterIterator(oldstr);
-				for (char pch = ' ', ch = ci.first(); ch != CharacterIterator.DONE; pch = ch, ch = ci.next()) {
-					if (!Character.isLetter(pch)) newstr.append(Character.toTitleCase(ch));
-					else newstr.append(Character.toLowerCase(ch));
-				}
-				return new XOMString(newstr.toString());
-			}
+			else return new XOMString(XIONUtil.toTitleCase(parameter.toTextString(ctx)));
 		}
 	};
 	
