@@ -40,11 +40,11 @@ import java.util.regex.Pattern;
  */
 public class VersionNumberRange implements Serializable, Comparable<VersionNumberRange> {
 	private static final long serialVersionUID = 1L;
-	private static final Pattern  RANGE_PATTERN = Pattern.compile("(\\+*)([0-9A-Za-z.]+)(\\+*)-(-*)([0-9A-Za-z.]+)(-*)");
+	
+	private static final Pattern RANGE_PATTERN = Pattern.compile("(>=|>|=>)([0-9A-Za-z.]+)(<=|<|=<)([0-9A-Za-z.]+)");
+	private static final Pattern START_PATTERN = Pattern.compile("(>=|>|=>)([0-9A-Za-z.]+)");
+	private static final Pattern END_PATTERN = Pattern.compile("(<=|<|=<)([0-9A-Za-z.]+)");
 	private static final Pattern SINGLE_PATTERN = Pattern.compile("[0-9A-Za-z.]+");
-	private static final Pattern  START_PATTERN = Pattern.compile("(\\+*)([0-9A-Za-z.]+)(\\+*)");
-	private static final Pattern    END_PATTERN = Pattern.compile("(-*)([0-9A-Za-z.]+)(-*)");
-	private static final Pattern   STAR_PATTERN = Pattern.compile("(\\**)([0-9A-Za-z.]+)(\\**)");
 	
 	private VersionNumber start;
 	private boolean startInclusive;
@@ -77,27 +77,22 @@ public class VersionNumberRange implements Serializable, Comparable<VersionNumbe
 		versions = versions.replaceAll("\\s+", "");
 		if ((m = RANGE_PATTERN.matcher(versions)).matches()) {
 			this.start = new VersionNumber(m.group(2));
-			this.startInclusive = (m.group(1).length() == 0);
-			this.end = new VersionNumber(m.group(5));
-			this.endInclusive = (m.group(4).length() == 0);
-		} else if ((m = SINGLE_PATTERN.matcher(versions)).matches()) {
-			this.start = this.end = new VersionNumber(m.group());
-			this.startInclusive = this.endInclusive = true;
+			this.startInclusive = (m.group(1).contains("="));
+			this.end = new VersionNumber(m.group(4));
+			this.endInclusive = (m.group(3).contains("="));
 		} else if ((m = START_PATTERN.matcher(versions)).matches()) {
 			this.start = new VersionNumber(m.group(2));
-			this.startInclusive = (m.group(1).length() == 0);
+			this.startInclusive = (m.group(1).contains("="));
 			this.end = null;
 			this.endInclusive = true;
 		} else if ((m = END_PATTERN.matcher(versions)).matches()) {
 			this.start = null;
 			this.startInclusive = true;
 			this.end = new VersionNumber(m.group(2));
-			this.endInclusive = (m.group(1).length() == 0);
-		} else if ((m = STAR_PATTERN.matcher(versions)).matches()) {
-			this.start = new VersionNumber(m.group(2));
-			this.startInclusive = true;
-			this.end = this.start.next();
-			this.endInclusive = false;
+			this.endInclusive = (m.group(1).contains("="));
+		} else if ((m = SINGLE_PATTERN.matcher(versions)).matches()) {
+			this.start = this.end = new VersionNumber(m.group());
+			this.startInclusive = this.endInclusive = true;
 		} else {
 			this.start = this.end = null;
 			this.startInclusive = this.endInclusive = true;
@@ -105,29 +100,19 @@ public class VersionNumberRange implements Serializable, Comparable<VersionNumbe
 	}
 	
 	public String toString() {
-		if (this.start == null && this.end == null) {
-			return "";
-		} else if (this.end == null) {
-			if (this.startInclusive)
-				return this.start.toString() + "+";
-			else
-				return "+" + this.start.toString();
-		} else if (this.start == null) {
-			if (this.endInclusive)
-				return this.end.toString() + "-";
-			else
-				return "-" + this.end.toString();
-		} else if (this.startInclusive && this.endInclusive) {
-			if (this.start.compareTo(this.end) == 0)
-				return this.start.toString();
-			else
-				return this.start.toString() + "-" + this.end.toString();
-		} else if (this.endInclusive) {
-			return "+" + this.start.toString() + "-" + this.end.toString();
-		} else if (this.startInclusive) {
-			return this.start.toString() + "--" + this.end.toString();
+		if (this.start != null && this.end != null && this.start.equals(this.end)) {
+			return this.start.toString();
 		} else {
-			return "+" + this.start.toString() + "--" + this.end.toString();
+			StringBuffer s = new StringBuffer();
+			if (this.start != null) {
+				s.append(this.startInclusive ? ">=" : ">");
+				s.append(this.start.toString());
+			}
+			if (this.end != null) {
+				s.append(this.endInclusive ? "<=" : "<");
+				s.append(this.end.toString());
+			}
+			return s.toString();
 		}
 	}
 	
