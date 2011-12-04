@@ -140,7 +140,7 @@ public class XMLSDOMParser {
 		for (int i = 0; i < children.getLength(); i++) {
 			Node child = children.item(i);
 			String type = child.getNodeName();
-			if (type.equalsIgnoreCase("#text")) {
+			if (type.equalsIgnoreCase("#text") || type.equalsIgnoreCase("kwd")) {
 				String[] words = child.getTextContent().trim().split("\\s+");
 				for (String word : words) {
 					if (word.length() > 0) {
@@ -265,6 +265,8 @@ public class XMLSDOMParser {
 			else if (type.equalsIgnoreCase("c")) spans.add(parseSpanList(child, new Code()));
 			else if (type.equalsIgnoreCase("tt")) spans.add(parseSpanList(child, new Code()));
 			else if (type.equalsIgnoreCase("code")) spans.add(parseSpanList(child, new Code()));
+			else if (type.equalsIgnoreCase("kwd")) spans.add(new Keyword(child.getTextContent().replaceAll("\\s+", " ")));
+			else if (type.equalsIgnoreCase("mv")) spans.add(new Metavariable(child.getTextContent().replaceAll("\\s+", " ")));
 			else if (type.equalsIgnoreCase("span")) {
 				NamedNodeMap attr = child.getAttributes();
 				Node style = (attr == null) ? null : attr.getNamedItem("style");

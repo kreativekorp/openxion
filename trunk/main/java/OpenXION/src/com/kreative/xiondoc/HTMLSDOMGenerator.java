@@ -428,6 +428,16 @@ public class HTMLSDOMGenerator {
 			}
 			out.append("</code>");
 		}
+		else if (span instanceof Keyword) {
+			out.append("<span class=\"keyword\">");
+			out.append(htmlencode(((Keyword)span).toString(),true));
+			out.append("</span>");
+		}
+		else if (span instanceof Metavariable) {
+			out.append("<span class=\"metavariable\">");
+			out.append(htmlencode(((Metavariable)span).toString(),true));
+			out.append("</span>");
+		}
 		else if (span instanceof Generic) {
 			out.append("<span class=\"generic\" style=\"");
 			out.append(htmlencode(((Generic)span).getStyle(), true));
