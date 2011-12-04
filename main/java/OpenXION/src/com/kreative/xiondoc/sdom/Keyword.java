@@ -32,7 +32,7 @@ package com.kreative.xiondoc.sdom;
  * @since XIONDoc 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
  */
-public class Keyword implements Syntactic {
+public class Keyword implements Syntactic, Span {
 	private static final long serialVersionUID = 1L;
 	
 	private String keyword;

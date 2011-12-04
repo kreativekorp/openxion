@@ -15,9 +15,9 @@
 
 <!ENTITY % verbatim  "( #PCDATA )"><!-- actually CDATA, but that would make it not XML -->
 <!ENTITY % plain     "( #PCDATA )">
-<!ENTITY % syntactic "( #PCDATA | mv | opt | ch | br | me )*">
-<!ENTITY % formatted "( #PCDATA | img | b | strong | i | em | u | s | sup | sub | big | small | c | tt | code | span | a | if | br | dia | mod | lib | ver | me )*">
-<!ENTITY % condition "( #PCDATA | img | b | strong | i | em | u | s | sup | sub | big | small | c | tt | code | span | a | if | else | br | dia | mod | lib | ver | me )*">
+<!ENTITY % syntactic "( #PCDATA | kwd | mv | opt | ch | br | me )*">
+<!ENTITY % formatted "( #PCDATA | img | b | strong | i | em | u | s | sup | sub | big | small | c | tt | code | kwd | mv | span | a | if | br | dia | mod | lib | ver | me )*">
+<!ENTITY % condition "( #PCDATA | img | b | strong | i | em | u | s | sup | sub | big | small | c | tt | code | kwd | mv | span | a | if | else | br | dia | mod | lib | ver | me )*">
 <!ENTITY % blockseq  "( scr | syn | ul | ol | table | p | blockquote | h1 | h2 | h3 | h4 | h5 | h6 | hr | img )*">
 
 <!ELEMENT xiondoc ( summary | description | dialect | module | library | article | structure | keyword | event | command | function | datatype | property | operator | constant | ordinal | iomethod | iomanager | extlang | version )*>
@@ -79,6 +79,7 @@
 <!-- SYNTAX BLOCKS -->
 <!ELEMENT syn %syntactic;>
 <!ATTLIST syn indent CDATA #IMPLIED>
+<!ELEMENT kwd %plain;>
 <!ELEMENT mv %plain;>
 <!ELEMENT opt %syntactic;>
 <!ELEMENT ch ( ci )*>
