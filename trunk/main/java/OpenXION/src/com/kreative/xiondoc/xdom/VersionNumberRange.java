@@ -41,9 +41,9 @@ import java.util.regex.Pattern;
 public class VersionNumberRange implements Serializable, Comparable<VersionNumberRange> {
 	private static final long serialVersionUID = 1L;
 	
-	private static final Pattern RANGE_PATTERN = Pattern.compile("(>=|>|=>)([0-9A-Za-z.]+)(<=|<|=<)([0-9A-Za-z.]+)");
-	private static final Pattern START_PATTERN = Pattern.compile("(>=|>|=>)([0-9A-Za-z.]+)");
-	private static final Pattern END_PATTERN = Pattern.compile("(<=|<|=<)([0-9A-Za-z.]+)");
+	private static final Pattern RANGE_PATTERN = Pattern.compile("(>=|>|=>|\u2265)([0-9A-Za-z.]+)(<=|<|=<|\u2264)([0-9A-Za-z.]+)");
+	private static final Pattern START_PATTERN = Pattern.compile("(>=|>|=>|\u2265)([0-9A-Za-z.]+)");
+	private static final Pattern END_PATTERN = Pattern.compile("(<=|<|=<|\u2264)([0-9A-Za-z.]+)");
 	private static final Pattern SINGLE_PATTERN = Pattern.compile("[0-9A-Za-z.]+");
 	
 	private VersionNumber start;
@@ -77,19 +77,19 @@ public class VersionNumberRange implements Serializable, Comparable<VersionNumbe
 		versions = versions.replaceAll("\\s+", "");
 		if ((m = RANGE_PATTERN.matcher(versions)).matches()) {
 			this.start = new VersionNumber(m.group(2));
-			this.startInclusive = (m.group(1).contains("="));
+			this.startInclusive = (m.group(1).contains("=") || m.group(1).contains("\u2265"));
 			this.end = new VersionNumber(m.group(4));
-			this.endInclusive = (m.group(3).contains("="));
+			this.endInclusive = (m.group(3).contains("=") || m.group(3).contains("\u2264"));
 		} else if ((m = START_PATTERN.matcher(versions)).matches()) {
 			this.start = new VersionNumber(m.group(2));
-			this.startInclusive = (m.group(1).contains("="));
+			this.startInclusive = (m.group(1).contains("=") || m.group(1).contains("\u2265"));
 			this.end = null;
 			this.endInclusive = true;
 		} else if ((m = END_PATTERN.matcher(versions)).matches()) {
 			this.start = null;
 			this.startInclusive = true;
 			this.end = new VersionNumber(m.group(2));
-			this.endInclusive = (m.group(1).contains("="));
+			this.endInclusive = (m.group(1).contains("=") || m.group(1).contains("\u2264"));
 		} else if ((m = SINGLE_PATTERN.matcher(versions)).matches()) {
 			this.start = this.end = new VersionNumber(m.group());
 			this.startInclusive = this.endInclusive = true;
@@ -254,7 +254,7 @@ public class VersionNumberRange implements Serializable, Comparable<VersionNumbe
 		
 		for (String arg : args) {
 			Vector<VersionNumberRange> v = new Vector<VersionNumberRange>();
-			java.util.Scanner scan = new java.util.Scanner(new java.io.File(arg));
+			java.util.Scanner scan = new java.util.Scanner(new java.io.File(arg), "UTF-8");
 			while (scan.hasNextLine()) v.add(new VersionNumberRange(scan.nextLine()));
 			scan.close();
 			java.util.Collections.sort(v);
