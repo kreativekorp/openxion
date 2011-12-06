@@ -176,6 +176,7 @@
 >
 <!ELEMENT else %formatted;>
 <!ELEMENT br EMPTY>
+<!ATTLIST br indent CDATA #IMPLIED>
 <!ELEMENT dia EMPTY>
 <!ELEMENT mod EMPTY>
 <!ELEMENT lib EMPTY>
