@@ -158,7 +158,21 @@ public class XMLSDOMParser {
 			}
 			else if (type.equalsIgnoreCase("opt")) syntax.add(parseSyntacticList(child, new Optional()));
 			else if (type.equalsIgnoreCase("ch")) syntax.add(parseChoiceItemList(child, new Choice()));
-			else if (type.equalsIgnoreCase("br")) syntax.add(new Break());
+			else if (type.equalsIgnoreCase("br")) {
+				NamedNodeMap attr = child.getAttributes();
+				Node indent = (attr == null) ? null : attr.getNamedItem("indent");
+				int in;
+				if (indent != null) {
+					try {
+						in = Integer.parseInt(indent.getTextContent().trim());
+					} catch (NumberFormatException nfe) {
+						in = 0;
+					}
+				} else {
+					in = 0;
+				}
+				syntax.add(new Break(in));
+			}
 			else if (type.equalsIgnoreCase("me")) syntax.add(new TermName());
 		}
 		return syntax;
