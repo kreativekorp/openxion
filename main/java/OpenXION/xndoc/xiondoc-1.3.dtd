@@ -13,6 +13,9 @@
 	ignored by the XIONDoc parser.
 -->
 
+<!ENTITY le "&#x2264;">
+<!ENTITY ge "&#x2265;">
+
 <!ENTITY % verbatim  "( #PCDATA )"><!-- actually CDATA, but that would make it not XML -->
 <!ENTITY % plain     "( #PCDATA )">
 <!ENTITY % syntactic "( #PCDATA | kwd | mv | opt | ch | br | me )*">
