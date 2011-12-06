@@ -100,7 +100,7 @@ public class HTMLSDOMGenerator {
 		}
 		else if (block instanceof Syntax) {
 			out.append("<p class=\"block syntax indent" + indent + "\">");
-			generateSyntaxHTML(out, (Syntax)block, false);
+			generateSyntaxHTML(out, (Syntax)block);
 			out.append("</p>");
 		}
 		else if (block instanceof UnorderedList) {
@@ -192,17 +192,16 @@ public class HTMLSDOMGenerator {
 		}
 	}
 	
-	private boolean generateSyntaxHTML(StringBuffer out, List<Syntactic> block, boolean indented) {
+	private void generateSyntaxHTML(StringBuffer out, List<Syntactic> block) {
 		boolean first = true;
 		for (Syntactic syn : block) {
 			if (first) first = false;
 			else out.append(' ');
-			indented = generateSyntacticHTML(out, syn, indented);
+			generateSyntacticHTML(out, syn);
 		}
-		return indented;
 	}
 	
-	private boolean generateSyntacticHTML(StringBuffer out, Syntactic syn, boolean indented) {
+	private void generateSyntacticHTML(StringBuffer out, Syntactic syn) {
 		if (syn instanceof Keyword) {
 			out.append("<span class=\"keyword\">");
 			out.append(htmlencode(((Keyword)syn).toString(),true));
@@ -221,14 +220,14 @@ public class HTMLSDOMGenerator {
 				for (ChoiceItem ci : (Choice)((Optional)syn).get(0)) {
 					if (first) first = false;
 					else out.append("<span class=\"metasymbol\">|</span>");
-					indented = generateSyntaxHTML(out, ci, indented);
+					generateSyntaxHTML(out, ci);
 				}
 				out.append("<span class=\"metasymbol\">]</span>");
 				out.append("</span>");
 			} else {
 				out.append("<span class=\"optional\">");
 				out.append("<span class=\"metasymbol\">[</span>");
-				indented = generateSyntaxHTML(out, (Optional)syn, indented);
+				generateSyntaxHTML(out, (Optional)syn);
 				out.append("<span class=\"metasymbol\">]</span>");
 				out.append("</span>");
 			}
@@ -240,21 +239,21 @@ public class HTMLSDOMGenerator {
 			for (ChoiceItem ci : (Choice)syn) {
 				if (first) first = false;
 				else out.append("<span class=\"metasymbol\">|</span>");
-				indented = generateSyntaxHTML(out, ci, indented);
+				generateSyntaxHTML(out, ci);
 			}
 			out.append("<span class=\"metasymbol\">)</span>");
 			out.append("</span>");
 		}
 		else if (syn instanceof Break) {
 			out.append("<br/>");
-			if (indented) {
-				return false;
-			} else {
+			int indent = ((Break)syn).getIndent();
+			if (indent > 0) {
 				out.append(' ');
 				out.append("<span class=\"syntaxindent\">");
-				out.append("&nbsp;&nbsp;");
+				while (indent-->0) {
+					out.append("&nbsp;&nbsp;");
+				}
 				out.append("</span>");
-				return true;
 			}
 		}
 		else if (syn instanceof TermName) {
@@ -272,7 +271,6 @@ public class HTMLSDOMGenerator {
 				}
 			}
 		}
-		return indented;
 	}
 	
 	private void generateListItemHTML(StringBuffer out, ListOrListItem item) {

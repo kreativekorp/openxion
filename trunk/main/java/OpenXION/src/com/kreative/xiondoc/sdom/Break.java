@@ -34,4 +34,22 @@ package com.kreative.xiondoc.sdom;
  */
 public class Break implements Span, Syntactic {
 	private static final long serialVersionUID = 1L;
+	
+	private int indent;
+	
+	public Break() {
+		this.indent = 0;
+	}
+	
+	public Break(int indent) {
+		this.indent = indent;
+	}
+	
+	public int getIndent() {
+		return this.indent;
+	}
+	
+	public void setIndent(int indent) {
+		this.indent = indent;
+	}
 }
