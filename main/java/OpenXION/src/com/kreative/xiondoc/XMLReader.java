@@ -38,6 +38,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import com.kreative.xiondoc.xdom.DocumentationSet;
 
@@ -68,9 +69,11 @@ public class XMLReader implements XIONDocReader {
 			System.out.println("Traversing XML document...");
 			p.parseDocument(document, d);
 		} catch (ParserConfigurationException pce) {
-			throw new IOException(pce.getMessage());
-		} catch (SAXException pce) {
-			throw new IOException(pce.getMessage());
+			throw new IOException(pce);
+		} catch (SAXParseException saxpe) {
+			throw new IOException(saxpe.getMessage() + " at " + saxpe.getLineNumber()+":"+saxpe.getColumnNumber());
+		} catch (SAXException saxe) {
+			throw new IOException(saxe);
 		}
 	}
 }
