@@ -203,14 +203,14 @@ public class HTMLSDOMGenerator {
 	
 	private void generateSyntacticHTML(StringBuffer out, Syntactic syn) {
 		if (syn instanceof Keyword) {
-			out.append("<span class=\"keyword\">");
+			out.append("<code class=\"keyword\">");
 			out.append(htmlencode(((Keyword)syn).toString(),true));
-			out.append("</span>");
+			out.append("</code>");
 		}
 		else if (syn instanceof Metavariable) {
-			out.append("<span class=\"metavariable\">");
+			out.append("<em class=\"metavariable\">");
 			out.append(htmlencode(((Metavariable)syn).toString(),true));
-			out.append("</span>");
+			out.append("</em>");
 		}
 		else if (syn instanceof Optional) {
 			if ((((Optional)syn).size() == 1) && (((Optional)syn).get(0) instanceof Choice)) {
@@ -264,9 +264,9 @@ public class HTMLSDOMGenerator {
 					if (word.length() > 0) {
 						if (first) first = false;
 						else out.append(' ');
-						out.append("<span class=\"keyword\">");
+						out.append("<code class=\"keyword\">");
 						out.append(htmlencode(word, true));
-						out.append("</span>");
+						out.append("</code>");
 					}
 				}
 			}
@@ -427,14 +427,14 @@ public class HTMLSDOMGenerator {
 			out.append("</code>");
 		}
 		else if (span instanceof Keyword) {
-			out.append("<span class=\"keyword\">");
+			out.append("<code class=\"keyword\">");
 			out.append(htmlencode(((Keyword)span).toString(),true));
-			out.append("</span>");
+			out.append("</code>");
 		}
 		else if (span instanceof Metavariable) {
-			out.append("<span class=\"metavariable\">");
+			out.append("<em class=\"metavariable\">");
 			out.append(htmlencode(((Metavariable)span).toString(),true));
-			out.append("</span>");
+			out.append("</em>");
 		}
 		else if (span instanceof Generic) {
 			out.append("<span class=\"generic\" style=\"");
