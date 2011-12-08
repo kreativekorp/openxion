@@ -48,7 +48,10 @@ public class XOMInteger extends XOMValue {
 	private boolean undefined;
 	
 	public XOMInteger(Number n) {
-		if (n instanceof BigInteger) {
+		if (n == null) {
+			this.theInteger = BigInteger.ZERO;
+			this.undefined = true;
+		} else if (n instanceof BigInteger) {
 			this.theInteger = (BigInteger)n;
 			this.undefined = false;
 		} else if (n instanceof BigDecimal) {
