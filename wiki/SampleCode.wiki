@@ -6,6 +6,7 @@
   * HelloWorld
   * HyperQuine
   * [99Bottles]
+  * [BF]
   * [Primes]
   * [Factor]
   * [Grapher]
