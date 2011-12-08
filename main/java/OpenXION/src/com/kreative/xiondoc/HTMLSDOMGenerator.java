@@ -34,6 +34,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.kreative.xiondoc.sdom.*;
 import com.kreative.xiondoc.xdom.DialectSpecList;
+import com.kreative.xiondoc.xdom.TermType;
 import com.kreative.xiondoc.xdom.VersionNumber;
 
 /**
@@ -44,17 +45,20 @@ import com.kreative.xiondoc.xdom.VersionNumber;
 public class HTMLSDOMGenerator {
 	private static final Pattern INTERNAL_HREF_PATTERN = Pattern.compile("([A-Za-z]{2}):(.*)", Pattern.DOTALL);
 	
+	private TermType currentTermType = null;
 	private String currentTermName = null;
 	private String currentDialectCode = null;
 	private String currentDialectTitle = null;
 	private VersionNumber currentDialectVersion = null;
 	private String urlPrefix = null;
 	
-	public void setTerm(String name) {
+	public void setTerm(TermType type, String name) {
+		this.currentTermType = type;
 		this.currentTermName = name;
 	}
 	
 	public void unsetTerm() {
+		this.currentTermType = null;
 		this.currentTermName = null;
 	}
 	
@@ -458,23 +462,29 @@ public class HTMLSDOMGenerator {
 						|| (((Anchor)span).get(0).toString().equalsIgnoreCase(href))
 						|| (((Anchor)span).get(0).toString().equalsIgnoreCase(m.group(2)))
 				);
+				boolean isThisTerm = (
+						(currentTermType != null) && (currentTermName != null) &&
+						(currentTermType.getCode()+":"+currentTermName).equalsIgnoreCase(href)
+				);
 				if (textOnly) {
 					out.append("<code>");
 				}
-				out.append("<a href=\"");
-				if (urlPrefix != null) {
-					out.append(htmlencode(urlPrefix, false));
+				if (!isThisTerm) {
+					out.append("<a href=\"");
+					if (urlPrefix != null) {
+						out.append(htmlencode(urlPrefix, false));
+					}
+					out.append(
+							htmlencode(
+									fnencode(m.group(1).toLowerCase()) +
+									"/" +
+									fnencode(m.group(2).toLowerCase()) +
+									".html",
+									true
+							)
+					);
+					out.append("\">");
 				}
-				out.append(
-						htmlencode(
-								fnencode(m.group(1).toLowerCase()) +
-								"/" +
-								fnencode(m.group(2).toLowerCase()) +
-								".html",
-								true
-						)
-				);
-				out.append("\">");
 				if (textSame) {
 					out.append(htmlencode(m.group(2), false));
 				} else {
@@ -482,7 +492,9 @@ public class HTMLSDOMGenerator {
 						generateSpanHTML(out, subspan);
 					}
 				}
-				out.append("</a>");
+				if (!isThisTerm) {
+					out.append("</a>");
+				}
 				if (textOnly) {
 					out.append("</code>");
 				}
