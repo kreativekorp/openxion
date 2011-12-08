@@ -36,7 +36,7 @@
 <!ELEMENT event     ( name+,                                syntax, examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
 <!ELEMENT command   ( name+,                                syntax, examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
 <!ELEMENT function  ( name+,                                syntax, examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
-<!ELEMENT datatype  ( name+, descriptors, properties?,              examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT datatype  ( name+, descriptors?, properties?,             examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
 <!ELEMENT property  ( name+, applies-to,                            examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
 <!ELEMENT operator  ( name+, precedence, description-short, syntax, examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
 <!ELEMENT constant  ( name+, type, value,                           examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
