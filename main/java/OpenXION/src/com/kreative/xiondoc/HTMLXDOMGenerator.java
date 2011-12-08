@@ -29,6 +29,7 @@ package com.kreative.xiondoc;
 
 import java.awt.Color;
 import java.io.*;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.CharacterIterator;
@@ -774,7 +775,13 @@ public class HTMLXDOMGenerator {
 				Term tb = constants.get(b);
 				String tta = ta.hasDataValue() ? ta.getDataValue() : "";
 				String ttb = tb.hasDataValue() ? tb.getDataValue() : "";
-				return tta.compareToIgnoreCase(ttb);
+				try {
+					BigDecimal da = new BigDecimal(tta);
+					BigDecimal db = new BigDecimal(ttb);
+					return da.compareTo(db);
+				} catch (NumberFormatException nfe) {
+					return tta.compareToIgnoreCase(ttb);
+				}
 			}
 		});
 		out.println("<p class=\"constantintro\"><a name=\"byvalue\">The table below lists all the built-in constants by value." +
