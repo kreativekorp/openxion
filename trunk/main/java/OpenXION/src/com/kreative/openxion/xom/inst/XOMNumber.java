@@ -55,7 +55,10 @@ public class XOMNumber extends XOMValue {
 	private boolean undefined;
 	
 	public XOMNumber(Number n) {
-		if (n instanceof BigDecimal) {
+		if (n == null) {
+			this.theNumber = BigDecimal.ZERO;
+			this.undefined = true;
+		} else if (n instanceof BigDecimal) {
 			this.theNumber = (BigDecimal)n;
 			this.undefined = false;
 		} else if (n instanceof BigInteger) {
