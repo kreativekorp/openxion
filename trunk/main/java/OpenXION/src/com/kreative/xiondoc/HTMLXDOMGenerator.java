@@ -125,7 +125,7 @@ public class HTMLXDOMGenerator {
 				}
 			}
 			for (Map.Entry<TermSpec, Term> e : allTermsOfType.entrySet()) {
-				sdomg.setTerm(e.getKey().getName());
+				sdomg.setTerm(e.getKey().getType(), e.getKey().getName());
 				writeVocabularyItem(
 						dialect, dialectVersion, termType,
 						e.getKey().getName(), e.getValue(),
