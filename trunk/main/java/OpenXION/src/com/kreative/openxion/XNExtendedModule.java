@@ -28,6 +28,7 @@
 package com.kreative.openxion;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.net.*;
 import java.sql.*;
 import java.text.*;
@@ -88,6 +89,8 @@ public class XNExtendedModule extends XNModule {
 		commands.put("sql", c_sql);
 		
 		functions.put("atob", f_atob);
+		functions.put("bitmingle", f_bitmingle);
+		functions.put("bitselect", f_bitselect);
 		functions.put("btoa", f_btoa);
 		functions.put("getenv", f_getenv);
 		functions.put("heapspace", f_heapspace);
@@ -640,6 +643,52 @@ public class XNExtendedModule extends XNModule {
 				return new XOMBinary(Base64.decodeLegacy85(a));
 			else
 				return XOMEmpty.EMPTY;
+		}
+	};
+	
+	private static final Function f_bitmingle = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
+			BigInteger a = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(0), true).toBigInteger();
+			BigInteger b = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(1), true).toBigInteger();
+			if (a == null || b == null) return XOMInteger.NaN;
+			
+			BigInteger c;
+			if (a.signum() < 0 && b.signum() < 0) {
+				c = BigInteger.ONE.negate();
+			} else if (a.signum() < 0 || b.signum() < 0) {
+				return XOMInteger.NaN;
+			} else {
+				c = BigInteger.ZERO;
+			}
+			
+			int n = Math.max(a.bitLength(), b.bitLength());
+			for (int i = 0; i <= n; i++) {
+				c = b.testBit(i) ? c.setBit(i+i) : c.clearBit(i+i);
+				c = a.testBit(i) ? c.setBit(i+i+1) : c.clearBit(i+i+1);
+			}
+			return new XOMInteger(c);
+		}
+	};
+	
+	private static final Function f_bitselect = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
+			BigInteger a = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(0), true).toBigInteger();
+			BigInteger b = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(1), true).toBigInteger();
+			if (a == null || b == null) return XOMInteger.NaN;
+			
+			BigInteger c = (a.signum() < 0 && b.signum() < 0) ? BigInteger.ONE.negate() : BigInteger.ZERO;
+			int ci = 0;
+			
+			int n = Math.max(a.bitLength(), b.bitLength());
+			for (int i = 0; i <= n; i++) {
+				if (b.testBit(i)) {
+					c = a.testBit(i) ? c.setBit(ci) : c.clearBit(ci);
+					ci++;
+				}
+			}
+			return new XOMInteger(c);
 		}
 	};
 	
