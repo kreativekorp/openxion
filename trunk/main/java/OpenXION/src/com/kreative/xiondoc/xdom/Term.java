@@ -43,7 +43,7 @@ public class Term implements Serializable {
 	
 	private TermType type;
 	private TermNameList names;
-	private String appliesTo;
+	private Section appliesTo;
 	private Precedence precedence;
 	private String descriptionShort;
 	private TermSpec dataType;
@@ -88,20 +88,20 @@ public class Term implements Serializable {
 	}
 	
 	public boolean hasAppliesTo() {
-		return (appliesTo != null && appliesTo.length() > 0);
+		return (appliesTo != null && !appliesTo.isEmpty());
 	}
 	
-	public String getAppliesTo() {
+	public Section getAppliesTo() {
 		return appliesTo;
 	}
 	
-	public void setAppliesTo(String appliesTo) {
+	public void setAppliesTo(Section appliesTo) {
 		this.appliesTo = appliesTo;
 	}
 	
-	public void appendAppliesTo(String appliesTo) {
+	public void appendAppliesTo(Section appliesTo) {
 		if (this.appliesTo == null) this.appliesTo = appliesTo;
-		else this.appliesTo += " " + appliesTo;
+		else this.appliesTo.addAll(appliesTo);
 	}
 	
 	public boolean hasPrecedence() {

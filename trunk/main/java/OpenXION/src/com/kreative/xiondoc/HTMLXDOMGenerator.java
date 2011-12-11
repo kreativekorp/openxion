@@ -202,7 +202,7 @@ public class HTMLXDOMGenerator {
 		out.println("</ul>");
 		if (term.hasAppliesTo()) {
 			out.println("<h3 class=\"vocabsectionheader\">Applies To</h3>");
-			out.println("<p class=\"appliesto\">" + htmlencode(term.getAppliesTo()) + "</p>");
+			out.println(sdomg.generateSectionHTML(term.getAppliesTo()));
 		}
 		if (term.descriptors() != null && !term.descriptors().isEmpty()) {
 			out.println("<h3 class=\"vocabsectionheader\">Descriptors</h3>");

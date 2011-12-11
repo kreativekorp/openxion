@@ -221,7 +221,7 @@ public class XMLXDOMParser {
 				t.names().add(new TermName(theName, new DialectSpecList(theDialects.toString())));
 			}
 			else if (type.equalsIgnoreCase("applies-to")) {
-				t.appendAppliesTo(child.getTextContent().trim().replaceAll("\\s+", " "));
+				t.appendAppliesTo(sdomp.parseSection(child));
 			}
 			else if (type.equalsIgnoreCase("precedence")) {
 				t.setPrecedence(Precedence.forString(child.getTextContent().trim()));
