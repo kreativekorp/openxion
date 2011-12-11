@@ -40,6 +40,10 @@ import com.kreative.xiondoc.sdom.Script;
 import com.kreative.xiondoc.xdom.*;
 
 public class HTMLXDOMGenerator {
+	private static final String LOG_ENCODING = "UTF-8";
+	private static final String CSS_ENCODING = "UTF-8";
+	private static final String HTML_ENCODING = "UTF-8";
+	
 	private DocumentationSet ds;
 	private File base;
 	private String basePath;
@@ -53,7 +57,7 @@ public class HTMLXDOMGenerator {
 		this.sdomg = new HTMLSDOMGenerator();
 		if (output) {
 			try {
-				this.out = new PrintWriter(new OutputStreamWriter(System.out, "UTF-8"), true);
+				this.out = new PrintWriter(new OutputStreamWriter(System.out, LOG_ENCODING), true);
 			} catch (UnsupportedEncodingException uee) {
 				this.out = new PrintWriter(new OutputStreamWriter(System.out), true);
 			}
@@ -170,6 +174,7 @@ public class HTMLXDOMGenerator {
 		} else {
 			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + " " + htmlencode(termType.getPluralTitleCase()) + " - " + htmlencode(termName) + "</title>");
 		}
+		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
 		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", "+htmlencode(termType.getSingular())+", "+htmlencode(termType.getPlural())+", "+htmlencode(termName)+"\">");
 		out.println("<meta name=\"description\" content=\"This page describes the "+htmlencode(termName)+" "+htmlencode(termType.getSingular())+".\">");
@@ -316,6 +321,7 @@ public class HTMLXDOMGenerator {
 		} else {
 			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + " " + htmlencode(termType.getPluralTitleCase()) + "</title>");
 		}
+		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
 		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", "+htmlencode(termType.getSingular())+", "+htmlencode(termType.getPlural())+", "+htmlencode(termType.getSingular())+" descriptions\">");
 		out.println("<meta name=\"description\" content=\"This page describes the "+htmlencode(termType.getPlural())+" supported by "+((dialect == null) ? "all dialects, modules, and libraries in this documentation set" : htmlencode(dialect.getTitle()))+".\">");
@@ -348,6 +354,7 @@ public class HTMLXDOMGenerator {
 		} else {
 			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + " " + htmlencode(termType.getPluralTitleCase()) + "</title>");
 		}
+		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
 		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", "+htmlencode(termType.getSingular())+", "+htmlencode(termType.getPlural())+", "+htmlencode(termType.getSingular())+" index\">");
 		out.println("<meta name=\"description\" content=\"A list of XION "+htmlencode(termType.getPlural())+" with documentation available in "+((dialect == null) ? "all dialects, modules, and libraries in this documentation set" : htmlencode(dialect.getTitle()))+".\">");
@@ -376,6 +383,7 @@ public class HTMLXDOMGenerator {
 		} else {
 			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + " Vocabulary Index</title>");
 		}
+		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
 		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", vocabulary, all vocabulary, vocabulary index\">");
 		out.println("<meta name=\"description\" content=\"A list of XION vocabulary terms with documentation available in "+((dialect == null) ? "all dialects, modules, and libraries in this documentation set" : htmlencode(dialect.getTitle()))+".\">");
@@ -409,6 +417,7 @@ public class HTMLXDOMGenerator {
 			} else {
 				out[i].println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + " Vocabulary Index - "+(i == 0 ? "Symbols" : ""+(i-1+'A'))+"</title>");
 			}
+			out[i].println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 			out[i].println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
 			out[i].println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", vocabulary, all vocabulary, vocabulary index\">");
 			out[i].println("<meta name=\"description\" content=\"A list of XION vocabulary terms with documentation available in "+((dialect == null) ? "all dialects, modules, and libraries in this documentation set" : htmlencode(dialect.getTitle()))+".\">");
@@ -487,6 +496,7 @@ public class HTMLXDOMGenerator {
 		} else {
 			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + " Color Chart</title>");
 		}
+		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
 		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", color, colors, colour, colours, color constants, colour constants, RGB values\">");
 		out.println("<meta name=\"description\" content=\"This page lists the names, RGB values, and color swatches of each color defined as a constant in "+((dialect == null) ? "XION" : htmlencode(dialect.getTitle()))+".\">");
@@ -592,6 +602,7 @@ public class HTMLXDOMGenerator {
 		} else {
 			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + " Operator Precedence Table</title>");
 		}
+		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
 		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", operator, operators, operator precedence, operator precedence chart, operator precedence table\">");
 		out.println("<meta name=\"description\" content=\"This page shows the order of precedence of operators in "+((dialect == null) ? "XION" : htmlencode(dialect.getTitle()))+".\">");
@@ -668,6 +679,7 @@ public class HTMLXDOMGenerator {
 		} else {
 			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + " Constant Summary</title>");
 		}
+		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
 		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", constant, constants, built-in constant, built-in constants, constant summary\">");
 		out.println("<meta name=\"description\" content=\"This page summarizes "+((dialect == null) ? "XION" : htmlencode(dialect.getTitle()))+"'s built-in constants.\">");
@@ -830,6 +842,7 @@ public class HTMLXDOMGenerator {
 		} else {
 			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + " Synonyms</title>");
 		}
+		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
 		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", synonym, synonyms\">");
 		out.println("<meta name=\"description\" content=\"This page lists the alternative ways that "+((dialect == null) ? "XION" : htmlencode(dialect.getTitle()))+" terms can be used.\">");
@@ -890,6 +903,7 @@ public class HTMLXDOMGenerator {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>"+htmlencode(article.getTitle())+"</title>");
+		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
 		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", "+htmlencode(article.getTitle())+"\">");
 		if (article.hasSummary()) {
@@ -918,6 +932,7 @@ public class HTMLXDOMGenerator {
 		} else {
 			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + " Vocabulary Type Index</title>");
 		}
+		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
 		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", vocabulary type, vocabulary type index\">");
 		out.println("<meta name=\"description\" content=\"A list of the types of XION vocabulary terms in "+((dialect == null) ? "all dialects, modules, and libraries in this documentation set" : htmlencode(dialect.getTitle()))+".\">");
@@ -1030,6 +1045,7 @@ public class HTMLXDOMGenerator {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>XION Dialect Index</title>");
+		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
 		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", dialect, dialects, dialect index, module, modules, module index, library, libraries, library index\">");
 		out.println("<meta name=\"description\" content=\"A list of XION dialects, OpenXION modules, and XION code libraries with documentation available in this documentation set.\">");
@@ -1175,6 +1191,7 @@ public class HTMLXDOMGenerator {
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>Welcome to XION</title>");
+		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
 		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", intro, introduction\">");
 		if (dialect == null) {
@@ -1218,7 +1235,7 @@ public class HTMLXDOMGenerator {
 			}
 			ui.close();
 			uo.close();
-			String us = new String(uo.toByteArray(), "UTF-8");
+			String us = new String(uo.toByteArray(), CSS_ENCODING);
 			mainCSS = us;
 		}
 		PrintWriter out = openFile(dialect, dialectVersion, "xiondoc.css");
@@ -1240,7 +1257,7 @@ public class HTMLXDOMGenerator {
 			}
 			ui.close();
 			uo.close();
-			String us = new String(uo.toByteArray(), "UTF-8");
+			String us = new String(uo.toByteArray(), CSS_ENCODING);
 			navCSS = us;
 		}
 		PrintWriter out = openFile(dialect, dialectVersion, "xionnav.css");
@@ -1260,6 +1277,7 @@ public class HTMLXDOMGenerator {
 		} else {
 			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + " Documentation</title>");
 		}
+		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
 		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+"\">");
 		if (dialect == null) {
@@ -1343,13 +1361,13 @@ public class HTMLXDOMGenerator {
 	private PrintWriter openFile(Dialect dialect, VersionNumber dialectVersion, TermType type, String name) throws IOException {
 		File outf = getFile(((dialect == null) ? null : dialect.name()), dialectVersion, type, name);
 		if (out != null) out.println("Writing " + fileToString(outf) + "...");
-		return new PrintWriter(new OutputStreamWriter(new FileOutputStream(outf), "UTF-8"), true);
+		return new PrintWriter(new OutputStreamWriter(new FileOutputStream(outf), HTML_ENCODING), true);
 	}
 	
 	private PrintWriter openFile(Dialect dialect, VersionNumber dialectVersion, String name) throws IOException {
 		File outf = getFile(((dialect == null) ? null : dialect.name()), dialectVersion, name);
 		if (out != null) out.println("Writing " + fileToString(outf) + "...");
-		return new PrintWriter(new OutputStreamWriter(new FileOutputStream(outf), "UTF-8"), true);
+		return new PrintWriter(new OutputStreamWriter(new FileOutputStream(outf), HTML_ENCODING), true);
 	}
 	
 	private File getFile(String dialectName, VersionNumber dialectVersion, TermType type, String name) {
