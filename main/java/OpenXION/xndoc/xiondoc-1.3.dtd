@@ -3,7 +3,7 @@
 	XIONDoc 1.3 replaces XIONDoc 1.2's horrible mishmash
 	of XML and Wiki markup with clean, valid, structured XML.
 	
-	Date: 2011/06/04 22:17:10 PST
+	Date: 2011/12/11 17:34:10 PST
 	
 	Author: Rebecca Bettencourt <support@kreativekorp.com>
 	
@@ -13,6 +13,7 @@
 	ignored by the XIONDoc parser.
 -->
 
+<!ENTITY nbsp "&#xA0;">
 <!ENTITY le "&#x2264;">
 <!ENTITY ge "&#x2265;">
 
