@@ -71,6 +71,7 @@ public class XNToken implements Serializable, Cloneable {
 	}
 	
 	public boolean isEOF() {
-		return (kind == LINE_TERM) && (image == null || image.length() == 0);
+		return ((kind == LINE_TERM) && (image == null || image.length() == 0))
+			|| ((kind == ID) && (image != null) && image.equals("__END__"));
 	}
 }
