@@ -35,6 +35,7 @@ bin:
 	mkdir -p bin
 	javac -target 1.5 -sourcepath src $(SRCFILES) -d bin
 	cp src/com/kreative/xiondoc/*.css bin/com/kreative/xiondoc/
+	cp src/com/kreative/xiondoc/*.dtd bin/com/kreative/xiondoc/
 
 doc:
 	mkdir -p doc
