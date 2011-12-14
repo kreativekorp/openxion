@@ -1,0 +1,188 @@
+<!--
+	This is the XIONDoc 1.3 DTD.
+	XIONDoc 1.3 replaces XIONDoc 1.2's horrible mishmash
+	of XML and Wiki markup with clean, valid, structured XML.
+	
+	Date: 2011/12/11 17:34:10 PST
+	
+	Author: Rebecca Bettencourt <support@kreativekorp.com>
+	
+	XIONDoc 1.3 includes additional syntactic constraints
+	that cannot be expressed within the DTD. However,
+	violations of these constraints are mostly silently
+	ignored by the XIONDoc parser.
+-->
+
+<!ENTITY nbsp "&#xA0;">
+<!ENTITY le "&#x2264;">
+<!ENTITY ge "&#x2265;">
+
+<!ENTITY % verbatim  "( #PCDATA )"><!-- actually CDATA, but that would make it not XML -->
+<!ENTITY % plain     "( #PCDATA )">
+<!ENTITY % syntactic "( #PCDATA | kwd | mv | opt | ch | br | me )*">
+<!ENTITY % formatted "( #PCDATA | img | b | strong | i | em | u | s | sup | sub | big | small | c | tt | code | kwd | mv | span | a | if | br | dia | mod | lib | ver | me )*">
+<!ENTITY % condition "( #PCDATA | img | b | strong | i | em | u | s | sup | sub | big | small | c | tt | code | kwd | mv | span | a | if | else | br | dia | mod | lib | ver | me )*">
+<!ENTITY % blockseq  "( scr | syn | ul | ol | table | p | blockquote | h1 | h2 | h3 | h4 | h5 | h6 | hr | img )*">
+
+<!ELEMENT xiondoc ( summary | description | dialect | module | library | article | structure | keyword | event | command | function | datatype | property | operator | constant | ordinal | iomethod | iomanager | extlang | version )*>
+
+<!ELEMENT dialect ( name, title, versions, summary?, description?, article* )>
+<!ELEMENT module  ( name, title, versions, summary?, description?, article* )>
+<!ELEMENT library ( name, title, versions, summary?, description?, article* )>
+<!ELEMENT article ( name, title,           summary,                content  )>
+
+<!-- TERMS -->
+<!ELEMENT structure ( name+,                                syntax, examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT keyword   ( name+, applies-to?,                   syntax, examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT event     ( name+,                                syntax, examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT command   ( name+,                                syntax, examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT function  ( name+,                                syntax, examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT datatype  ( name+, descriptors?, properties?,             examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT property  ( name+, applies-to,                            examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT operator  ( name+, precedence, description-short, syntax, examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT constant  ( name+, type, value,                           examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT ordinal   ( name+,       value,                           examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT iomethod  ( name+,                                        examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT iomanager ( name+,                                        examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT extlang   ( name+,                                        examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+<!ELEMENT version   ( name+,                                        examples?, description, scripts?, notes?, security?, compatibility?, see-also? )>
+
+<!-- SECTIONS -->
+<!ELEMENT name %plain;>
+<!ATTLIST name
+	dialects CDATA #IMPLIED
+	modules CDATA #IMPLIED
+	libraries CDATA #IMPLIED
+>
+<!ELEMENT title %plain;>
+<!ELEMENT versions %plain;>
+<!ELEMENT summary %plain;>
+<!ELEMENT description %blockseq;>
+<!ELEMENT content %blockseq;>
+
+<!-- TERM SECTIONS -->
+<!ELEMENT applies-to %blockseq;>
+<!ELEMENT descriptors %plain;>
+<!ELEMENT properties %plain;>
+<!ELEMENT precedence %plain;>
+<!ELEMENT description-short %plain;>
+<!ELEMENT type %plain;>
+<!ELEMENT value %plain;>
+<!ELEMENT syntax %blockseq;>
+<!ELEMENT examples %blockseq;>
+<!ELEMENT scripts %blockseq;>
+<!ELEMENT notes %blockseq;>
+<!ELEMENT security %blockseq;>
+<!ELEMENT compatibility %blockseq;>
+<!ELEMENT see-also %plain;>
+
+<!-- SCRIPT BLOCKS -->
+<!ELEMENT scr %verbatim;>
+<!ATTLIST scr indent CDATA #IMPLIED>
+
+<!-- SYNTAX BLOCKS -->
+<!ELEMENT syn %syntactic;>
+<!ATTLIST syn indent CDATA #IMPLIED>
+<!ELEMENT kwd %plain;>
+<!ELEMENT mv %plain;>
+<!ELEMENT opt %syntactic;>
+<!ELEMENT ch ( ci )*>
+<!ELEMENT ci %syntactic;>
+
+<!-- LIST BLOCKS -->
+<!ELEMENT ul ( li | ul | ol )*>
+<!ATTLIST ul
+	indent CDATA #IMPLIED
+	border CDATA #IMPLIED
+>
+<!ELEMENT ol ( li | ul | ol )*>
+<!ATTLIST ol
+	indent CDATA #IMPLIED
+	border CDATA #IMPLIED
+>
+<!ELEMENT li %formatted;>
+
+<!-- TABLE BLOCKS -->
+<!ELEMENT table ( tr )*>
+<!ATTLIST table
+	indent CDATA #IMPLIED
+	border CDATA #IMPLIED
+>
+<!ELEMENT tr ( th | td )*>
+<!ELEMENT th %formatted;>
+<!ATTLIST th
+	colspan CDATA #IMPLIED
+	rowspan CDATA #IMPLIED
+>
+<!ELEMENT td %formatted;>
+<!ATTLIST td
+	colspan CDATA #IMPLIED
+	rowspan CDATA #IMPLIED
+>
+
+<!-- PARAGRAPH BLOCKS -->
+<!ELEMENT p %formatted;>
+<!ATTLIST p indent CDATA #IMPLIED>
+<!ELEMENT blockquote %formatted;>
+<!ATTLIST blockquote indent CDATA #IMPLIED>
+
+<!-- HEADING BLOCKS -->
+<!ELEMENT h1 %formatted;>
+<!ATTLIST h1 indent CDATA #IMPLIED>
+<!ELEMENT h2 %formatted;>
+<!ATTLIST h2 indent CDATA #IMPLIED>
+<!ELEMENT h3 %formatted;>
+<!ATTLIST h3 indent CDATA #IMPLIED>
+<!ELEMENT h4 %formatted;>
+<!ATTLIST h4 indent CDATA #IMPLIED>
+<!ELEMENT h5 %formatted;>
+<!ATTLIST h5 indent CDATA #IMPLIED>
+<!ELEMENT h6 %formatted;>
+<!ATTLIST h6 indent CDATA #IMPLIED>
+
+<!-- HR BLOCKS -->
+<!ELEMENT hr EMPTY>
+
+<!-- IMAGES -->
+<!ELEMENT img EMPTY>
+<!ATTLIST img
+	indent CDATA #IMPLIED
+	src CDATA #REQUIRED
+	width CDATA #IMPLIED
+	height CDATA #IMPLIED
+	alt CDATA #IMPLIED
+	title CDATA #IMPLIED
+>
+
+<!-- SPANS -->
+<!ELEMENT b %formatted;>
+<!ELEMENT strong %formatted;>
+<!ELEMENT i %formatted;>
+<!ELEMENT em %formatted;>
+<!ELEMENT u %formatted;>
+<!ELEMENT s %formatted;>
+<!ELEMENT sup %formatted;>
+<!ELEMENT sub %formatted;>
+<!ELEMENT big %formatted;>
+<!ELEMENT small %formatted;>
+<!ELEMENT c %formatted;>
+<!ELEMENT tt %formatted;>
+<!ELEMENT code %formatted;>
+<!ELEMENT span %formatted;>
+<!ATTLIST span style CDATA #IMPLIED>
+<!ELEMENT a %formatted;>
+<!ATTLIST a href CDATA #IMPLIED>
+<!ELEMENT if %condition;>
+<!ATTLIST if
+	dialect CDATA #IMPLIED
+	module CDATA #IMPLIED
+	library CDATA #IMPLIED
+>
+<!ELEMENT else %formatted;>
+<!ELEMENT br EMPTY>
+<!ATTLIST br indent CDATA #IMPLIED>
+<!ELEMENT dia EMPTY>
+<!ELEMENT mod EMPTY>
+<!ELEMENT lib EMPTY>
+<!ELEMENT ver EMPTY>
+<!ELEMENT me EMPTY>
