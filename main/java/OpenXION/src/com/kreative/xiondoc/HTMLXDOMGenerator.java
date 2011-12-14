@@ -181,10 +181,10 @@ public class HTMLXDOMGenerator {
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"../xiondoc.css\">");
 		out.println("</head>");
 		out.println("<body>");
-		out.println("<h1 class=\"vocabtypeheader\">"+htmlencode(termType.getPluralTitleCase())+"</h1>");
-		out.println("<h2 class=\"vocabnameheader\">"+htmlencode(termName)+"</h2>");
-		out.println("<h3 class=\"vocabsectionheader\">Supported By</h3>");
-		out.println("<ul class=\"dialectlist supportedby\">");
+		out.println("<h1>"+htmlencode(termType.getPluralTitleCase())+"</h1>");
+		out.println("<h2>"+htmlencode(termName)+"</h2>");
+		out.println("<h3>Supported By</h3>");
+		out.println("<ul class=\"block unorderedlist indent0 border0 nobullet\">");
 		for (Dialect d : ds.dialects()) {
 			boolean first = true;
 			for (VersionNumber dv : d.versions()) {
@@ -206,12 +206,12 @@ public class HTMLXDOMGenerator {
 		}
 		out.println("</ul>");
 		if (term.hasAppliesTo()) {
-			out.println("<h3 class=\"vocabsectionheader\">Applies To</h3>");
+			out.println("<h3>Applies To</h3>");
 			out.println(sdomg.generateSectionHTML(term.getAppliesTo()));
 		}
 		if (term.descriptors() != null && !term.descriptors().isEmpty()) {
-			out.println("<h3 class=\"vocabsectionheader\">Descriptors</h3>");
-			out.println("<ul class=\"descriptorlist\">");
+			out.println("<h3>Descriptors</h3>");
+			out.println("<ul class=\"block unorderedlist indent0 border0 nobullet\">");
 			for (Descriptor descriptor : term.descriptors()) {
 				String example = descriptor.getExample(termName);
 				if (example.contains("steve")) {
@@ -224,8 +224,8 @@ public class HTMLXDOMGenerator {
 			out.println("</ul>");
 		}
 		if (term.properties() != null && !term.properties().isEmpty()) {
-			out.println("<h3 class=\"vocabsectionheader\">Properties</h3>");
-			out.print("<p class=\"termlist\">");
+			out.println("<h3>Properties</h3>");
+			out.print("<p class=\"block paragraph indent0\">");
 			boolean first = true;
 			for (TermSpec termSpec : term.properties()) {
 				if (first) first = false;
@@ -235,53 +235,53 @@ public class HTMLXDOMGenerator {
 			out.println("</p>");
 		}
 		if (term.hasSyntax()) {
-			out.println("<h3 class=\"vocabsectionheader\">Syntax</h3>");
+			out.println("<h3>Syntax</h3>");
 			out.println(sdomg.generateSectionHTML(term.getSyntax()));
 		}
 		if (term.hasExamples()) {
 			if (term.getExamples().size(Script.class) > 1) {
-				out.println("<h3 class=\"vocabsectionheader\">Examples</h3>");
+				out.println("<h3>Examples</h3>");
 			} else {
-				out.println("<h3 class=\"vocabsectionheader\">Example</h3>");
+				out.println("<h3>Example</h3>");
 			}
 			out.println(sdomg.generateSectionHTML(term.getExamples()));
 		}
 		if (term.hasDescription()) {
-			out.println("<h3 class=\"vocabsectionheader\">Description</h3>");
+			out.println("<h3>Description</h3>");
 			out.println(sdomg.generateSectionHTML(term.getDescription()));
 		}
 		if (term.hasScripts()) {
 			if (term.getScripts().size(Script.class) > 1) {
-				out.println("<h3 class=\"vocabsectionheader\">Scripts</h3>");
+				out.println("<h3>Scripts</h3>");
 			} else {
-				out.println("<h3 class=\"vocabsectionheader\">Script</h3>");
+				out.println("<h3>Script</h3>");
 			}
 			out.println(sdomg.generateSectionHTML(term.getScripts()));
 		}
 		if (term.hasNotes()) {
 			if (term.getNotes().size() > 1) {
-				out.println("<h3 class=\"vocabsectionheader\">Notes</h3>");
+				out.println("<h3>Notes</h3>");
 			} else {
-				out.println("<h3 class=\"vocabsectionheader\">Note</h3>");
+				out.println("<h3>Note</h3>");
 			}
 			out.println(sdomg.generateSectionHTML(term.getNotes()));
 		}
 		if (term.hasSecurity()) {
-			out.println("<h3 class=\"vocabsectionheader\">Security</h3>");
+			out.println("<h3>Security</h3>");
 			out.println(sdomg.generateSectionHTML(term.getSecurity()));
 		}
 		if (term.hasCompatibility()) {
-			out.println("<h3 class=\"vocabsectionheader\">Compatibility</h3>");
+			out.println("<h3>Compatibility</h3>");
 			out.println(sdomg.generateSectionHTML(term.getCompatibility()));
 		}
 		if (term.hasSynonyms(((dialect == null) ? null : dialect.name()), dialectVersion)) {
 			TermSpecList synonyms = term.getSynonyms(((dialect == null) ? null : dialect.name()), dialectVersion, termName);
 			if (synonyms.size() > 1) {
-				out.println("<h3 class=\"vocabsectionheader\">Synonyms</h3>");
+				out.println("<h3>Synonyms</h3>");
 			} else {
-				out.println("<h3 class=\"vocabsectionheader\">Synonym</h3>");
+				out.println("<h3>Synonym</h3>");
 			}
-			out.print("<p class=\"termlist\">");
+			out.print("<p class=\"block paragraph indent0\">");
 			boolean first = true;
 			for (TermSpec termSpec : synonyms) {
 				if (first) first = false;
@@ -291,8 +291,8 @@ public class HTMLXDOMGenerator {
 			out.println("</p>");
 		}
 		if (term.seeAlso() != null && !term.seeAlso().isEmpty()) {
-			out.println("<h3 class=\"vocabsectionheader\">See Also</h3>");
-			out.print("<p class=\"termlist\">");
+			out.println("<h3>See Also</h3>");
+			out.print("<p class=\"block paragraph indent0\">");
 			boolean first = true;
 			for (TermSpec termSpec : term.seeAlso()) {
 				if (first) first = false;
@@ -328,11 +328,11 @@ public class HTMLXDOMGenerator {
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"../xiondoc.css\">");
 		out.println("</head>");
 		out.println("<body>");
-		out.println("<h1 class=\"vocabindexheader\">"+htmlencode(termType.getPluralTitleCase())+"</h1>");
-		out.println("<p class=\"vocabindexintro\">This page describes the "+htmlencode(termType.getPlural())+" supported by "+((dialect == null) ? "all dialects, modules, and libraries in this documentation set" : htmlencode(dialect.getTitle()))+".</p>");
-		out.println("<ul class=\"vocabindexlist\">");
+		out.println("<h1>"+htmlencode(termType.getPluralTitleCase())+"</h1>");
+		out.println("<p class=\"block paragraph indent0\">This page describes the "+htmlencode(termType.getPlural())+" supported by "+((dialect == null) ? "all dialects, modules, and libraries in this documentation set" : htmlencode(dialect.getTitle()))+".</p>");
+		out.println("<ul class=\"block unorderedlist indent0 border0 nobullet\">");
 		for (TermSpec termSpec : allTermsOfType.keySet()) {
-			out.println("<li class=\"vocabindexlistitem\"><code><a href=\""+fnencode(termSpec.getName())+".html\">"+htmlencode(termSpec.getName())+"</a></code></li>");
+			out.println("<li><code><a href=\""+fnencode(termSpec.getName())+".html\">"+htmlencode(termSpec.getName())+"</a></code></li>");
 		}
 		out.println("</ul>");
 		out.println("</body>");
@@ -424,7 +424,7 @@ public class HTMLXDOMGenerator {
 			out[i].println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xiondoc.css\">");
 			out[i].println("</head>");
 			out[i].println("<body>");
-			out[i].println("<h1 class=\"indexheader\">"+((dialect == null) ? "XION" : htmlencode(dialect.getTitle()))+" Vocabulary Index</h1>");
+			out[i].println("<h1>"+((dialect == null) ? "XION" : htmlencode(dialect.getTitle()))+" Vocabulary Index</h1>");
 			out[i].println("<p class=\"indexnav\">" +
 					"<a href=\"index-a.html\">A</a> - " +
 					"<a href=\"index-b.html\">B</a> - " +
@@ -454,7 +454,7 @@ public class HTMLXDOMGenerator {
 					"<a href=\"index-z.html\">Z</a> - " +
 					"<a href=\"index-symb.html\">#</a>" +
 					"</p>");
-			out[i].println("<table class=\"indextable\">");
+			out[i].println("<table class=\"block table indent0 border0\">");
 			out[i].println("<tr><th>Term</th><th>Type</th></tr>");
 		}
 		for (TermSpec termSpec : allTerms) {
@@ -534,10 +534,11 @@ public class HTMLXDOMGenerator {
 				return a.getName().compareToIgnoreCase(b.getName());
 			}
 		});
-		out.println("<p class=\"colortableintro\"><a name=\"byname\">The table below lists the name, " +
+		out.println("<h2>Colors by Name</h2>");
+		out.println("<p class=\"block paragraph indent0\"><a name=\"byname\">The table below lists the name, " +
 				"the RGB value, and a color swatch for each <code><a href=\"dt/color.html\">color</a></code> " +
 				"defined as a constant, sorted by name. See also <a href=\"#byhue\">by hue</a>.</a></p>");
-		out.println("<table class=\"colortable\">");
+		out.println("<table class=\"block table indent0 border0\">");
 		out.println("<tr><th>Name</th><th>R</th><th>G</th><th>B</th><th>Swatch</th></tr>");
 		for (TermSpec termSpec : colorTermSpecs) {
 			int[] rgb = colorTermRGB.get(termSpec);
@@ -568,10 +569,11 @@ public class HTMLXDOMGenerator {
 				return a.getName().compareToIgnoreCase(b.getName());
 			}
 		});
-		out.println("<p class=\"colortableintro\"><a name=\"byhue\">The table below lists the name, " +
+		out.println("<h2>Colors by Hue</h2>");
+		out.println("<p class=\"block paragraph indent0\"><a name=\"byhue\">The table below lists the name, " +
 				"the RGB value, and a color swatch for each <code><a href=\"dt/color.html\">color</a></code> " +
 				"defined as a constant, sorted by hue. See also <a href=\"#byname\">by name</a>.</a></p>");
-		out.println("<table class=\"colortable\">");
+		out.println("<table class=\"block table indent0 border0\">");
 		out.println("<tr><th>Name</th><th>R</th><th>G</th><th>B</th><th>Swatch</th></tr>");
 		for (TermSpec termSpec : colorTermSpecs) {
 			int[] rgb = colorTermRGB.get(termSpec);
@@ -610,7 +612,7 @@ public class HTMLXDOMGenerator {
 		out.println("</head>");
 		out.println("<body>");
 		out.println("<h1>"+((dialect == null) ? "XION" : htmlencode(dialect.getTitle()))+" Operator Precedence Table</h1>");
-		out.println("<p class=\"operatorintro\">The table below shows the order of precedence of operators in " +
+		out.println("<p class=\"block paragraph indent0\">The table below shows the order of precedence of operators in " +
 				((dialect == null) ? "XION" : htmlencode(dialect.getTitle())) + ". " +
 				"In a complex expression containing more than one operator, the operations " +
 				"indicated by operators with lower-numbered precedence will be performed before " +
@@ -618,7 +620,7 @@ public class HTMLXDOMGenerator {
 				"evaluated left-to-right, except for exponentiation, which goes right-to-left. " +
 				"If you use parentheses, the innermost parenthetical expression is evaluated " +
 				"first.</p>");
-		out.println("<table class=\"operatortable\">");
+		out.println("<table class=\"block table indent0 border0 linedrowgroups\">");
 		out.println("<thead>");
 		out.println("<tr>");
 		out.println("<th>Order</th>");
@@ -687,7 +689,7 @@ public class HTMLXDOMGenerator {
 		out.println("</head>");
 		out.println("<body>");
 		out.println("<h1>"+((dialect == null) ? "XION" : htmlencode(dialect.getTitle()))+" Constant Summary</h1>");
-		out.println("<p>This page summarizes " + ((dialect == null) ? "XION" : htmlencode(dialect.getTitle())) + "'s built-in constants." +
+		out.println("<p class=\"block paragraph indent0\">This page summarizes " + ((dialect == null) ? "XION" : htmlencode(dialect.getTitle())) + "'s built-in constants." +
 				" A constant is a named value that never changes." +
 				" You cannot change its value or use its name as a variable name." +
 				" If you try, the interpreter will trigger a script error.</p>");
@@ -710,9 +712,10 @@ public class HTMLXDOMGenerator {
 				return a.getName().compareToIgnoreCase(b.getName());
 			}
 		});
-		out.println("<p class=\"constantintro\"><a name=\"byname\">The table below lists all the built-in constants by name." +
+		out.println("<h2>Constants by Name</h2>");
+		out.println("<p class=\"block paragraph indent0\"><a name=\"byname\">The table below lists all the built-in constants by name." +
 				" See also <a href=\"#bytype\">by data type</a> and <a href=\"#byvalue\">by value</a>.</a></p>");
-		out.println("<table class=\"constanttable\">");
+		out.println("<table class=\"block table indent0 border0\">");
 		out.println("<thead>");
 		out.println("<tr>");
 		out.println("<th>Constant Name</th>");
@@ -750,9 +753,10 @@ public class HTMLXDOMGenerator {
 				return tta.compareToIgnoreCase(ttb);
 			}
 		});
-		out.println("<p class=\"constantintro\"><a name=\"bytype\">The table below lists all the built-in constants by data type." +
+		out.println("<h2>Constants by Type</h2>");
+		out.println("<p class=\"block paragraph indent0\"><a name=\"bytype\">The table below lists all the built-in constants by data type." +
 				" See also <a href=\"#byname\">by name</a> and <a href=\"#byvalue\">by value</a>.</a></p>");
-		out.println("<table class=\"constanttable\">");
+		out.println("<table class=\"block table indent0 border0\">");
 		out.println("<thead>");
 		out.println("<tr>");
 		out.println("<th>Constant Name</th>");
@@ -796,9 +800,10 @@ public class HTMLXDOMGenerator {
 				}
 			}
 		});
-		out.println("<p class=\"constantintro\"><a name=\"byvalue\">The table below lists all the built-in constants by value." +
+		out.println("<h2>Constants by Value</h2>");
+		out.println("<p class=\"block paragraph indent0\"><a name=\"byvalue\">The table below lists all the built-in constants by value." +
 				" See also <a href=\"#byname\">by name</a> and <a href=\"#bytype\">by data type</a>.</a></p>");
-		out.println("<table class=\"constanttable\">");
+		out.println("<table class=\"block table indent0 border0\">");
 		out.println("<thead>");
 		out.println("<tr>");
 		out.println("<th>Constant Name</th>");
@@ -850,7 +855,7 @@ public class HTMLXDOMGenerator {
 		out.println("</head>");
 		out.println("<body>");
 		out.println("<h1>"+((dialect == null) ? "XION" : htmlencode(dialect.getTitle()))+" Synonyms</h1>");
-		out.println("<p class=\"synonymintro\">The table below lists the alternative ways that "+((dialect == null) ? "XION" : htmlencode(dialect.getTitle()))+" terms can be used.</p>");
+		out.println("<p class=\"block paragraph indent0\">The table below lists the alternative ways that "+((dialect == null) ? "XION" : htmlencode(dialect.getTitle()))+" terms can be used.</p>");
 		
 		final List<Term> termsWithSynonyms = new Vector<Term>();
 		final Map<Term,List<TermSpec>> termSynonyms = new HashMap<Term,List<TermSpec>>();
@@ -872,7 +877,7 @@ public class HTMLXDOMGenerator {
 			}
 		});
 		
-		out.println("<table class=\"synonymtable\">");
+		out.println("<table class=\"block table indent0 border0 linedrowgroups\">");
 		out.println("<thead>");
 		out.println("<tr>");
 		out.println("<th>Synonym</th>");
@@ -887,7 +892,12 @@ public class HTMLXDOMGenerator {
 				TermSpec termSpec = termSpecs.get(i);
 				if ((i % 4) == 0) out.println("<tr>");
 				out.println("<td><code><a href=\""+fnencode(termSpec.getType().getCode())+"/"+fnencode(termSpec.getName())+".html\">"+htmlencode(termSpec.getName())+"</a></td>");
-				if (((i % 4) == 3) || (i == (n-1))) out.println("</tr>");
+				if ((i % 4) == 3) out.println("</tr>");
+			}
+			while ((n % 4) != 0) {
+				out.println("<td>&nbsp;</td>");
+				if ((n % 4) == 3) out.println("</tr>");
+				n++;
 			}
 			out.println("</tbody>");
 		}
@@ -912,7 +922,7 @@ public class HTMLXDOMGenerator {
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xiondoc.css\">");
 		out.println("</head>");
 		out.println("<body>");
-		out.println("<h1 class=\"articleheader\">"+htmlencode(article.getTitle())+"</h1>");
+		out.println("<h1>"+htmlencode(article.getTitle())+"</h1>");
 		if (article.hasContent()) {
 			out.println(sdomg.generateSectionHTML(article.getContent()));
 		}
@@ -1206,7 +1216,7 @@ public class HTMLXDOMGenerator {
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xiondoc.css\">");
 		out.println("</head>");
 		out.println("<body>");
-		out.println("<h1 class=\"articleheader\">Welcome to XION</h1>");
+		out.println("<h1>Welcome to XION</h1>");
 		if (dialect == null) {
 			if (ds.hasDescription()) {
 				out.println(sdomg.generateSectionHTML(ds.getDescription()));

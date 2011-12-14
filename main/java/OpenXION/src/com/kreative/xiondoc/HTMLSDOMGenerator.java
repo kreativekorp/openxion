@@ -145,49 +145,49 @@ public class HTMLSDOMGenerator {
 			out.append("</p>");
 		}
 		else if (block instanceof H1) {
-			out.append("<h1 class=\"block h1 indent" + indent + "\">");
+			out.append("<h1>");
 			for (Span span : (H1)block) {
 				generateSpanHTML(out, span);
 			}
 			out.append("</h1>");
 		}
 		else if (block instanceof H2) {
-			out.append("<h2 class=\"block h2 indent" + indent + "\">");
+			out.append("<h2>");
 			for (Span span : (H2)block) {
 				generateSpanHTML(out, span);
 			}
 			out.append("</h2>");
 		}
 		else if (block instanceof H3) {
-			out.append("<h3 class=\"block h3 indent" + indent + "\">");
+			out.append("<h3>");
 			for (Span span : (H3)block) {
 				generateSpanHTML(out, span);
 			}
 			out.append("</h3>");
 		}
 		else if (block instanceof H4) {
-			out.append("<h4 class=\"block h4 indent" + indent + "\">");
+			out.append("<h4>");
 			for (Span span : (H4)block) {
 				generateSpanHTML(out, span);
 			}
 			out.append("</h4>");
 		}
 		else if (block instanceof H5) {
-			out.append("<h5 class=\"block h5 indent" + indent + "\">");
+			out.append("<h5>");
 			for (Span span : (H5)block) {
 				generateSpanHTML(out, span);
 			}
 			out.append("</h5>");
 		}
 		else if (block instanceof H6) {
-			out.append("<h6 class=\"block h6 indent" + indent + "\">");
+			out.append("<h6>");
 			for (Span span : (H6)block) {
 				generateSpanHTML(out, span);
 			}
 			out.append("</h6>");
 		}
 		else if (block instanceof HorizontalRule) {
-			out.append("<hr class=\"block horizontalrule indent" + indent + "\" />");
+			out.append("<hr/>");
 		}
 		else if (block instanceof Image) {
 			out.append("<p class=\"block image indent" + indent + "\">");
