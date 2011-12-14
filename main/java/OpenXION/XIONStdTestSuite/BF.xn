@@ -1,0 +1,68 @@
+function bf program as string, input as binary
+	local tape as binary is empty
+	local pointer as integer is zero
+	local pc as integer is one
+	local depth as integer
+	local output as binary is empty
+	local inputPointer as integer is zero
+	local outputPointer as integer is zero
+	repeat while there is a char pc of program
+		put char pc of program into instruction
+		add 1 to pc
+		switch instruction
+		case ">"
+			add 1 to pointer
+		case "<"
+			subtract 1 from pointer
+		case "+"
+			add 1 to tinyInt pointer of tape
+		case "-"
+			subtract 1 from tinyInt pointer of tape
+		case "."
+			put tinyInt pointer of tape into ¬
+				tinyInt outputPointer of output
+			add 1 to outputPointer
+		case ","
+			put tinyInt inputPointer of input into ¬
+				tinyInt pointer of tape
+			add 1 to inputPointer
+		case "["
+			if tinyInt pointer of tape is zero then
+				put zero into depth
+				repeat while there is a char pc of program
+					put char pc of program into tmp
+					add 1 to pc
+					if tmp is "[" then
+						add 1 to depth
+					else if tmp is "]" then
+						if depth is zero then
+							exit repeat
+						end if
+						subtract 1 from depth
+					end if
+				end repeat
+			end if
+		case "]"
+			if tinyInt pointer of tape is not zero then
+				put zero into depth
+				repeat while there is a char pc-1 of program
+					subtract 1 from pc
+					put char pc of program into tmp
+					if tmp is "]" then
+						add 1 to depth
+					else if tmp is "[" then
+						subtract 1 from depth
+						if depth is zero then
+							exit repeat
+						end if
+					end if
+				end repeat
+			end if
+		end switch
+	end repeat
+	return output
+end bf
+
+-- Hello World
+put binToChar(bf("++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>."))
+put "."
