@@ -361,10 +361,10 @@ public class HTMLXDOMGenerator {
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xionnav.css\">");
 		out.println("</head>");
 		out.println("<body>");
-		out.println("<h1 class=\"vocablistheader\">"+htmlencode(termType.getPluralTitleCase())+"</h1>");
-		out.println("<ul class=\"vocablist\">");
+		out.println("<h1>"+htmlencode(termType.getPluralTitleCase())+"</h1>");
+		out.println("<ul>");
 		for (TermSpec termSpec : allTermsOfType.keySet()) {
-			out.println("<li class=\"vocablistitem\"><code><a href=\""+fnencode(termType.getCode())+"/"+fnencode(termSpec.getName())+".html\" target=\"xncontent\">"+htmlencode(termSpec.getName())+"</a></code></li>");
+			out.println("<li><code><a href=\""+fnencode(termType.getCode())+"/"+fnencode(termSpec.getName())+".html\" target=\"xncontent\">"+htmlencode(termSpec.getName())+"</a></code></li>");
 		}
 		out.println("</ul>");
 		out.println("</body>");
@@ -390,10 +390,10 @@ public class HTMLXDOMGenerator {
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xionnav.css\">");
 		out.println("</head>");
 		out.println("<body>");
-		out.println("<h1 class=\"vocablistheader\">All Vocabulary</h1>");
-		out.println("<ul class=\"vocablist\">");
+		out.println("<h1>All Vocabulary</h1>");
+		out.println("<ul>");
 		for (TermSpec termSpec : allTerms) {
-			out.println("<li class=\"vocablistitem\"><code><a href=\""+fnencode(termSpec.getType().getCode())+"/"+fnencode(termSpec.getName())+".html\" target=\"xncontent\">"+htmlencode(termSpec.getName())+"</a></code> <span class=\"expl\">("+htmlencode(termSpec.getType().getSingular())+")</span></li>");
+			out.println("<li><code><a href=\""+fnencode(termSpec.getType().getCode())+"/"+fnencode(termSpec.getName())+".html\" target=\"xncontent\">"+htmlencode(termSpec.getName())+"</a></code> <span class=\"expl\">("+htmlencode(termSpec.getType().getSingular())+")</span></li>");
 		}
 		out.println("</ul>");
 		out.println("</body>");
@@ -954,33 +954,33 @@ public class HTMLXDOMGenerator {
 		out.println("</head>");
 		out.println("<body>");
 		if (dialect == null) {
-			out.println("<h1 class=\"vocabtypelistheader\">" + allString() + "</h1>");
+			out.println("<h1>" + allString() + "</h1>");
 		} else if (dialectVersion == null) {
-			out.println("<h1 class=\"vocabtypelistheader\">" + htmlencode(dialect.getTitle()) + "</h1>");
+			out.println("<h1>" + htmlencode(dialect.getTitle()) + "</h1>");
 		} else {
-			out.println("<h1 class=\"vocabtypelistheader\">" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + "</h1>");
+			out.println("<h1>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + "</h1>");
 		}
-		out.println("<ul class=\"vocabtypelist\">");
-		out.println("<li class=\"vocabtypelistitem\"><a href=\"all-index.html\" target=\"xnvocab\" onclick=\"return loadAllVocab();\">All Vocabulary</a></li>");
+		out.println("<ul>");
+		out.println("<li><a href=\"all-index.html\" target=\"xnvocab\" onclick=\"return loadAllVocab();\">All Vocabulary</a></li>");
 		for (TermType termType : TermType.values()) {
 			if (!ds.terms().getTerms(termType, null, ((dialect == null) ? null : dialect.name()), dialectVersion).isEmpty()) {
-				out.println("<li class=\"vocabtypelistitem\"><a href=\""+htmlencode(termType.getCode())+"-index.html\" target=\"xnvocab\" onclick=\"return loadVocabType('"+htmlencode(termType.getCode())+"');\">"+htmlencode(termType.getPluralTitleCase())+"</a></li>");
+				out.println("<li><a href=\""+htmlencode(termType.getCode())+"-index.html\" target=\"xnvocab\" onclick=\"return loadVocabType('"+htmlencode(termType.getCode())+"');\">"+htmlencode(termType.getPluralTitleCase())+"</a></li>");
 			}
 		}
 		out.println("</ul>");
 		if (articles != null && !articles.isEmpty()) {
-			out.println("<ul class=\"vocabtypelist\">");
+			out.println("<ul>");
 			for (Article article : articles) {
-				out.println("<li class=\"vocabtypelistitem\"><a href=\""+htmlencode(article.name())+".html\" target=\"xncontent\">"+htmlencode(article.getTitle())+"</a></li>");
+				out.println("<li><a href=\""+htmlencode(article.name())+".html\" target=\"xncontent\">"+htmlencode(article.getTitle())+"</a></li>");
 			}
 			out.println("</ul>");
 		}
-		out.println("<ul class=\"vocabtypelist\">");
+		out.println("<ul>");
 		if (!ds.terms().getTerms(TermType.CONSTANT, null, ((dialect == null) ? null : dialect.name()), dialectVersion).isEmpty()) {
-			out.println("<li class=\"vocabtypelistitem\"><a href=\"constants.html\" target=\"xncontent\">Constant Summary</a></li>");
+			out.println("<li><a href=\"constants.html\" target=\"xncontent\">Constant Summary</a></li>");
 		}
 		if (!ds.terms().getTerms(TermType.OPERATOR, null, ((dialect == null) ? null : dialect.name()), dialectVersion).isEmpty()) {
-			out.println("<li class=\"vocabtypelistitem\"><a href=\"precedence.html\" target=\"xncontent\">Operator Precedence Table</a></li>");
+			out.println("<li><a href=\"precedence.html\" target=\"xncontent\">Operator Precedence Table</a></li>");
 		}
 		boolean iHasASynonym = false;
 		for (Term term : ds.terms().getTerms(null, null, ((dialect == null) ? null : dialect.name()), dialectVersion)) {
@@ -990,7 +990,7 @@ public class HTMLXDOMGenerator {
 			}
 		}
 		if (iHasASynonym) {
-			out.println("<li class=\"vocabtypelistitem\"><a href=\"synonyms.html\" target=\"xncontent\">Synonyms</a></li>");
+			out.println("<li><a href=\"synonyms.html\" target=\"xncontent\">Synonyms</a></li>");
 		}
 		boolean iHasAColor = false;
 		for (Term term : ds.terms().getTerms(TermType.CONSTANT, null, ((dialect == null) ? null : dialect.name()), dialectVersion)) {
@@ -1000,9 +1000,9 @@ public class HTMLXDOMGenerator {
 			}
 		}
 		if (iHasAColor) {
-			out.println("<li class=\"vocabtypelistitem\"><a href=\"colors.html\" target=\"xncontent\">Color Chart</a></li>");
+			out.println("<li><a href=\"colors.html\" target=\"xncontent\">Color Chart</a></li>");
 		}
-		out.println("<li class=\"vocabtypelistitem\"><a href=\"index-a.html\" target=\"xncontent\">Index</a></li>");
+		out.println("<li><a href=\"index-a.html\" target=\"xncontent\">Index</a></li>");
 		out.println("</ul>");
 		out.println("</body>");
 		out.println("</html>");
@@ -1136,21 +1136,21 @@ public class HTMLXDOMGenerator {
 			}
 		}
 		
-		out.println("<ul class=\"dialectlist\">");
-		out.println("<li class=\"dialectlistitem\">");
+		out.println("<ul>");
+		out.println("<li>");
 		out.println("<a href=\"vocabtypes.html\" target=\"xnvocabtypes\" onclick=\"return loadAllDialects();\">" + allString + "</a>");
 		out.println("</li>");
 		out.println("</ul>");
 		if (!dialects.isEmpty()) {
-			out.println("<h1 class=\"dialectlistheader\">Dialects</h1>");
+			out.println("<h1>Dialects</h1>");
 			writeDialectList(dialect, dialectVersion, out, dialects);
 		}
 		if (!modules.isEmpty()) {
-			out.println("<h1 class=\"dialectlistheader\">Modules</h1>");
+			out.println("<h1>Modules</h1>");
 			writeDialectList(dialect, dialectVersion, out, modules);
 		}
 		if (!libraries.isEmpty()) {
-			out.println("<h1 class=\"dialectlistheader\">Libraries</h1>");
+			out.println("<h1>Libraries</h1>");
 			writeDialectList(dialect, dialectVersion, out, libraries);
 		}
 		out.println("</body>");
@@ -1159,10 +1159,10 @@ public class HTMLXDOMGenerator {
 	}
 	
 	private void writeDialectList(Dialect dialect, VersionNumber dialectVersion, PrintWriter out, List<Dialect> dialects) {
-		out.println("<ul class=\"dialectlist\">");
+		out.println("<ul>");
 		for (Dialect d : dialects) {
 			String href = ((dialect == null) ? (htmlencode(d.name()) + "/vocabtypes.html") : "vocabtypes.html");
-			out.println("<li class=\"dialectlistitem\">");
+			out.println("<li>");
 			out.println("<a href=\""+href+"\" target=\"xnvocabtypes\" onclick=\"return loadDialect('"+htmlencode(d.name())+"');\">"+htmlencode(d.getTitle())+"</a>");
 			out.print("<span class=\"dversion\">(");
 			if (dialectVersion == null || dialect == null) {
