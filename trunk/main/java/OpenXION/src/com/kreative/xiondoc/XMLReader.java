@@ -29,13 +29,18 @@ package com.kreative.xiondoc;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
+import java.net.URL;
+import java.net.URLConnection;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -65,15 +70,44 @@ public class XMLReader implements XIONDocReader {
 			factory.setValidating(true); // make sure the XML is valid
 			factory.setExpandEntityReferences(false); // don't allow custom entities
 			DocumentBuilder builder = factory.newDocumentBuilder();
+			builder.setEntityResolver(new XIONDocEntityResolver());
+			builder.setErrorHandler(new XIONDocErrorHandler());
 			Document document = builder.parse(new InputSource(new StringReader(xnd)));
 			System.out.println("Traversing XML document...");
 			p.parseDocument(document, d);
 		} catch (ParserConfigurationException pce) {
 			throw new IOException(pce);
-		} catch (SAXParseException saxpe) {
-			throw new IOException(saxpe.getMessage() + " at " + saxpe.getLineNumber()+":"+saxpe.getColumnNumber());
 		} catch (SAXException saxe) {
 			throw new IOException(saxe);
+		}
+	}
+	
+	private static class XIONDocEntityResolver implements EntityResolver {
+		@Override
+		public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+			if (systemId.contains("xiondoc-1.3.dtd")) {
+				URL u = XMLReader.class.getResource("xiondoc-1.3.dtd");
+				URLConnection uc = u.openConnection();
+				InputStream ui = uc.getInputStream();
+				return new InputSource(ui);
+			} else {
+				return null;
+			}
+		}
+	}
+	
+	private static class XIONDocErrorHandler implements ErrorHandler {
+		@Override
+		public void error(SAXParseException e) throws SAXException {
+			System.out.println("ERROR on "+e.getLineNumber()+":"+e.getColumnNumber()+": "+e.getMessage());
+		}
+		@Override
+		public void fatalError(SAXParseException e) throws SAXException {
+			System.out.println("FATAL ERROR on "+e.getLineNumber()+":"+e.getColumnNumber()+": "+e.getMessage());
+		}
+		@Override
+		public void warning(SAXParseException e) throws SAXException {
+			System.out.println("WARNING on "+e.getLineNumber()+":"+e.getColumnNumber()+": "+e.getMessage());
 		}
 	}
 }
