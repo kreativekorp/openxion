@@ -1,0 +1,61 @@
+#summary Release notes from version 1.3 of OpenXION.
+
+= OpenXION 1.3 is out! =
+
+OpenXION 1.3 is the latest release version of OpenXION, the reference implementation of XION, the open scripting language based on !HyperTalk. Version 1.3 introduces several new features and fixes major issues with lists and containers.
+
+= Repeat Lastly =
+
+Use the [http://www.kreativekorp.com/docs/openxion/1.3/manual/cs.html#lastly lastly] construction in repeat blocks to execute code when the loop terminates normally.
+
+{{{
+-- the following prints "done" because the loop terminates normally
+repeat with x = 1 to 10
+  put x
+lastly
+  put "done"
+end repeat
+}}}
+
+{{{
+-- the following does not print "done" because the loop terminates abnormally
+repeat with x = 1 to 10
+  put x
+  if x is 5 then exit repeat
+lastly
+  put "done"
+end repeat
+}}}
+
+= Dictionaries =
+
+Use [http://www.kreativekorp.com/docs/openxion/1.3/manual/dt.html#dictionary dictionaries] to map strings to values. Use braces to indicate dictionary literals. Use the [http://www.kreativekorp.com/docs/openxion/1.3/manual/dt.html#entry entry] chunk type to manipulate dictionaries.
+
+{{{
+local d as dictionary
+put {
+  "a" = "apple"
+  "b" = "raise"
+} into d
+put entry "a" of d
+put "kreative" into entry "c" of d
+put d
+}}}
+
+= References =
+
+Use [http://www.kreativekorp.com/docs/openxion/1.3/manual/dt.html#reference references] to pass containers around without using string literals or the value function.
+
+= ASCII-to-Binary and Binary-to-ASCII =
+
+Use the [http://www.kreativekorp.com/docs/openxion/1.3/manual/fn.html#atob atob] and [http://www.kreativekorp.com/docs/openxion/1.3/manual/fn.html#btoa btoa] functions to encode and decode data in Base64, ASCII85, and other encodings.
+
+= Translate Characters =
+
+Use the [http://www.kreativekorp.com/docs/openxion/1.3/manual/fn.html#trreplace trReplace] and [http://www.kreativekorp.com/docs/openxion/1.3/manual/fn.html#trreplaceall trReplaceAll] functions to perform `tr` substitutions.
+
+----
+
+= Previous Release Notes =
+
+[ReleaseNotes12]
