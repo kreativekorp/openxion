@@ -115,7 +115,7 @@ public class HTMLXDOMGenerator {
 				if (a.getName().equalsIgnoreCase(b.getName())) {
 					return a.getType().compareTo(b.getType());
 				} else {
-					return a.getName().compareToIgnoreCase(b.getName());
+					return compareTermNames(a.getName(), b.getName());
 				}
 			}
 		});
@@ -531,7 +531,7 @@ public class HTMLXDOMGenerator {
 		Collections.sort(colorTermSpecs, new Comparator<TermSpec>() {
 			@Override
 			public int compare(TermSpec a, TermSpec b) {
-				return a.getName().compareToIgnoreCase(b.getName());
+				return compareTermNames(a.getName(), b.getName());
 			}
 		});
 		out.println("<h2>Colors by Name</h2>");
@@ -566,7 +566,7 @@ public class HTMLXDOMGenerator {
 				if (Math.abs(hsva[0]-hsvb[0]) > 0.01) return (int)Math.signum(hsva[0]-hsvb[0]);
 				if (Math.abs(aa-ba) > 0.01) return (int)Math.signum(aa-ba);
 				if (Math.abs(ad-bd) > 0.01) return (int)Math.signum(ad-bd);
-				return a.getName().compareToIgnoreCase(b.getName());
+				return compareTermNames(a.getName(), b.getName());
 			}
 		});
 		out.println("<h2>Colors by Hue</h2>");
@@ -709,7 +709,7 @@ public class HTMLXDOMGenerator {
 		Collections.sort(constantList, new Comparator<TermSpec>() {
 			@Override
 			public int compare(TermSpec a, TermSpec b) {
-				return a.getName().compareToIgnoreCase(b.getName());
+				return compareTermNames(a.getName(), b.getName());
 			}
 		});
 		out.println("<h2>Constants by Name</h2>");
@@ -872,7 +872,8 @@ public class HTMLXDOMGenerator {
 		Collections.sort(termsWithSynonyms, new Comparator<Term>() {
 			@Override
 			public int compare(Term a, Term b) {
-				return termSynonyms.get(a).get(0).getName().compareToIgnoreCase(
+				return compareTermNames(
+						termSynonyms.get(a).get(0).getName(),
 						termSynonyms.get(b).get(0).getName());
 			}
 		});
@@ -1355,6 +1356,20 @@ public class HTMLXDOMGenerator {
 			}
 		}
 		return out.toString().trim().replaceAll("\\s+", " ");
+	}
+	
+	private static int compareTermNames(String a, String b) {
+		boolean aIsLetter = a.length() > 0 && Character.isLetterOrDigit(a.charAt(0));
+		boolean bIsLetter = b.length() > 0 && Character.isLetterOrDigit(b.charAt(0));
+		if (aIsLetter == bIsLetter) {
+			return a.compareToIgnoreCase(b);
+		} else if (aIsLetter) {
+			return -1;
+		} else if (bIsLetter) {
+			return 1;
+		} else {
+			return a.compareToIgnoreCase(b);
+		}
 	}
 	
 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
