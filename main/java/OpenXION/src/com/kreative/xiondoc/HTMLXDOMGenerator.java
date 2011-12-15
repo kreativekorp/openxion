@@ -528,12 +528,7 @@ public class HTMLXDOMGenerator {
 			}
 		}
 		
-		Collections.sort(colorTermSpecs, new Comparator<TermSpec>() {
-			@Override
-			public int compare(TermSpec a, TermSpec b) {
-				return compareTermNames(a.getName(), b.getName());
-			}
-		});
+		Collections.sort(colorTermSpecs, termSpecComparator);
 		out.println("<h2>Colors by Name</h2>");
 		out.println("<p class=\"block paragraph indent0\"><a name=\"byname\">The table below lists the name, " +
 				"the RGB value, and a color swatch for each <code><a href=\"dt/color.html\">color</a></code> " +
@@ -644,7 +639,7 @@ public class HTMLXDOMGenerator {
 					operatorList.add(e.getKey());
 				}
 			}
-			Collections.sort(operatorList);
+			Collections.sort(operatorList, termSpecComparator);
 			if (!operatorList.isEmpty()) {
 				out.println("<tbody>");
 				boolean first = true;
@@ -706,12 +701,7 @@ public class HTMLXDOMGenerator {
 			}
 		}
 		
-		Collections.sort(constantList, new Comparator<TermSpec>() {
-			@Override
-			public int compare(TermSpec a, TermSpec b) {
-				return compareTermNames(a.getName(), b.getName());
-			}
-		});
+		Collections.sort(constantList, termSpecComparator);
 		out.println("<h2>Constants by Name</h2>");
 		out.println("<p class=\"block paragraph indent0\"><a name=\"byname\">The table below lists all the built-in constants by name." +
 				" See also <a href=\"#bytype\">by data type</a> and <a href=\"#byvalue\">by value</a>.</a></p>");
@@ -864,7 +854,7 @@ public class HTMLXDOMGenerator {
 				TermSpecList termSpecs = term.getSynonyms(((dialect == null) ? null : dialect.name()), dialectVersion, null);
 				List<TermSpec> termSpecs2 = new Vector<TermSpec>();
 				termSpecs2.addAll(termSpecs);
-				Collections.sort(termSpecs2);
+				Collections.sort(termSpecs2, termSpecComparator);
 				termsWithSynonyms.add(term);
 				termSynonyms.put(term, termSpecs2);
 			}
@@ -1371,6 +1361,13 @@ public class HTMLXDOMGenerator {
 			return a.compareToIgnoreCase(b);
 		}
 	}
+	
+	private static final Comparator<TermSpec> termSpecComparator = new Comparator<TermSpec>() {
+		@Override
+		public int compare(TermSpec a, TermSpec b) {
+			return compareTermNames(a.getName(), b.getName());
+		}
+	};
 	
 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 	
