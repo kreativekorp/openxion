@@ -83,7 +83,20 @@ public class TermSpec implements Serializable, Comparable<TermSpec> {
 	public int compareTo(TermSpec other) {
 		int cmp = this.type.compareTo(other.type);
 		if (cmp != 0) return cmp;
-		else return this.name.compareToIgnoreCase(other.name);
+		
+		String a = this.name;
+		String b = other.name;
+		boolean aIsLetter = a.length() > 0 && Character.isLetterOrDigit(a.charAt(0));
+		boolean bIsLetter = b.length() > 0 && Character.isLetterOrDigit(b.charAt(0));
+		if (aIsLetter == bIsLetter) {
+			return a.compareToIgnoreCase(b);
+		} else if (aIsLetter) {
+			return -1;
+		} else if (bIsLetter) {
+			return 1;
+		} else {
+			return a.compareToIgnoreCase(b);
+		}
 	}
 	
 	public boolean equals(Object o) {
