@@ -26233,6 +26233,7 @@
 			<tr>
 				<td><a>kw:__LINE__</a></td>
 				<td><a>kw:__FILE__</a></td>
+				<td><a>kw:__END__</a></td>
 			</tr>
 		</table>
 	</content>
@@ -26826,6 +26827,376 @@
 				<td><a>fn:includePath</a></td>
 				<td><a>fn:includeFile</a></td>
 				<td><a>fn:path</a></td>
+			</tr>
+		</table>
+	</content>
+</article>
+
+<article>
+	<name>datatypes</name>
+	<title>Data Types at a Glance</title>
+	<summary>
+		An at-a-glance view of all the data types
+		available in OpenXION.
+	</summary>
+	<content>
+		<h2>Data Types</h2>
+		<h3>Primitives</h3>
+		<table>
+			<tr>
+				<td><a>dt:variant</a></td>
+				<td><a>dt:variants</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:boolean</a></td>
+				<td><a>dt:booleans</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:integer</a></td>
+				<td><a>dt:integers</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:number</a></td>
+				<td><a>dt:numbers</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:complex</a></td>
+				<td><a>dt:complexes</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:string</a></td>
+				<td><a>dt:strings</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:binary</a></td>
+				<td><a>dt:binaries</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:reference</a></td>
+				<td><a>dt:references</a></td>
+			</tr>
+		</table>
+		<h3>Compound Types</h3>
+		<table>
+			<tr>
+				<td><a>dt:point</a></td>
+				<td><a>dt:points</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:rect</a></td>
+				<td><a>dt:rects</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:rectangle</a></td>
+				<td><a>dt:rectangles</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:color</a></td>
+				<td><a>dt:colors</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:colour</a></td>
+				<td><a>dt:colours</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:date</a></td>
+				<td><a>dt:dates</a></td>
+			</tr>
+		</table>
+		<h3>Data Structures</h3>
+		<table>
+			<tr>
+				<td><a>dt:list</a></td>
+				<td><a>dt:lists</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:dictionary</a></td>
+				<td><a>dt:dictionaries</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:object</a></td>
+				<td><a>dt:objects</a></td>
+			</tr>
+		</table>
+		<h2>Chunk Types</h2>
+		<h3>String Chunk Types</h3>
+		<table>
+			<tr>
+				<td><a>dt:char</a></td>
+				<td><a>dt:chars</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:character</a></td>
+				<td><a>dt:characters</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:item</a></td>
+				<td><a>dt:items</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:col</a></td>
+				<td><a>dt:cols</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:column</a></td>
+				<td><a>dt:columns</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:row</a></td>
+				<td><a>dt:rows</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:line</a></td>
+				<td><a>dt:lines</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:word</a></td>
+				<td><a>dt:words</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:sent</a></td>
+				<td><a>dt:sents</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:sentence</a></td>
+				<td><a>dt:sentences</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:para</a></td>
+				<td><a>dt:paras</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:paragraph</a></td>
+				<td><a>dt:paragraphs</a></td>
+			</tr>
+		</table>
+		<h3>Binary Chunk Types</h3>
+		<table>
+			<tr>
+				<td><a>dt:byte</a></td>
+				<td><a>dt:bytes</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:tinyInt</a></td>
+				<td><a>dt:tinyInts</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:shortInt</a></td>
+				<td><a>dt:shortInts</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:medInt</a></td>
+				<td><a>dt:medInts</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:mediumInt</a></td>
+				<td><a>dt:mediumInts</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:longInt</a></td>
+				<td><a>dt:longInts</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:halfFloat</a></td>
+				<td><a>dt:halfFloats</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:singleFloat</a></td>
+				<td><a>dt:singleFloats</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:doubleFloat</a></td>
+				<td><a>dt:doubleFloats</a></td>
+			</tr>
+		</table>
+		<h3>Data Structure Chunk Types</h3>
+		<table>
+			<tr>
+				<td><a>dt:element</a></td>
+				<td><a>dt:elements</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:entry</a></td>
+				<td><a>dt:entries</a></td>
+			</tr>
+		</table>
+		<h2>Built-In Object Types</h2>
+		<h3>File System Objects</h3>
+		<table>
+			<tr>
+				<td><a>dt:disk</a></td>
+				<td><a>dt:disks</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:volume</a></td>
+				<td><a>dt:volumes</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:folder</a></td>
+				<td><a>dt:folders</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:directory</a></td>
+				<td><a>dt:directories</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:file</a></td>
+				<td><a>dt:files</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:fork</a></td>
+				<td><a>dt:forks</a></td>
+			</tr>
+		</table>
+		<h3>Miscellaneous Objects</h3>
+		<table>
+			<tr>
+				<td><a>dt:environment</a></td>
+				<td><a>dt:environments</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:interpreter</a></td>
+				<td><a>dt:interpreters</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:clipboard</a></td>
+				<td><a>dt:clipboards</a></td>
+			</tr>
+			<tr>
+				<td><a>dt:URL</a></td>
+				<td><a>dt:URLs</a></td>
+			</tr>
+		</table>
+	</content>
+</article>
+
+<article>
+	<name>properties</name>
+	<title>Properties at a Glance</title>
+	<summary>
+		An at-a-glance view of all the properties
+		available in OpenXION.
+	</summary>
+	<content>
+		<h2>Global Properties</h2>
+		<h3>Basic Global Properties</h3>
+		<table>
+			<tr>
+				<td><a>pr:textEncoding</a></td>
+				<td><a>pr:lineEnding</a></td>
+				<td><a>pr:numberFormat</a></td>
+			</tr>
+			<tr>
+				<td><a>pr:mathProcessor</a></td>
+				<td><a>pr:precision</a></td>
+				<td><a>pr:roundingMode</a></td>
+			</tr>
+		</table>
+		<h3>Chunk Processing Properties</h3>
+		<table>
+			<tr>
+				<td><a>pr:itemDelimiter</a></td>
+				<td><a>pr:columnDelimiter</a></td>
+				<td><a>pr:rowDelimiter</a></td>
+			</tr>
+			<tr>
+				<td><a>pr:littleEndian</a></td>
+				<td><a>pr:unsigned</a></td>
+			</tr>
+		</table>
+		<h3>Audio Properties</h3>
+		<table>
+			<tr>
+				<td><a>pr:dialingPort</a></td>
+				<td><a>pr:dialingTime</a></td>
+				<td><a>pr:dialingVolume</a></td>
+			</tr>
+			<tr>
+				<td><a>pr:soundChannel</a></td>
+				<td><a>pr:toneChannel</a></td>
+				<td><a>pr:toneVolume</a></td>
+			</tr>
+		</table>
+		<h3>System Properties</h3>
+		<table>
+			<tr>
+				<td><a>pr:userName</a></td>
+			</tr>
+			<tr>
+				<td><a>pr:applicationPaths</a></td>
+				<td><a>pr:programPaths</a></td>
+			</tr>
+			<tr>
+				<td><a>pr:documentPaths</a></td>
+				<td><a>pr:includePaths</a></td>
+			</tr>
+		</table>
+		<h2>Data Properties</h2>
+		<h3>Rectangle Properties</h3>
+		<table>
+			<tr>
+				<td><a>pr:left</a></td>
+				<td><a>pr:top</a></td>
+				<td><a>pr:right</a></td>
+				<td><a>pr:bottom</a></td>
+			</tr>
+			<tr>
+				<td><a>pr:topLeft</a></td>
+				<td><a>pr:topRight</a></td>
+				<td><a>pr:botLeft</a></td>
+				<td><a>pr:botRight</a></td>
+			</tr>
+			<tr>
+				<td><a>pr:bottomLeft</a></td>
+				<td><a>pr:bottomRight</a></td>
+				<td><a>pr:width</a></td>
+				<td><a>pr:height</a></td>
+			</tr>
+			<tr>
+				<td><a>pr:center</a></td>
+				<td><a>pr:loc</a></td>
+				<td><a>pr:location</a></td>
+			</tr>
+		</table>
+		<h3>Color Properties</h3>
+		<table>
+			<tr>
+				<td><a>pr:red</a></td>
+				<td><a>pr:green</a></td>
+				<td><a>pr:blue</a></td>
+			</tr>
+			<tr>
+				<td><a>pr:hue</a></td>
+				<td><a>pr:saturation</a></td>
+				<td><a>pr:brightness</a></td>
+			</tr>
+			<tr>
+				<td><a>pr:alpha</a></td>
+			</tr>
+		</table>
+		<h3>Dictionary Properties</h3>
+		<table>
+			<tr>
+				<td><a>pr:keys</a></td>
+				<td><a>pr:values</a></td>
+			</tr>
+		</table>
+		<h2>Object Properties</h2>
+		<h3>Basic Object Properties</h3>
+		<table>
+			<tr>
+				<td><a>pr:name</a></td>
+				<td><a>pr:id</a></td>
+				<td><a>pr:number</a></td>
+			</tr>
+		</table>
+		<h3>File System Object Properties</h3>
+		<table>
+			<tr>
+				<td><a>pr:path</a></td>
+				<td><a>pr:modificationDate</a></td>
+				<td><a>pr:count</a></td>
+				<td><a>pr:size</a></td>
 			</tr>
 		</table>
 	</content>
