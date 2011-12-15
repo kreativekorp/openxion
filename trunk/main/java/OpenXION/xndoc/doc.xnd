@@ -352,8 +352,8 @@
 	</description>
 	<notes>
 		<p>
-			The expression <me/> <mv>x</mv> is equivalent to the
-			expression <a>op:−</a><mv>x</mv><a>op:-</a>1 when
+			The expression <code><me/> <mv>x</mv></code> is equivalent
+			to the expression <code>-<mv>x</mv>-1</code> when
 			<mv>x</mv> is an <a>dt:integer</a>.
 		</p>
 	</notes>
@@ -606,9 +606,8 @@
 			be a <a>dt:number</a>.
 		</p>
 		<p>
-			The expression <mv>x</mv> <me/> <mv>y</mv> is equivalent to
-			<a>fn:trunc</a> <code>(</code> <mv>x</mv> <a>op:/</a> <mv>y</mv>
-			<code>)</code>.
+			The expression <code><mv>x</mv> <me/> <mv>y</mv></code> is
+			equivalent to <code><a>fn:trunc</a>(<mv>x</mv>/<mv>y</mv>)</code>.
 		</p>
 	</notes>
 	<see-also>
@@ -643,9 +642,8 @@
 			be a <a>dt:number</a>.
 		</p>
 		<p>
-			The expression <mv>x</mv> <me/> <mv>y</mv> is equivalent to
-			<mv>x</mv> <a>op:-</a> <mv>y</mv> <a>op:*</a> <a>fn:trunc</a>
-			<code>(</code> <mv>x</mv> <a>op:/</a> <mv>y</mv> <code>)</code>.
+			The expression <code><mv>x</mv> <me/> <mv>y</mv></code> is equivalent to
+			<code><mv>x</mv>-<mv>y</mv>*<a>fn:trunc</a>(<mv>x</mv>/<mv>y</mv>)</code>.
 		</p>
 	</notes>
 	<see-also>
@@ -680,20 +678,18 @@
 			be a <a>dt:number</a>.
 		</p>
 		<p>
-			In XION, the expression <mv>x</mv> <me/> <mv>y</mv> is equivalent
-			to <a>fn:floor</a> <code>(</code> <mv>x</mv> <a>op:/</a> <mv>y</mv>
-			<code>)</code>.
+			In XION, the expression <code><mv>x</mv> <me/> <mv>y</mv></code>
+			is equivalent to <code><a>fn:floor</a>(<mv>x</mv>/<mv>y</mv>)</code>.
 		</p>
 	</notes>
 	<compatibility>
 		<p>
-			In HyperTalk, the expression <mv>x</mv> <me/> <mv>y</mv> is
-			equivalent to <a>fn:trunc</a> <code>(</code> <mv>x</mv> <a>op:/</a>
-			<mv>y</mv> <code>)</code>. What HyperTalk calls the <a>op:div</a>
-			operator is implemented in XION as the <a>op:quot</a> operator
-			instead. This does not change the value of the operator for
-			positive values, but does change the value of the operator for
-			negative values.
+			In HyperTalk, the expression <code><mv>x</mv> <me/> <mv>y</mv></code>
+			is equivalent to <code><a>fn:trunc</a>(<mv>x</mv>/<mv>y</mv>)</code>.
+			What HyperTalk calls the <a>op:div</a> operator is implemented in
+			XION as the <a>op:quot</a> operator instead. This does not change
+			the value of the operator for positive values, but does change the
+			value of the operator for negative values.
 		</p>
 	</compatibility>
 	<see-also>
@@ -728,21 +724,18 @@
 			be a <a>dt:number</a>.
 		</p>
 		<p>
-			In XION, the expression <mv>x</mv> <me/> <mv>y</mv> is equivalent
-			to <mv>x</mv> <a>op:-</a> <mv>y</mv> <a>op:*</a> <a>fn:floor</a>
-			<code>(</code> <mv>x</mv> <a>op:/</a> <mv>y</mv> <code>)</code>.
+			In XION, the expression <code><mv>x</mv> <me/> <mv>y</mv></code> is equivalent
+			to <code><mv>x</mv>-<mv>y</mv>*<a>fn:floor</a>(<mv>x</mv>/<mv>y</mv>)</code>.
 		</p>
 	</notes>
 	<compatibility>
 		<p>
-			In HyperTalk, the expression <mv>x</mv> <me/> <mv>y</mv> is
-			equivalent to <mv>x</mv> <a>op:-</a> <mv>y</mv> <a>op:*</a>
-			<a>fn:trunc</a> <code>(</code> <mv>x</mv> <a>op:/</a> <mv>y</mv>
-			<code>)</code>. What HyperTalk calls the <a>op:mod</a>
-			operator is implemented in XION as the <a>op:rem</a> operator
-			instead. This does not change the value of the operator for
-			positive values, but does change the value of the operator for
-			negative values.
+			In HyperTalk, the expression <code><mv>x</mv> <me/> <mv>y</mv></code> is equivalent
+			to <code><mv>x</mv>-<mv>y</mv>*<a>fn:trunc</a>(<mv>x</mv>/<mv>y</mv>)</code>.
+			What HyperTalk calls the <a>op:mod</a> operator is implemented in
+			XION as the <a>op:rem</a> operator instead. This does not change
+			the value of the operator for positive values, but does change the
+			value of the operator for negative values.
 		</p>
 	</compatibility>
 	<see-also>
@@ -831,8 +824,8 @@
 	</description>
 	<notes>
 		<p>
-			The expression <mv>x</mv> <me/> <mv>y</mv> is equivalent to
-			<mv>x</mv> <a>op:*</a> <code>2</code> <a>op:^</a> <mv>y</mv>
+			The expression <code><mv>x</mv> <me/> <mv>y</mv></code> is
+			equivalent to <code><mv>x</mv>*2^<mv>y</mv></code>
 			when <mv>x</mv> and <mv>y</mv> are integers and the result
 			is in the range of the <a>dt:integer</a> data type.
 		</p>
@@ -868,9 +861,8 @@
 	</description>
 	<notes>
 		<p>
-			The expression <mv>x</mv> <me/> <mv>y</mv> is equivalent to
-			<a>fn:floor</a> <code>(</code> <mv>x</mv> <a>op:/</a>
-			<code>2</code> <a>fn:^</a> <mv>y</mv> <code>)</code>
+			The expression <code><mv>x</mv> <me/> <mv>y</mv></code> is
+			equivalent to <code><a>fn:floor</a>(<mv>x</mv>/2^<mv>y</mv>)</code>
 			when <mv>x</mv> and <mv>y</mv> are integers.
 		</p>
 	</notes>
@@ -900,9 +892,8 @@
 	</description>
 	<notes>
 		<p>
-			The expression <mv>x</mv> <me/> <mv>y</mv> is equivalent to
-			<a>fn:floor</a> <code>(</code> <mv>x</mv> <a>op:/</a>
-			<code>2</code> <a>fn:^</a> <mv>y</mv> <code>)</code>
+			The expression <code><mv>x</mv> <me/> <mv>y</mv></code> is
+			equivalent to <code><a>fn:floor</a>(<mv>x</mv>/2^<mv>y</mv>)</code>
 			when <mv>x</mv> and <mv>y</mv> are positive integers.
 		</p>
 		<p>
@@ -2581,8 +2572,11 @@
 	<description-short>Construction of lists</description-short>
 	<syntax>
 		<syn>
-			<mv>expression</mv> <opt> <me/> <mv>expression</mv>
-			<opt>...</opt> </opt>
+			<mv>expression</mv>
+			<opt>
+				<me/> <mv>expression</mv>
+				<opt>...</opt>
+			</opt>
 		</syn>
 	</syntax>
 	<description>
@@ -2831,9 +2825,9 @@
 			<a>cs:aka</a> for a singular synonym or the keyword <a>cs:pl</a>
 			for a plural name or synonym. Names can be more than one word long:
 		</p>
-		<p indent="1">
-			<code>object type fraction aka rational number pl fractions pl rational numbers</code>
-		</p>
+		<scr>
+			object type fraction aka rational number pl fractions pl rational numbers
+		</scr>
 		<p>
 			<mv>ParentTypeName</mv> is the name of a data type to inherit
 			handlers and properties from. <mv>HandlerList</mv> is a series of
@@ -2875,9 +2869,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>object type fraction aka rational number</code>
-		</p>
+		<scr>
+			object type fraction aka rational number
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -2899,9 +2893,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>object type fraction pl fractions</code>
-		</p>
+		<scr>
+			object type fraction pl fractions
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -2923,9 +2917,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>object type resistor extends impedor</code>
-		</p>
+		<scr>
+			object type resistor extends impedor
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -3312,9 +3306,8 @@
 	<name dialects="xn,oxn,hyp" modules="oxnb">repeat with</name>
 	<syntax>
 		<syn>
-			<me/> <mv>variable</mv> = <mv>start</mv>
-				to <mv>finish</mv>
-				<opt>step <mv>increment</mv></opt>
+			<me/> <mv>variable</mv> = <mv>start</mv> to <mv>finish</mv>
+			<opt>step <mv>increment</mv></opt>
 			<br indent="1"/><mv>statementList</mv><br/>
 			<opt><ch><ci>lastly</ci><ci>then</ci><ci>else</ci></ch>
 			<br indent="1"/><mv>statementList</mv></opt><br/>
@@ -4570,9 +4563,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>get the short name of me</code>
-		</p>
+		<scr>
+			get the short name of me
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -4592,9 +4585,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>tell super to doSomething</code>
-		</p>
+		<scr>
+			tell super to doSomething
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -4621,30 +4614,28 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put "I am on line" &amp;&amp; __LINE__</code>
-		</p>
+		<scr>
+			put "I am on line" &amp;&amp; __LINE__
+		</scr>
 	</examples>
 	<description>
 		<p>
-			<a>kw:__LINE__</a> is a special keyword that is replaced with
-			the line number of the line it's on when a script is parsed.
+			<me/> is a special keyword that is replaced with the line number
+			of the line it's on when a script is parsed.
 		</p>
 	</description>
 	<notes>
 		<p>
-			If <a>kw:__LINE__</a> is used inside a string passed to
-			<a>cs:do</a> or <a>fn:value</a>, it will be replaced with
-			the line number of the line it's on inside the string,
-			not inside the current script file. If you want the latter,
-			put <a>kw:__LINE__</a> outside the string.
+			If <me/> is used inside a string passed to <a>cs:do</a> or
+			<a>fn:value</a>, it will be replaced with the line number of
+			the line it's on inside the string, not inside the current
+			script file. If you want the latter, put <me/> outside the string.
 		</p>
 	</notes>
 	<compatibility>
 		<p>
-			<a>kw:__LINE__</a> is not part of the XION Scripting Language
-			Standard and is not portable. It is not available in OpenXION
-			1.0 or 1.1.
+			<me/> is not part of the XION Scripting Language Standard and
+			is not portable. It is not available in OpenXION 1.0 or 1.1.
 		</p>
 	</compatibility>
 </keyword>
@@ -4657,32 +4648,53 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put "I am in" &amp;&amp; __FILE__</code>
-		</p>
+		<scr>
+			put "I am in" &amp;&amp; __FILE__
+		</scr>
 	</examples>
 	<description>
 		<p>
-			<a>kw:__FILE__</a> is a special keyword that is replaced with
-			the full path of the file it is in when a script is parsed.
-			If the script did not come from a file, the <a>kw:__FILE__</a>
-			keyword is replaced with <a>cn:empty</a>.
+			<me/> is a special keyword that is replaced with the full path
+			of the file it is in when a script is parsed. If the script did
+			not come from a file, the <me/> keyword is replaced with
+			<a>cn:empty</a>.
 		</p>
 	</description>
 	<notes>
 		<p>
-			If <a>kw:__FILE__</a> is used inside a string passed to
-			<a>cs:do</a> or <a>fn:value</a>, it will be replaced with
-			<a>cn:empty</a>, not the path of the current script file.
-			If you want the latter, put <a>kw:__FILE__</a> outside
-			the string.
+			If <me/> is used inside a string passed to <a>cs:do</a> or
+			<a>fn:value</a>, it will be replaced with <a>cn:empty</a>,
+			not the path of the current script file. If you want the
+			latter, put <me/> outside the string.
 		</p>
 	</notes>
 	<compatibility>
 		<p>
-			<a>kw:__FILE__</a> is not part of the XION Scripting Language
-			Standard and is not portable. It is not available in OpenXION
-			1.0 or 1.1.
+			<me/> is not part of the XION Scripting Language Standard and
+			is not portable. It is not available in OpenXION 1.0 or 1.1.
+		</p>
+	</compatibility>
+</keyword>
+
+<keyword>
+	<name dialects="oxn&ge;1.4" modules="oxnb&ge;1.4">__END__</name>
+	<syntax>
+		<syn>
+			<me/>
+		</syn>
+	</syntax>
+	<description>
+		<p>
+			<me/> is a special keyword that tells the XION interpreter
+			to stop parsing the XION script. Everything following a <me/>
+			token will be ignored completely.
+		</p>
+	</description>
+	<compatibility>
+		<p>
+			<me/> is not part of the XION Scripting Language Standard and
+			is not portable. It is not available in versions of OpenXION
+			before 1.4.
 		</p>
 	</compatibility>
 </keyword>
@@ -4699,9 +4711,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>get the <me/> date</code>
-		</p>
+		<scr>
+			get the short date
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -4761,9 +4773,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>get the <me/> date</code>
-		</p>
+		<scr>
+			get the long date
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -4790,9 +4802,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>get the <me/> date</code>
-		</p>
+		<scr>
+			get the English date
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -4815,9 +4827,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put " not " into char 69 of steve</code>
-		</p>
+		<scr>
+			put " not " into char 69 of steve
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -4840,9 +4852,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put "not " before word 12 of steve</code>
-		</p>
+		<scr>
+			put "not " before word 12 of steve
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -4866,9 +4878,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put " not" after word 11 of steve</code>
-		</p>
+		<scr>
+			put " not" after word 11 of steve
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5025,12 +5037,12 @@
 	<type>integer</type>
 	<value>0</value>
 	<examples>
-		<p>
-			<code>put zero into theCounter</code>
-		</p>
-		<p>
-			<code>beep never</code>
-		</p>
+		<scr>
+			put zero into theCounter
+		</scr>
+		<scr>
+			beep never
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5045,12 +5057,12 @@
 	<type>integer</type>
 	<value>1</value>
 	<examples>
-		<p>
-			<code>put one into numberOfUniverses</code>
-		</p>
-		<p>
-			<code>beep once</code>
-		</p>
+		<scr>
+			put one into numberOfUniverses
+		</scr>
+		<scr>
+			beep once
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5065,12 +5077,12 @@
 	<type>integer</type>
 	<value>2</value>
 	<examples>
-		<p>
-			<code>put two into numberOfShoes</code>
-		</p>
-		<p>
-			<code>beep twice</code>
-		</p>
+		<scr>
+			put two into numberOfShoes
+		</scr>
+		<scr>
+			beep twice
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5085,12 +5097,12 @@
 	<type>integer</type>
 	<value>3</value>
 	<examples>
-		<p>
-			<code>put three into numberOfDimensions</code>
-		</p>
-		<p>
-			<code>beep thrice</code>
-		</p>
+		<scr>
+			put three into numberOfDimensions
+		</scr>
+		<scr>
+			beep thrice
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5104,9 +5116,9 @@
 	<type>integer</type>
 	<value>4</value>
 	<examples>
-		<p>
-			<code>put four into numberOfSeasons</code>
-		</p>
+		<scr>
+			put four into numberOfSeasons
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5120,9 +5132,9 @@
 	<type>integer</type>
 	<value>5</value>
 	<examples>
-		<p>
-			<code>put five into numberOfSenses</code>
-		</p>
+		<scr>
+			put five into numberOfSenses
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5136,9 +5148,9 @@
 	<type>integer</type>
 	<value>6</value>
 	<examples>
-		<p>
-			<code>put six into numberOfQuarks</code>
-		</p>
+		<scr>
+			put six into numberOfQuarks
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5152,9 +5164,9 @@
 	<type>integer</type>
 	<value>7</value>
 	<examples>
-		<p>
-			<code>put seven into numberOfWeekdays</code>
-		</p>
+		<scr>
+			put seven into numberOfWeekdays
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5168,9 +5180,9 @@
 	<type>integer</type>
 	<value>8</value>
 	<examples>
-		<p>
-			<code>put eight into numberOfGluons</code>
-		</p>
+		<scr>
+			put eight into numberOfGluons
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5184,9 +5196,9 @@
 	<type>integer</type>
 	<value>9</value>
 	<examples>
-		<p>
-			<code>put nine into numberOfInnings</code>
-		</p>
+		<scr>
+			put nine into numberOfInnings
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5200,9 +5212,9 @@
 	<type>integer</type>
 	<value>10</value>
 	<examples>
-		<p>
-			<code>put ten into numberOfCommandments</code>
-		</p>
+		<scr>
+			put ten into numberOfCommandments
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5216,9 +5228,9 @@
 	<type>integer</type>
 	<value>11</value>
 	<examples>
-		<p>
-			<code>put eleven into numberOfCloningAttemptsBeforeThisOne</code>
-		</p>
+		<scr>
+			put eleven into numberOfCloningAttemptsBeforeThisOne
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5232,9 +5244,9 @@
 	<type>integer</type>
 	<value>12</value>
 	<examples>
-		<p>
-			<code>put twelve into numberOfMonths</code>
-		</p>
+		<scr>
+			put twelve into numberOfMonths
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5248,9 +5260,9 @@
 	<type>integer</type>
 	<value>13</value>
 	<examples>
-		<p>
-			<code>put thirteen into numberOfColonies</code>
-		</p>
+		<scr>
+			put thirteen into numberOfColonies
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5264,9 +5276,9 @@
 	<type>integer</type>
 	<value>14</value>
 	<examples>
-		<p>
-			<code>put fourteen into numberOfPoints</code>
-		</p>
+		<scr>
+			put fourteen into numberOfPoints
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5280,9 +5292,9 @@
 	<type>integer</type>
 	<value>15</value>
 	<examples>
-		<p>
-			<code>put fifteen into numberOfMinutes</code>
-		</p>
+		<scr>
+			put fifteen into numberOfMinutes
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5296,9 +5308,9 @@
 	<type>integer</type>
 	<value>16</value>
 	<examples>
-		<p>
-			<code>put sixteen into numberOfCandles</code>
-		</p>
+		<scr>
+			put sixteen into numberOfCandles
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5312,9 +5324,9 @@
 	<type>integer</type>
 	<value>17</value>
 	<examples>
-		<p>
-			<code>put seventeen into numberOfSyllables</code>
-		</p>
+		<scr>
+			put seventeen into numberOfSyllables
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5328,9 +5340,9 @@
 	<type>integer</type>
 	<value>18</value>
 	<examples>
-		<p>
-			<code>put eighteen into numberOfTammies</code>
-		</p>
+		<scr>
+			put eighteen into numberOfTammies
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5344,9 +5356,9 @@
 	<type>integer</type>
 	<value>19</value>
 	<examples>
-		<p>
-			<code>put nineteen into numberOfBiquadrates</code>
-		</p>
+		<scr>
+			put nineteen into numberOfBiquadrates
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5360,9 +5372,9 @@
 	<type>integer</type>
 	<value>20</value>
 	<examples>
-		<p>
-			<code>put twenty into numberOfQuestions</code>
-		</p>
+		<scr>
+			put twenty into numberOfQuestions
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5377,9 +5389,9 @@
 	<type>number</type>
 	<value>1.6180339887</value>
 	<examples>
-		<p>
-			<code>put height * phi into width</code>
-		</p>
+		<scr>
+			put height * phi into width
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5393,9 +5405,9 @@
 	<type>number</type>
 	<value>2.7182818284</value>
 	<examples>
-		<p>
-			<code>put euler ^ myLogarithm into myNumber</code>
-		</p>
+		<scr>
+			put euler ^ myLogarithm into myNumber
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5410,12 +5422,12 @@
 	<type>number</type>
 	<value>3.1415926535</value>
 	<examples>
-		<p>
-			<code>put pi * radius * radius into area</code>
-		</p>
-		<p>
-			<code>put 2*π*r into circumference</code>
-		</p>
+		<scr>
+			put pi * radius * radius into area
+		</scr>
+		<scr>
+			put 2*π*r into circumference
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5432,9 +5444,9 @@
 	<type>number</type>
 	<value>INF</value>
 	<examples>
-		<p>
-			<code>if 1 / 0 is infinity then beep</code>
-		</p>
+		<scr>
+			if 1 / 0 is infinity then beep
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5448,9 +5460,9 @@
 	<type>number</type>
 	<value>NAN</value>
 	<examples>
-		<p>
-			<code>if 0/0 is NaN then beep</code>
-		</p>
+		<scr>
+			if 0/0 is NaN then beep
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5472,9 +5484,9 @@
 	<type>variant</type>
 	<value></value>
 	<examples>
-		<p>
-			<code>put empty into steve</code>
-		</p>
+		<scr>
+			put empty into steve
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5516,9 +5528,9 @@
 	<type>string</type>
 	<value></value>
 	<examples>
-		<p>
-			<code>put null into tooHotForHyperCard</code>
-		</p>
+		<scr>
+			put null into tooHotForHyperCard
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5543,9 +5555,9 @@
 	<type>string</type>
 	<value></value>
 	<examples>
-		<p>
-			<code>set the itemDelimiter to backspace</code>
-		</p>
+		<scr>
+			set the itemDelimiter to backspace
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5567,9 +5579,9 @@
 	<type>string</type>
 	<value></value>
 	<examples>
-		<p>
-			<code>put tab before line 2 of theText</code>
-		</p>
+		<scr>
+			put tab before line 2 of theText
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5592,9 +5604,9 @@
 	<type>string</type>
 	<value></value>
 	<examples>
-		<p>
-			<code>put newline after line 2 of theText</code>
-		</p>
+		<scr>
+			put newline after line 2 of theText
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5618,9 +5630,9 @@
 	<type>string</type>
 	<value></value>
 	<examples>
-		<p>
-			<code>put formfeed after theText</code>
-		</p>
+		<scr>
+			put formfeed after theText
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5643,9 +5655,9 @@
 	<type>string</type>
 	<value></value>
 	<examples>
-		<p>
-			<code>put return after line 2 of theText</code>
-		</p>
+		<scr>
+			put return after line 2 of theText
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5668,9 +5680,9 @@
 	<type>string</type>
 	<value></value>
 	<examples>
-		<p>
-			<code>put escape &amp; "[0m"</code>
-		</p>
+		<scr>
+			put escape &amp; "[0m"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5693,9 +5705,9 @@
 	<type>string</type>
 	<value> </value>
 	<examples>
-		<p>
-			<code>put "Hello" &amp; space &amp; "World" into steve</code>
-		</p>
+		<scr>
+			put "Hello" &amp; space &amp; "World" into steve
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5710,9 +5722,9 @@
 	<type>string</type>
 	<value>&quot;</value>
 	<examples>
-		<p>
-			<code>put quote &amp; "I think she broke the CD-R drive when she dropped it on the floor," &amp; quote &amp;&amp; "said Smart Claire."</code>
-		</p>
+		<scr>
+			put quote &amp; "I think she broke the CD-R drive when she dropped it on the floor," &amp; quote &amp;&amp; "said Smart Claire."
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5735,9 +5747,9 @@
 	<type>string</type>
 	<value>&#39;</value>
 	<examples>
-		<p>
-			<code>put "would" &amp; apostrophe &amp; "ve" &amp;&amp; "could" &amp; apostrophe &amp; "ve" &amp;&amp; "should" &amp; apostrophe &amp; "ve"</code>
-		</p>
+		<scr>
+			put "would" &amp; apostrophe &amp; "ve" &amp;&amp; "could" &amp; apostrophe &amp; "ve" &amp;&amp; "should" &amp; apostrophe &amp; "ve"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5752,9 +5764,9 @@
 	<type>string</type>
 	<value>,</value>
 	<examples>
-		<p>
-			<code>set the itemDelimiter to comma</code>
-		</p>
+		<scr>
+			set the itemDelimiter to comma
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5773,9 +5785,9 @@
 	<type>string</type>
 	<value>.</value>
 	<examples>
-		<p>
-			<code>put 3 &amp; period &amp; 14159</code>
-		</p>
+		<scr>
+			put 3 &amp; period &amp; 14159
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5790,9 +5802,9 @@
 	<type>string</type>
 	<value>/</value>
 	<examples>
-		<p>
-			<code>put slash &amp; "usr" &amp; slash &amp; "bin" &amp; slash &amp; "perl" into thePath</code>
-		</p>
+		<scr>
+			put slash &amp; "usr" &amp; slash &amp; "bin" &amp; slash &amp; "perl" into thePath
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5809,9 +5821,9 @@
 	<type>string</type>
 	<value>:</value>
 	<examples>
-		<p>
-			<code>put "Macintosh HD" &amp; colon &amp; "Applications" &amp; colon &amp; "HyperCard" into thePath</code>
-		</p>
+		<scr>
+			put "Macintosh HD" &amp; colon &amp; "Applications" &amp; colon &amp; "HyperCard" into thePath
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5828,9 +5840,9 @@
 	<type>string</type>
 	<value>;</value>
 	<examples>
-		<p>
-			<code>set the columnDelimiter to semicolon</code>
-		</p>
+		<scr>
+			set the columnDelimiter to semicolon
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5845,9 +5857,9 @@
 	<type>string</type>
 	<value>\</value>
 	<examples>
-		<p>
-			<code>put "C:" &amp; backslash &amp; "Windows" &amp; backslash &amp; "System32" into thePath</code>
-		</p>
+		<scr>
+			put "C:" &amp; backslash &amp; "Windows" &amp; backslash &amp; "System32" into thePath
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5872,9 +5884,9 @@
 	<type>string</type>
 	<value></value>
 	<examples>
-		<p>
-			<code>set the itemDelimiter to del</code>
-		</p>
+		<scr>
+			set the itemDelimiter to del
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5896,9 +5908,9 @@
 	<type>string</type>
 	<value>&#x2028;</value>
 	<examples>
-		<p>
-			<code>put linesep after line 12 of theText</code>
-		</p>
+		<scr>
+			put linesep after line 12 of theText
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5921,9 +5933,9 @@
 	<type>string</type>
 	<value>&#x2029;</value>
 	<examples>
-		<p>
-			<code>put parasep after line 12 of theText</code>
-		</p>
+		<scr>
+			put parasep after line 12 of theText
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5947,12 +5959,12 @@
 	<type>string</type>
 	<value></value>
 	<examples>
-		<p>
-			<code>read from file thePath until eof</code>
-		</p>
-		<p>
-			<code>read from file thePath until end</code>
-		</p>
+		<scr>
+			read from file thePath until eof
+		</scr>
+		<scr>
+			read from file thePath until end
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -5985,9 +5997,9 @@
 	<type>string</type>
 	<value>up</value>
 	<examples>
-		<p>
-			<code>wait until the optionKey is up</code>
-		</p>
+		<scr>
+			wait until the optionKey is up
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6017,9 +6029,9 @@
 	<type>string</type>
 	<value>down</value>
 	<examples>
-		<p>
-			<code>wait until the mouse is down</code>
-		</p>
+		<scr>
+			wait until the mouse is down
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6049,9 +6061,9 @@
 	<type>boolean</type>
 	<value>true</value>
 	<examples>
-		<p>
-			<code>if 2+2=4 is true then beep</code>
-		</p>
+		<scr>
+			if 2+2=4 is true then beep
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6065,9 +6077,9 @@
 	<type>boolean</type>
 	<value>false</value>
 	<examples>
-		<p>
-			<code>if false then answer "This should never happen."</code>
-		</p>
+		<scr>
+			if false then answer "This should never happen."
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6081,9 +6093,9 @@
 	<type>color</type>
 	<value>65535,65535,65535</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to white
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6171,9 +6183,9 @@
 	<type>color</type>
 	<value>0,0,0</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to black
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6197,9 +6209,9 @@
 	<type>color</type>
 	<value>65535,32768,32768</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to coral
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6214,9 +6226,9 @@
 	<type>color</type>
 	<value>65535,49152,32768</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to corange
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6231,9 +6243,9 @@
 	<type>color</type>
 	<value>65535,65535,32768</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to lemon
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6248,9 +6260,9 @@
 	<type>color</type>
 	<value>32768,65535,32768</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to lime
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6265,9 +6277,9 @@
 	<type>color</type>
 	<value>32768,65535,65535</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to sky
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6282,9 +6294,9 @@
 	<type>color</type>
 	<value>32768,32768,65535</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to frost
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6299,9 +6311,9 @@
 	<type>color</type>
 	<value>49152,32768,65535</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to lavender
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6316,9 +6328,9 @@
 	<type>color</type>
 	<value>65535,32768,65535</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to pink
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6333,9 +6345,9 @@
 	<type>color</type>
 	<value>65535,0,0</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to red
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6350,9 +6362,9 @@
 	<type>color</type>
 	<value>65535,16384,0</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to scarlet
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6367,9 +6379,9 @@
 	<type>color</type>
 	<value>65535,32768,0</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to orange
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6402,9 +6414,9 @@
 	<type>color</type>
 	<value>65535,65535,0</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to yellow
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6419,9 +6431,9 @@
 	<type>color</type>
 	<value>32768,65535,0</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to chartreuse
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6436,9 +6448,9 @@
 	<type>color</type>
 	<value>0,65535,0</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to green
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6453,9 +6465,9 @@
 	<type>color</type>
 	<value>0,65535,32768</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to aquamarine
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6488,9 +6500,9 @@
 	<type>color</type>
 	<value>0,32768,65535</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to azure
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6505,9 +6517,9 @@
 	<type>color</type>
 	<value>0,0,65535</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to blue
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6522,9 +6534,9 @@
 	<type>color</type>
 	<value>16384,0,65535</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to indigo
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6539,9 +6551,9 @@
 	<type>color</type>
 	<value>32768,0,65535</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to violet
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6556,9 +6568,9 @@
 	<type>color</type>
 	<value>49152,0,65535</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to purple
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6591,9 +6603,9 @@
 	<type>color</type>
 	<value>65535,0,32768</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to rose
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6608,9 +6620,9 @@
 	<type>color</type>
 	<value>32768,0,0</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to maroon
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6625,9 +6637,9 @@
 	<type>color</type>
 	<value>32768,16384,0</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to umber
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6642,9 +6654,9 @@
 	<type>color</type>
 	<value>32768,32768,0</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to olive
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6659,9 +6671,9 @@
 	<type>color</type>
 	<value>0,32768,0</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to pine
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6676,9 +6688,9 @@
 	<type>color</type>
 	<value>0,32768,32768</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to teal
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6693,9 +6705,9 @@
 	<type>color</type>
 	<value>0,0,32768</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to navy
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6710,9 +6722,9 @@
 	<type>color</type>
 	<value>16384,0,32768</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to eggplant
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6727,9 +6739,9 @@
 	<type>color</type>
 	<value>32768,0,32768</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to plum
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6744,9 +6756,9 @@
 	<type>color</type>
 	<value>39321,26214,13107</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to brown
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6761,9 +6773,9 @@
 	<type>color</type>
 	<value>65535,61166,52428</value>
 	<examples>
-		<p>
-			<code>set the color of myObject to <me/></code>
-		</p>
+		<scr>
+			set the color of myObject to creme
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6777,9 +6789,9 @@
 	<name dialects="xn,oxn" modules="oxns">zeroth</name>
 	<value>0</value>
 	<examples>
-		<p>
-			<code>put the zeroth byte of ("09F91102" as binary) -- prints "09"</code>
-		</p>
+		<scr>
+			put the zeroth byte of ("09F91102" as binary) -- prints "09"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6795,9 +6807,9 @@
 	<name dialects="xn,oxn,hyp" modules="oxns">first</name>
 	<value>1</value>
 	<examples>
-		<p>
-			<code>put first sentence of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "Hello, my name is Rebecca."</code>
-		</p>
+		<scr>
+			put first sentence of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "Hello, my name is Rebecca."
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6810,9 +6822,9 @@
 	<name dialects="xn,oxn,hyp" modules="oxns">second</name>
 	<value>2</value>
 	<examples>
-		<p>
-			<code>put second word of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "my"</code>
-		</p>
+		<scr>
+			put second word of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "my"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6825,9 +6837,9 @@
 	<name dialects="xn,oxn,hyp" modules="oxns">third</name>
 	<value>3</value>
 	<examples>
-		<p>
-			<code>put third word of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "name"</code>
-		</p>
+		<scr>
+			put third word of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "name"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6840,9 +6852,9 @@
 	<name dialects="xn,oxn,hyp" modules="oxns">fourth</name>
 	<value>4</value>
 	<examples>
-		<p>
-			<code>put fourth word of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "is"</code>
-		</p>
+		<scr>
+			put fourth word of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "is"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6855,9 +6867,9 @@
 	<name dialects="xn,oxn,hyp" modules="oxns">fifth</name>
 	<value>5</value>
 	<examples>
-		<p>
-			<code>put fifth word of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "Rebecca."</code>
-		</p>
+		<scr>
+			put fifth word of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "Rebecca."
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6870,9 +6882,9 @@
 	<name dialects="xn,oxn,hyp" modules="oxns">sixth</name>
 	<value>6</value>
 	<examples>
-		<p>
-			<code>put sixth word of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "But"</code>
-		</p>
+		<scr>
+			put sixth word of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "But"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6885,9 +6897,9 @@
 	<name dialects="xn,oxn,hyp" modules="oxns">seventh</name>
 	<value>7</value>
 	<examples>
-		<p>
-			<code>put seventh word of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "you"</code>
-		</p>
+		<scr>
+			put seventh word of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "you"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6900,9 +6912,9 @@
 	<name dialects="xn,oxn,hyp" modules="oxns">eighth</name>
 	<value>8</value>
 	<examples>
-		<p>
-			<code>put eighth word of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "can"</code>
-		</p>
+		<scr>
+			put eighth word of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "can"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6915,9 +6927,9 @@
 	<name dialects="xn,oxn,hyp" modules="oxns">ninth</name>
 	<value>9</value>
 	<examples>
-		<p>
-			<code>put ninth word of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "call"</code>
-		</p>
+		<scr>
+			put ninth word of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "call"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6930,9 +6942,9 @@
 	<name dialects="xn,oxn,hyp" modules="oxns">tenth</name>
 	<value>10</value>
 	<examples>
-		<p>
-			<code>put tenth word of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "me"</code>
-		</p>
+		<scr>
+			put tenth word of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "me"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6945,9 +6957,9 @@
 	<name dialects="xn,oxn" modules="oxns">eleventh</name>
 	<value>11</value>
 	<examples>
-		<p>
-			<code>put eleventh word of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "Beckie."</code>
-		</p>
+		<scr>
+			put eleventh word of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "Beckie."
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6960,9 +6972,9 @@
 	<name dialects="xn,oxn" modules="oxns">twelfth</name>
 	<value>12</value>
 	<examples>
-		<p>
-			<code>put twelfth char of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "a" from "name"</code>
-		</p>
+		<scr>
+			put twelfth char of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "a" from "name"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6975,9 +6987,9 @@
 	<name dialects="xn,oxn" modules="oxns">thirteenth</name>
 	<value>13</value>
 	<examples>
-		<p>
-			<code>put thirteenth char of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "m" from "name"</code>
-		</p>
+		<scr>
+			put thirteenth char of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "m" from "name"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -6990,9 +7002,9 @@
 	<name dialects="xn,oxn" modules="oxns">fourteenth</name>
 	<value>14</value>
 	<examples>
-		<p>
-			<code>put fourteenth char of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "e" from "name"</code>
-		</p>
+		<scr>
+			put fourteenth char of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "e" from "name"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -7005,9 +7017,9 @@
 	<name dialects="xn,oxn" modules="oxns">fifteenth</name>
 	<value>15</value>
 	<examples>
-		<p>
-			<code>put fifteenth char of "Hello, my name is Rebecca. But you can call me Beckie." -- prints " " after "name"</code>
-		</p>
+		<scr>
+			put fifteenth char of "Hello, my name is Rebecca. But you can call me Beckie." -- prints " " after "name"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -7020,9 +7032,9 @@
 	<name dialects="xn,oxn" modules="oxns">sixteenth</name>
 	<value>16</value>
 	<examples>
-		<p>
-			<code>put sixteenth char of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "i" from "is"</code>
-		</p>
+		<scr>
+			put sixteenth char of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "i" from "is"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -7035,9 +7047,9 @@
 	<name dialects="xn,oxn" modules="oxns">seventeenth</name>
 	<value>17</value>
 	<examples>
-		<p>
-			<code>put seventeenth char of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "s" from "is"</code>
-		</p>
+		<scr>
+			put seventeenth char of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "s" from "is"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -7050,9 +7062,9 @@
 	<name dialects="xn,oxn" modules="oxns">eighteenth</name>
 	<value>18</value>
 	<examples>
-		<p>
-			<code>put eighteenth char of "Hello, my name is Rebecca. But you can call me Beckie." -- prints " " after "is"</code>
-		</p>
+		<scr>
+			put eighteenth char of "Hello, my name is Rebecca. But you can call me Beckie." -- prints " " after "is"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -7065,9 +7077,9 @@
 	<name dialects="xn,oxn" modules="oxns">nineteenth</name>
 	<value>19</value>
 	<examples>
-		<p>
-			<code>put nineteenth char of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "R" from "Rebecca"</code>
-		</p>
+		<scr>
+			put nineteenth char of "Hello, my name is Rebecca. But you can call me Beckie." -- prints "R" from "Rebecca"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -7080,9 +7092,9 @@
 	<name dialects="xn,oxn" modules="oxns">twentieth</name>
 	<value>20</value>
 	<examples>
-		<p>
-			<code>put twentieth char of "Hello, my name is Rebecca. But you can call me Beckie." -- prints first "e" from "Rebecca"</code>
-		</p>
+		<scr>
+			put twentieth char of "Hello, my name is Rebecca. But you can call me Beckie." -- prints first "e" from "Rebecca"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -7096,12 +7108,12 @@
 	<name dialects="xn,oxn,hyp" modules="oxns">middle</name>
 	<value>-2147483647</value>
 	<examples>
-		<p>
-			<code>put the middle word of "It was the turtle, not I, who spilled the beans." -- prints "I,"</code>
-		</p>
-		<p>
-			<code>put the mid item of "It was the turtle, not I, who spilled the beans." -- prints " not I"</code>
-		</p>
+		<scr>
+			put the middle word of "It was the turtle, not I, who spilled the beans." -- prints "I,"
+		</scr>
+		<scr>
+			put the mid item of "It was the turtle, not I, who spilled the beans." -- prints " not I"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -7117,9 +7129,9 @@
 	<name dialects="xn,oxn,hyp" modules="oxns">last</name>
 	<value>-1</value>
 	<examples>
-		<p>
-			<code>put the last word of "Hello, my name is Rebecca." -- prints "Rebecca."</code>
-		</p>
+		<scr>
+			put the last word of "Hello, my name is Rebecca." -- prints "Rebecca."
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -7133,9 +7145,9 @@
 	<name dialects="xn,oxn,hyp" modules="oxns">any</name>
 	<value>-2147483648</value>
 	<examples>
-		<p>
-			<code>put any word of "apple orange banana" into randomFruit</code>
-		</p>
+		<scr>
+			put any word of "apple orange banana" into randomFruit
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -7248,7 +7260,7 @@
 			undeclared, or declared to be a type other than a kind of list,
 			the list will be converted to a single string. For example:
 		</p>
-		<scr indent="1">
+		<scr>
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
@@ -7257,15 +7269,14 @@
 			one element: the string <code>"1,2,3,4"</code>. However, this
 			example:
 		</p>
-		<scr indent="1">
+		<scr>
 			local steve as numbers
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
 		<p>
 			will print <code>4</code> because <code>steve</code> has
-			four elements: the numbers <code>1</code>, <code>2</code>,
-			<code>3</code>, and <code>4</code>.
+			four elements: the numbers 1, 2, 3, and 4.
 		</p>
 	</notes>
 </datatype>
@@ -7297,7 +7308,7 @@
 			undeclared, or declared to be a type other than a kind of list,
 			the list will be converted to a single string. For example:
 		</p>
-		<scr indent="1">
+		<scr>
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
@@ -7306,15 +7317,14 @@
 			one element: the string <code>"1,2,3,4"</code>. However, this
 			example:
 		</p>
-		<scr indent="1">
+		<scr>
 			local steve as numbers
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
 		<p>
 			will print <code>4</code> because <code>steve</code> has
-			four elements: the numbers <code>1</code>, <code>2</code>,
-			<code>3</code>, and <code>4</code>.
+			four elements: the numbers 1, 2, 3, and 4.
 		</p>
 	</notes>
 </datatype>
@@ -7341,7 +7351,7 @@
 			undeclared, or declared to be a type other than a kind of list,
 			the list will be converted to a single string. For example:
 		</p>
-		<scr indent="1">
+		<scr>
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
@@ -7350,15 +7360,14 @@
 			one element: the string <code>"1,2,3,4"</code>. However, this
 			example:
 		</p>
-		<scr indent="1">
+		<scr>
 			local steve as numbers
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
 		<p>
 			will print <code>4</code> because <code>steve</code> has
-			four elements: the numbers <code>1</code>, <code>2</code>,
-			<code>3</code>, and <code>4</code>.
+			four elements: the numbers 1, 2, 3, and 4.
 		</p>
 		<p>
 			There is a subtle difference between an index, ordinal, or
@@ -7377,7 +7386,7 @@
 		<p>
 			The first line of output will be <code>2</code>,
 			since <code>element 3 of myList</code> is a list
-			containing two values, <code>3</code> and <code>4</code>.
+			containing two values, 3 and 4.
 			However, the second line of output will be <code>1</code>,
 			since <code>element 3 to 3 of myList</code> is a list
 			containing that list.
@@ -7413,7 +7422,7 @@
 			undeclared, or declared to be a type other than a kind of list,
 			the list will be converted to a single string. For example:
 		</p>
-		<scr indent="1">
+		<scr>
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
@@ -7422,15 +7431,14 @@
 			one element: the string <code>"1,2,3,4"</code>. However, this
 			example:
 		</p>
-		<scr indent="1">
+		<scr>
 			local steve as numbers
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
 		<p>
 			will print <code>4</code> because <code>steve</code> has
-			four elements: the numbers <code>1</code>, <code>2</code>,
-			<code>3</code>, and <code>4</code>.
+			four elements: the numbers 1, 2, 3, and 4.
 		</p>
 		<p>
 			There is a subtle difference between an index, ordinal, or
@@ -7449,7 +7457,7 @@
 		<p>
 			The first line of output will be <code>2</code>,
 			since <code>element 3 of myList</code> is a list
-			containing two values, <code>3</code> and <code>4</code>.
+			containing two values, 3 and 4.
 			However, the second line of output will be <code>1</code>,
 			since <code>element 3 to 3 of myList</code> is a list
 			containing that list.
@@ -7517,7 +7525,7 @@
 			undeclared, or declared to be a type other than a kind of list,
 			the list will be converted to a single string. For example:
 		</p>
-		<scr indent="1">
+		<scr>
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
@@ -7526,15 +7534,14 @@
 			one element: the string <code>"1,2,3,4"</code>. However, this
 			example:
 		</p>
-		<scr indent="1">
+		<scr>
 			local steve as numbers
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
 		<p>
 			will print <code>4</code> because <code>steve</code> has
-			four elements: the numbers <code>1</code>, <code>2</code>,
-			<code>3</code>, and <code>4</code>.
+			four elements: the numbers 1, 2, 3, and 4.
 		</p>
 	</notes>
 </datatype>
@@ -7575,7 +7582,7 @@
 			undeclared, or declared to be a type other than a kind of list,
 			the list will be converted to a single string. For example:
 		</p>
-		<scr indent="1">
+		<scr>
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
@@ -7584,15 +7591,14 @@
 			one element: the string <code>"1,2,3,4"</code>. However, this
 			example:
 		</p>
-		<scr indent="1">
+		<scr>
 			local steve as numbers
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
 		<p>
 			will print <code>4</code> because <code>steve</code> has
-			four elements: the numbers <code>1</code>, <code>2</code>,
-			<code>3</code>, and <code>4</code>.
+			four elements: the numbers 1, 2, 3, and 4.
 		</p>
 	</notes>
 </datatype>
@@ -7652,7 +7658,7 @@
 			undeclared, or declared to be a type other than a kind of list,
 			the list will be converted to a single string. For example:
 		</p>
-		<scr indent="1">
+		<scr>
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
@@ -7661,15 +7667,14 @@
 			one element: the string <code>"1,2,3,4"</code>. However, this
 			example:
 		</p>
-		<scr indent="1">
+		<scr>
 			local steve as numbers
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
 		<p>
 			will print <code>4</code> because <code>steve</code> has
-			four elements: the numbers <code>1</code>, <code>2</code>,
-			<code>3</code>, and <code>4</code>.
+			four elements: the numbers 1, 2, 3, and 4.
 		</p>
 	</notes>
 </datatype>
@@ -7732,7 +7737,7 @@
 			undeclared, or declared to be a type other than a kind of list,
 			the list will be converted to a single string. For example:
 		</p>
-		<scr indent="1">
+		<scr>
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
@@ -7741,15 +7746,14 @@
 			one element: the string <code>"1,2,3,4"</code>. However, this
 			example:
 		</p>
-		<scr indent="1">
+		<scr>
 			local steve as numbers
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
 		<p>
 			will print <code>4</code> because <code>steve</code> has
-			four elements: the numbers <code>1</code>, <code>2</code>,
-			<code>3</code>, and <code>4</code>.
+			four elements: the numbers 1, 2, 3, and 4.
 		</p>
 	</notes>
 </datatype>
@@ -7807,7 +7811,7 @@
 			undeclared, or declared to be a type other than a kind of list,
 			the list will be converted to a single string. For example:
 		</p>
-		<scr indent="1">
+		<scr>
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
@@ -7816,15 +7820,14 @@
 			one element: the string <code>"1,2,3,4"</code>. However, this
 			example:
 		</p>
-		<scr indent="1">
+		<scr>
 			local steve as numbers
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
 		<p>
 			will print <code>4</code> because <code>steve</code> has
-			four elements: the numbers <code>1</code>, <code>2</code>,
-			<code>3</code>, and <code>4</code>.
+			four elements: the numbers 1, 2, 3, and 4.
 		</p>
 	</notes>
 </datatype>
@@ -7876,7 +7879,7 @@
 			undeclared, or declared to be a type other than a kind of list,
 			the list will be converted to a single string. For example:
 		</p>
-		<scr indent="1">
+		<scr>
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
@@ -7885,15 +7888,14 @@
 			one element: the string <code>"1,2,3,4"</code>. However, this
 			example:
 		</p>
-		<scr indent="1">
+		<scr>
 			local steve as numbers
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
 		<p>
 			will print <code>4</code> because <code>steve</code> has
-			four elements: the numbers <code>1</code>, <code>2</code>,
-			<code>3</code>, and <code>4</code>.
+			four elements: the numbers 1, 2, 3, and 4.
 		</p>
 	</notes>
 </datatype>
@@ -7950,7 +7952,7 @@
 			undeclared, or declared to be a type other than a kind of list,
 			the list will be converted to a single string. For example:
 		</p>
-		<scr indent="1">
+		<scr>
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
@@ -7959,15 +7961,14 @@
 			one element: the string <code>"1,2,3,4"</code>. However, this
 			example:
 		</p>
-		<scr indent="1">
+		<scr>
 			local steve as numbers
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
 		<p>
 			will print <code>4</code> because <code>steve</code> has
-			four elements: the numbers <code>1</code>, <code>2</code>,
-			<code>3</code>, and <code>4</code>.
+			four elements: the numbers 1, 2, 3, and 4.
 		</p>
 	</notes>
 </datatype>
@@ -8030,7 +8031,7 @@
 			undeclared, or declared to be a type other than a kind of list,
 			the list will be converted to a single string. For example:
 		</p>
-		<scr indent="1">
+		<scr>
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
@@ -8039,15 +8040,14 @@
 			one element: the string <code>"1,2,3,4"</code>. However, this
 			example:
 		</p>
-		<scr indent="1">
+		<scr>
 			local steve as numbers
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
 		<p>
 			will print <code>4</code> because <code>steve</code> has
-			four elements: the numbers <code>1</code>, <code>2</code>,
-			<code>3</code>, and <code>4</code>.
+			four elements: the numbers 1, 2, 3, and 4.
 		</p>
 	</notes>
 </datatype>
@@ -8136,7 +8136,7 @@
 			undeclared, or declared to be a type other than a kind of list,
 			the list will be converted to a single string. For example:
 		</p>
-		<scr indent="1">
+		<scr>
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
@@ -8145,15 +8145,14 @@
 			one element: the string <code>"1,2,3,4"</code>. However, this
 			example:
 		</p>
-		<scr indent="1">
+		<scr>
 			local steve as numbers
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
 		<p>
 			will print <code>4</code> because <code>steve</code> has
-			four elements: the numbers <code>1</code>, <code>2</code>,
-			<code>3</code>, and <code>4</code>.
+			four elements: the numbers 1, 2, 3, and 4.
 		</p>
 	</notes>
 </datatype>
@@ -8200,7 +8199,7 @@
 			undeclared, or declared to be a type other than a kind of list,
 			the list will be converted to a single string. For example:
 		</p>
-		<scr indent="1">
+		<scr>
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
@@ -8209,15 +8208,14 @@
 			one element: the string <code>"1,2,3,4"</code>. However, this
 			example:
 		</p>
-		<scr indent="1">
+		<scr>
 			local steve as numbers
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
 		<p>
 			will print <code>4</code> because <code>steve</code> has
-			four elements: the numbers <code>1</code>, <code>2</code>,
-			<code>3</code>, and <code>4</code>.
+			four elements: the numbers 1, 2, 3, and 4.
 		</p>
 	</notes>
 </datatype>
@@ -8231,7 +8229,7 @@
 			<a>dt:string</a>s to <a>dt:variant</a>s. In an XION script and
 			in <a>dt:string</a> form, a <a>dt:dictionary</a> looks like:
 		</p>
-		<scr indent="1">
+		<scr>
 			{
 			  "4" = "Steve"
 			  "1" = "Bill"
@@ -8279,7 +8277,7 @@
 			undeclared, or declared to be a type other than a kind of list,
 			the list will be converted to a single string. For example:
 		</p>
-		<scr indent="1">
+		<scr>
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
@@ -8288,15 +8286,14 @@
 			one element: the string <code>"1,2,3,4"</code>. However, this
 			example:
 		</p>
-		<scr indent="1">
+		<scr>
 			local steve as numbers
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
 		<p>
 			will print <code>4</code> because <code>steve</code> has
-			four elements: the numbers <code>1</code>, <code>2</code>,
-			<code>3</code>, and <code>4</code>.
+			four elements: the numbers 1, 2, 3, and 4.
 		</p>
 	</notes>
 </datatype>
@@ -8397,7 +8394,7 @@
 			undeclared, or declared to be a type other than a kind of list,
 			the list will be converted to a single string. For example:
 		</p>
-		<scr indent="1">
+		<scr>
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
@@ -8406,15 +8403,14 @@
 			one element: the string <code>"1,2,3,4"</code>. However, this
 			example:
 		</p>
-		<scr indent="1">
+		<scr>
 			local steve as numbers
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
 		<p>
 			will print <code>4</code> because <code>steve</code> has
-			four elements: the numbers <code>1</code>, <code>2</code>,
-			<code>3</code>, and <code>4</code>.
+			four elements: the numbers 1, 2, 3, and 4.
 		</p>
 	</notes>
 </datatype>
@@ -8454,7 +8450,7 @@
 			undeclared, or declared to be a type other than a kind of list,
 			the list will be converted to a single string. For example:
 		</p>
-		<scr indent="1">
+		<scr>
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
@@ -8463,15 +8459,14 @@
 			one element: the string <code>"1,2,3,4"</code>. However, this
 			example:
 		</p>
-		<scr indent="1">
+		<scr>
 			local steve as numbers
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
 		<p>
 			will print <code>4</code> because <code>steve</code> has
-			four elements: the numbers <code>1</code>, <code>2</code>,
-			<code>3</code>, and <code>4</code>.
+			four elements: the numbers 1, 2, 3, and 4.
 		</p>
 	</notes>
 </datatype>
@@ -8520,7 +8515,7 @@
 			undeclared, or declared to be a type other than a kind of list,
 			the list will be converted to a single string. For example:
 		</p>
-		<scr indent="1">
+		<scr>
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
@@ -8529,15 +8524,14 @@
 			one element: the string <code>"1,2,3,4"</code>. However, this
 			example:
 		</p>
-		<scr indent="1">
+		<scr>
 			local steve as numbers
 			put (1,2,3,4) into steve
 			put the number of elements in steve
 		</scr>
 		<p>
 			will print <code>4</code> because <code>steve</code> has
-			four elements: the numbers <code>1</code>, <code>2</code>,
-			<code>3</code>, and <code>4</code>.
+			four elements: the numbers 1, 2, 3, and 4.
 		</p>
 	</notes>
 </datatype>
@@ -9606,15 +9600,15 @@
 		<p>Global environment</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>set textEncoding to "ISO-8859-1"</code>
-		</p>
-		<p>
-			<code>set the textEncoding to "UTF-8"</code>
-		</p>
-		<p>
-			<code>set textEncoding to "MacRoman"</code>
-		</p>
+		<scr>
+			set textEncoding to "ISO-8859-1"
+		</scr>
+		<scr>
+			set the textEncoding to "UTF-8"
+		</scr>
+		<scr>
+			set textEncoding to "MacRoman"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -9642,15 +9636,15 @@
 		<p>Global environment</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>set lineEnding to return&amp;newline -- MS-DOS style</code>
-		</p>
-		<p>
-			<code>set lineEnding to return -- Mac OS Classic style</code>
-		</p>
-		<p>
-			<code>set lineEnding to newline -- Unix style</code>
-		</p>
+		<scr>
+			set lineEnding to return&amp;newline -- MS-DOS style
+		</scr>
+		<scr>
+			set lineEnding to return -- Mac OS Classic style
+		</scr>
+		<scr>
+			set lineEnding to newline -- Unix style
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -9682,15 +9676,15 @@
 		<p>Global environment</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>set numberFormat to "00.##" -- displays 02.21 for 2.21</code>
-		</p>
-		<p>
-			<code>set numberFormat to "0" -- displays 2 for 2.21</code>
-		</p>
-		<p>
-			<code>set numberFormat to "0.0" -- displays 2.2 for 2.21</code>
-		</p>
+		<scr>
+			set numberFormat to "00.##" -- displays 02.21 for 2.21
+		</scr>
+		<scr>
+			set numberFormat to "0" -- displays 2 for 2.21
+		</scr>
+		<scr>
+			set numberFormat to "0.0" -- displays 2.2 for 2.21
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10007,12 +10001,12 @@
 		<p>Global environment</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>set mathProcessor to "fast"</code>
-		</p>
-		<p>
-			<code>set mathProcessor to "big"</code>
-		</p>
+		<scr>
+			set mathProcessor to "fast"
+		</scr>
+		<scr>
+			set mathProcessor to "big"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10048,12 +10042,12 @@
 		<p>Global environment</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>set precision to 100</code>
-		</p>
-		<p>
-			<code>set precision to 6</code>
-		</p>
+		<scr>
+			set precision to 100
+		</scr>
+		<scr>
+			set precision to 6
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10088,12 +10082,12 @@
 		<p>Global environment</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>set roundingMode to "even"</code>
-		</p>
-		<p>
-			<code>set roundingMode to "down"</code>
-		</p>
+		<scr>
+			set roundingMode to "even"
+		</scr>
+		<scr>
+			set roundingMode to "down"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10139,9 +10133,9 @@
 			if the itemDelimiter &lt;&gt; comma
 			then set the itemDelimiter to comma
 		</scr>
-		<p>
-			<code>set itemDelimiter to "#"</code>
-		</p>
+		<scr>
+			set itemDelimiter to "#"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10166,9 +10160,9 @@
 		<p>Global environment</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>set columnDelimiter to delete</code>
-		</p>
+		<scr>
+			set columnDelimiter to delete
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10188,9 +10182,9 @@
 		<p>Global environment</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>set rowDelimiter to backspace</code>
-		</p>
+		<scr>
+			set rowDelimiter to backspace
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10210,12 +10204,12 @@
 		<p>Global environment</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>set the littleEndian to true -- use little-endian byte order</code>
-		</p>
-		<p>
-			<code>set the littleEndian to false -- use big-endian byte order</code>
-		</p>
+		<scr>
+			set the littleEndian to true -- use little-endian byte order
+		</scr>
+		<scr>
+			set the littleEndian to false -- use big-endian byte order
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10245,12 +10239,12 @@
 		<p>Global environment</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>set the unsigned to false -- use signed integers</code>
-		</p>
-		<p>
-			<code>set the unsigned to true -- use unsigned integers</code>
-		</p>
+		<scr>
+			set the unsigned to false -- use signed integers
+		</scr>
+		<scr>
+			set the unsigned to true -- use unsigned integers
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10275,9 +10269,9 @@
 		<p><a>dt:Rectangle</a>s</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the left of ((100,50,600,230) as rectangle)</code>
-		</p>
+		<scr>
+			get the left of ((100,50,600,230) as rectangle)
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10293,9 +10287,9 @@
 		<p><a>dt:Rectangle</a>s</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the top of ((100,50,600,230) as rectangle)</code>
-		</p>
+		<scr>
+			get the top of ((100,50,600,230) as rectangle)
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10311,9 +10305,9 @@
 		<p><a>dt:Rectangle</a>s</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the right of ((100,50,600,230) as rectangle)</code>
-		</p>
+		<scr>
+			get the right of ((100,50,600,230) as rectangle)
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10329,9 +10323,9 @@
 		<p><a>dt:Rectangle</a>s</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the bottom of ((100,50,600,230) as rectangle)</code>
-		</p>
+		<scr>
+			get the bottom of ((100,50,600,230) as rectangle)
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10347,9 +10341,9 @@
 		<p><a>dt:Rectangle</a>s</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the topLeft of ((100,50,600,230) as rectangle)</code>
-		</p>
+		<scr>
+			get the topLeft of ((100,50,600,230) as rectangle)
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10364,9 +10358,9 @@
 		<p><a>dt:Rectangle</a>s</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the topRight of ((100,50,600,230) as rectangle)</code>
-		</p>
+		<scr>
+			get the topRight of ((100,50,600,230) as rectangle)
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10382,9 +10376,9 @@
 		<p><a>dt:Rectangle</a>s</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the bottomLeft of ((100,50,600,230) as rectangle)</code>
-		</p>
+		<scr>
+			get the bottomLeft of ((100,50,600,230) as rectangle)
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10400,9 +10394,9 @@
 		<p><a>dt:Rectangle</a>s</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the bottomRight of ((100,50,600,230) as rectangle)</code>
-		</p>
+		<scr>
+			get the bottomRight of ((100,50,600,230) as rectangle)
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10419,9 +10413,9 @@
 		<p><a>dt:Rectangle</a>s</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the loc of ((100,50,600,230) as rectangle)</code>
-		</p>
+		<scr>
+			get the loc of ((100,50,600,230) as rectangle)
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10436,9 +10430,9 @@
 		<p><a>dt:Rectangle</a>s</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the width of ((100,50,600,230) as rectangle)</code>
-		</p>
+		<scr>
+			get the width of ((100,50,600,230) as rectangle)
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10453,9 +10447,9 @@
 		<p><a>dt:Rectangle</a>s</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the height of ((100,50,600,230) as rectangle)</code>
-		</p>
+		<scr>
+			get the height of ((100,50,600,230) as rectangle)
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10470,9 +10464,9 @@
 		<p><a>dt:Color</a>s</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the red of purple</code>
-		</p>
+		<scr>
+			get the red of purple
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10489,9 +10483,9 @@
 		<p><a>dt:Color</a>s</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the green of purple</code>
-		</p>
+		<scr>
+			get the green of purple
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10508,9 +10502,9 @@
 		<p><a>dt:Color</a>s</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the blue of purple</code>
-		</p>
+		<scr>
+			get the blue of purple
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10527,9 +10521,9 @@
 		<p><a>dt:Color</a>s</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the alpha of purple</code>
-		</p>
+		<scr>
+			get the alpha of purple
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10546,9 +10540,9 @@
 		<p><a>dt:Color</a>s</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the hue of purple</code>
-		</p>
+		<scr>
+			get the hue of purple
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10566,9 +10560,9 @@
 		<p><a>dt:Color</a>s</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the saturation of purple</code>
-		</p>
+		<scr>
+			get the saturation of purple
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10586,9 +10580,9 @@
 		<p><a>dt:Color</a>s</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the brightness of purple</code>
-		</p>
+		<scr>
+			get the brightness of purple
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10638,9 +10632,9 @@
 		</ul>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the name of the first file</code>
-		</p>
+		<scr>
+			get the name of the first file
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10655,9 +10649,9 @@
 		<p>User-defined objects</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the id of steve</code>
-		</p>
+		<scr>
+			get the id of steve
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10678,15 +10672,15 @@
 		</ul>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the number of elements in steve</code>
-		</p>
-		<p>
-			<code>get the number of words in bill</code>
-		</p>
-		<p>
-			<code>get the number of andy</code>
-		</p>
+		<scr>
+			get the number of elements in steve
+		</scr>
+		<scr>
+			get the number of words in bill
+		</scr>
+		<scr>
+			get the number of andy
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10716,9 +10710,9 @@
 		</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the path of the first file</code>
-		</p>
+		<scr>
+			get the path of the first file
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10738,9 +10732,9 @@
 		</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the modificationDate of the first file</code>
-		</p>
+		<scr>
+			get the modificationDate of the first file
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10759,9 +10753,9 @@
 		</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the count of the first volume</code>
-		</p>
+		<scr>
+			get the count of the first volume
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10780,9 +10774,9 @@
 		</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>get the size of the first file</code>
-		</p>
+		<scr>
+			get the size of the first file
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10798,9 +10792,9 @@
 		<p>Global environment</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>answer "Hello," &amp;&amp; the long userName &amp; "!"</code>
-		</p>
+		<scr>
+			answer "Hello," &amp;&amp; the long userName &amp; "!"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10866,7 +10860,7 @@
 		<p>
 			The default list of paths in OpenXION is, on Mac OS X:
 		</p>
-		<scr indent="1">
+		<scr>
 			/Applications/
 			/Applications/Utilities/
 			/Applications (Mac OS 9)/
@@ -10950,9 +10944,9 @@
 		<p>Global environment</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>set <me/> to the <me/> &amp; newline &amp; "/home/jdoe/work/"</code>
-		</p>
+		<scr>
+			set documentPaths to the documentPaths &amp; newline &amp; "/home/jdoe/work/"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -10972,7 +10966,7 @@
 		<p>
 			The default list of paths in OpenXION is, on Mac OS X:
 		</p>
-		<scr indent="1">
+		<scr>
 			~/Desktop/
 			~/Documents/
 			~/Downloads/
@@ -10986,7 +10980,7 @@
 		<p>
 			On Windows:
 		</p>
-		<scr indent="1">
+		<scr>
 			~\Desktop\
 			~\My Documents\
 			~\My Photos\
@@ -10997,7 +10991,7 @@
 		<p>
 			On all other systems:
 		</p>
-		<scr indent="1">
+		<scr>
 			~/
 		</scr>
 		<p>
@@ -11035,9 +11029,9 @@
 		<p>Global environment</p>
 	</applies-to>
 	<examples>
-		<p>
-			<code>set <me/> to the <me/> &amp; newline &amp; "/home/jdoe/scripts/"</code>
-		</p>
+		<scr>
+			set includePaths to the includePaths &amp; newline &amp; "/home/jdoe/scripts/"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -11236,12 +11230,12 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>add 3 to it</code>
-		</p>
-		<p>
-			<code>add amount to total</code>
-		</p>
+		<scr>
+			add 3 to it
+		</scr>
+		<scr>
+			add amount to total
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -11323,12 +11317,12 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>answer "Which is the way the world ends?" with "Bang" or "Whimper"</code>
-		</p>
-		<p>
-			<code>answer file "Pick a file:"</code>
-		</p>
+		<scr>
+			answer "Which is the way the world ends?" with "Bang" or "Whimper"
+		</scr>
+		<scr>
+			answer file "Pick a file:"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -11450,15 +11444,15 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>ask "Who needs this kind of grief?" with "Not me."</code>
-		</p>
-		<p>
-			<code>ask password "Please enter your password:"</code>
-		</p>
-		<p>
-			<code>ask file "Save this file as:" with "Untitled-1"</code>
-		</p>
+		<scr>
+			ask "Who needs this kind of grief?" with "Not me."
+		</scr>
+		<scr>
+			ask password "Please enter your password:"
+		</scr>
+		<scr>
+			ask file "Save this file as:" with "Untitled-1"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -11561,12 +11555,12 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>create folder "My Files"</code>
-		</p>
-		<p>
-			<code>create file "MyTemp"</code>
-		</p>
+		<scr>
+			create folder "My Files"
+		</scr>
+		<scr>
+			create file "MyTemp"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -11601,15 +11595,15 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>delete line 1 of steve</code>
-		</p>
-		<p>
-			<code>delete char 1 to 5 of line 4 of bill</code>
-		</p>
-		<p>
-			<code>delete file "MyTemp"</code>
-		</p>
+		<scr>
+			delete line 1 of steve
+		</scr>
+		<scr>
+			delete char 1 to 5 of line 4 of bill
+		</scr>
+		<scr>
+			delete file "MyTemp"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -11641,7 +11635,7 @@
 			as using <code>put empty into</code> with the same chunk.
 			For example, if you delete a line with a statement like:
 		</p>
-		<scr indent="1">
+		<scr>
 			delete line 4 of myText
 		</scr>
 		<p>
@@ -11649,7 +11643,7 @@
 			previously the fifth line becomes the fourth. The following
 			statement leaves the line break in line 4:
 		</p>
-		<scr indent="1">
+		<scr>
 			put empty into line 4 of myText
 		</scr>
 		<p>
@@ -11683,12 +11677,12 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>divide total by 3</code>
-		</p>
-		<p>
-			<code>divide line 3 of steve by 10</code>
-		</p>
+		<scr>
+			divide total by 3
+		</scr>
+		<scr>
+			divide line 3 of steve by 10
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -11788,15 +11782,15 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>get the short name of file 1</code>
-		</p>
-		<p>
-			<code>get 2+3</code>
-		</p>
-		<p>
-			<code>get the date</code>
-		</p>
+		<scr>
+			get the short name of file 1
+		</scr>
+		<scr>
+			get 2+3
+		</scr>
+		<scr>
+			get the date
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -11851,12 +11845,12 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>modulo steve by 17</code>
-		</p>
-		<p>
-			<code>modulo line 13 of bill by 100</code>
-		</p>
+		<scr>
+			modulo steve by 17
+		</scr>
+		<scr>
+			modulo line 13 of bill by 100
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -11871,7 +11865,7 @@
 		<p>
 			The remainder is calculated as follows:
 		</p>
-		<p indent="1">
+		<p>
 			<mv>remainder</mv> = <mv>container</mv> - <mv>number</mv> *
 			<mv>roundingFunction</mv> ( <mv>container</mv> / <mv>number</mv> )
 		</p>
@@ -11958,15 +11952,15 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>multiply Subtotal by Tax</code>
-		</p>
-		<p>
-			<code>multiply steve by bill</code>
-		</p>
-		<p>
-			<code>multiply line 3 of andy by 25</code>
-		</p>
+		<scr>
+			multiply Subtotal by Tax
+		</scr>
+		<scr>
+			multiply steve by bill
+		</scr>
+		<scr>
+			multiply line 3 of andy by 25
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -12017,27 +12011,27 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put "Hello" into steve</code>
-		</p>
-		<p>
-			<code>put empty into it</code>
-		</p>
-		<p>
-			<code>put it</code>
-		</p>
-		<p>
-			<code>put "Tom" into first word of theName</code>
-		</p>
-		<p>
-			<code>put "." after first character of last word of bill</code>
-		</p>
-		<p>
-			<code>put steve + bill into andy</code>
-		</p>
-		<p>
-			<code>put the date into myDate</code>
-		</p>
+		<scr>
+			put "Hello" into steve
+		</scr>
+		<scr>
+			put empty into it
+		</scr>
+		<scr>
+			put it
+		</scr>
+		<scr>
+			put "Tom" into first word of theName
+		</scr>
+		<scr>
+			put "." after first character of last word of bill
+		</scr>
+		<scr>
+			put steve + bill into andy
+		</scr>
+		<scr>
+			put the date into myDate
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -12087,12 +12081,12 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>set the name of file "Untitled" to "MyFile"</code>
-		</p>
-		<p>
-			<code>set itemDelimiter to ":"</code>
-		</p>
+		<scr>
+			set the name of file "Untitled" to "MyFile"
+		</scr>
+		<scr>
+			set itemDelimiter to ":"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -12124,12 +12118,12 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>subtract 2 from it</code>
-		</p>
-		<p>
-			<code>subtract steve from bill</code>
-		</p>
+		<scr>
+			subtract 2 from it
+		</scr>
+		<scr>
+			subtract steve from bill
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -12156,12 +12150,12 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>beep 5</code>
-		</p>
-		<p>
-			<code>beep twice</code>
-		</p>
+		<scr>
+			beep 5
+		</scr>
+		<scr>
+			beep twice
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -12249,18 +12243,18 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>convert line 1 of steve from date to dateItems</code>
-		</p>
-		<p>
-			<code>convert bill from date and time to dateItems</code>
-		</p>
-		<p>
-			<code>convert andy to seconds</code>
-		</p>
-		<p>
-			<code>convert first line of steve to long date and short time</code>
-		</p>
+		<scr>
+			convert line 1 of steve from date to dateItems
+		</scr>
+		<scr>
+			convert bill from date and time to dateItems
+		</scr>
+		<scr>
+			convert andy to seconds
+		</scr>
+		<scr>
+			convert first line of steve to long date and short time
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -12452,15 +12446,15 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>read from file "MyData" at 4 for 20</code>
-		</p>
-		<p>
-			<code>read from file "MyData" until tab</code>
-		</p>
-		<p>
-			<code>read from file "MyData" at -20 until eof</code>
-		</p>
+		<scr>
+			read from file "MyData" at 4 for 20
+		</scr>
+		<scr>
+			read from file "MyData" until tab
+		</scr>
+		<scr>
+			read from file "MyData" at -20 until eof
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -12512,24 +12506,24 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>sort lines of steve by last word of each</code>
-		</p>
-		<p>
-			<code>sort items of bill descending numeric by word 2 of each</code>
-		</p>
-		<p>
-			<code>sort lines of steve ascending</code>
-		</p>
-		<p>
-			<code>sort items of bill dateTime</code>
-		</p>
-		<p>
-			<code>sort andy</code>
-		</p>
-		<p>
-			<code>sort it numeric</code>
-		</p>
+		<scr>
+			sort lines of steve by last word of each
+		</scr>
+		<scr>
+			sort items of bill descending numeric by word 2 of each
+		</scr>
+		<scr>
+			sort lines of steve ascending
+		</scr>
+		<scr>
+			sort items of bill dateTime
+		</scr>
+		<scr>
+			sort andy
+		</scr>
+		<scr>
+			sort it numeric
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -12661,15 +12655,15 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>write address to file "MyFile"</code>
-		</p>
-		<p>
-			<code>write "first line" &amp; newline &amp; "second line" to file "TwoLiner"</code>
-		</p>
-		<p>
-			<code>write steve to file "MyFile" at -15</code>
-		</p>
+		<scr>
+			write address to file "MyFile"
+		</scr>
+		<scr>
+			write "first line" &amp; newline &amp; "second line" to file "TwoLiner"
+		</scr>
+		<scr>
+			write steve to file "MyFile" at -15
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -12749,27 +12743,27 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>sql connect to "mysql://localhost/studentdb" with driver "com.mysql.jdbc.Driver" with username "admin" with password "woot"</code>
-		</p>
-		<p>
-			<code>sql execute "select * from students" using connection "mysql://localhost/studentdb"</code>
-		</p>
-		<p>
-			<code>sql prepare "update students set name=? where id=?" using connection "mysql://localhost/studentdb"</code>
-		</p>
-		<p>
-			<code>sql prepare set 1 to "Little Bobby Tables"</code>
-		</p>
-		<p>
-			<code>sql prepare set 2 to 16777216</code>
-		</p>
-		<p>
-			<code>sql execute prepared</code>
-		</p>
-		<p>
-			<code>sql disconnect from "mysql://localhost/studentdb"</code>
-		</p>
+		<scr>
+			sql connect to "mysql://localhost/studentdb" with driver "com.mysql.jdbc.Driver" with username "admin" with password "woot"
+		</scr>
+		<scr>
+			sql execute "select * from students" using connection "mysql://localhost/studentdb"
+		</scr>
+		<scr>
+			sql prepare "update students set name=? where id=?" using connection "mysql://localhost/studentdb"
+		</scr>
+		<scr>
+			sql prepare set 1 to "Little Bobby Tables"
+		</scr>
+		<scr>
+			sql prepare set 2 to 16777216
+		</scr>
+		<scr>
+			sql execute prepared
+		</scr>
+		<scr>
+			sql disconnect from "mysql://localhost/studentdb"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -12855,7 +12849,7 @@
 			It is also possible to execute a query without quotes
 			by leaving out the <kwd>execute</kwd> keyword, e.g.:
 		</p>
-		<scr indent="1">
+		<scr>
 			sql select * from students where firstname = "Steve"
 		</scr>
 		<p>
@@ -12882,18 +12876,18 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>dial steve -- steve is a variable containing a phone number</code>
-		</p>
-		<p>
-			<code>dial "555-1212"</code>
-		</p>
-		<p>
-			<code>dial "555-1212" with modem</code>
-		</p>
-		<p>
-			<code>dial "555-1212" with modem "ATS0=0S7=1DT"</code>
-		</p>
+		<scr>
+			dial steve -- steve is a variable containing a phone number
+		</scr>
+		<scr>
+			dial "555-1212"
+		</scr>
+		<scr>
+			dial "555-1212" with modem
+		</scr>
+		<scr>
+			dial "555-1212" with modem "ATS0=0S7=1DT"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -12960,15 +12954,15 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>play "harpsichord" "ch d e f g a b c5w"</code>
-		</p>
-		<p>
-			<code>play "music box" "c4e c dq c f eh"</code>
-		</p>
-		<p>
-			<code>play "harpsichord" "c4 a3 f c4 a3 f c4 d c c c"</code>
-		</p>
+		<scr>
+			play "harpsichord" "ch d e f g a b c5w"
+		</scr>
+		<scr>
+			play "music box" "c4e c dq c f eh"
+		</scr>
+		<scr>
+			play "harpsichord" "c4 a3 f c4 a3 f c4 d c c c"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -12984,7 +12978,7 @@
 			of notes is represented as a <a>dt:string</a> with notes delimited
 			by whitespace. Each note has the following format for a regular note:
 		</p>
-		<syn indent="1">
+		<syn>
 			<mv>noteName</mv>
 			<opt><mv>octave</mv></opt>
 			<opt><mv>duration</mv></opt>
@@ -12994,7 +12988,7 @@
 		<p>
 			or the following format for a rest:
 		</p>
-		<syn indent="1">
+		<syn>
 			<mv>duration</mv> r
 		</syn>
 		<p>
@@ -13023,7 +13017,7 @@
 		<p>
 			<mv>Duration</mv> is one of the following letters:
 		</p>
-		<table indent="1">
+		<table>
 			<tr>
 				<td><code>w</code></td>
 				<td>whole note</td>
@@ -13074,7 +13068,7 @@
 			<mv>Velocity</mv> is an extension provided by OpenXION not found
 			in HyperTalk. It may be any of the following strings:
 		</p>
-		<table indent="1">
+		<table>
 			<tr>
 				<td><code>fff</code></td>
 				<td>triple forte (velocity 127)</td>
@@ -13130,7 +13124,7 @@
 			<mv>Effect</mv> is another extension provided by OpenXION not found
 			in HyperTalk. It is one or more of the following characters:
 		</p>
-		<table indent="1">
+		<table>
 			<tr>
 				<td><code>,</code></td>
 				<td>
@@ -13193,7 +13187,7 @@
 			In HyperTalk, the <me/> command accepted note strings that were
 			left unquoted, and this was often done. For example:
 		</p>
-		<scr indent="1">
+		<scr>
 			play harpsichord c4 a3 f c4 a3 f c4 d c c c
 		</scr>
 		<p>
@@ -13354,9 +13348,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put abs(a-b) into theDifference</code>
-		</p>
+		<scr>
+			put abs(a-b) into theDifference
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -13404,9 +13398,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put acos(theCosine) into theAngle</code>
-		</p>
+		<scr>
+			put acos(theCosine) into theAngle
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -13438,9 +13432,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put acosh(steve) into bill</code>
-		</p>
+		<scr>
+			put acosh(steve) into bill
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -13473,9 +13467,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put acot(theCotangent) into theAngle</code>
-		</p>
+		<scr>
+			put acot(theCotangent) into theAngle
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -13507,9 +13501,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put acoth(steve) into bill</code>
-		</p>
+		<scr>
+			put acoth(steve) into bill
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -13542,9 +13536,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put acsc(theCosecant) into theAngle</code>
-		</p>
+		<scr>
+			put acsc(theCosecant) into theAngle
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -13576,9 +13570,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put acsch(steve) into bill</code>
-		</p>
+		<scr>
+			put acsch(steve) into bill
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -13608,9 +13602,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put agm(steve, bill) into andy</code>
-		</p>
+		<scr>
+			put agm(steve, bill) into andy
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -13705,9 +13699,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put myPayment*annuity(.015,12) into presentValue</code>
-		</p>
+		<scr>
+			put myPayment*annuity(.015,12) into presentValue
+		</scr>
 		<scr>
 			put myPayment*annuity(.015,12)*compound(.015,12) ¬
 			    into futureValue
@@ -13939,9 +13933,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put arg(3,4) into angle</code>
-		</p>
+		<scr>
+			put arg(3,4) into angle
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -14025,9 +14019,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put asec(theSecant) into theAngle</code>
-		</p>
+		<scr>
+			put asec(theSecant) into theAngle
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -14059,9 +14053,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put asech(steve) into bill</code>
-		</p>
+		<scr>
+			put asech(steve) into bill
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -14094,9 +14088,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put asin(theSine) into theAngle</code>
-		</p>
+		<scr>
+			put asin(theSine) into theAngle
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -14128,9 +14122,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put asinh(steve) into bill</code>
-		</p>
+		<scr>
+			put asinh(steve) into bill
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -14163,9 +14157,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put atan(theTangent) into theAngle</code>
-		</p>
+		<scr>
+			put atan(theTangent) into theAngle
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -14200,9 +14194,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put atan2(steve, bill) into andy</code>
-		</p>
+		<scr>
+			put atan2(steve, bill) into andy
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -14240,9 +14234,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put atanh(steve) into bill</code>
-		</p>
+		<scr>
+			put atanh(steve) into bill
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -14275,9 +14269,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put aug(steve) into bill</code>
-		</p>
+		<scr>
+			put aug(steve) into bill
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -14609,9 +14603,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put average(1,3,4) into bill</code>
-		</p>
+		<scr>
+			put average(1,3,4) into bill
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -14647,9 +14641,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put bc("09F91102", 16, 10) into myNumber</code>
-		</p>
+		<scr>
+			put bc("09F91102", 16, 10) into myNumber
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -14717,9 +14711,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put bin(6789) into steve</code>
-		</p>
+		<scr>
+			put bin(6789) into steve
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -14747,9 +14741,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the binToChar of "6364" -- yields "cd"</code>
-		</p>
+		<scr>
+			put the binToChar of "6364" -- yields "cd"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -14778,9 +14772,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the binToUni of "CEB3CEB4" -- yields "γδ"</code>
-		</p>
+		<scr>
+			put the binToUni of "CEB3CEB4" -- yields "γδ"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -14809,9 +14803,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put cbrt(27) -- puts 3</code>
-		</p>
+		<scr>
+			put cbrt(27) -- puts 3
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -14846,9 +14840,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put ceil(steve) into bill</code>
-		</p>
+		<scr>
+			put ceil(steve) into bill
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -15209,9 +15203,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the charToBin of "ab" into it -- yields "6162"</code>
-		</p>
+		<scr>
+			put the charToBin of "ab" into it -- yields "6162"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -15240,9 +15234,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the charToNum of "a" into it -- yields 97</code>
-		</p>
+		<scr>
+			put the charToNum of "a" into it -- yields 97
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -15278,12 +15272,12 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put futureValue/compound(.10,12) into presentValue</code>
-		</p>
-		<p>
-			<code>put presentValue*compound(.10,12) into futureValue</code>
-		</p>
+		<scr>
+			put futureValue/compound(.10,12) into presentValue
+		</scr>
+		<scr>
+			put presentValue*compound(.10,12) into futureValue
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -15293,10 +15287,15 @@
 			of periods over which the value is calculated.
 		</p>
 		<p>
-			The formula for the <me/> function is
+			The formula for the <me/> function is:
+		</p>
+		<p>
 			<code><a>fn:compound</a>(<mv>rate</mv>, <mv>periods</mv>) =
-			(1+<mv>rate</mv>)^<mv>periods</mv></code>. The <me/> function
-			is faster and more accurate than using the above formula.
+			(1+<mv>rate</mv>)^<mv>periods</mv></code>.
+		</p>
+		<p>
+			The <me/> function is faster and more accurate
+			than using the above formula.
 		</p>
 	</description>
 	<scripts>
@@ -15399,9 +15398,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put conj(3,4) -- yields 3,-4</code>
-		</p>
+		<scr>
+			put conj(3,4) -- yields 3,-4
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -15435,9 +15434,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the cos of 2 -- yields -0.416147</code>
-		</p>
+		<scr>
+			put the cos of 2 -- yields -0.416147
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -15475,9 +15474,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the cosh of 2 -- yields 3.762196</code>
-		</p>
+		<scr>
+			put the cosh of 2 -- yields 3.762196
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -15507,9 +15506,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the cot of 2 -- yields -0.457658</code>
-		</p>
+		<scr>
+			put the cot of 2 -- yields -0.457658
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -15547,9 +15546,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the coth of 2 -- yields 1.037315</code>
-		</p>
+		<scr>
+			put the coth of 2 -- yields 1.037315
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -15651,9 +15650,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the csc of 2 -- yields 1.099750</code>
-		</p>
+		<scr>
+			put the csc of 2 -- yields 1.099750
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -15691,9 +15690,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the csch of 2 -- yields 0.275721</code>
-		</p>
+		<scr>
+			put the csch of 2 -- yields 0.275721
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -16029,9 +16028,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the last word of the long date into currentYear</code>
-		</p>
+		<scr>
+			put the last word of the long date into currentYear
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -16086,9 +16085,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the first item of the dateItems into currentYear</code>
-		</p>
+		<scr>
+			put the first item of the dateItems into currentYear
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -16278,9 +16277,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the exp of 2 -- yields 7.389056</code>
-		</p>
+		<scr>
+			put the exp of 2 -- yields 7.389056
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -16290,7 +16289,7 @@
 			That is, it returns:
 		</p>
 		<p>
-			<code><a>cn:euler</a> <a>op:^</a> <mv>number</mv></code>
+			<code><a>cn:euler</a>^<mv>number</mv></code>
 		</p>
 		<p>
 			The <me/> function is faster and more accurate than using
@@ -16322,9 +16321,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the exp1 of 2 -- yields 6.389056</code>
-		</p>
+		<scr>
+			put the exp1 of 2 -- yields 6.389056
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -16332,7 +16331,7 @@
 			exponential of its argument. That is, it returns:
 		</p>
 		<p>
-			<code>(<a>cn:euler</a> <a>op:^</a> <mv>number</mv>) <a>op:-</a> 1</code>
+			<code>(<a>cn:euler</a>^<mv>number</mv>)-1</code>
 		</p>
 		<p>
 			The <me/> function is faster and more accurate than using
@@ -16364,9 +16363,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the exp10 of 4 -- yields 10000</code>
-		</p>
+		<scr>
+			put the exp10 of 4 -- yields 10000
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -16374,7 +16373,7 @@
 			power specified by its argument. That is, it returns:
 		</p>
 		<p>
-			<code>10 <a>op:^</a> <mv>number</mv></code>
+			<code>10^<mv>number</mv></code>
 		</p>
 		<p>
 			The <me/> function is faster and more accurate than using
@@ -16406,9 +16405,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the exp2 of 16 -- yields 65536</code>
-		</p>
+		<scr>
+			put the exp2 of 16 -- yields 65536
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -16416,7 +16415,7 @@
 			power specified by its argument. That is, it returns:
 		</p>
 		<p>
-			<code>2 <a>op:^</a> <mv>number</mv></code>
+			<code>2^<mv>number</mv></code>
 		</p>
 		<p>
 			The <me/> function is faster and more accurate than using
@@ -16514,9 +16513,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put filter((1,2,inf,NaN,-7), "isFinite") -- prints 1,2,-7</code>
-		</p>
+		<scr>
+			put filter((1,2,inf,NaN,-7), "isFinite") -- prints 1,2,-7
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -16548,9 +16547,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put floor(steve) into bill</code>
-		</p>
+		<scr>
+			put floor(steve) into bill
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -17029,9 +17028,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put frac(steve) into bill</code>
-		</p>
+		<scr>
+			put frac(steve) into bill
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -17165,9 +17164,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put gcd(steve, bill) into andy</code>
-		</p>
+		<scr>
+			put gcd(steve, bill) into andy
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -17236,12 +17235,12 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put hash(steve, "Atkinson") into bill</code>
-		</p>
-		<p>
-			<code>put hash(data, "MD5") into md5</code>
-		</p>
+		<scr>
+			put hash(steve, "Atkinson") into bill
+		</scr>
+		<scr>
+			put hash(data, "MD5") into md5
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -17329,9 +17328,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put hex(6789) into steve</code>
-		</p>
+		<scr>
+			put hex(6789) into steve
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -17682,9 +17681,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put lcm(steve, bill) into andy</code>
-		</p>
+		<scr>
+			put lcm(steve, bill) into andy
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -17840,9 +17839,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the ln of 10 -- yields 2.302585</code>
-		</p>
+		<scr>
+			put the ln of 10 -- yields 2.302585
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -17881,9 +17880,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the ln1 of 10 -- yields 2.397895</code>
-		</p>
+		<scr>
+			put the ln1 of 10 -- yields 2.397895
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -17891,7 +17890,7 @@
 			of 1 plus the number passed to it. That is, it returns:
 		</p>
 		<p>
-			<code><a>fn:ln</a>(1 + <mv>number</mv>)</code>
+			<code><a>fn:ln</a>(1+<mv>number</mv>)</code>
 		</p>
 		<p>
 			The <me/> function is faster and more accurate than using
@@ -18024,9 +18023,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put log(10,4) -- yields 1.660964</code>
-		</p>
+		<scr>
+			put log(10,4) -- yields 1.660964
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -18034,7 +18033,7 @@
 			of <mv>argument</mv>. That is, it returns:
 		</p>
 		<p>
-			<code><a>fn:ln</a>(<mv>argument</mv>) / ln(<mv>base</mv>)</code>
+			<code><a>fn:ln</a>(<mv>argument</mv>)/<a>fn:ln</a>(<mv>base</mv>)</code>
 		</p>
 		<p>
 			The <me/> function is faster and more accurate than using
@@ -18066,9 +18065,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the log10 of 42 -- yields 1.623249</code>
-		</p>
+		<scr>
+			put the log10 of 42 -- yields 1.623249
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -18108,9 +18107,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the log2 of 10 -- yields 3.321928</code>
-		</p>
+		<scr>
+			put the log2 of 10 -- yields 3.321928
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -18188,9 +18187,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put lreverse(1,2,3,4) -- yields 4,3,2,1</code>
-		</p>
+		<scr>
+			put lreverse(1,2,3,4) -- yields 4,3,2,1
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -18216,9 +18215,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put ltrim("  Hello, world!  ") -- yields "Hello, world!  "</code>
-		</p>
+		<scr>
+			put ltrim("  Hello, world!  ") -- yields "Hello, world!  "
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -18247,9 +18246,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put map((1,4,9,16,25), "sqrt") -- prints 1,2,3,4,5</code>
-		</p>
+		<scr>
+			put map((1,4,9,16,25), "sqrt") -- prints 1,2,3,4,5
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -18374,7 +18373,7 @@
 		<p>
 			The formula for the <me/> function is:
 		</p>
-		<p indent="1">
+		<p>
 			<code><me/>(<mv>n</mv>,<mv>r</mv>) = <a>fn:fact</a>(<mv>n</mv>) /
 			(<a>fn:fact</a>(<mv>r</mv>) * <a>fn:fact</a>(<mv>n</mv>-<mv>r</mv>))</code>
 		</p>
@@ -18417,7 +18416,7 @@
 		<p>
 			The formula for the <me/> function is:
 		</p>
-		<p indent="1">
+		<p>
 			<code><me/>(<mv>n</mv>,<mv>r</mv>) = <a>fn:fact</a>(<mv>n</mv>) /
 			<a>fn:fact</a>(<mv>n</mv>-<mv>r</mv>)</code>
 		</p>
@@ -18488,15 +18487,15 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>get the number of elements in steve</code>
-		</p>
-		<p>
-			<code>get the number of words in bill</code>
-		</p>
-		<p>
-			<code>get the number of andy</code>
-		</p>
+		<scr>
+			get the number of elements in steve
+		</scr>
+		<scr>
+			get the number of words in bill
+		</scr>
+		<scr>
+			get the number of andy
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -18532,9 +18531,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put numToChar(67) into it -- yields C</code>
-		</p>
+		<scr>
+			put numToChar(67) into it -- yields C
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -18570,9 +18569,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put numToUni(915) into it -- yields Γ</code>
-		</p>
+		<scr>
+			put numToUni(915) into it -- yields Γ
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -18601,9 +18600,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put oct(6789) into steve</code>
-		</p>
+		<scr>
+			put oct(6789) into steve
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -18790,9 +18789,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the params</code>
-		</p>
+		<scr>
+			put the params
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -18801,7 +18800,7 @@
 			including the message name. In other words, <code>the params</code>
 			looks like:
 		</p>
-		<p indent="1">
+		<p>
 			<code><mv>parameter</mv>,<mv>parameter</mv>,<mv>parameter</mv>,...</code>
 		</p>
 		<p>
@@ -18841,12 +18840,12 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the parent of char 3 of "Hello" -- yields "Hello"</code>
-		</p>
-		<p>
-			<code>put the parent of file 1</code>
-		</p>
+		<scr>
+			put the parent of char 3 of "Hello" -- yields "Hello"
+		</scr>
+		<scr>
+			put the parent of file 1
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -19196,12 +19195,12 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put reduce((1,2,3,4,5), "sum") -- prints 15</code>
-		</p>
-		<p>
-			<code>put reduce((1,2,3,4,5), "product", 1) -- prints 120</code>
-		</p>
+		<scr>
+			put reduce((1,2,3,4,5), "sum") -- prints 15
+		</scr>
+		<scr>
+			put reduce((1,2,3,4,5), "product", 1) -- prints 120
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -19308,9 +19307,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>if the result is not empty then answer "Try again."</code>
-		</p>
+		<scr>
+			if the result is not empty then answer "Try again."
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -19342,9 +19341,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put reverse("hello") -- yields "olleh"</code>
-		</p>
+		<scr>
+			put reverse("hello") -- yields "olleh"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -19491,9 +19490,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put rint(steve) into bill</code>
-		</p>
+		<scr>
+			put rint(steve) into bill
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -19825,9 +19824,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put <me/>(2,3,4) -- yields 3.109126</code>
-		</p>
+		<scr>
+			put rms(2,3,4) -- yields 3.109126
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -19898,7 +19897,7 @@
 			In the following example, the punchline of the joke has been
 			enciphered with ROT13:
 		</p>
-		<scr indent="1">
+		<scr>
 			How can you tell an extrovert from an introvert at NSA?
 			Va gur ryringbef, gur rkgebireg ybbxf ng gur BGURE thl'f fubrf.
 		</scr>
@@ -19906,7 +19905,7 @@
 			Applying the ROT13 function to this text enciphers the setup
 			and deciphers the punchline:
 		</p>
-		<scr indent="1">
+		<scr>
 			Ubj pna lbh gryy na rkgebireg sebz na vagebireg ng AFN?
 			In the elevators, the extrovert looks at the OTHER guy's shoes.
 		</scr>
@@ -19938,9 +19937,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put round(steve) into bill</code>
-		</p>
+		<scr>
+			put round(steve) into bill
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -20311,9 +20310,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put <me/>(2,3,6) -- yields 1</code>
-		</p>
+		<scr>
+			put rsr(2,3,6) -- yields 1
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -20349,9 +20348,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put rtrim("  Hello, world!  ") -- yields "  Hello, world!"</code>
-		</p>
+		<scr>
+			put rtrim("  Hello, world!  ") -- yields "  Hello, world!"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -20380,9 +20379,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the sec of 2 -- yields -2.402998</code>
-		</p>
+		<scr>
+			put the sec of 2 -- yields -2.402998
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -20420,9 +20419,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the sech of 2 -- yields 0.265802</code>
-		</p>
+		<scr>
+			put the sech of 2 -- yields 0.265802
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -20449,9 +20448,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put (the seconds-startTime) into runTime</code>
-		</p>
+		<scr>
+			put (the seconds-startTime) into runTime
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -20518,9 +20517,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the sin of 2 -- yields 0.909297</code>
-		</p>
+		<scr>
+			put the sin of 2 -- yields 0.909297
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -20558,9 +20557,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the sinh of 2 -- yields 3.626860</code>
-		</p>
+		<scr>
+			put the sinh of 2 -- yields 3.626860
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -20590,9 +20589,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put sqrt(opposite^2 + adjacent^2) into hypotenuse</code>
-		</p>
+		<scr>
+			put sqrt(opposite^2 + adjacent^2) into hypotenuse
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -20630,9 +20629,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>get <me/>(1,2,3,4)</code>
-		</p>
+		<scr>
+			get sstddev(1,2,3,4)
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -20778,9 +20777,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>get <me/>(1,2,3,4)</code>
-		</p>
+		<scr>
+			get sum(1,2,3,4)
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -20818,9 +20817,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>get <me/>(1,2,3,4)</code>
-		</p>
+		<scr>
+			get svariance(1,2,3,4)
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -20849,9 +20848,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the <me/></code>
-		</p>
+		<scr>
+			put the systemName
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -20886,9 +20885,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the <me/></code>
-		</p>
+		<scr>
+			put the systemVersion
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -20955,9 +20954,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the tan of 2 -- yields -2.185040</code>
-		</p>
+		<scr>
+			put the tan of 2 -- yields -2.185040
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -20995,9 +20994,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the tanh of 2 -- yields 0.964027</code>
-		</p>
+		<scr>
+			put the tanh of 2 -- yields 0.964027
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -21056,9 +21055,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put theta(bill, steve) into andy</code>
-		</p>
+		<scr>
+			put theta(bill, steve) into andy
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -21092,9 +21091,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the ticks into dog</code>
-		</p>
+		<scr>
+			put the ticks into dog
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -21133,9 +21132,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the time</code>
-		</p>
+		<scr>
+			put the time
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -21199,7 +21198,7 @@
 			The formula for this function is:
 		</p>
 		<p>
-			<code><me/>(<mv>angle</mv>) = <mv>angle</mv> * 180 / <a>cn:pi</a></code>
+			<code><me/>(<mv>angle</mv>) = <mv>angle</mv>*180/<a>cn:pi</a></code>
 		</p>
 		<p>
 			The <me/> function is faster, more accurate, and easier
@@ -21232,10 +21231,10 @@
 			converted from degrees to radians.
 		</p>
 		<p>
-			The formula for this function is
+			The formula for this function is:
 		</p>
 		<p>
-			<code><me/>(<mv>angle</mv>) = <mv>angle</mv> * <a>cn:pi</a> / 180</code>
+			<code><me/>(<mv>angle</mv>) = <mv>angle</mv>*<a>cn:pi</a>/180</code>
 		</p>
 		<p>
 			The <me/> function is faster, more accurate, and easier
@@ -21261,9 +21260,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put trim("  Hello, world!  ") -- yields "Hello, world!"</code>
-		</p>
+		<scr>
+			put trim("  Hello, world!  ") -- yields "Hello, world!"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -21654,9 +21653,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the uniToBin of "αβ" -- yields "CEB1CEB2"</code>
-		</p>
+		<scr>
+			put the uniToBin of "αβ" -- yields "CEB1CEB2"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -21684,9 +21683,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the uniToNum of "α" -- yields 945</code>
-		</p>
+		<scr>
+			put the uniToNum of "α" -- yields 945
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -21720,9 +21719,9 @@
 		</p>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the value of myFormula into myResult</code>
-		</p>
+		<scr>
+			put the value of myFormula into myResult
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -21813,9 +21812,8 @@
 		<p>
 			The formula for the <me/> function is:
 		</p>
-		<p indent="1">
-			<code><me/>(<mv>r</mv>, <mv>th</mv>) =
-			<mv>r</mv> * cos(<mv>th</mv>)</code>
+		<p>
+			<code><me/>(<mv>r</mv>, <mv>th</mv>) = <mv>r</mv>*cos(<mv>th</mv>)</code>
 		</p>
 		<p>
 			The <me/> function is faster and more accurate than using
@@ -21838,9 +21836,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the <me/></code>
-		</p>
+		<scr>
+			put the xionName
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -21867,9 +21865,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the <me/></code>
-		</p>
+		<scr>
+			put the xionVersion
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -21936,8 +21934,7 @@
 			The formula for the <me/> function is:
 		</p>
 		<p>
-			<code><me/>(<mv>r</mv>, <mv>th</mv>) =
-			<mv>r</mv> * sin(<mv>th</mv>)</code>
+			<code><me/>(<mv>r</mv>, <mv>th</mv>) = <mv>r</mv>*sin(<mv>th</mv>)</code>
 		</p>
 		<p>
 			The <me/> function is faster and more accurate than
@@ -22055,7 +22052,12 @@
 	</syntax>
 	<description>
 		<p>
-			The <me/> function <!-- TODO -->
+			The <me/> function returns an <a>dt:integer</a> produced by
+			alternating the bits of the two's complement representations of
+			the two given <a>dt:integer</a>s. For example,
+			<code>bitMingle(15,0)</code> will produce binary 10101010 or
+			decimal 170, while <code>bitMingle(0,15)</code> will produce
+			binary 01010101 or decimal 85.
 		</p>
 		<p>
 			If both given values are positive, the result will be positive.
@@ -22084,7 +22086,11 @@
 	</syntax>
 	<description>
 		<p>
-			The <me/> function <!-- TODO -->
+			The <me/> function takes the bits from the first given
+			<a>dt:integer</a> corresponding to the set bits in the
+			second <a>dt:integer</a> and packs them to the right.
+			For example, <code>bitSelect(179,201)</code> (10110011
+			and 11001001 in binary) will produce 9 (1001 in binary).
 		</p>
 		<p>
 			If both given values are negative, the result will be negative.
@@ -22231,9 +22237,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the heapSpace into heapOFun</code>
-		</p>
+		<scr>
+			put the heapSpace into heapOFun
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -22976,9 +22982,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the <me/></code>
-		</p>
+		<scr>
+			put the javaName
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -23013,9 +23019,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the <me/></code>
-		</p>
+		<scr>
+			put the javaVersion
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -25054,9 +25060,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the <me/></code>
-		</p>
+		<scr>
+			put the vmName
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -25091,9 +25097,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the <me/></code>
-		</p>
+		<scr>
+			put the vmVersion
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -25407,9 +25413,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the <me/></code>
-		</p>
+		<scr>
+			put the serialPorts
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -25447,12 +25453,12 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the <me/></code>
-		</p>
-		<p>
-			<code>wait until the <me/> is "done"</code>
-		</p>
+		<scr>
+			put the sound
+		</scr>
+		<scr>
+			wait until the sound is "done"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -25485,9 +25491,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the <me/></code>
-		</p>
+		<scr>
+			put the sounds
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -25512,12 +25518,12 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the <me/></code>
-		</p>
-		<p>
-			<code>wait until the <me/> is "done"</code>
-		</p>
+		<scr>
+			put the speech
+		</scr>
+		<scr>
+			wait until the speech is "done"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -25550,12 +25556,12 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the <me/></code>
-		</p>
-		<p>
-			<code>wait until the <me/> is "done"</code>
-		</p>
+		<scr>
+			put the tone
+		</scr>
+		<scr>
+			wait until the tone is "done"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -25588,12 +25594,12 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the <me/></code>
-		</p>
-		<p>
-			<code>wait until the <me/> is "done"</code>
-		</p>
+		<scr>
+			put the voice
+		</scr>
+		<scr>
+			wait until the voice is "done"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -25626,9 +25632,9 @@
 		</syn>
 	</syntax>
 	<examples>
-		<p>
-			<code>put the <me/></code>
-		</p>
+		<scr>
+			put the voices
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -25645,18 +25651,18 @@
 <iomanager>
 	<name dialects="xn,oxn,hyp" modules="oxns">file</name>
 	<examples>
-		<p>
-			<code>open file "XION.tex"</code>
-		</p>
-		<p>
-			<code>open file "XION.tex" as "ISO-8859-1"</code>
-		</p>
-		<p>
-			<code>open file "XION.tex" as "UTF-8"</code>
-		</p>
-		<p>
-			<code>open file "Resources.dff" as "binary"</code>
-		</p>
+		<scr>
+			open file "XION.tex"
+		</scr>
+		<scr>
+			open file "XION.tex" as "ISO-8859-1"
+		</scr>
+		<scr>
+			open file "XION.tex" as "UTF-8"
+		</scr>
+		<scr>
+			open file "Resources.dff" as "binary"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -25700,12 +25706,12 @@
 <iomanager>
 	<name dialects="oxn,hyp" modules="oxne">URL</name>
 	<examples>
-		<p>
-			<code>open URL "http://www.openxion.org"</code>
-		</p>
-		<p>
-			<code>open URL "http://www.openxion.org" as "text"</code>
-		</p>
+		<scr>
+			open URL "http://www.openxion.org"
+		</scr>
+		<scr>
+			open URL "http://www.openxion.org" as "text"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -25743,9 +25749,9 @@
 <iomethod>
 	<name dialects="xn,oxn" modules="oxns">binary</name>
 	<examples>
-		<p>
-			<code>open file "logo.png" as "binary"</code>
-		</p>
+		<scr>
+			open file "logo.png" as "binary"
+		</scr>
 	</examples>
 	<description>
 		<p>
@@ -25768,15 +25774,15 @@
 <iomethod>
 	<name dialects="xn,oxn" modules="oxns">text</name>
 	<examples>
-		<p>
-			<code>open file "readme.txt" as "text"</code>
-		</p>
-		<p>
-			<code>open file "My To-Do List" as "MacRoman"</code>
-		</p>
-		<p>
-			<code>open file "AUTOEXEC.BAT" as "CP437"</code>
-		</p>
+		<scr>
+			open file "readme.txt" as "text"
+		</scr>
+		<scr>
+			open file "My To-Do List" as "MacRoman"
+		</scr>
+		<scr>
+			open file "AUTOEXEC.BAT" as "CP437"
+		</scr>
 	</examples>
 	<description>
 		<p>
