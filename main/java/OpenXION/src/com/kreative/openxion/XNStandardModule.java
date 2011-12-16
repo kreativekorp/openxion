@@ -397,6 +397,7 @@ public class XNStandardModule extends XNModule {
 		functions.put("bc",f_bc);
 		functions.put("beta",f_beta);
 		functions.put("bin",f_bin);
+		functions.put("bindec",f_bindec);
 		functions.put("bintochar",f_bintochar);
 		functions.put("bintouni",f_bintouni);
 		functions.put("cbrt",f_cbrt);
@@ -429,6 +430,9 @@ public class XNStandardModule extends XNModule {
 		functions.put("date",f_date);
 		functions.put("dateitems",f_dateitems);
 		functions.put("dec",f_dec);
+		functions.put("decbin",f_bin);
+		functions.put("dechex",f_hex);
+		functions.put("decoct",f_oct);
 		functions.put("decreasing",f_dec);
 		functions.put("desc",f_desc);
 		functions.put("descending",f_desc);
@@ -455,6 +459,7 @@ public class XNStandardModule extends XNModule {
 		functions.put("hash",f_hash);
 		functions.put("head",f_head);
 		functions.put("hex",f_hex);
+		functions.put("hexdec",f_hexdec);
 		functions.put("hypot",f_hypot);
 		functions.put("im",f_im);
 		functions.put("implode",f_implode);
@@ -501,6 +506,7 @@ public class XNStandardModule extends XNModule {
 		functions.put("numtochar",f_numtochar);
 		functions.put("numtouni",f_numtouni);
 		functions.put("oct",f_oct);
+		functions.put("octdec",f_octdec);
 		functions.put("offset",f_offset);
 		functions.put("or",f_or);
 		functions.put("param",f_param);
@@ -3171,6 +3177,13 @@ public class XNStandardModule extends XNModule {
 		}
 	};
 	
+	private static final Function f_bindec = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			if (parameter == null) throw new XNScriptError("Can't understand arguments to bindec");
+			return new XOMString(BaseConvert.bc(parameter.toTextString(ctx), 2, 10, ctx.getMathContext()));
+		}
+	};
+	
 	private static final Function f_bintochar = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) throw new XNScriptError("Can't understand arguments to bintochar");
@@ -3867,6 +3880,13 @@ public class XNStandardModule extends XNModule {
 		}
 	};
 	
+	private static final Function f_hexdec = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			if (parameter == null) throw new XNScriptError("Can't understand arguments to hexdec");
+			return new XOMString(BaseConvert.bc(parameter.toTextString(ctx), 16, 10, ctx.getMathContext()));
+		}
+	};
+	
 	private static final Function f_hypot = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			List<? extends XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
@@ -4420,6 +4440,13 @@ public class XNStandardModule extends XNModule {
 				);
 			}
 			else throw new XOMMorphError("number");
+		}
+	};
+	
+	private static final Function f_octdec = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			if (parameter == null) throw new XNScriptError("Can't understand arguments to octdec");
+			return new XOMString(BaseConvert.bc(parameter.toTextString(ctx), 8, 10, ctx.getMathContext()));
 		}
 	};
 	
