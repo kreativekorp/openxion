@@ -430,8 +430,8 @@ public class XNStandardModule extends XNModule {
 		functions.put("dateitems",f_dateitems);
 		functions.put("dec",f_dec);
 		functions.put("decreasing",f_dec);
-		functions.put("desc",f_dec);
-		functions.put("descending",f_dec);
+		functions.put("desc",f_desc);
+		functions.put("descending",f_desc);
 		functions.put("docfile", f_documentfile);
 		functions.put("docpath", f_documentpath);
 		functions.put("documentfile", f_documentfile);
@@ -458,10 +458,10 @@ public class XNStandardModule extends XNModule {
 		functions.put("hypot",f_hypot);
 		functions.put("im",f_im);
 		functions.put("implode",f_implode);
-		functions.put("inc",f_asc);
+		functions.put("inc",f_inc);
 		functions.put("includefile", f_includefile);
 		functions.put("includepath", f_includepath);
-		functions.put("increasing",f_asc);
+		functions.put("increasing",f_inc);
 		functions.put("instr",f_instr);
 		functions.put("int",f_trunc);
 		functions.put("isfinite", f_isfinite);
@@ -2720,9 +2720,14 @@ public class XNStandardModule extends XNModule {
 		}
 		if (parameter instanceof XOMList) {
 			Class<? extends XOMVariant> clazz = ((XOMList)parameter).getElementClass();
-			if (clazz.isAssignableFrom(XOMInteger.class)) return (XOMComplexType.listInstance.makeInstanceFrom(ctx, parameter)).toPrimitiveList(ctx);
+			if (clazz.isAssignableFrom(XOMInteger.class)) return (XOMIntegerType.listInstance.makeInstanceFrom(ctx, parameter)).toPrimitiveList(ctx);
 			else if (clazz.isAssignableFrom(XOMNumber.class)) return (XOMNumberType.listInstance.makeInstanceFrom(ctx, parameter)).toPrimitiveList(ctx);
-			else if (clazz.isAssignableFrom(XOMComplex.class)) return (XOMIntegerType.listInstance.makeInstanceFrom(ctx, parameter)).toPrimitiveList(ctx);
+			else if (clazz.isAssignableFrom(XOMComplex.class)) return (XOMComplexType.listInstance.makeInstanceFrom(ctx, parameter)).toPrimitiveList(ctx);
+		}
+		else if (parameter instanceof XOMInteger || parameter instanceof XOMNumber || parameter instanceof XOMComplex) {
+			List<XOMVariant> ret = new LinkedList<XOMVariant>();
+			ret.add(parameter);
+			return ret;
 		}
 		if (XOMIntegerType.listInstance.canMakeInstanceFrom(ctx, parameter)) {
 			return (XOMIntegerType.listInstance.makeInstanceFrom(ctx, parameter)).toPrimitiveList(ctx);
@@ -2746,6 +2751,11 @@ public class XNStandardModule extends XNModule {
 			Class<? extends XOMVariant> clazz = ((XOMList)parameter).getElementClass();
 			if (clazz.isAssignableFrom(XOMNumber.class)) return (XOMNumberType.listInstance.makeInstanceFrom(ctx, parameter)).toPrimitiveList(ctx);
 			else if (clazz.isAssignableFrom(XOMComplex.class)) return (XOMComplexType.listInstance.makeInstanceFrom(ctx, parameter)).toPrimitiveList(ctx);
+		}
+		else if (parameter instanceof XOMInteger || parameter instanceof XOMNumber) {
+			List<XOMVariant> ret = new LinkedList<XOMVariant>();
+			ret.add(parameter);
+			return ret;
 		}
 		if (XOMNumberType.listInstance.canMakeInstanceFrom(ctx, parameter)) {
 			return (XOMNumberType.listInstance.makeInstanceFrom(ctx, parameter)).toPrimitiveList(ctx);
@@ -2963,26 +2973,31 @@ public class XNStandardModule extends XNModule {
 			List<? extends XOMVariant> numbers = anyNumericListParameter(ctx, functionName, parameter);
 			if (numbers.isEmpty()) return XOMBoolean.TRUE;
 			if (numbers.get(0) instanceof XOMComplex) {
-				XOMNumber[] prev = ((XOMComplex)numbers.get(0)).toXOMNumbers();
-				for (XOMVariant number : numbers) {
-					XOMNumber[] num = ((XOMComplex)number).toXOMNumbers();
+				Iterator<? extends XOMVariant> ni = numbers.iterator();
+				XOMNumber[] prev = ((XOMComplex)ni.next()).toXOMNumbers();
+				while (ni.hasNext()) {
+					XOMNumber[] num = ((XOMComplex)ni.next()).toXOMNumbers();
 					if (XOMNumberMath.compare(num[0], prev[0]) < 0) return XOMBoolean.FALSE;
 					if (XOMNumberMath.compare(num[1], prev[1]) < 0) return XOMBoolean.FALSE;
 					prev = num;
 				}
 				return XOMBoolean.TRUE;
 			} else if (numbers.get(0) instanceof XOMInteger) {
-				XOMInteger prev = (XOMInteger)numbers.get(0);
-				for (XOMVariant number : numbers) {
-					if (XOMIntegerMath.compare((XOMInteger)number, prev) < 0) return XOMBoolean.FALSE;
-					prev = (XOMInteger)number;
+				Iterator<? extends XOMVariant> ni = numbers.iterator();
+				XOMInteger prev = (XOMInteger)ni.next();
+				while (ni.hasNext()) {
+					XOMInteger num = (XOMInteger)ni.next();
+					if (XOMIntegerMath.compare(num, prev) < 0) return XOMBoolean.FALSE;
+					prev = num;
 				}
 				return XOMBoolean.TRUE;
 			} else {
-				XOMNumber prev = (XOMNumber)numbers.get(0);
-				for (XOMVariant number : numbers) {
-					if (XOMNumberMath.compare((XOMNumber)number, prev) < 0) return XOMBoolean.FALSE;
-					prev = (XOMNumber)number;
+				Iterator<? extends XOMVariant> ni = numbers.iterator();
+				XOMNumber prev = (XOMNumber)ni.next();
+				while (ni.hasNext()) {
+					XOMNumber num = (XOMNumber)ni.next();
+					if (XOMNumberMath.compare(num, prev) < 0) return XOMBoolean.FALSE;
+					prev = num;
 				}
 				return XOMBoolean.TRUE;
 			}
@@ -3513,26 +3528,67 @@ public class XNStandardModule extends XNModule {
 			List<? extends XOMVariant> numbers = anyNumericListParameter(ctx, functionName, parameter);
 			if (numbers.isEmpty()) return XOMBoolean.TRUE;
 			if (numbers.get(0) instanceof XOMComplex) {
-				XOMNumber[] prev = ((XOMComplex)numbers.get(0)).toXOMNumbers();
-				for (XOMVariant number : numbers) {
-					XOMNumber[] num = ((XOMComplex)number).toXOMNumbers();
+				Iterator<? extends XOMVariant> ni = numbers.iterator();
+				XOMNumber[] prev = ((XOMComplex)ni.next()).toXOMNumbers();
+				while (ni.hasNext()) {
+					XOMNumber[] num = ((XOMComplex)ni.next()).toXOMNumbers();
+					if (XOMNumberMath.compare(num[0], prev[0]) >= 0) return XOMBoolean.FALSE;
+					if (XOMNumberMath.compare(num[1], prev[1]) >= 0) return XOMBoolean.FALSE;
+					prev = num;
+				}
+				return XOMBoolean.TRUE;
+			} else if (numbers.get(0) instanceof XOMInteger) {
+				Iterator<? extends XOMVariant> ni = numbers.iterator();
+				XOMInteger prev = (XOMInteger)ni.next();
+				while (ni.hasNext()) {
+					XOMInteger num = (XOMInteger)ni.next();
+					if (XOMIntegerMath.compare(num, prev) >= 0) return XOMBoolean.FALSE;
+					prev = num;
+				}
+				return XOMBoolean.TRUE;
+			} else {
+				Iterator<? extends XOMVariant> ni = numbers.iterator();
+				XOMNumber prev = (XOMNumber)ni.next();
+				while (ni.hasNext()) {
+					XOMNumber num = (XOMNumber)ni.next();
+					if (XOMNumberMath.compare(num, prev) >= 0) return XOMBoolean.FALSE;
+					prev = num;
+				}
+				return XOMBoolean.TRUE;
+			}
+		}
+	};
+	
+	private static final Function f_desc = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> numbers = anyNumericListParameter(ctx, functionName, parameter);
+			if (numbers.isEmpty()) return XOMBoolean.TRUE;
+			if (numbers.get(0) instanceof XOMComplex) {
+				Iterator<? extends XOMVariant> ni = numbers.iterator();
+				XOMNumber[] prev = ((XOMComplex)ni.next()).toXOMNumbers();
+				while (ni.hasNext()) {
+					XOMNumber[] num = ((XOMComplex)ni.next()).toXOMNumbers();
 					if (XOMNumberMath.compare(num[0], prev[0]) > 0) return XOMBoolean.FALSE;
 					if (XOMNumberMath.compare(num[1], prev[1]) > 0) return XOMBoolean.FALSE;
 					prev = num;
 				}
 				return XOMBoolean.TRUE;
 			} else if (numbers.get(0) instanceof XOMInteger) {
-				XOMInteger prev = (XOMInteger)numbers.get(0);
-				for (XOMVariant number : numbers) {
-					if (XOMIntegerMath.compare((XOMInteger)number, prev) > 0) return XOMBoolean.FALSE;
-					prev = (XOMInteger)number;
+				Iterator<? extends XOMVariant> ni = numbers.iterator();
+				XOMInteger prev = (XOMInteger)ni.next();
+				while (ni.hasNext()) {
+					XOMInteger num = (XOMInteger)ni.next();
+					if (XOMIntegerMath.compare(num, prev) > 0) return XOMBoolean.FALSE;
+					prev = num;
 				}
 				return XOMBoolean.TRUE;
 			} else {
-				XOMNumber prev = (XOMNumber)numbers.get(0);
-				for (XOMVariant number : numbers) {
-					if (XOMNumberMath.compare((XOMNumber)number, prev) > 0) return XOMBoolean.FALSE;
-					prev = (XOMNumber)number;
+				Iterator<? extends XOMVariant> ni = numbers.iterator();
+				XOMNumber prev = (XOMNumber)ni.next();
+				while (ni.hasNext()) {
+					XOMNumber num = (XOMNumber)ni.next();
+					if (XOMNumberMath.compare(num, prev) > 0) return XOMBoolean.FALSE;
+					prev = num;
 				}
 				return XOMBoolean.TRUE;
 			}
@@ -3857,6 +3913,42 @@ public class XNStandardModule extends XNModule {
 				out.delete(out.length()-d.length(), out.length());
 			}
 			return new XOMString(out.toString());
+		}
+	};
+	
+	private static final Function f_inc = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> numbers = anyNumericListParameter(ctx, functionName, parameter);
+			if (numbers.isEmpty()) return XOMBoolean.TRUE;
+			if (numbers.get(0) instanceof XOMComplex) {
+				Iterator<? extends XOMVariant> ni = numbers.iterator();
+				XOMNumber[] prev = ((XOMComplex)ni.next()).toXOMNumbers();
+				while (ni.hasNext()) {
+					XOMNumber[] num = ((XOMComplex)ni.next()).toXOMNumbers();
+					if (XOMNumberMath.compare(num[0], prev[0]) <= 0) return XOMBoolean.FALSE;
+					if (XOMNumberMath.compare(num[1], prev[1]) <= 0) return XOMBoolean.FALSE;
+					prev = num;
+				}
+				return XOMBoolean.TRUE;
+			} else if (numbers.get(0) instanceof XOMInteger) {
+				Iterator<? extends XOMVariant> ni = numbers.iterator();
+				XOMInteger prev = (XOMInteger)ni.next();
+				while (ni.hasNext()) {
+					XOMInteger num = (XOMInteger)ni.next();
+					if (XOMIntegerMath.compare(num, prev) <= 0) return XOMBoolean.FALSE;
+					prev = num;
+				}
+				return XOMBoolean.TRUE;
+			} else {
+				Iterator<? extends XOMVariant> ni = numbers.iterator();
+				XOMNumber prev = (XOMNumber)ni.next();
+				while (ni.hasNext()) {
+					XOMNumber num = (XOMNumber)ni.next();
+					if (XOMNumberMath.compare(num, prev) <= 0) return XOMBoolean.FALSE;
+					prev = num;
+				}
+				return XOMBoolean.TRUE;
+			}
 		}
 	};
 	
