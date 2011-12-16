@@ -13970,8 +13970,6 @@
 <function>
 	<name dialects="xn,oxn" modules="oxns">asc</name>
 	<name dialects="xn,oxn" modules="oxns">ascending</name>
-	<name dialects="xn,oxn" modules="oxns">inc</name>
-	<name dialects="xn,oxn" modules="oxns">increasing</name>
 	<syntax>
 		<syn>
 			<opt>the</opt> <me/> of <mv>factor</mv>
@@ -14000,7 +13998,7 @@
 		</p>
 	</notes>
 	<see-also>
-		fn:desc, fn:descending, fn:dec, fn:decreasing, op:&lt;=
+		fn:inc, fn:increasing, fn:desc, fn:descending, fn:dec, fn:decreasing, op:&lt;=
 	</see-also>
 </function>
 
@@ -16107,6 +16105,43 @@
 <function>
 	<name dialects="xn,oxn" modules="oxns">dec</name>
 	<name dialects="xn,oxn" modules="oxns">decreasing</name>
+	<syntax>
+		<syn>
+			<opt>the</opt> <me/> of <mv>factor</mv>
+		</syn>
+		<syn>
+			<me/> ( <mv>expression</mv> )
+		</syn>
+		<p>
+			<mv>Factor</mv> and <mv>expression</mv>
+			yield any kind of <a>dt:list</a>.
+		</p>
+	</syntax>
+	<description>
+		<p>
+			The <me/> function returns <a>cn:true</a> if and only if its
+			arguments are in a strictly decreasing sequence. That is,
+			every element in the list must be less than the elements
+			preceding it, and greater than the elements following it.
+			The elements are compared as if by the <a>op:&gt;</a> operator.
+		</p>
+	</description>
+	<notes>
+		<p>
+			This is the infinite-arity version of the <a>op:&gt;</a> operator.
+		</p>
+	</notes>
+	<compatibility>
+		<p>
+			In OpenXION 1.3 and earlier, this was a synonym of <a>fn:descending</a>.
+		</p>
+	</compatibility>
+	<see-also>
+		fn:desc, fn:descending, fn:inc, fn:increasing, fn:asc, fn:ascending, op:&gt;
+	</see-also>
+</function>
+
+<function>
 	<name dialects="xn,oxn" modules="oxns">desc</name>
 	<name dialects="xn,oxn" modules="oxns">descending</name>
 	<syntax>
@@ -16137,7 +16172,7 @@
 		</p>
 	</notes>
 	<see-also>
-		fn:inc, fn:increasing, fn:asc, fn:ascending, op:&gt;=
+		fn:dec, fn:decreasing, fn:inc, fn:increasing, fn:asc, fn:ascending, op:&gt;=
 	</see-also>
 </function>
 
@@ -17440,6 +17475,46 @@
 	<see-also>
 		fn:concat, fn:concatsp,
 		fn:explode, fn:csExplode, fn:regExplode, fn:trExplode
+	</see-also>
+</function>
+
+<function>
+	<name dialects="xn,oxn" modules="oxns">inc</name>
+	<name dialects="xn,oxn" modules="oxns">increasing</name>
+	<syntax>
+		<syn>
+			<opt>the</opt> <me/> of <mv>factor</mv>
+		</syn>
+		<syn>
+			<me/> ( <mv>expression</mv> )
+		</syn>
+		<p>
+			<mv>Factor</mv> and <mv>expression</mv>
+			yield any kind of <a>dt:list</a>.
+		</p>
+	</syntax>
+	<description>
+		<p>
+			The <me/> function returns <a>cn:true</a> if and only if
+			its arguments are in a strictly increasing sequence.
+			That is, every element in the list must be greater than
+			the elements preceding it, and less than the elements
+			following it. The elements are compared as if by the
+			<a>op:&lt;</a> operator.
+		</p>
+	</description>
+	<notes>
+		<p>
+			This is the infinite-arity version of the <a>op:&lt;</a> operator.
+		</p>
+	</notes>
+	<compatibility>
+		<p>
+			In OpenXION 1.3 and earlier, this was a synonym of <a>fn:ascending</a>.
+		</p>
+	</compatibility>
+	<see-also>
+		fn:asc, fn:ascending, fn:desc, fn:descending, fn:dec, fn:decreasing, op:&lt;
 	</see-also>
 </function>
 
