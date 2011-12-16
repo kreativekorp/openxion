@@ -14696,6 +14696,7 @@
 
 <function>
 	<name dialects="xn,oxn" modules="oxns">bin</name>
+	<name dialects="xn,oxn&ge;1.4" modules="oxns&ge;1.4">decbin</name>
 	<syntax>
 		<syn>
 			<opt>the</opt> <me/> of <mv>factor</mv>
@@ -14721,7 +14722,37 @@
 		</p>
 	</description>
 	<see-also>
-		fn:bc, fn:hex, fn:oct
+		fn:bindec, fn:bc, fn:hex, fn:oct
+	</see-also>
+</function>
+
+<function>
+	<name dialects="xn,oxn&ge;1.4" modules="oxns&ge;1.4">bindec</name>
+	<syntax>
+		<syn>
+			<opt>the</opt> <me/> of <mv>factor</mv>
+		</syn>
+		<syn>
+			<me/> ( <mv>expression</mv> )
+		</syn>
+		<p>
+			<mv>Factor</mv> and <mv>expression</mv> yield <a>dt:string</a>s.
+		</p>
+	</syntax>
+	<examples>
+		<scr>
+			put bindec("1101001010011") into steve
+		</scr>
+	</examples>
+	<description>
+		<p>
+			The <me/> function converts a real or complex number in binary,
+			or base two, to the same number in decimal, or base ten. For example,
+			<code>bindec("101010")</code> gives <code>42</code>.
+		</p>
+	</description>
+	<see-also>
+		fn:decbin, fn:bc, fn:hexdec, fn:octdec
 	</see-also>
 </function>
 
@@ -17350,6 +17381,7 @@
 
 <function>
 	<name dialects="xn,oxn" modules="oxns">hex</name>
+	<name dialects="xn,oxn&ge;1.4" modules="oxns&ge;1.4">dechex</name>
 	<syntax>
 		<syn>
 			<opt>the</opt> <me/> of <mv>factor</mv>
@@ -17375,7 +17407,37 @@
 		</p>
 	</description>
 	<see-also>
-		fn:bc, fn:bin, fn:oct
+		fn:hexdec, fn:bc, fn:bin, fn:oct
+	</see-also>
+</function>
+
+<function>
+	<name dialects="xn,oxn&ge;1.4" modules="oxns&ge;1.4">hexdec</name>
+	<syntax>
+		<syn>
+			<opt>the</opt> <me/> of <mv>factor</mv>
+		</syn>
+		<syn>
+			<me/> ( <mv>expression</mv> )
+		</syn>
+		<p>
+			<mv>Factor</mv> and <mv>expression</mv> yield <a>dt:string</a>s.
+		</p>
+	</syntax>
+	<examples>
+		<scr>
+			put hexdec("9F91102") into steve
+		</scr>
+	</examples>
+	<description>
+		<p>
+			The <me/> function converts a real or complex number in hexadecimal,
+			or base sixteen, to the same number in decimal, or base ten.
+			For example, <code>hex("2318")</code> gives <code>8984</code>.
+		</p>
+	</description>
+	<see-also>
+		fn:dechex, fn:bc, fn:bindec, fn:octdec
 	</see-also>
 </function>
 
@@ -18662,6 +18724,7 @@
 
 <function>
 	<name dialects="xn,oxn" modules="oxns">oct</name>
+	<name dialects="xn,oxn&ge;1.4" modules="oxns&ge;1.4">decoct</name>
 	<syntax>
 		<syn>
 			<opt>the</opt> <me/> of <mv>factor</mv>
@@ -18687,7 +18750,37 @@
 		</p>
 	</description>
 	<see-also>
-		fn:bc, fn:bin, fn:hex
+		fn:octdec, fn:bc, fn:bin, fn:hex
+	</see-also>
+</function>
+
+<function>
+	<name dialects="xn,oxn&ge;1.4" modules="oxns&ge;1.4">octdec</name>
+	<syntax>
+		<syn>
+			<opt>the</opt> <me/> of <mv>factor</mv>
+		</syn>
+		<syn>
+			<me/> ( <mv>expression</mv> )
+		</syn>
+		<p>
+			<mv>Factor</mv> and <mv>expression</mv> yield <a>dt:string</a>s.
+		</p>
+	</syntax>
+	<examples>
+		<scr>
+			put octdec("4631") into steve
+		</scr>
+	</examples>
+	<description>
+		<p>
+			The <me/> function converts a real or complex number in octal,
+			or base eight, to the same number in decimal, or base ten. For
+			example, <code>oct("755")</code> gives <code>493</code>.
+		</p>
+	</description>
+	<see-also>
+		fn:decoct, fn:bc, fn:bindec, fn:hexdec
 	</see-also>
 </function>
 
@@ -26602,6 +26695,16 @@
 				<td><a>fn:oct</a></td>
 				<td><a>fn:hex</a></td>
 				<td><a>fn:bc</a></td>
+			</tr>
+			<tr>
+				<td><a>fn:decbin</a></td>
+				<td><a>fn:decoct</a></td>
+				<td><a>fn:dechex</a></td>
+			</tr>
+			<tr>
+				<td><a>fn:bindec</a></td>
+				<td><a>fn:octdec</a></td>
+				<td><a>fn:hexdec</a></td>
 			</tr>
 			<tr>
 				<td colspan="2"><a>fn:reverseBits</a></td>
