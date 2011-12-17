@@ -54,7 +54,7 @@ public class HTMLXDOMGenerator {
 		this.ds = ds;
 		this.base = base;
 		this.basePath = base.getAbsolutePath();
-		this.sdomg = new HTMLSDOMGenerator();
+		this.sdomg = new HTMLSDOMGenerator(ds.terms());
 		if (output) {
 			try {
 				this.out = new PrintWriter(new OutputStreamWriter(System.out, LOG_ENCODING), true);
@@ -70,7 +70,7 @@ public class HTMLXDOMGenerator {
 		this.ds = ds;
 		this.base = base;
 		this.basePath = base.getAbsolutePath();
-		this.sdomg = new HTMLSDOMGenerator();
+		this.sdomg = new HTMLSDOMGenerator(ds.terms());
 		this.out = out;
 	}
 	
@@ -224,15 +224,29 @@ public class HTMLXDOMGenerator {
 			out.println("</ul>");
 		}
 		if (term.properties() != null && !term.properties().isEmpty()) {
-			out.println("<h3>Properties</h3>");
-			out.print("<p class=\"block paragraph indent0\">");
-			boolean first = true;
-			for (TermSpec termSpec : term.properties()) {
-				if (first) first = false;
-				else out.print(", ");
-				out.print("<code><a href=\"../" + htmlencode(fnencode(termSpec.getType().getCode()) + "/" + fnencode(termSpec.getName())) + "\">" + htmlencode(termSpec.getName()) + "</a></code>");
+			List<TermSpec> termSpecs = new Vector<TermSpec>();
+			termSpecs.addAll(term.properties());
+			Iterator<TermSpec> termSpecIterator = termSpecs.iterator();
+			while (termSpecIterator.hasNext()) {
+				TermSpec termSpec = termSpecIterator.next();
+				if (ds.terms().getTerms(
+						termSpec.getType(), termSpec.getName(),
+						(dialect == null ? null : dialect.name()), dialectVersion
+				).isEmpty()) {
+					termSpecIterator.remove();
+				}
 			}
-			out.println("</p>");
+			if (!termSpecs.isEmpty()) {
+				out.println("<h3>Properties</h3>");
+				out.print("<p class=\"block paragraph indent0\">");
+				boolean first = true;
+				for (TermSpec termSpec : termSpecs) {
+					if (first) first = false;
+					else out.print(", ");
+					out.print("<code><a href=\"../" + htmlencode(fnencode(termSpec.getType().getCode()) + "/" + fnencode(termSpec.getName())) + "\">" + htmlencode(termSpec.getName()) + "</a></code>");
+				}
+				out.println("</p>");
+			}
 		}
 		if (term.hasSyntax()) {
 			out.println("<h3>Syntax</h3>");
@@ -275,31 +289,58 @@ public class HTMLXDOMGenerator {
 			out.println(sdomg.generateSectionHTML(term.getCompatibility()));
 		}
 		if (term.hasSynonyms(((dialect == null) ? null : dialect.name()), dialectVersion)) {
-			TermSpecList synonyms = term.getSynonyms(((dialect == null) ? null : dialect.name()), dialectVersion, termName);
-			if (synonyms.size() > 1) {
-				out.println("<h3>Synonyms</h3>");
-			} else {
-				out.println("<h3>Synonym</h3>");
+			List<TermSpec> termSpecs = new Vector<TermSpec>();
+			termSpecs.addAll(term.getSynonyms(((dialect == null) ? null : dialect.name()), dialectVersion, termName));
+			Iterator<TermSpec> termSpecIterator = termSpecs.iterator();
+			while (termSpecIterator.hasNext()) {
+				TermSpec termSpec = termSpecIterator.next();
+				if (ds.terms().getTerms(
+						termSpec.getType(), termSpec.getName(),
+						(dialect == null ? null : dialect.name()), dialectVersion
+				).isEmpty()) {
+					termSpecIterator.remove();
+				}
 			}
-			out.print("<p class=\"block paragraph indent0\">");
-			boolean first = true;
-			for (TermSpec termSpec : synonyms) {
-				if (first) first = false;
-				else out.print(", ");
-				out.print("<code><a href=\"../" + htmlencode(fnencode(termSpec.getType().getCode()) + "/" + fnencode(termSpec.getName())) + ".html\">" + htmlencode(termSpec.getName()) + "</a></code>");
+			if (!termSpecs.isEmpty()) {
+				if (termSpecs.size() > 1) {
+					out.println("<h3>Synonyms</h3>");
+				} else {
+					out.println("<h3>Synonym</h3>");
+				}
+				out.print("<p class=\"block paragraph indent0\">");
+				boolean first = true;
+				for (TermSpec termSpec : termSpecs) {
+					if (first) first = false;
+					else out.print(", ");
+					out.print("<code><a href=\"../" + htmlencode(fnencode(termSpec.getType().getCode()) + "/" + fnencode(termSpec.getName())) + ".html\">" + htmlencode(termSpec.getName()) + "</a></code>");
+				}
+				out.println("</p>");
 			}
-			out.println("</p>");
 		}
 		if (term.seeAlso() != null && !term.seeAlso().isEmpty()) {
-			out.println("<h3>See Also</h3>");
-			out.print("<p class=\"block paragraph indent0\">");
-			boolean first = true;
-			for (TermSpec termSpec : term.seeAlso()) {
-				if (first) first = false;
-				else out.print(", ");
-				out.print("<code><a href=\"../" + htmlencode(fnencode(termSpec.getType().getCode()) + "/" + fnencode(termSpec.getName())) + ".html\">" + htmlencode(termSpec.getName()) + "</a></code>");
+			List<TermSpec> termSpecs = new Vector<TermSpec>();
+			termSpecs.addAll(term.seeAlso());
+			Iterator<TermSpec> termSpecIterator = termSpecs.iterator();
+			while (termSpecIterator.hasNext()) {
+				TermSpec termSpec = termSpecIterator.next();
+				if (ds.terms().getTerms(
+						termSpec.getType(), termSpec.getName(),
+						(dialect == null ? null : dialect.name()), dialectVersion
+				).isEmpty()) {
+					termSpecIterator.remove();
+				}
 			}
-			out.println("</p>");
+			if (!termSpecs.isEmpty()) {
+				out.println("<h3>See Also</h3>");
+				out.print("<p class=\"block paragraph indent0\">");
+				boolean first = true;
+				for (TermSpec termSpec : termSpecs) {
+					if (first) first = false;
+					else out.print(", ");
+					out.print("<code><a href=\"../" + htmlencode(fnencode(termSpec.getType().getCode()) + "/" + fnencode(termSpec.getName())) + ".html\">" + htmlencode(termSpec.getName()) + "</a></code>");
+				}
+				out.println("</p>");
+			}
 		}
 		out.println("</body>");
 		out.println("</html>");
@@ -632,6 +673,7 @@ public class HTMLXDOMGenerator {
 				}
 			}
 		}
+		int number = 1;
 		for (Precedence precedence : Precedence.values()) {
 			operatorList.clear();
 			for (Map.Entry<TermSpec,Term> e : operators.entrySet()) {
@@ -646,7 +688,7 @@ public class HTMLXDOMGenerator {
 				for (TermSpec termSpec : operatorList) {
 					out.print("<tr>");
 					if (first) {
-						out.print("<td>"+precedence.getNumber()+" - "+htmlencode(precedence.getName())+"</td>");
+						out.print("<td>"+(number++)+" - "+htmlencode(precedence.getName())+"</td>");
 						first = false;
 					} else {
 						out.print("<td></td>");
