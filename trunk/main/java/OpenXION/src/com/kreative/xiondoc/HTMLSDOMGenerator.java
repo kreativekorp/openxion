@@ -34,6 +34,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.kreative.xiondoc.sdom.*;
 import com.kreative.xiondoc.xdom.DialectSpecList;
+import com.kreative.xiondoc.xdom.TermCollection;
 import com.kreative.xiondoc.xdom.TermType;
 import com.kreative.xiondoc.xdom.VersionNumber;
 
@@ -45,12 +46,17 @@ import com.kreative.xiondoc.xdom.VersionNumber;
 public class HTMLSDOMGenerator {
 	private static final Pattern INTERNAL_HREF_PATTERN = Pattern.compile("([A-Za-z]{2}):(.*)", Pattern.DOTALL);
 	
+	private final TermCollection termCollection;
 	private TermType currentTermType = null;
 	private String currentTermName = null;
 	private String currentDialectCode = null;
 	private String currentDialectTitle = null;
 	private VersionNumber currentDialectVersion = null;
 	private String urlPrefix = null;
+	
+	public HTMLSDOMGenerator(TermCollection termCollection) {
+		this.termCollection = termCollection;
+	}
 	
 	public void setTerm(TermType type, String name) {
 		this.currentTermType = type;
@@ -453,6 +459,8 @@ public class HTMLSDOMGenerator {
 			String href = ((Anchor)span).getHref();
 			Matcher m = INTERNAL_HREF_PATTERN.matcher(href);
 			if (m.matches()) {
+				String termType = m.group(1);
+				String termName = m.group(2);
 				boolean textOnly = ((Anchor)span).isEmpty() || (
 						(((Anchor)span).size() == 1)
 						&& (((Anchor)span).get(0) instanceof Literal)
@@ -460,8 +468,11 @@ public class HTMLSDOMGenerator {
 				boolean textSame = textOnly && (
 						((Anchor)span).isEmpty()
 						|| (((Anchor)span).get(0).toString().equalsIgnoreCase(href))
-						|| (((Anchor)span).get(0).toString().equalsIgnoreCase(m.group(2)))
+						|| (((Anchor)span).get(0).toString().equalsIgnoreCase(termName))
 				);
+				boolean isValidTerm = !termCollection.getTerms(
+						TermType.forCode(termType), termName,
+						currentDialectCode, currentDialectVersion).isEmpty();
 				boolean isThisTerm = (
 						(currentTermType != null) && (currentTermName != null) &&
 						(currentTermType.getCode()+":"+currentTermName).equalsIgnoreCase(href)
@@ -469,16 +480,16 @@ public class HTMLSDOMGenerator {
 				if (textOnly) {
 					out.append("<code>");
 				}
-				if (!isThisTerm) {
+				if (isValidTerm && !isThisTerm) {
 					out.append("<a href=\"");
 					if (urlPrefix != null) {
 						out.append(htmlencode(urlPrefix, false));
 					}
 					out.append(
 							htmlencode(
-									fnencode(m.group(1).toLowerCase()) +
+									fnencode(termType.toLowerCase()) +
 									"/" +
-									fnencode(m.group(2).toLowerCase()) +
+									fnencode(termName.toLowerCase()) +
 									".html",
 									true
 							)
@@ -486,13 +497,13 @@ public class HTMLSDOMGenerator {
 					out.append("\">");
 				}
 				if (textSame) {
-					out.append(htmlencode(m.group(2), false));
+					out.append(htmlencode(termName, false));
 				} else {
 					for (Span subspan : (Anchor)span) {
 						generateSpanHTML(out, subspan);
 					}
 				}
-				if (!isThisTerm) {
+				if (isValidTerm && !isThisTerm) {
 					out.append("</a>");
 				}
 				if (textOnly) {

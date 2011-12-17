@@ -33,46 +33,33 @@ package com.kreative.xiondoc.xdom;
  * @author Rebecca G. Bettencourt, Kreative Software
  */
 public enum Precedence {
-	NULL        ( 0,  ""                     ),
-	UNARY       ( 1,  "Unary & Conditional"  ),
-	EXPONENT    ( 2,  "Exponentiation"       ),
-	MULTIPLY    ( 3,  "Multiplication"       ),
-	ADD         ( 4,  "Addition"             ),
-	SHIFT       ( 5,  "Bit Shift"            ),
-	BIT_AND     ( 6,  "Bitwise AND"          ),
-	BIT_XOR     ( 7,  "Bitwise XOR"          ),
-	BIT_OR      ( 8,  "Bitwise OR"           ),
-	STR_CONCAT  ( 9,  "String Concatenation" ),
-	LIST_CONCAT ( 10, "List Concatenation"   ),
-	RELATION    ( 11, "Relational"           ),
-	IS_A        ( 12, "Polymorphic"          ),
-	EQUAL       ( 13, "Equivalence"          ),
-	AND         ( 14, "Boolean AND"          ),
-	XOR         ( 15, "Boolean XOR"          ),
-	OR          ( 16, "Boolean OR"           ),
-	LIST        ( 17, "List Construction"    );
+	NULL        (""                    ),
+	UNARY       ("Unary & Conditional" ),
+	EXPONENT    ("Exponentiation"      ),
+	MULTIPLY    ("Multiplication"      ),
+	ADD         ("Addition"            ),
+	SHIFT       ("Bit Shift"           ),
+	BIT_AND     ("Bitwise AND"         ),
+	BIT_XOR     ("Bitwise XOR"         ),
+	BIT_OR      ("Bitwise OR"          ),
+	STR_CONCAT  ("String Concatenation"),
+	LIST_CONCAT ("List Concatenation"  ),
+	RELATION    ("Relational"          ),
+	IS_A        ("Polymorphic"         ),
+	EQUAL       ("Equivalence"         ),
+	AND         ("Boolean AND"         ),
+	XOR         ("Boolean XOR"         ),
+	OR          ("Boolean OR"          ),
+	LIST        ("List Construction"   );
 	
-	private int number;
 	private String name;
 	
-	private Precedence(int number, String name) {
-		this.number = number;
+	private Precedence(String name) {
 		this.name = name;
-	}
-	
-	public int getNumber() {
-		return number;
 	}
 	
 	public String getName() {
 		return name;
-	}
-	
-	public static Precedence forNumber(int number) {
-		for (Precedence p : values()) {
-			if (p.number == number) return p;
-		}
-		return null;
 	}
 	
 	public static Precedence forName(String name) {
@@ -83,12 +70,6 @@ public enum Precedence {
 	}
 	
 	public static Precedence forString(String s) {
-		try {
-			int i = Integer.parseInt(s);
-			for (Precedence p : values()) {
-				if (p.number == i) return p;
-			}
-		} catch (NumberFormatException e) {}
 		for (Precedence p : values()) {
 			if (p.name.equalsIgnoreCase(s)) return p;
 		}
