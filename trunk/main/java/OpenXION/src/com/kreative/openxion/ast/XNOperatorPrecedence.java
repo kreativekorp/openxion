@@ -43,7 +43,6 @@ public enum XNOperatorPrecedence {
 	IS_A,
 	EQUAL,
 	AND,
-	XOR,
 	OR,
 	LIST;
 }

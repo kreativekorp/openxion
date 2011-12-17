@@ -1259,7 +1259,7 @@
 </operator>
 
 <operator>
-	<name dialects="xn,oxn" modules="oxnb">lt</name>
+	<name dialects="oxn&lt;1.4" modules="oxnb&lt;1.4">lt</name>
 	<precedence>relational</precedence>
 	<description-short>Comparison for strings</description-short>
 	<syntax>
@@ -1282,6 +1282,12 @@
 			For case-sensitive comparison, use the <a>fn:csstrcmp</a> function.
 		</p>
 	</notes>
+	<compatibility>
+		<p>
+			The <me/> operator is no longer available in OpenXION 1.4
+			and later.
+		</p>
+	</compatibility>
 	<see-also>
 		op:&lt;, op:&lt;=, op:le, op:between,
 		fn:decreasing, fn:descending,
@@ -1290,7 +1296,7 @@
 </operator>
 
 <operator>
-	<name dialects="xn,oxn" modules="oxnb">gt</name>
+	<name dialects="oxn&lt;1.4" modules="oxnb&lt;1.4">gt</name>
 	<precedence>relational</precedence>
 	<description-short>Comparison for strings</description-short>
 	<syntax>
@@ -1316,6 +1322,12 @@
 			For case-sensitive comparison, use the <a>fn:csstrcmp</a> function.
 		</p>
 	</notes>
+	<compatibility>
+		<p>
+			The <me/> operator is no longer available in OpenXION 1.4
+			and later.
+		</p>
+	</compatibility>
 	<see-also>
 		op:&gt;, op:&gt;=, op:ge, op:between,
 		fn:increasing, fn:ascending,
@@ -1324,7 +1336,7 @@
 </operator>
 
 <operator>
-	<name dialects="xn,oxn" modules="oxnb">le</name>
+	<name dialects="oxn&lt;1.4" modules="oxnb&lt;1.4">le</name>
 	<precedence>relational</precedence>
 	<description-short>Comparison for strings</description-short>
 	<syntax>
@@ -1347,6 +1359,12 @@
 			For case-sensitive comparison, use the <a>fn:csstrcmp</a> function.
 		</p>
 	</notes>
+	<compatibility>
+		<p>
+			The <me/> operator is no longer available in OpenXION 1.4
+			and later.
+		</p>
+	</compatibility>
 	<see-also>
 		op:&lt;, op:&lt;=, op:lt, op:between,
 		fn:decreasing, fn:descending,
@@ -1355,7 +1373,7 @@
 </operator>
 
 <operator>
-	<name dialects="xn,oxn" modules="oxnb">ge</name>
+	<name dialects="oxn&lt;1.4" modules="oxnb&lt;1.4">ge</name>
 	<precedence>relational</precedence>
 	<description-short>Comparison for strings</description-short>
 	<syntax>
@@ -1378,6 +1396,12 @@
 			For case-sensitive comparison, use the <a>fn:csstrcmp</a> function.
 		</p>
 	</notes>
+	<compatibility>
+		<p>
+			The <me/> operator is no longer available in OpenXION 1.4
+			and later.
+		</p>
+	</compatibility>
 	<see-also>
 		op:&gt;, op:&gt;=, op:gt, op:between,
 		fn:increasing, fn:ascending,
@@ -2272,7 +2296,7 @@
 </operator>
 
 <operator>
-	<name dialects="xn,oxn" modules="oxnb">eq</name>
+	<name dialects="oxn&lt;1.4" modules="oxnb&lt;1.4">eq</name>
 	<precedence>equivalence</precedence>
 	<description-short>Comparison for strings</description-short>
 	<syntax>
@@ -2294,13 +2318,19 @@
 			function or the <a>op:===</a> operator.
 		</p>
 	</notes>
+	<compatibility>
+		<p>
+			The <me/> operator is no longer available in OpenXION 1.4
+			and later.
+		</p>
+	</compatibility>
 	<see-also>
 		op:=, op:===, op:strcmp, op:csstrcmp, fn:equal
 	</see-also>
 </operator>
 
 <operator>
-	<name dialects="xn,oxn" modules="oxnb">ne</name>
+	<name dialects="oxn&lt;1.4" modules="oxnb&lt;1.4">ne</name>
 	<precedence>equivalence</precedence>
 	<description-short>Comparison for strings</description-short>
 	<syntax>
@@ -2322,6 +2352,12 @@
 			function or the <a>op:!==</a> operator.
 		</p>
 	</notes>
+	<compatibility>
+		<p>
+			The <me/> operator is no longer available in OpenXION 1.4
+			and later.
+		</p>
+	</compatibility>
 	<see-also>
 		op:!=, op:!==, op:strcmp, op:csstrcmp, fn:equal
 	</see-also>
@@ -2466,8 +2502,8 @@
 </operator>
 
 <operator>
-	<name dialects="xn,oxn" modules="oxnb">^^^</name>
-	<name dialects="xn,oxn" modules="oxnb">xor</name>
+	<name dialects="oxn&lt;1.4" modules="oxnb&lt;1.4">^^^</name>
+	<name dialects="oxn&lt;1.4" modules="oxnb&lt;1.4">xor</name>
 	<precedence>boolean xor</precedence>
 	<description-short>Logical XOR for boolean values</description-short>
 	<syntax>
@@ -2487,6 +2523,12 @@
 			<a>cn:false</a>, the expression will evaluate to <a>cn:false</a>.
 		</p>
 	</description>
+	<compatibility>
+		<p>
+			The <me/> operator is no longer available in OpenXION 1.4
+			and later.
+		</p>
+	</compatibility>
 	<see-also>
 		op:and, op:&amp;&amp;&amp;, op:or, op:|||
 	</see-also>
@@ -13740,9 +13782,9 @@
 
 <function>
 	<name dialects="oxn" modules="oxns">appFile</name>
-	<name dialects="oxn" modules="oxns">applicationFile</name>
 	<name dialects="oxn" modules="oxns">progFile</name>
-	<name dialects="oxn" modules="oxns">programFile</name>
+	<name dialects="oxn&lt;1.4" modules="oxns&lt;1.4">applicationFile</name>
+	<name dialects="oxn&lt;1.4" modules="oxns&lt;1.4">programFile</name>
 	<syntax>
 		<syn>
 			<opt>the</opt> <me/> of <mv>factor</mv>
@@ -13784,9 +13826,9 @@
 
 <function>
 	<name dialects="oxn" modules="oxns">appPath</name>
-	<name dialects="oxn" modules="oxns">applicationPath</name>
 	<name dialects="oxn" modules="oxns">progPath</name>
-	<name dialects="oxn" modules="oxns">programPath</name>
+	<name dialects="oxn&lt;1.4" modules="oxns&lt;1.4">applicationPath</name>
+	<name dialects="oxn&lt;1.4" modules="oxns&lt;1.4">programPath</name>
 	<syntax>
 		<syn>
 			<opt>the</opt> <me/> of <mv>factor</mv>
@@ -13828,9 +13870,9 @@
 
 <function>
 	<name dialects="oxn" modules="oxns">appOrDocFile</name>
-	<name dialects="oxn" modules="oxns">applicationOrDocumentFile</name>
 	<name dialects="oxn" modules="oxns">progOrDocFile</name>
-	<name dialects="oxn" modules="oxns">programOrDocumentFile</name>
+	<name dialects="oxn&lt;1.4" modules="oxns&lt;1.4">applicationOrDocumentFile</name>
+	<name dialects="oxn&lt;1.4" modules="oxns&lt;1.4">programOrDocumentFile</name>
 	<syntax>
 		<syn>
 			<opt>the</opt> <me/> of <mv>factor</mv>
@@ -13873,11 +13915,11 @@
 </function>
 
 <function>
-	<name dialects="oxn" modules="oxns">appOrDocPath</name>
-	<name dialects="oxn" modules="oxns">applicationOrDocumentPath</name>
-	<name dialects="oxn" modules="oxns">progOrDocPath</name>
-	<name dialects="oxn" modules="oxns">programOrDocumentPath</name>
 	<name dialects="oxn" modules="oxns">path</name>
+	<name dialects="oxn" modules="oxns">appOrDocPath</name>
+	<name dialects="oxn" modules="oxns">progOrDocPath</name>
+	<name dialects="oxn&lt;1.4" modules="oxns&lt;1.4">applicationOrDocumentPath</name>
+	<name dialects="oxn&lt;1.4" modules="oxns&lt;1.4">programOrDocumentPath</name>
 	<syntax>
 		<syn>
 			<opt>the</opt> <me/> of <mv>factor</mv>
@@ -16209,7 +16251,7 @@
 
 <function>
 	<name dialects="oxn" modules="oxns">docFile</name>
-	<name dialects="oxn" modules="oxns">documentFile</name>
+	<name dialects="oxn&lt;1.4" modules="oxns&lt;1.4">documentFile</name>
 	<syntax>
 		<syn>
 			<opt>the</opt> <me/> of <mv>factor</mv>
@@ -16251,7 +16293,7 @@
 
 <function>
 	<name dialects="oxn" modules="oxns">docPath</name>
-	<name dialects="oxn" modules="oxns">documentPath</name>
+	<name dialects="oxn&lt;1.4" modules="oxns&lt;1.4">documentPath</name>
 	<syntax>
 		<syn>
 			<opt>the</opt> <me/> of <mv>factor</mv>
@@ -22047,7 +22089,7 @@
 </function>
 
 <function>
-	<name dialects="xn,oxn" modules="oxns">xor</name>
+	<name dialects="oxn&lt;1.4" modules="oxns&lt;1.4">xor</name>
 	<syntax>
 		<syn>
 			<opt>the</opt> <me/> of <mv>factor</mv>
@@ -22072,6 +22114,12 @@
 			This is the infinite-arity version of the <a>op:xor</a> operator.
 		</p>
 	</notes>
+	<compatibility>
+		<p>
+			The <me/> function is no longer available in OpenXION 1.4
+			and later.
+		</p>
+	</compatibility>
 	<see-also>
 		op:xor, op:^^^, fn:and, fn:or
 	</see-also>

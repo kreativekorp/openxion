@@ -536,30 +536,6 @@ public class XNInterpreter {
 					} catch (NaNComparisonException nce) {
 						return XOMBoolean.FALSE;
 					}
-				case LT_STR:
-					av = evaluateExpression(a).asPrimitive(context);
-					bv = evaluateExpression(b).asPrimitive(context);
-					as = av.toTextString(context);
-					bs = bv.toTextString(context);
-					return (as.compareToIgnoreCase(bs) < 0) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
-				case GT_STR:
-					av = evaluateExpression(a).asPrimitive(context);
-					bv = evaluateExpression(b).asPrimitive(context);
-					as = av.toTextString(context);
-					bs = bv.toTextString(context);
-					return (as.compareToIgnoreCase(bs) > 0) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
-				case LE_STR:
-					av = evaluateExpression(a).asPrimitive(context);
-					bv = evaluateExpression(b).asPrimitive(context);
-					as = av.toTextString(context);
-					bs = bv.toTextString(context);
-					return (as.compareToIgnoreCase(bs) <= 0) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
-				case GE_STR:
-					av = evaluateExpression(a).asPrimitive(context);
-					bv = evaluateExpression(b).asPrimitive(context);
-					as = av.toTextString(context);
-					bs = bv.toTextString(context);
-					return (as.compareToIgnoreCase(bs) >= 0) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
 				case CONTAINS:
 					av = evaluateExpression(a).asPrimitive(context);
 					bv = evaluateExpression(b).asPrimitive(context);
@@ -690,10 +666,6 @@ public class XNInterpreter {
 					av = evaluateExpression(a).asPrimitive(context);
 					bv = evaluateExpression(b).asPrimitive(context);
 					return (av.equals(bv)) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
-				case STRING_EQUAL:
-					av = evaluateExpression(a).asPrimitive(context);
-					bv = evaluateExpression(b).asPrimitive(context);
-					return (av.toTextString(context).equalsIgnoreCase(bv.toTextString(context))) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
 				case NOT_EQUAL:
 					try {
 						av = evaluateExpression(a).asPrimitive(context);
@@ -706,10 +678,6 @@ public class XNInterpreter {
 					av = evaluateExpression(a).asPrimitive(context);
 					bv = evaluateExpression(b).asPrimitive(context);
 					return (!av.equals(bv)) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
-				case NOT_STRING_EQUAL:
-					av = evaluateExpression(a).asPrimitive(context);
-					bv = evaluateExpression(b).asPrimitive(context);
-					return (!av.toTextString(context).equalsIgnoreCase(bv.toTextString(context))) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
 				case CMP_NUM:
 					try {
 						av = evaluateExpression(a).asPrimitive(context);
@@ -740,12 +708,6 @@ public class XNInterpreter {
 					bb = XOMBooleanType.instance.makeInstanceFrom(context, bv).toBoolean();
 					if (!bb) return XOMBoolean.FALSE;
 					return XOMBoolean.TRUE;
-				case XOR:
-					av = evaluateExpression(a).asPrimitive(context);
-					bv = evaluateExpression(b).asPrimitive(context);
-					ab = XOMBooleanType.instance.makeInstanceFrom(context, av).toBoolean();
-					bb = XOMBooleanType.instance.makeInstanceFrom(context, bv).toBoolean();
-					return (ab != bb) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
 				case OR:
 					av = evaluateExpression(a).asPrimitive(context);
 					bv = evaluateExpression(b).asPrimitive(context);

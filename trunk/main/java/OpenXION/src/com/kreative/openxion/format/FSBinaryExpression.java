@@ -416,30 +416,6 @@ public class FSBinaryExpression implements FSExpression {
 			} catch (NaNComparisonException nce) {
 				return XOMBoolean.FALSE;
 			}
-		case LT_STR:
-			av = left.evaluate(ctx, vs);
-			bv = right.evaluate(ctx, vs);
-			as = av.toTextString(ctx);
-			bs = bv.toTextString(ctx);
-			return (as.compareToIgnoreCase(bs) < 0) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
-		case GT_STR:
-			av = left.evaluate(ctx, vs);
-			bv = right.evaluate(ctx, vs);
-			as = av.toTextString(ctx);
-			bs = bv.toTextString(ctx);
-			return (as.compareToIgnoreCase(bs) > 0) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
-		case LE_STR:
-			av = left.evaluate(ctx, vs);
-			bv = right.evaluate(ctx, vs);
-			as = av.toTextString(ctx);
-			bs = bv.toTextString(ctx);
-			return (as.compareToIgnoreCase(bs) <= 0) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
-		case GE_STR:
-			av = left.evaluate(ctx, vs);
-			bv = right.evaluate(ctx, vs);
-			as = av.toTextString(ctx);
-			bs = bv.toTextString(ctx);
-			return (as.compareToIgnoreCase(bs) >= 0) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
 		case CONTAINS:
 			av = left.evaluate(ctx, vs);
 			bv = right.evaluate(ctx, vs);
@@ -570,10 +546,6 @@ public class FSBinaryExpression implements FSExpression {
 			av = left.evaluate(ctx, vs);
 			bv = right.evaluate(ctx, vs);
 			return (av.equals(bv)) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
-		case STRING_EQUAL:
-			av = left.evaluate(ctx, vs);
-			bv = right.evaluate(ctx, vs);
-			return (av.toTextString(ctx).equalsIgnoreCase(bv.toTextString(ctx))) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
 		case NOT_EQUAL:
 			try {
 				av = left.evaluate(ctx, vs);
@@ -586,10 +558,6 @@ public class FSBinaryExpression implements FSExpression {
 			av = left.evaluate(ctx, vs);
 			bv = right.evaluate(ctx, vs);
 			return (!av.equals(bv)) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
-		case NOT_STRING_EQUAL:
-			av = left.evaluate(ctx, vs);
-			bv = right.evaluate(ctx, vs);
-			return (!av.toTextString(ctx).equalsIgnoreCase(bv.toTextString(ctx))) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
 		case CMP_NUM:
 			try {
 				av = left.evaluate(ctx, vs);
@@ -620,12 +588,6 @@ public class FSBinaryExpression implements FSExpression {
 			bb = XOMBooleanType.instance.makeInstanceFrom(ctx, bv).toBoolean();
 			if (!bb) return XOMBoolean.FALSE;
 			return XOMBoolean.TRUE;
-		case XOR:
-			av = left.evaluate(ctx, vs);
-			bv = right.evaluate(ctx, vs);
-			ab = XOMBooleanType.instance.makeInstanceFrom(ctx, av).toBoolean();
-			bb = XOMBooleanType.instance.makeInstanceFrom(ctx, bv).toBoolean();
-			return (ab != bb) ? XOMBoolean.TRUE : XOMBoolean.FALSE;
 		case OR:
 			av = left.evaluate(ctx, vs);
 			bv = right.evaluate(ctx, vs);
