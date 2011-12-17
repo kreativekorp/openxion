@@ -30,6 +30,7 @@
 		<string>beep</string>
 		<string>before</string>
 		<string>begin</string>
+		<string>begins</string>
 		<string>between</string>
 		<string>bigger</string>
 		<string>bitand</string>
@@ -65,6 +66,7 @@
 		<string>element</string>
 		<string>else</string>
 		<string>end</string>
+		<string>ends</string>
 		<string>english</string>
 		<string>eq</string>
 		<string>equal</string>
@@ -170,6 +172,7 @@
 		<string>speak</string>
 		<string>sql</string>
 		<string>start</string>
+		<string>starts</string>
 		<string>static</string>
 		<string>step</string>
 		<string>stop</string>
@@ -226,7 +229,7 @@
 	<key>Language Features</key>
 	<dict>
 		<key>Comment Pattern</key>
-		<string>(--|//|#|\x{2014}|\x{2015})([^\n\r\x{2028}\x{2029}]*)|\x{221E}\x{221E}\x{221E}*([^\x{221E}]+?)\x{221E}\x{221E}\x{221E}*</string>
+		<string>(--|//|#|\x{2014}|\x{2015})([^\n\r\x{2028}\x{2029}]*)|\x{221E}\x{221E}\x{221E}*([^\x{221E}]+?)\x{221E}\x{221E}\x{221E}*|~~~*([^~]+?)~~~*</string>
 		<key>String Pattern</key>
 		<string>&quot;([^&quot;\\\n\r\x{2028}\x{2029}]|\\[^\n\r\x{2028}\x{2029}])*(&quot;)?</string>
 		<key>Function Pattern</key>

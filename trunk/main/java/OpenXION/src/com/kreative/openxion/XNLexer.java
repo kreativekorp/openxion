@@ -193,23 +193,23 @@ public class XNLexer {
 						reader.getLine(), reader.getCol());
 			}
 		}
-		else if (firstChar == '\u221E') {
+		else if (firstChar == '\u221E' || firstChar == '~') {
 			int secondChar = reader.read(); numChars++;
 			if (firstChar == secondChar) {
 				int nextToLastChar = firstChar;
 				int lastChar = secondChar;
 				// loop invariant: [nextToLastChar, lastChar] contain the last two characters read
 				// at this point, we've read [°, °]
-				while (nextToLastChar == '\u221E' && lastChar == '\u221E') {
+				while (nextToLastChar == firstChar && lastChar == firstChar) {
 					nextToLastChar = lastChar; lastChar = reader.read(); numChars++;
 				}
 				// at this point, we're read [°, something else]
-				while ((nextToLastChar >= 0 && nextToLastChar != '\u221E') || (lastChar >= 0 && lastChar != '\u221E')) {
+				while ((nextToLastChar >= 0 && nextToLastChar != firstChar) || (lastChar >= 0 && lastChar != firstChar)) {
 					nextToLastChar = lastChar; lastChar = reader.read(); numChars++;
 				}
 				// at this point, we've read [°, °] or maybe [eof, eof] or even [°, eof]
 				// end loop invariant
-				while (reader.read() == '\u221E') numChars++;
+				while (reader.read() == firstChar) numChars++;
 				char[] cbuf = new char[numChars];
 				reader.reset();
 				reader.read(cbuf);
