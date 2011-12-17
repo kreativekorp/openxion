@@ -221,7 +221,6 @@ public class FSParser {
 		if (s.startsWith("\\\\")) return XNOperator.DIV;
 		if (s.startsWith("\\")) return XNOperator.QUOT;
 		// standard XION operators
-		if (s.startsWith("^^^")) return XNOperator.XOR;
 		if (s.startsWith("^")) return XNOperator.EXPONENT;
 		if (s.startsWith("-")) return unary ? XNOperator.UNARY_SUBTRACT : XNOperator.SUBTRACT;
 		if (s.startsWith("::")) return XNOperator.LIST_APPEND;
@@ -278,7 +277,6 @@ public class FSParser {
 		if (s.startsWith("\\\\")) { pos += 2; return XNOperator.DIV; }
 		if (s.startsWith("\\")) { pos += 1; return XNOperator.QUOT; }
 		// standard XION operators
-		if (s.startsWith("^^^")) { pos += 3; return XNOperator.XOR; }
 		if (s.startsWith("^")) { pos += 1; return XNOperator.EXPONENT; }
 		if (s.startsWith("-")) { pos += 1; return unary ? XNOperator.UNARY_SUBTRACT : XNOperator.SUBTRACT; }
 		if (s.startsWith("::")) { pos += 2; return XNOperator.LIST_APPEND; }
@@ -540,24 +538,12 @@ public class FSParser {
 		return l;
 	}
 	
-	private FSExpression parseExpXor() {
-		FSExpression l = parseExpAnd();
-		skipWhitespace();
-		while (pos < text.length() && text.charAt(pos) != '?' && text.charAt(pos) != '}' && lookOperator(false).precedence() == XNOperatorPrecedence.XOR) {
-			XNOperator o = parseOperator(false);
-			FSExpression r = parseExpAnd();
-			l = new FSBinaryExpression(l, o, r);
-			skipWhitespace();
-		}
-		return l;
-	}
-	
 	private FSExpression parseExpression() {
-		FSExpression l = parseExpXor();
+		FSExpression l = parseExpAnd();
 		skipWhitespace();
 		while (pos < text.length() && text.charAt(pos) != '?' && text.charAt(pos) != '}' && lookOperator(false).precedence() == XNOperatorPrecedence.OR) {
 			XNOperator o = parseOperator(false);
-			FSExpression r = parseExpXor();
+			FSExpression r = parseExpAnd();
 			l = new FSBinaryExpression(l, o, r);
 			skipWhitespace();
 		}

@@ -377,10 +377,6 @@ public class XNStandardModule extends XNModule {
 		functions.put("apppath", f_applicationpath);
 		functions.put("appordocfile", f_applicationordocumentfile);
 		functions.put("appordocpath", f_applicationordocumentpath);
-		functions.put("applicationfile", f_applicationfile);
-		functions.put("applicationpath", f_applicationpath);
-		functions.put("applicationordocumentfile", f_applicationordocumentfile);
-		functions.put("applicationordocumentpath", f_applicationordocumentpath);
 		functions.put("arg",f_arg);
 		functions.put("asc",f_asc);
 		functions.put("ascending",f_asc);
@@ -438,8 +434,6 @@ public class XNStandardModule extends XNModule {
 		functions.put("descending",f_desc);
 		functions.put("docfile", f_documentfile);
 		functions.put("docpath", f_documentpath);
-		functions.put("documentfile", f_documentfile);
-		functions.put("documentpath", f_documentpath);
 		functions.put("equal",f_equal);
 		functions.put("exp",f_exp);
 		functions.put("exp1",f_exp1);
@@ -522,10 +516,6 @@ public class XNStandardModule extends XNModule {
 		functions.put("progpath", f_applicationpath);
 		functions.put("progordocfile", f_applicationordocumentfile);
 		functions.put("progordocpath", f_applicationordocumentpath);
-		functions.put("programfile", f_applicationfile);
-		functions.put("programpath", f_applicationpath);
-		functions.put("programordocumentfile", f_applicationordocumentfile);
-		functions.put("programordocumentpath", f_applicationordocumentpath);
 		functions.put("pstddev",f_pstddev);
 		functions.put("pvariance",f_pvariance);
 		functions.put("radius",f_hypot);
@@ -590,7 +580,6 @@ public class XNStandardModule extends XNModule {
 		functions.put("xcoord",f_xcoord);
 		functions.put("xionname",f_xionname);
 		functions.put("xionversion",f_xionversion);
-		functions.put("xor",f_xor);
 		functions.put("ycoord",f_ycoord);
 		
 		properties.put("username", p_username);
@@ -5346,20 +5335,6 @@ public class XNStandardModule extends XNModule {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			assertEmptyParameter(functionName, parameter);
 			return new XOMString(XNMain.XION_VERSION);
-		}
-	};
-	
-	private static final Function f_xor = new Function() {
-		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
-			if (parameter == null) return XOMBoolean.FALSE;
-			List<? extends XOMVariant> booleans = XOMBooleanType.listInstance.makeInstanceFrom(ctx, parameter).toPrimitiveList(ctx);
-			boolean finalResult = false;
-			for (XOMVariant b : booleans) {
-				if (XOMBooleanType.instance.makeInstanceFrom(ctx, b).toBoolean()) {
-					finalResult = !finalResult;
-				}
-			}
-			return finalResult ? XOMBoolean.TRUE : XOMBoolean.FALSE;
 		}
 	};
 	

@@ -105,7 +105,6 @@ public class XNParser {
 	 * * * * * * * * * * */
 	
 	public XNOperator lookOperator(int idx, boolean unary) {
-		if (lookToken(idx).kind == XNToken.SYMBOL && lookToken(idx).image.equalsIgnoreCase("^") && lookToken(idx+1).kind == XNToken.SYMBOL && lookToken(idx+1).image.equalsIgnoreCase("^") && lookToken(idx+2).kind == XNToken.SYMBOL && lookToken(idx+2).image.equalsIgnoreCase("^")) return XNOperator.XOR;
 		if (lookToken(idx).kind == XNToken.SYMBOL && lookToken(idx).image.equalsIgnoreCase("^")) return XNOperator.EXPONENT;
 		if (lookToken(idx).kind == XNToken.SYMBOL && lookToken(idx).image.equalsIgnoreCase("-")) return unary ? XNOperator.UNARY_SUBTRACT : XNOperator.SUBTRACT;
 		if (lookToken(idx).kind == XNToken.SYMBOL && lookToken(idx).image.equalsIgnoreCase(",")) return XNOperator.LIST;
@@ -184,10 +183,7 @@ public class XNParser {
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("doesn't") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("end") && lookToken(idx+2).kind == XNToken.ID && lookToken(idx+2).image.equalsIgnoreCase("with")) return XNOperator.NOT_ENDS_WITH;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("doesn't") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("equal")) return XNOperator.NOT_EQUAL;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("ends") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("with")) return XNOperator.ENDS_WITH;
-		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("eq")) return XNOperator.STRING_EQUAL;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("equals")) return XNOperator.EQUAL;
-		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("ge")) return XNOperator.GE_STR;
-		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("gt")) return XNOperator.GT_STR;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("instanceof")) return XNOperator.IS_A;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("is") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("not") && lookToken(idx+2).kind == XNToken.ID && lookToken(idx+2).image.equalsIgnoreCase("equal") && lookToken(idx+3).kind == XNToken.ID && lookToken(idx+3).image.equalsIgnoreCase("to")) return XNOperator.NOT_EQUAL;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("is") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("not") && lookToken(idx+2).kind == XNToken.ID && lookToken(idx+2).image.equalsIgnoreCase("exactly")) return XNOperator.NOT_STRICT_EQUAL;
@@ -259,10 +255,7 @@ public class XNParser {
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("isn't") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("within")) return XNOperator.NOT_WITHIN;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("isn't") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("between")) return XNOperator.NOT_BETWEEN;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("isn't")) return XNOperator.NOT_EQUAL;
-		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("le")) return XNOperator.LE_STR;
-		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("lt")) return XNOperator.LT_STR;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("mod")) return XNOperator.MOD;
-		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("ne")) return XNOperator.NOT_STRING_EQUAL;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("not") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("between")) return XNOperator.NOT_BETWEEN;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("not")) return XNOperator.NOT;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("or")) return XNOperator.OR;
@@ -289,12 +282,10 @@ public class XNParser {
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("the") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("referent") && lookToken(idx+2).kind == XNToken.ID && lookToken(idx+2).image.equalsIgnoreCase("in")) return XNOperator.REFERENT_OF;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("the") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("ref") && lookToken(idx+2).kind == XNToken.ID && lookToken(idx+2).image.equalsIgnoreCase("of")) return XNOperator.REFERENT_OF;
 		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("the") && lookToken(idx+1).kind == XNToken.ID && lookToken(idx+1).image.equalsIgnoreCase("ref") && lookToken(idx+2).kind == XNToken.ID && lookToken(idx+2).image.equalsIgnoreCase("in")) return XNOperator.REFERENT_OF;
-		if (lookToken(idx).kind == XNToken.ID && lookToken(idx).image.equalsIgnoreCase("xor")) return XNOperator.XOR;
 		return XNOperator.NULL;
 	}
 	
 	public XNOperator getOperator(boolean unary) {
-		if (lookToken(1).kind == XNToken.SYMBOL && lookToken(1).image.equalsIgnoreCase("^") && lookToken(2).kind == XNToken.SYMBOL && lookToken(2).image.equalsIgnoreCase("^") && lookToken(3).kind == XNToken.SYMBOL && lookToken(3).image.equalsIgnoreCase("^")) { consumeTokens(3); return XNOperator.XOR; }
 		if (lookToken(1).kind == XNToken.SYMBOL && lookToken(1).image.equalsIgnoreCase("^")) { consumeTokens(1); return XNOperator.EXPONENT; }
 		if (lookToken(1).kind == XNToken.SYMBOL && lookToken(1).image.equalsIgnoreCase("-")) { consumeTokens(1); return unary ? XNOperator.UNARY_SUBTRACT : XNOperator.SUBTRACT; }
 		if (lookToken(1).kind == XNToken.SYMBOL && lookToken(1).image.equalsIgnoreCase(",")) { consumeTokens(1); return XNOperator.LIST; }
@@ -373,10 +364,7 @@ public class XNParser {
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("doesn't") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("end") && lookToken(3).kind == XNToken.ID && lookToken(3).image.equalsIgnoreCase("with")) { consumeTokens(3); return XNOperator.NOT_ENDS_WITH; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("doesn't") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("equal")) { consumeTokens(2); return XNOperator.NOT_EQUAL; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("ends") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("with")) { consumeTokens(2); return XNOperator.ENDS_WITH; }
-		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("eq")) { consumeTokens(1); return XNOperator.STRING_EQUAL; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("equals")) { consumeTokens(1); return XNOperator.EQUAL; }
-		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("ge")) { consumeTokens(1); return XNOperator.GE_STR; }
-		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("gt")) { consumeTokens(1); return XNOperator.GT_STR; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("instanceof")) { consumeTokens(1); return XNOperator.IS_A; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("is") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("not") && lookToken(3).kind == XNToken.ID && lookToken(3).image.equalsIgnoreCase("equal") && lookToken(4).kind == XNToken.ID && lookToken(4).image.equalsIgnoreCase("to")) { consumeTokens(4); return XNOperator.NOT_EQUAL; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("is") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("not") && lookToken(3).kind == XNToken.ID && lookToken(3).image.equalsIgnoreCase("exactly")) { consumeTokens(3); return XNOperator.NOT_STRICT_EQUAL; }
@@ -448,10 +436,7 @@ public class XNParser {
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("isn't") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("within")) { consumeTokens(2); return XNOperator.NOT_WITHIN; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("isn't") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("between")) { consumeTokens(2); return XNOperator.NOT_BETWEEN; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("isn't")) { consumeTokens(1); return XNOperator.NOT_EQUAL; }
-		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("le")) { consumeTokens(1); return XNOperator.LE_STR; }
-		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("lt")) { consumeTokens(1); return XNOperator.LT_STR; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("mod")) { consumeTokens(1); return XNOperator.MOD; }
-		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("ne")) { consumeTokens(1); return XNOperator.NOT_STRING_EQUAL; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("not") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("between")) { consumeTokens(2); return XNOperator.NOT_BETWEEN; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("not")) { consumeTokens(1); return XNOperator.NOT; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("or")) { consumeTokens(1); return XNOperator.OR; }
@@ -478,7 +463,6 @@ public class XNParser {
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("the") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("referent") && lookToken(3).kind == XNToken.ID && lookToken(3).image.equalsIgnoreCase("in")) { consumeTokens(3); return XNOperator.REFERENT_OF; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("the") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("ref") && lookToken(3).kind == XNToken.ID && lookToken(3).image.equalsIgnoreCase("of")) { consumeTokens(3); return XNOperator.REFERENT_OF; }
 		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("the") && lookToken(2).kind == XNToken.ID && lookToken(2).image.equalsIgnoreCase("ref") && lookToken(3).kind == XNToken.ID && lookToken(3).image.equalsIgnoreCase("in")) { consumeTokens(3); return XNOperator.REFERENT_OF; }
-		if (lookToken(1).kind == XNToken.ID && lookToken(1).image.equalsIgnoreCase("xor")) { consumeTokens(1); return XNOperator.XOR; }
 		throw new XNParseError("operator", lookToken(1));
 	}
 	
@@ -720,25 +704,15 @@ public class XNParser {
 		return l;
 	}
 	
-	private XNExpression getExpXor(Collection<String> keywords) {
-		XNExpression l = getExpAnd(keywords);
-		while (lookOperator(1, false).precedence() == XNOperatorPrecedence.XOR && isNotKeyword(1, keywords)) {
-			XNOperator o = getOperator(false);
-			XNExpression r = getExpAnd(keywords);
-			l = new XNBinaryExpression(l,o,r);
-		}
-		return l;
-	}
-	
 	public boolean lookSingleExpression(int idx, Collection<String> keywords) {
 		return lookFactor(idx, keywords);
 	}
 	
 	public XNExpression getSingleExpression(Collection<String> keywords) {
-		XNExpression l = getExpXor(keywords);
+		XNExpression l = getExpAnd(keywords);
 		while (lookOperator(1, false).precedence() == XNOperatorPrecedence.OR && isNotKeyword(1, keywords)) {
 			XNOperator o = getOperator(false);
-			XNExpression r = getExpXor(keywords);
+			XNExpression r = getExpAnd(keywords);
 			l = new XNBinaryExpression(l,o,r);
 		}
 		return l;
