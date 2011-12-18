@@ -8,12 +8,12 @@ Source code and compiled binaries of version 0.9 of OpenXION are available at th
 
 Each release of OpenXION also includes XIONDoc, the documentation generator tool. The version number of XIONDoc changes only when XIONDoc has actually changed, so multiple OpenXION releases may include the same version of XIONDoc.
 
-|| *OpenXION* || *XIONDoc* || *Release Date* || *Release Notes* || *General Binary* || *Windows Binary* || Documentation || *Source* ||
-|| 1.0 || 1.0 || Jun 3, 2010 || || [http://openxion.googlecode.com/files/OpenXION-1.0.jar OpenXION-1.0.jar] || || [http://http://www.openxion.org/docs/openxion/1.0/manual/ XIONDocs] || r3 ||
-|| 1.1 || 1.1 || Oct 25, 2010 || || [http://openxion.googlecode.com/files/OpenXION-1.1-dist.zip OpenXION-1.1-dist.zip] || || [http://http://www.openxion.org/docs/openxion/1.1/manual/ XIONDocs] || r34 ||
-|| 1.2 || 1.2 || Jan 19, 2011 || [ReleaseNotes12] || [http://openxion.googlecode.com/files/OpenXION-1.2-dist.zip OpenXION-1.2-dist.zip] || [http://openxion.googlecode.com/files/OpenXION-1.2-distwin.zip OpenXION-1.2-distwin.zip] || [http://http://www.openxion.org/docs/openxion/1.2/manual/ XIONDocs] || r99 ||
-|| 1.3 || 1.2 || Apr 26, 2011 || [ReleaseNotes13] || [http://openxion.googlecode.com/files/OpenXION-1.3-dist.zip OpenXION-1.3-dist.zip] || [http://openxion.googlecode.com/files/OpenXION-1.3-distwin.zip OpenXION-1.3-distwin.zip] || [http://http://www.openxion.org/docs/openxion/1.3/manual/ XIONDocs] || r156 ||
-|| 1.4 || 1.3 || Dec 17, 2011 || [ReleaseNotes14] || [http://openxion.googlecode.com/files/OpenXION-1.4-dist.zip OpenXION-1.4-dist.zip] || [http://openxion.googlecode.com/files/OpenXION-1.4-distwin.zip OpenXION-1.4-distwin.zip] || [http://http://www.openxion.org/docs/openxion/1.4/manual/ XIONDocs] || r237 ||
+|| *OpenXION* || *XIONDoc* || *Release Date* || *Release Notes* || *General Binary* || *Windows Binary* || *Documentation* || *Source* ||
+|| 1.0 || 1.0 || Jun 3, 2010 || || [http://openxion.googlecode.com/files/OpenXION-1.0.jar OpenXION-1.0.jar] || || [http://www.openxion.org/docs/openxion/1.0/manual/ XIONDocs] || r3 ||
+|| 1.1 || 1.1 || Oct 25, 2010 || || [http://openxion.googlecode.com/files/OpenXION-1.1-dist.zip OpenXION-1.1-dist.zip] || || [http://www.openxion.org/docs/openxion/1.1/manual/ XIONDocs] || r34 ||
+|| 1.2 || 1.2 || Jan 19, 2011 || [ReleaseNotes12] || [http://openxion.googlecode.com/files/OpenXION-1.2-dist.zip OpenXION-1.2-dist.zip] || [http://openxion.googlecode.com/files/OpenXION-1.2-distwin.zip OpenXION-1.2-distwin.zip] || [http://www.openxion.org/docs/openxion/1.2/manual/ XIONDocs] || r99 ||
+|| 1.3 || 1.2 || Apr 26, 2011 || [ReleaseNotes13] || [http://openxion.googlecode.com/files/OpenXION-1.3-dist.zip OpenXION-1.3-dist.zip] || [http://openxion.googlecode.com/files/OpenXION-1.3-distwin.zip OpenXION-1.3-distwin.zip] || [http://www.openxion.org/docs/openxion/1.3/manual/ XIONDocs] || r156 ||
+|| 1.4 || 1.3 || Dec 17, 2011 || [ReleaseNotes14] || [http://openxion.googlecode.com/files/OpenXION-1.4-dist.zip OpenXION-1.4-dist.zip] || [http://openxion.googlecode.com/files/OpenXION-1.4-distwin.zip OpenXION-1.4-distwin.zip] || [http://www.openxion.org/docs/openxion/1.4/manual/ XIONDocs] || r237 ||
 
 = Bleeding Edge =
 
