@@ -1,0 +1,52 @@
+#summary Release notes from version 1.4 of OpenXION.
+
+= OpenXION 1.4 is out! =
+
+OpenXION 1.4 is the latest release version of OpenXION, the reference
+implementation of XION, the open scripting language based on !HyperTalk.
+Version 1.4 introduces some new features and fixes major issues with lists,
+dictionaries, and chunk types.
+
+= Format =
+
+Use the `format` function to produce formatted strings using placeholders
+rather than string concatenation. Use the `'` function to make formatted
+strings easily localizable.
+
+= Map, Filter, and Reduce =
+
+Use the `map`, `filter`, and `reduce` functions to quickly manipulate lists.
+Given a list and a function name, `map` will apply the function to each element
+in the list, `filter` will return only elements where the function returns true,
+and `reduce` will collapse all the elements into a single value using the function
+to combine two elements.
+
+= Use OpenXION as a CGI Backend for Web Apps =
+
+Pass the `-W` option to the OpenXION interpreter, and the interpreter will
+import all CGI-related environment variables into the OpenXION environment.
+It will also automatically parse GET and POST query strings into dictionaries.
+
+= New Documentation Generator =
+
+XIONDoc 1.3 is a complete rewrite of XIONDoc that uses a real XML parser to
+read documentation files. The new XIONDoc now produces a page for each term
+individually, greatly reducing loading times. The new documentation includes
+new 'at a Glance' pages for data types and properties as well as keywords,
+commands, and functions.
+
+= Bug Fixes =
+
+  * Putting into a list chunk now puts the thing itself, rather than the thing as a list.
+  * The `::` operator now properly appends to a list, rather than concatenating lists.
+  * Checking if `there is a` chunk (character, word, element, byte, etc.) now works as you'd expect.
+  * No longer crashes when attempting to access a dictionary entry that doesn't exist.
+  * No longer crashes when setting the `mathProcessor` property.
+  * No longer crashes when passing infinity or NaN to a function expecting an integer.
+
+----
+
+= Previous Release Notes =
+
+[ReleaseNotes13]
+[ReleaseNotes12]
