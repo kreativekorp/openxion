@@ -1,0 +1,142 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background: white;
+	margin: 18pt 18pt 36pt;
+}
+
+h1 {
+	font-family: Palatino, Times, Times New Roman, serif;
+	font-size: 18pt;
+	font-weight: normal;
+	padding-bottom: 2px;
+	border-bottom: solid 1px black;
+	width: 100%;
+	margin-top: 18pt;
+	margin-bottom: 16pt;
+}
+
+h2 {
+	font-family: Palatino, Times, Times New Roman, serif;
+	font-size: 13pt;
+	font-weight: bold;
+	padding-bottom: 2px;
+	border-bottom: solid 1px black;
+	width: 100%;
+	margin-top: 32pt;
+	margin-bottom: 32pt;
+}
+
+h3 {
+	font-family: Palatino, Times, Times New Roman, serif;
+	font-size: 9pt;
+	font-weight: bold;
+	text-transform: uppercase;
+	margin-top: 24pt;
+	margin-bottom: 6pt;
+}
+
+p, ul, ol, table {
+	font-family: Palatino, Times, Times New Roman, serif;
+	font-size: 11pt;
+	line-height: 13pt;
+	margin-top: 6pt;
+	margin-bottom: 10pt;
+}
+
+pre {
+	font-family: Courier, Courier New, monospace;
+	font-size: 10pt;
+	line-height: 12pt;
+	margin-top: 6pt;
+	margin-bottom: 10pt;
+}
+
+code {
+	font-family: Courier, Courier New, monospace;
+	font-size: 10pt;
+	line-height: 12pt;
+}
+
+code b, code strong, code i, code em {
+	font-family: Palatino, Times, Times New Roman, serif;
+	font-size: 11pt;
+	line-height: 13pt;
+}
+
+th {
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 10pt;
+	line-height: 12pt;
+	font-weight: bold;
+	text-align: left;
+	padding: 2pt 18pt 2pt 0pt;
+}
+
+td {
+	text-align: left;
+	padding: 2pt 18pt 2pt 0pt;
+}
+
+li {
+	margin-left: 18pt;
+	padding: 2pt 0pt;
+}
+
+.indent0 { margin-left: 72pt; }
+.indent1 { margin-left: 108pt; }
+.indent2 { margin-left: 144pt; }
+.indent3 { margin-left: 180pt; }
+.indent4 { margin-left: 216pt; }
+.indent5 { margin-left: 252pt; }
+
+.syntax code, .syntax em {
+	margin-right: 3pt;
+}
+
+.syntax .metasymbol {
+	font-family: Courier, Courier New, monospace;
+	font-size: 14pt;
+	font-weight: bold;
+	margin-right: 3pt;
+}
+
+ul.nobullet li, ol.nobullet li {
+	margin-left: 0pt;
+	list-style-type: none;
+}
+
+table.linedrowgroups {
+	border-collapse: collapse;
+}
+
+table.linedrowgroups tbody {
+	border-top: solid 1px #CCCCCC;
+}
+
+table.linedrowgroups tbody tr:first-child td {
+	padding-top: 4pt;
+}
+
+table.linedrowgroups tbody tr:last-child td {
+	padding-bottom: 4pt;
+}
+
+p.indexnav {
+	margin-left: 0;
+	padding: 8pt;
+	font-size: 15pt;
+	line-height: 18pt;
+	background: #DDDDFF;
+	text-align: center;
+}
+
+p.indexnav a:link,
+p.indexnav a:hover,
+p.indexnav a:visited,
+p.indexnav a:active {
+	text-decoration: none;
+}

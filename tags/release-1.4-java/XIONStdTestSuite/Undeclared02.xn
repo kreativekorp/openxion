@@ -1,0 +1,53 @@
+put a
+put b
+put c
+put d
+put "Hi" before a
+put "Hi" after b
+put "Hi" before c
+put "Hi" after d
+put a
+put b
+put c
+put d
+
+put w
+put x
+put y
+put z
+add 7 to w
+subtract 7 from x
+multiply y by 7
+divide z by 7
+put w
+put x
+put y
+put z
+
+put i
+put j
+put k
+try
+	put "Hello" before "i"
+	put i
+catch e
+	put e
+end try
+try
+	put "Hello" after "j"
+	put j
+catch e
+	put e
+end try
+try
+	put "Hello" into "k"
+	put k
+catch e
+	put e
+end try
+put "Hello" before i
+put i
+put "Hello" after j
+put j
+put "Hello" into k
+put k

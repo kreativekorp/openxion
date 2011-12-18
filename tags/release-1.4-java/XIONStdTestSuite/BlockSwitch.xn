@@ -1,0 +1,42 @@
+SWITCH 2+2=4
+casE trUe
+	put "This is mathematically correct"
+cAse fALse
+	put "Something is very wrong"
+deFAult
+	put "WTF?"
+end SWiTch
+
+ LoCal MYstrinG iS "%"
+
+SwITch myString
+CASE "a","b","c"
+		Put "a letter"
+	caSE "1","2","3"
+Put  "a number"
+		deFAULT
+	Put "something else"
+ ENd switCH
+
+switch EMPTY
+defauLT
+	Put "blah!"
+ enD switcH
+
+
+lOCAL x is TRue
+LocaL Y is 7
+lOCAl Z IS 9
+local a is 8
+
+switch x
+case y
+	Put ""
+case z
+	Put 2
+case a
+	Put 3
+case 2+2=4, 3+3=9
+	Put 18
+END SWITCH
+

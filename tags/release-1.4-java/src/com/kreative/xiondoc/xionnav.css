@@ -1,0 +1,53 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background: white;
+	margin: 9pt;
+}
+
+h1 {
+	font-family: Palatino, Times, Times New Roman, serif;
+	font-size: 14pt;
+	font-weight: bold;
+	margin-top: 9pt;
+	margin-bottom: 9pt;
+	white-space: nowrap;
+}
+
+ul {
+	font-family: Palatino, Times, Times New Roman, serif;
+	font-size: 11pt;
+	margin-top: 9pt;
+	margin-bottom: 9pt;
+}
+
+code {
+	font-family: Courier, Courier New, monospace;
+	font-size: 10pt;
+}
+
+li {
+	list-style-type: none;
+	white-space: nowrap;
+}
+
+li .expl {
+	font-size: 9pt;
+	font-style: italic;
+	color: #FFFFFF;
+	visibility: hidden;
+}
+
+li:hover .expl {
+	font-size: 9pt;
+	font-style: italic;
+	color: #555555;
+	visibility: visible;
+}
+
+li .dversion {
+	font-size: 9pt;
+}

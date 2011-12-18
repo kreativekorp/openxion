@@ -1,0 +1,23 @@
+-- Author: Jim Latham
+
+-- Test of list processing
+local mylists as lists
+local mylist as list
+-- following 2 statements should show 0 elements
+put number of elements in mylist 
+put number of elements in mylists
+-- following 2 statements should show empty list(s)
+put "mylist: " & mylist 
+put "mylists: " & mylists
+--
+put "word01" into element 1 of mylist
+put "1" into element 2 of mylist
+put mylist into element 1 of mylists
+put "mylist: " & mylist & " Elements in mylist=" & number of elements in mylist
+put "mylists: " & mylists & " Elements in mylists=" & number of elements in mylists
+--
+put "word02" into element 1 of mylist
+put "2" into element 2 of mylist
+put mylist into element 2 of mylists
+put "mylist: " & mylist & " Elements in mylist=" & number of elements in mylist
+put "mylists: " & mylists & " Elements in mylists=" & number of elements in mylists

@@ -1,0 +1,15 @@
+local x as dictionary
+put "Hello" into entry 1 of x
+put "Goodbye" into entry "A" of x
+
+put there is an entry 1 of x
+put there is an entry "A" of x
+put there is an entry 2 of x
+put there is an entry "B" of x
+
+put entry 1 of x
+put entry "A" of x
+put entry 2 of x
+put entry "B" of x
+
+put "--"

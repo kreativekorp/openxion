@@ -1,0 +1,15 @@
+put empty into a
+put "a b c" into item
+put 1 into char
+put 2 into word
+if true then repeat with word char of item = char char to word of word char of char to word char to char of char char of word
+	put a&&"How much word could a word char char if a word char could char word?
+end repeat else beep
+
+if false then if false then put "a" else put "b" else put "c"
+
+if false then repeat 1
+put "reached then block"
+end repeat else repeat 1
+put "reached else block"
+end repeat
