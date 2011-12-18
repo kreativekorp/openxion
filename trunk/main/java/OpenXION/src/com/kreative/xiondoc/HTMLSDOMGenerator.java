@@ -596,21 +596,30 @@ public class HTMLSDOMGenerator {
 	}
 	
 	private static String fnencode(String in) {
-		CharacterIterator it = new StringCharacterIterator(in);
-		StringBuffer out = new StringBuffer();
-		boolean seenLetter = false;
+		CharacterIterator it;
+		
+		boolean hasLetter = false;
+		it = new StringCharacterIterator(in.toLowerCase());
 		for (char ch = it.first(); ch != CharacterIterator.DONE; ch = it.next()) {
-			if (Character.isLetterOrDigit(ch)) {
+			if (ch > 32 && ch < 127 && Character.isLetterOrDigit(ch)) {
+				hasLetter = true;
+				break;
+			}
+		}
+		
+		StringBuffer out = new StringBuffer();
+		it = new StringCharacterIterator(in.toLowerCase());
+		for (char ch = it.first(); ch != CharacterIterator.DONE; ch = it.next()) {
+			if (ch > 32 && ch < 127 && Character.isLetterOrDigit(ch)) {
 				out.append(ch);
-				seenLetter = true;
-			} else if ((ch == ' ' || ch == '-' || ch == '_' || ch == '.') && seenLetter) {
-				out.append(ch);
+			} else if (hasLetter && (ch == ' ' || ch == '-' || ch == '_' || ch == '.' || ch == '\'')) {
+				out.append('_');
 			} else {
 				String h = "0000" + Integer.toHexString((int)ch).toUpperCase();
 				out.append('$');
 				out.append(h.substring(h.length() - 4));
 			}
 		}
-		return out.toString().trim().replaceAll("\\s+", "_");
+		return out.toString();
 	}
 }

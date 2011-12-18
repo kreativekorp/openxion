@@ -137,13 +137,15 @@ public class TermCollection implements Serializable {
 				Term t = it.next();
 				boolean keep = false;
 				for (TermName n : t.names()) {
-					for (DialectSpec d : n.getDialects()) {
-						if (d.getVersions().contains(dialectVersion)) {
-							keep = true;
-							break;
+					if (termName == null || termName.equalsIgnoreCase(n.getName())) {
+						for (DialectSpec d : n.getDialects()) {
+							if (d.matches(dialectName, dialectVersion)) {
+								keep = true;
+								break;
+							}
 						}
+						if (keep) break;
 					}
-					if (keep) break;
 				}
 				if (!keep) {
 					it.remove();
