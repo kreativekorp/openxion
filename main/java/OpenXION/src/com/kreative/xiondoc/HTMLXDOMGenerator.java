@@ -80,31 +80,32 @@ public class HTMLXDOMGenerator {
 		for (Dialect d : ds.dialects()) {
 			for (VersionNumber v : d.versions()) {
 				if (out != null) out.println("Writing " + d.type().toString().toLowerCase() + " " + d.name() + " " + v.toString() + "...");
-				write(d, v);
+				write(d, v, v);
 			}
 			if (out != null) out.println("Writing " + d.type().toString().toLowerCase() + " " + d.name() + " (all versions)...");
-			write(d, null);
+			write(d, null, d.versions().last());
 		}
 		if (out != null) out.println("Writing all dialects...");
-		write(null, null);
+		write(null, null, null);
 	}
 	
-	private void write(Dialect dialect, VersionNumber dialectVersion) throws IOException {
+	private void write(
+			Dialect dialect,
+			VersionNumber navigationVersion,
+			VersionNumber contentVersion
+	) throws IOException {
 		String dialectName;
-		VersionNumber realVersion;
 		if (dialect == null) {
 			dialectName = null;
-			realVersion = null;
 			sdomg.unsetDialect();
 		} else {
 			dialectName = dialect.name();
-			realVersion = ((dialectVersion == null) ? dialect.versions().last() : dialectVersion);
-			sdomg.setDialect(dialectName, dialect.getTitle(), realVersion);
+			sdomg.setDialect(dialectName, dialect.getTitle(), contentVersion);
 		}
 		List<TermSpec> allTerms = new Vector<TermSpec>();
-		for (Term term : ds.terms().getTerms(null, null, dialectName, realVersion)) {
+		for (Term term : ds.terms().getTerms(null, null, dialectName, contentVersion)) {
 			for (TermName termName : term.names()) {
-				if (dialect == null || termName.getDialects().matches(dialectName, realVersion)) {
+				if (dialect == null || termName.getDialects().matches(dialectName, contentVersion)) {
 					allTerms.add(new TermSpec(term.type(), termName.getName()));
 				}
 			}
@@ -121,9 +122,9 @@ public class HTMLXDOMGenerator {
 		});
 		for (TermType termType : TermType.values()) {
 			SortedMap<TermSpec, Term> allTermsOfType = new TreeMap<TermSpec, Term>();
-			for (Term term : ds.terms().getTerms(termType, null, dialectName, realVersion)) {
+			for (Term term : ds.terms().getTerms(termType, null, dialectName, contentVersion)) {
 				for (TermName termName : term.names()) {
-					if (dialect == null || termName.getDialects().matches(dialectName, realVersion)) {
+					if (dialect == null || termName.getDialects().matches(dialectName, contentVersion)) {
 						allTermsOfType.put(new TermSpec(termType, termName.getName()), term);
 					}
 				}
@@ -131,52 +132,57 @@ public class HTMLXDOMGenerator {
 			for (Map.Entry<TermSpec, Term> e : allTermsOfType.entrySet()) {
 				sdomg.setTerm(e.getKey().getType(), e.getKey().getName());
 				writeVocabularyItem(
-						dialect, dialectVersion, termType,
-						e.getKey().getName(), e.getValue(),
+						dialect, navigationVersion, contentVersion,
+						termType, e.getKey().getName(), e.getValue(),
 						allTerms, allTermsOfType
 				);
 			}
 			sdomg.unsetTerm();
-			writeChapter(dialect, dialectVersion, termType, allTermsOfType);
-			writeIndex(dialect, dialectVersion, termType, allTermsOfType);
+			writeChapter(dialect, navigationVersion, termType, allTermsOfType);
+			writeIndex(dialect, navigationVersion, termType, allTermsOfType);
 		}
-		writeAllIndex(dialect, dialectVersion, allTerms);
-		writeSuperIndex(dialect, dialectVersion, allTerms);
-		writeColors(dialect, dialectVersion);
-		writeOperators(dialect, dialectVersion);
-		writeConstants(dialect, dialectVersion);
-		writeSynonyms(dialect, dialectVersion);
+		writeAllIndex(dialect, navigationVersion, allTerms);
+		writeSuperIndex(dialect, navigationVersion, allTerms);
+		writeColors(dialect, navigationVersion, contentVersion);
+		writeOperators(dialect, navigationVersion, contentVersion);
+		writeConstants(dialect, navigationVersion, contentVersion);
+		writeSynonyms(dialect, navigationVersion, contentVersion);
 		List<Article> articles = ((dialect == null) ? ds.articles() : dialect.articles());
 		for (Article article : articles) {
-			writeArticle(dialect, dialectVersion, article);
+			writeArticle(dialect, navigationVersion, article);
 		}
-		writeVocabTypeIndex(dialect, dialectVersion, articles);
-		writeDialectIndex(dialect, dialectVersion);
-		writeIntro(dialect, dialectVersion);
-		writeMainCSS(dialect, dialectVersion);
-		writeNavCSS(dialect, dialectVersion);
-		writeFrameset(dialect, dialectVersion);
+		writeVocabTypeIndex(dialect, navigationVersion, contentVersion, articles);
+		writeDialectIndex(dialect, navigationVersion);
+		writeIntro(dialect, navigationVersion);
+		writeMainCSS(dialect, navigationVersion);
+		writeNavCSS(dialect, navigationVersion);
+		writeFrameset(dialect, navigationVersion);
 	}
 	
 	private void writeVocabularyItem(
-		Dialect dialect, VersionNumber dialectVersion,
-		TermType termType, String termName, Term term,
-		List<TermSpec> allTerms, SortedMap<TermSpec, Term> allTermsOfType
+			Dialect dialect,
+			VersionNumber navigationVersion,
+			VersionNumber contentVersion,
+			TermType termType,
+			String termName,
+			Term term,
+			List<TermSpec> allTerms,
+			SortedMap<TermSpec, Term> allTermsOfType
 	) throws IOException {
 		sdomg.setURLPrefix("../");
-		PrintWriter out = openFile(dialect, dialectVersion, termType, termName);
+		PrintWriter out = openFile(dialect, navigationVersion, termType, termName);
 		out.println("<html>");
 		out.println("<head>");
 		if (dialect == null) {
 			out.println("<title>XION " + htmlencode(termType.getPluralTitleCase()) + " - " + htmlencode(termName) + "</title>");
-		} else if (dialectVersion == null) {
+		} else if (navigationVersion == null) {
 			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(termType.getPluralTitleCase()) + " - " + htmlencode(termName) + "</title>");
 		} else {
-			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + " " + htmlencode(termType.getPluralTitleCase()) + " - " + htmlencode(termName) + "</title>");
+			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(navigationVersion.toString()) + " " + htmlencode(termType.getPluralTitleCase()) + " - " + htmlencode(termName) + "</title>");
 		}
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
-		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", "+htmlencode(termType.getSingular())+", "+htmlencode(termType.getPlural())+", "+htmlencode(termName)+"\">");
+		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, navigationVersion)+", "+htmlencode(termType.getSingular())+", "+htmlencode(termType.getPlural())+", "+htmlencode(termName)+"\">");
 		out.println("<meta name=\"description\" content=\"This page describes the "+htmlencode(termName)+" "+htmlencode(termType.getSingular())+".\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"../xiondoc.css\">");
 		out.println("</head>");
@@ -231,7 +237,7 @@ public class HTMLXDOMGenerator {
 				TermSpec termSpec = termSpecIterator.next();
 				if (ds.terms().getTerms(
 						termSpec.getType(), termSpec.getName(),
-						(dialect == null ? null : dialect.name()), dialectVersion
+						(dialect == null ? null : dialect.name()), contentVersion
 				).isEmpty()) {
 					termSpecIterator.remove();
 				}
@@ -243,7 +249,7 @@ public class HTMLXDOMGenerator {
 				for (TermSpec termSpec : termSpecs) {
 					if (first) first = false;
 					else out.print(", ");
-					out.print("<code><a href=\"../" + htmlencode(fnencode(termSpec.getType().getCode()) + "/" + fnencode(termSpec.getName())) + "\">" + htmlencode(termSpec.getName()) + "</a></code>");
+					out.print("<code><a href=\"../" + htmlencode(fnencode(termSpec.getType().getCode()) + "/" + fnencode(termSpec.getName())) + ".html\">" + htmlencode(termSpec.getName()) + "</a></code>");
 				}
 				out.println("</p>");
 			}
@@ -288,15 +294,15 @@ public class HTMLXDOMGenerator {
 			out.println("<h3>Compatibility</h3>");
 			out.println(sdomg.generateSectionHTML(term.getCompatibility()));
 		}
-		if (term.hasSynonyms(((dialect == null) ? null : dialect.name()), dialectVersion)) {
+		if (term.hasSynonyms(((dialect == null) ? null : dialect.name()), contentVersion)) {
 			List<TermSpec> termSpecs = new Vector<TermSpec>();
-			termSpecs.addAll(term.getSynonyms(((dialect == null) ? null : dialect.name()), dialectVersion, termName));
+			termSpecs.addAll(term.getSynonyms(((dialect == null) ? null : dialect.name()), contentVersion, termName));
 			Iterator<TermSpec> termSpecIterator = termSpecs.iterator();
 			while (termSpecIterator.hasNext()) {
 				TermSpec termSpec = termSpecIterator.next();
 				if (ds.terms().getTerms(
 						termSpec.getType(), termSpec.getName(),
-						(dialect == null ? null : dialect.name()), dialectVersion
+						(dialect == null ? null : dialect.name()), contentVersion
 				).isEmpty()) {
 					termSpecIterator.remove();
 				}
@@ -325,7 +331,7 @@ public class HTMLXDOMGenerator {
 				TermSpec termSpec = termSpecIterator.next();
 				if (ds.terms().getTerms(
 						termSpec.getType(), termSpec.getName(),
-						(dialect == null ? null : dialect.name()), dialectVersion
+						(dialect == null ? null : dialect.name()), contentVersion
 				).isEmpty()) {
 					termSpecIterator.remove();
 				}
@@ -349,22 +355,24 @@ public class HTMLXDOMGenerator {
 	}
 	
 	private void writeChapter(
-		Dialect dialect, VersionNumber dialectVersion,
-		TermType termType, SortedMap<TermSpec, Term> allTermsOfType
+			Dialect dialect,
+			VersionNumber navigationVersion,
+			TermType termType,
+			SortedMap<TermSpec, Term> allTermsOfType
 	) throws IOException {
-		PrintWriter out = openFile(dialect, dialectVersion, termType, "index");
+		PrintWriter out = openFile(dialect, navigationVersion, termType, "index");
 		out.println("<html>");
 		out.println("<head>");
 		if (dialect == null) {
 			out.println("<title>XION " + htmlencode(termType.getPluralTitleCase()) + "</title>");
-		} else if (dialectVersion == null) {
+		} else if (navigationVersion == null) {
 			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(termType.getPluralTitleCase()) + "</title>");
 		} else {
-			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + " " + htmlencode(termType.getPluralTitleCase()) + "</title>");
+			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(navigationVersion.toString()) + " " + htmlencode(termType.getPluralTitleCase()) + "</title>");
 		}
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
-		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", "+htmlencode(termType.getSingular())+", "+htmlencode(termType.getPlural())+", "+htmlencode(termType.getSingular())+" descriptions\">");
+		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, navigationVersion)+", "+htmlencode(termType.getSingular())+", "+htmlencode(termType.getPlural())+", "+htmlencode(termType.getSingular())+" descriptions\">");
 		out.println("<meta name=\"description\" content=\"This page describes the "+htmlencode(termType.getPlural())+" supported by "+((dialect == null) ? "all dialects, modules, and libraries in this documentation set" : htmlencode(dialect.getTitle()))+".\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"../xiondoc.css\">");
 		out.println("</head>");
@@ -382,22 +390,24 @@ public class HTMLXDOMGenerator {
 	}
 	
 	private void writeIndex(
-		Dialect dialect, VersionNumber dialectVersion,
-		TermType termType, SortedMap<TermSpec, Term> allTermsOfType
+			Dialect dialect,
+			VersionNumber navigationVersion,
+			TermType termType,
+			SortedMap<TermSpec, Term> allTermsOfType
 	) throws IOException {
-		PrintWriter out = openFile(dialect, dialectVersion, termType.getCode()+"-index.html");
+		PrintWriter out = openFile(dialect, navigationVersion, termType.getCode()+"-index.html");
 		out.println("<html>");
 		out.println("<head>");
 		if (dialect == null) {
 			out.println("<title>XION " + htmlencode(termType.getPluralTitleCase()) + "</title>");
-		} else if (dialectVersion == null) {
+		} else if (navigationVersion == null) {
 			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(termType.getPluralTitleCase()) + "</title>");
 		} else {
-			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + " " + htmlencode(termType.getPluralTitleCase()) + "</title>");
+			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(navigationVersion.toString()) + " " + htmlencode(termType.getPluralTitleCase()) + "</title>");
 		}
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
-		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", "+htmlencode(termType.getSingular())+", "+htmlencode(termType.getPlural())+", "+htmlencode(termType.getSingular())+" index\">");
+		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, navigationVersion)+", "+htmlencode(termType.getSingular())+", "+htmlencode(termType.getPlural())+", "+htmlencode(termType.getSingular())+" index\">");
 		out.println("<meta name=\"description\" content=\"A list of XION "+htmlencode(termType.getPlural())+" with documentation available in "+((dialect == null) ? "all dialects, modules, and libraries in this documentation set" : htmlencode(dialect.getTitle()))+".\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xionnav.css\">");
 		out.println("</head>");
@@ -413,20 +423,24 @@ public class HTMLXDOMGenerator {
 		out.close();
 	}
 	
-	private void writeAllIndex(Dialect dialect, VersionNumber dialectVersion, List<TermSpec> allTerms) throws IOException {
-		PrintWriter out = openFile(dialect, dialectVersion, "all-index.html");
+	private void writeAllIndex(
+			Dialect dialect,
+			VersionNumber navigationVersion,
+			List<TermSpec> allTerms
+	) throws IOException {
+		PrintWriter out = openFile(dialect, navigationVersion, "all-index.html");
 		out.println("<html>");
 		out.println("<head>");
 		if (dialect == null) {
 			out.println("<title>XION Vocabulary Index</title>");
-		} else if (dialectVersion == null) {
+		} else if (navigationVersion == null) {
 			out.println("<title>" + htmlencode(dialect.getTitle()) + " Vocabulary Index</title>");
 		} else {
-			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + " Vocabulary Index</title>");
+			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(navigationVersion.toString()) + " Vocabulary Index</title>");
 		}
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
-		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", vocabulary, all vocabulary, vocabulary index\">");
+		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, navigationVersion)+", vocabulary, all vocabulary, vocabulary index\">");
 		out.println("<meta name=\"description\" content=\"A list of XION vocabulary terms with documentation available in "+((dialect == null) ? "all dialects, modules, and libraries in this documentation set" : htmlencode(dialect.getTitle()))+".\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xionnav.css\">");
 		out.println("</head>");
@@ -442,25 +456,29 @@ public class HTMLXDOMGenerator {
 		out.close();
 	}
 	
-	private void writeSuperIndex(Dialect dialect, VersionNumber dialectVersion, List<TermSpec> allTerms) throws IOException {
+	private void writeSuperIndex(
+			Dialect dialect,
+			VersionNumber navigationVersion,
+			List<TermSpec> allTerms
+	) throws IOException {
 		PrintWriter[] out = new PrintWriter[27];
-		out[0] = openFile(dialect, dialectVersion, "index-symb.html");
+		out[0] = openFile(dialect, navigationVersion, "index-symb.html");
 		for (int i = 1, ch = 'a'; i < out.length && ch <= 'z'; i++, ch++) {
-			out[i] = openFile(dialect, dialectVersion, "index-"+(char)ch+".html");
+			out[i] = openFile(dialect, navigationVersion, "index-"+(char)ch+".html");
 		}
 		for (int i = 0; i < out.length; i++) {
 			out[i].println("<html>");
 			out[i].println("<head>");
 			if (dialect == null) {
 				out[i].println("<title>XION Vocabulary Index - "+(i == 0 ? "Symbols" : ""+(i-1+'A'))+"</title>");
-			} else if (dialectVersion == null) {
+			} else if (navigationVersion == null) {
 				out[i].println("<title>" + htmlencode(dialect.getTitle()) + " Vocabulary Index - "+(i == 0 ? "Symbols" : ""+(i-1+'A'))+"</title>");
 			} else {
-				out[i].println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + " Vocabulary Index - "+(i == 0 ? "Symbols" : ""+(i-1+'A'))+"</title>");
+				out[i].println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(navigationVersion.toString()) + " Vocabulary Index - "+(i == 0 ? "Symbols" : ""+(i-1+'A'))+"</title>");
 			}
 			out[i].println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 			out[i].println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
-			out[i].println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", vocabulary, all vocabulary, vocabulary index\">");
+			out[i].println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, navigationVersion)+", vocabulary, all vocabulary, vocabulary index\">");
 			out[i].println("<meta name=\"description\" content=\"A list of XION vocabulary terms with documentation available in "+((dialect == null) ? "all dialects, modules, and libraries in this documentation set" : htmlencode(dialect.getTitle()))+".\">");
 			out[i].println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xiondoc.css\">");
 			out[i].println("</head>");
@@ -526,20 +544,24 @@ public class HTMLXDOMGenerator {
 		}
 	}
 	
-	private void writeColors(Dialect dialect, VersionNumber dialectVersion) throws IOException {
-		PrintWriter out = openFile(dialect, dialectVersion, "colors.html");
+	private void writeColors(
+			Dialect dialect,
+			VersionNumber navigationVersion,
+			VersionNumber contentVersion
+	) throws IOException {
+		PrintWriter out = openFile(dialect, navigationVersion, "colors.html");
 		out.println("<html>");
 		out.println("<head>");
 		if (dialect == null) {
 			out.println("<title>XION Color Chart</title>");
-		} else if (dialectVersion == null) {
+		} else if (navigationVersion == null) {
 			out.println("<title>" + htmlencode(dialect.getTitle()) + " Color Chart</title>");
 		} else {
-			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + " Color Chart</title>");
+			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(navigationVersion.toString()) + " Color Chart</title>");
 		}
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
-		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", color, colors, colour, colours, color constants, colour constants, RGB values\">");
+		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, navigationVersion)+", color, colors, colour, colours, color constants, colour constants, RGB values\">");
 		out.println("<meta name=\"description\" content=\"This page lists the names, RGB values, and color swatches of each color defined as a constant in "+((dialect == null) ? "XION" : htmlencode(dialect.getTitle()))+".\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xiondoc.css\">");
 		out.println("</head>");
@@ -548,10 +570,10 @@ public class HTMLXDOMGenerator {
 		
 		final List<TermSpec> colorTermSpecs = new Vector<TermSpec>();
 		final Map<TermSpec,int[]> colorTermRGB = new HashMap<TermSpec,int[]>();
-		for (Term term : ds.terms().getTerms(TermType.CONSTANT, null, ((dialect == null) ? null : dialect.name()), dialectVersion)) {
+		for (Term term : ds.terms().getTerms(TermType.CONSTANT, null, ((dialect == null) ? null : dialect.name()), contentVersion)) {
 			if (term.getDataType() != null && (term.getDataType().getName().equalsIgnoreCase("color") || term.getDataType().getName().equalsIgnoreCase("colour")) && term.getDataValue() != null) {
 				for (TermName termName : term.names()) {
-					if (dialect == null || termName.getDialects().matches(dialect.name(), dialectVersion)) {
+					if (dialect == null || termName.getDialects().matches(dialect.name(), contentVersion)) {
 						String[] rgbStrings = term.getDataValue().trim().split("\\s*,\\s*");
 						if (rgbStrings.length == 3) {
 							try {
@@ -629,20 +651,24 @@ public class HTMLXDOMGenerator {
 		out.close();
 	}
 	
-	private void writeOperators(Dialect dialect, VersionNumber dialectVersion) throws IOException {
-		PrintWriter out = openFile(dialect, dialectVersion, "precedence.html");
+	private void writeOperators(
+			Dialect dialect,
+			VersionNumber navigationVersion,
+			VersionNumber contentVersion
+	) throws IOException {
+		PrintWriter out = openFile(dialect, navigationVersion, "precedence.html");
 		out.println("<html>");
 		out.println("<head>");
 		if (dialect == null) {
 			out.println("<title>XION Operator Precedence Table</title>");
-		} else if (dialectVersion == null) {
+		} else if (navigationVersion == null) {
 			out.println("<title>" + htmlencode(dialect.getTitle()) + " Operator Precedence Table</title>");
 		} else {
-			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + " Operator Precedence Table</title>");
+			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(navigationVersion.toString()) + " Operator Precedence Table</title>");
 		}
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
-		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", operator, operators, operator precedence, operator precedence chart, operator precedence table\">");
+		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, navigationVersion)+", operator, operators, operator precedence, operator precedence chart, operator precedence table\">");
 		out.println("<meta name=\"description\" content=\"This page shows the order of precedence of operators in "+((dialect == null) ? "XION" : htmlencode(dialect.getTitle()))+".\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xiondoc.css\">");
 		out.println("</head>");
@@ -666,9 +692,9 @@ public class HTMLXDOMGenerator {
 		out.println("</thead>");
 		Map<TermSpec,Term> operators = new HashMap<TermSpec,Term>();
 		List<TermSpec> operatorList = new Vector<TermSpec>();
-		for (Term term : ds.terms().getTerms(TermType.OPERATOR, null, ((dialect == null) ? null : dialect.name()), dialectVersion)) {
+		for (Term term : ds.terms().getTerms(TermType.OPERATOR, null, ((dialect == null) ? null : dialect.name()), contentVersion)) {
 			for (TermName termName : term.names()) {
-				if (dialect == null || termName.getDialects().matches(dialect.name(), dialectVersion)) {
+				if (dialect == null || termName.getDialects().matches(dialect.name(), contentVersion)) {
 					operators.put(new TermSpec(TermType.OPERATOR, termName.getName()), term);
 				}
 			}
@@ -707,20 +733,24 @@ public class HTMLXDOMGenerator {
 		out.close();
 	}
 	
-	private void writeConstants(Dialect dialect, VersionNumber dialectVersion) throws IOException {
-		PrintWriter out = openFile(dialect, dialectVersion, "constants.html");
+	private void writeConstants(
+			Dialect dialect,
+			VersionNumber navigationVersion,
+			VersionNumber contentVersion
+	) throws IOException {
+		PrintWriter out = openFile(dialect, navigationVersion, "constants.html");
 		out.println("<html>");
 		out.println("<head>");
 		if (dialect == null) {
 			out.println("<title>XION Constant Summary</title>");
-		} else if (dialectVersion == null) {
+		} else if (navigationVersion == null) {
 			out.println("<title>" + htmlencode(dialect.getTitle()) + " Constant Summary</title>");
 		} else {
-			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + " Constant Summary</title>");
+			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(navigationVersion.toString()) + " Constant Summary</title>");
 		}
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
-		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", constant, constants, built-in constant, built-in constants, constant summary\">");
+		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, navigationVersion)+", constant, constants, built-in constant, built-in constants, constant summary\">");
 		out.println("<meta name=\"description\" content=\"This page summarizes "+((dialect == null) ? "XION" : htmlencode(dialect.getTitle()))+"'s built-in constants.\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xiondoc.css\">");
 		out.println("</head>");
@@ -733,9 +763,9 @@ public class HTMLXDOMGenerator {
 
 		final Map<TermSpec,Term> constants = new HashMap<TermSpec,Term>();
 		final List<TermSpec> constantList = new Vector<TermSpec>();
-		for (Term term : ds.terms().getTerms(TermType.CONSTANT, null, ((dialect == null) ? null : dialect.name()), dialectVersion)) {
+		for (Term term : ds.terms().getTerms(TermType.CONSTANT, null, ((dialect == null) ? null : dialect.name()), contentVersion)) {
 			for (TermName termName : term.names()) {
-				if (dialect == null || termName.getDialects().matches(dialect.name(), dialectVersion)) {
+				if (dialect == null || termName.getDialects().matches(dialect.name(), contentVersion)) {
 					TermSpec termSpec = new TermSpec(TermType.CONSTANT, termName.getName());
 					constants.put(termSpec, term);
 					constantList.add(termSpec);
@@ -761,7 +791,12 @@ public class HTMLXDOMGenerator {
 			out.println("<tr>");
 			out.println("<td><code><a href=\"cn/"+fnencode(ts.getName())+".html\">"+htmlencode(ts.getName())+"</a></code></td>");
 			if (t.hasDataType()) {
-				out.println("<td><code><a href=\"dt/"+fnencode(t.getDataType().getName())+"\">"+htmlencode(t.getDataType().getName())+"</a></code></td>");
+				boolean dataTypeValid = !ds.terms().getTerms(TermType.DATA_TYPE, t.getDataType().getName(), ((dialect == null) ? null : dialect.name()), contentVersion).isEmpty();
+				out.println("<td><code>");
+				if (dataTypeValid) out.println("<a href=\"dt/"+fnencode(t.getDataType().getName())+".html\">");
+				out.println(htmlencode(t.getDataType().getName()));
+				if (dataTypeValid) out.println("</a>");
+				out.println("</code></td>");
 			} else {
 				out.println("<td></td>");
 			}
@@ -802,7 +837,12 @@ public class HTMLXDOMGenerator {
 			out.println("<tr>");
 			out.println("<td><code><a href=\"cn/"+fnencode(ts.getName())+".html\">"+htmlencode(ts.getName())+"</a></code></td>");
 			if (t.hasDataType()) {
-				out.println("<td><code><a href=\"dt/"+fnencode(t.getDataType().getName())+"\">"+htmlencode(t.getDataType().getName())+"</a></code></td>");
+				boolean dataTypeValid = !ds.terms().getTerms(TermType.DATA_TYPE, t.getDataType().getName(), ((dialect == null) ? null : dialect.name()), contentVersion).isEmpty();
+				out.println("<td><code>");
+				if (dataTypeValid) out.println("<a href=\"dt/"+fnencode(t.getDataType().getName())+".html\">");
+				out.println(htmlencode(t.getDataType().getName()));
+				if (dataTypeValid) out.println("</a>");
+				out.println("</code></td>");
 			} else {
 				out.println("<td></td>");
 			}
@@ -849,7 +889,12 @@ public class HTMLXDOMGenerator {
 			out.println("<tr>");
 			out.println("<td><code><a href=\"cn/"+fnencode(ts.getName())+".html\">"+htmlencode(ts.getName())+"</a></code></td>");
 			if (t.hasDataType()) {
-				out.println("<td><code><a href=\"dt/"+fnencode(t.getDataType().getName())+".html\">"+htmlencode(t.getDataType().getName())+"</a></code></td>");
+				boolean dataTypeValid = !ds.terms().getTerms(TermType.DATA_TYPE, t.getDataType().getName(), ((dialect == null) ? null : dialect.name()), contentVersion).isEmpty();
+				out.println("<td><code>");
+				if (dataTypeValid) out.println("<a href=\"dt/"+fnencode(t.getDataType().getName())+".html\">");
+				out.println(htmlencode(t.getDataType().getName()));
+				if (dataTypeValid) out.println("</a>");
+				out.println("</code></td>");
 			} else {
 				out.println("<td></td>");
 			}
@@ -868,20 +913,24 @@ public class HTMLXDOMGenerator {
 		out.close();
 	}
 	
-	private void writeSynonyms(Dialect dialect, VersionNumber dialectVersion) throws IOException {
-		PrintWriter out = openFile(dialect, dialectVersion, "synonyms.html");
+	private void writeSynonyms(
+			Dialect dialect,
+			VersionNumber navigationVersion,
+			VersionNumber contentVersion
+	) throws IOException {
+		PrintWriter out = openFile(dialect, navigationVersion, "synonyms.html");
 		out.println("<html>");
 		out.println("<head>");
 		if (dialect == null) {
 			out.println("<title>XION Synonyms</title>");
-		} else if (dialectVersion == null) {
+		} else if (navigationVersion == null) {
 			out.println("<title>" + htmlencode(dialect.getTitle()) + " Synonyms</title>");
 		} else {
-			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + " Synonyms</title>");
+			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(navigationVersion.toString()) + " Synonyms</title>");
 		}
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
-		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", synonym, synonyms\">");
+		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, navigationVersion)+", synonym, synonyms\">");
 		out.println("<meta name=\"description\" content=\"This page lists the alternative ways that "+((dialect == null) ? "XION" : htmlencode(dialect.getTitle()))+" terms can be used.\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xiondoc.css\">");
 		out.println("</head>");
@@ -891,9 +940,9 @@ public class HTMLXDOMGenerator {
 		
 		final List<Term> termsWithSynonyms = new Vector<Term>();
 		final Map<Term,List<TermSpec>> termSynonyms = new HashMap<Term,List<TermSpec>>();
-		for (Term term : ds.terms().getTerms(null, null, ((dialect == null) ? null : dialect.name()), dialectVersion)) {
-			if (term.hasSynonyms(((dialect == null) ? null : dialect.name()), dialectVersion)) {
-				TermSpecList termSpecs = term.getSynonyms(((dialect == null) ? null : dialect.name()), dialectVersion, null);
+		for (Term term : ds.terms().getTerms(null, null, ((dialect == null) ? null : dialect.name()), contentVersion)) {
+			if (term.hasSynonyms(((dialect == null) ? null : dialect.name()), contentVersion)) {
+				TermSpecList termSpecs = term.getSynonyms(((dialect == null) ? null : dialect.name()), contentVersion, null);
 				List<TermSpec> termSpecs2 = new Vector<TermSpec>();
 				termSpecs2.addAll(termSpecs);
 				Collections.sort(termSpecs2, termSpecComparator);
@@ -941,14 +990,18 @@ public class HTMLXDOMGenerator {
 		out.close();
 	}
 	
-	private void writeArticle(Dialect dialect, VersionNumber dialectVersion, Article article) throws IOException {
-		PrintWriter out = openFile(dialect, dialectVersion, fnencode(article.name())+".html");
+	private void writeArticle(
+			Dialect dialect,
+			VersionNumber navigationVersion,
+			Article article
+	) throws IOException {
+		PrintWriter out = openFile(dialect, navigationVersion, fnencode(article.name())+".html");
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>"+htmlencode(article.getTitle())+"</title>");
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
-		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", "+htmlencode(article.getTitle())+"\">");
+		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, navigationVersion)+", "+htmlencode(article.getTitle())+"\">");
 		if (article.hasSummary()) {
 			out.println("<meta name=\"description\" content=\""+htmlencode(article.getSummary())+"\">");
 		}
@@ -964,20 +1017,25 @@ public class HTMLXDOMGenerator {
 		out.close();
 	}
 	
-	private void writeVocabTypeIndex(Dialect dialect, VersionNumber dialectVersion, List<Article> articles) throws IOException {
-		PrintWriter out = openFile(dialect, dialectVersion, "vocabtypes.html");
+	private void writeVocabTypeIndex(
+			Dialect dialect,
+			VersionNumber navigationVersion,
+			VersionNumber contentVersion,
+			List<Article> articles
+	) throws IOException {
+		PrintWriter out = openFile(dialect, navigationVersion, "vocabtypes.html");
 		out.println("<html>");
 		out.println("<head>");
 		if (dialect == null) {
 			out.println("<title>XION Vocabulary Type Index</title>");
-		} else if (dialectVersion == null) {
+		} else if (navigationVersion == null) {
 			out.println("<title>" + htmlencode(dialect.getTitle()) + " Vocabulary Type Index</title>");
 		} else {
-			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + " Vocabulary Type Index</title>");
+			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(navigationVersion.toString()) + " Vocabulary Type Index</title>");
 		}
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
-		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", vocabulary type, vocabulary type index\">");
+		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, navigationVersion)+", vocabulary type, vocabulary type index\">");
 		out.println("<meta name=\"description\" content=\"A list of the types of XION vocabulary terms in "+((dialect == null) ? "all dialects, modules, and libraries in this documentation set" : htmlencode(dialect.getTitle()))+".\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xionnav.css\">");
 		out.println("<script language=\"javascript\" type=\"text/javascript\">");
@@ -998,15 +1056,15 @@ public class HTMLXDOMGenerator {
 		out.println("<body>");
 		if (dialect == null) {
 			out.println("<h1>" + allString() + "</h1>");
-		} else if (dialectVersion == null) {
+		} else if (navigationVersion == null) {
 			out.println("<h1>" + htmlencode(dialect.getTitle()) + "</h1>");
 		} else {
-			out.println("<h1>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + "</h1>");
+			out.println("<h1>" + htmlencode(dialect.getTitle()) + " " + htmlencode(navigationVersion.toString()) + "</h1>");
 		}
 		out.println("<ul>");
 		out.println("<li><a href=\"all-index.html\" target=\"xnvocab\" onclick=\"return loadAllVocab();\">All Vocabulary</a></li>");
 		for (TermType termType : TermType.values()) {
-			if (!ds.terms().getTerms(termType, null, ((dialect == null) ? null : dialect.name()), dialectVersion).isEmpty()) {
+			if (!ds.terms().getTerms(termType, null, ((dialect == null) ? null : dialect.name()), contentVersion).isEmpty()) {
 				out.println("<li><a href=\""+htmlencode(termType.getCode())+"-index.html\" target=\"xnvocab\" onclick=\"return loadVocabType('"+htmlencode(termType.getCode())+"');\">"+htmlencode(termType.getPluralTitleCase())+"</a></li>");
 			}
 		}
@@ -1019,15 +1077,15 @@ public class HTMLXDOMGenerator {
 			out.println("</ul>");
 		}
 		out.println("<ul>");
-		if (!ds.terms().getTerms(TermType.CONSTANT, null, ((dialect == null) ? null : dialect.name()), dialectVersion).isEmpty()) {
+		if (!ds.terms().getTerms(TermType.CONSTANT, null, ((dialect == null) ? null : dialect.name()), contentVersion).isEmpty()) {
 			out.println("<li><a href=\"constants.html\" target=\"xncontent\">Constant Summary</a></li>");
 		}
-		if (!ds.terms().getTerms(TermType.OPERATOR, null, ((dialect == null) ? null : dialect.name()), dialectVersion).isEmpty()) {
+		if (!ds.terms().getTerms(TermType.OPERATOR, null, ((dialect == null) ? null : dialect.name()), contentVersion).isEmpty()) {
 			out.println("<li><a href=\"precedence.html\" target=\"xncontent\">Operator Precedence Table</a></li>");
 		}
 		boolean iHasASynonym = false;
-		for (Term term : ds.terms().getTerms(null, null, ((dialect == null) ? null : dialect.name()), dialectVersion)) {
-			if (term.hasSynonyms(((dialect == null) ? null : dialect.name()), dialectVersion)) {
+		for (Term term : ds.terms().getTerms(null, null, ((dialect == null) ? null : dialect.name()), contentVersion)) {
+			if (term.hasSynonyms(((dialect == null) ? null : dialect.name()), contentVersion)) {
 				iHasASynonym = true;
 				break;
 			}
@@ -1036,7 +1094,7 @@ public class HTMLXDOMGenerator {
 			out.println("<li><a href=\"synonyms.html\" target=\"xncontent\">Synonyms</a></li>");
 		}
 		boolean iHasAColor = false;
-		for (Term term : ds.terms().getTerms(TermType.CONSTANT, null, ((dialect == null) ? null : dialect.name()), dialectVersion)) {
+		for (Term term : ds.terms().getTerms(TermType.CONSTANT, null, ((dialect == null) ? null : dialect.name()), contentVersion)) {
 			if (term.getDataType() != null && (term.getDataType().getName().equalsIgnoreCase("color") || term.getDataType().getName().equalsIgnoreCase("colour"))) {
 				iHasAColor = true;
 				break;
@@ -1083,14 +1141,17 @@ public class HTMLXDOMGenerator {
 		return allString;
 	}
 	
-	private void writeDialectIndex(Dialect dialect, VersionNumber dialectVersion) throws IOException {
-		PrintWriter out = openFile(dialect, dialectVersion, "dialects.html");
+	private void writeDialectIndex(
+			Dialect dialect,
+			VersionNumber navigationVersion
+	) throws IOException {
+		PrintWriter out = openFile(dialect, navigationVersion, "dialects.html");
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>XION Dialect Index</title>");
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
-		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", dialect, dialects, dialect index, module, modules, module index, library, libraries, library index\">");
+		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, navigationVersion)+", dialect, dialects, dialect index, module, modules, module index, library, libraries, library index\">");
 		out.println("<meta name=\"description\" content=\"A list of XION dialects, OpenXION modules, and XION code libraries with documentation available in this documentation set.\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"xionnav.css\">");
 		out.println("<script language=\"javascript\" type=\"text/javascript\">");
@@ -1123,7 +1184,7 @@ public class HTMLXDOMGenerator {
 			out.println("parent.xncontent.location.href=x+'/'+y+'/intro.html';");
 			out.println("return false;");
 			out.println("}");
-		} else if (dialectVersion == null) {
+		} else if (navigationVersion == null) {
 			out.println("function loadDialectVersion(x, y) {");
 			out.println("parent.xnvocabtypes.location.href=y+'/vocabtypes.html';");
 			out.println("parent.xnvocab.location.href=y+'/all-index.html';");
@@ -1186,29 +1247,34 @@ public class HTMLXDOMGenerator {
 		out.println("</ul>");
 		if (!dialects.isEmpty()) {
 			out.println("<h1>Dialects</h1>");
-			writeDialectList(dialect, dialectVersion, out, dialects);
+			writeDialectList(dialect, navigationVersion, out, dialects);
 		}
 		if (!modules.isEmpty()) {
 			out.println("<h1>Modules</h1>");
-			writeDialectList(dialect, dialectVersion, out, modules);
+			writeDialectList(dialect, navigationVersion, out, modules);
 		}
 		if (!libraries.isEmpty()) {
 			out.println("<h1>Libraries</h1>");
-			writeDialectList(dialect, dialectVersion, out, libraries);
+			writeDialectList(dialect, navigationVersion, out, libraries);
 		}
 		out.println("</body>");
 		out.println("</html>");
 		out.close();
 	}
 	
-	private void writeDialectList(Dialect dialect, VersionNumber dialectVersion, PrintWriter out, List<Dialect> dialects) {
+	private void writeDialectList(
+			Dialect dialect,
+			VersionNumber navigationVersion,
+			PrintWriter out,
+			List<Dialect> dialects
+	) {
 		out.println("<ul>");
 		for (Dialect d : dialects) {
 			String href = ((dialect == null) ? (htmlencode(d.name()) + "/vocabtypes.html") : "vocabtypes.html");
 			out.println("<li>");
 			out.println("<a href=\""+href+"\" target=\"xnvocabtypes\" onclick=\"return loadDialect('"+htmlencode(d.name())+"');\">"+htmlencode(d.getTitle())+"</a>");
 			out.print("<span class=\"dversion\">(");
-			if (dialectVersion == null || dialect == null) {
+			if (navigationVersion == null || dialect == null) {
 				boolean first = true;
 				for (VersionNumber dv : d.versions().descendingSet()) {
 					String vhref = (
@@ -1221,7 +1287,7 @@ public class HTMLXDOMGenerator {
 					out.print("<a href=\""+vhref+"\" target=\"xnvocabtypes\" onclick=\"return loadDialectVersion('"+htmlencode(d.name())+"','"+htmlencode(dv.toString())+"');\">"+htmlencode(dv.toString())+"</a>");
 				}
 			} else {
-				out.print("<a href=\"vocabtypes.html\" target=\"xnvocabtypes\" onclick=\"return loadDialectVersion('"+htmlencode(d.name())+"','"+htmlencode(dialectVersion.toString())+"');\">"+htmlencode(dialectVersion.toString())+"</a>");
+				out.print("<a href=\"vocabtypes.html\" target=\"xnvocabtypes\" onclick=\"return loadDialectVersion('"+htmlencode(d.name())+"','"+htmlencode(navigationVersion.toString())+"');\">"+htmlencode(navigationVersion.toString())+"</a>");
 			}
 			out.println(")</span>");
 			out.println("</li>");
@@ -1229,14 +1295,17 @@ public class HTMLXDOMGenerator {
 		out.println("</ul>");
 	}
 	
-	private void writeIntro(Dialect dialect, VersionNumber dialectVersion) throws IOException {
-		PrintWriter out = openFile(dialect, dialectVersion, "intro.html");
+	private void writeIntro(
+			Dialect dialect,
+			VersionNumber navigationVersion
+	) throws IOException {
+		PrintWriter out = openFile(dialect, navigationVersion, "intro.html");
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>Welcome to XION</title>");
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
-		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+", intro, introduction\">");
+		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, navigationVersion)+", intro, introduction\">");
 		if (dialect == null) {
 			if (ds.hasSummary()) {
 				out.println("<meta name=\"description\" content=\"" + htmlencode(ds.getSummary()) + "\">");
@@ -1265,7 +1334,10 @@ public class HTMLXDOMGenerator {
 	}
 	
 	private static String mainCSS = null;
-	private void writeMainCSS(Dialect dialect, VersionNumber dialectVersion) throws IOException {
+	private void writeMainCSS(
+			Dialect dialect,
+			VersionNumber navigationVersion
+	) throws IOException {
 		if (mainCSS == null) {
 			URL u = HTMLXDOMGenerator.class.getResource("xiondoc.css");
 			URLConnection uc = u.openConnection();
@@ -1281,13 +1353,16 @@ public class HTMLXDOMGenerator {
 			String us = new String(uo.toByteArray(), CSS_ENCODING);
 			mainCSS = us;
 		}
-		PrintWriter out = openFile(dialect, dialectVersion, "xiondoc.css");
+		PrintWriter out = openFile(dialect, navigationVersion, "xiondoc.css");
 		out.print(mainCSS);
 		out.close();
 	}
 	
 	private static String navCSS = null;
-	private void writeNavCSS(Dialect dialect, VersionNumber dialectVersion) throws IOException {
+	private void writeNavCSS(
+			Dialect dialect,
+			VersionNumber navigationVersion
+	) throws IOException {
 		if (navCSS == null) {
 			URL u = HTMLXDOMGenerator.class.getResource("xionnav.css");
 			URLConnection uc = u.openConnection();
@@ -1303,26 +1378,29 @@ public class HTMLXDOMGenerator {
 			String us = new String(uo.toByteArray(), CSS_ENCODING);
 			navCSS = us;
 		}
-		PrintWriter out = openFile(dialect, dialectVersion, "xionnav.css");
+		PrintWriter out = openFile(dialect, navigationVersion, "xionnav.css");
 		out.print(navCSS);
 		out.close();
 	}
 	
-	private void writeFrameset(Dialect dialect, VersionNumber dialectVersion) throws IOException {
-		PrintWriter out = openFile(dialect, dialectVersion, "index.html");
+	private void writeFrameset(
+			Dialect dialect,
+			VersionNumber navigationVersion
+	) throws IOException {
+		PrintWriter out = openFile(dialect, navigationVersion, "index.html");
 		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Frameset//EN\" \"http://www.w3.org/TR/html4/frameset.dtd\">");
 		out.println("<html>");
 		out.println("<head>");
 		if (dialect == null) {
 			out.println("<title>XION Documentation</title>");
-		} else if (dialectVersion == null) {
+		} else if (navigationVersion == null) {
 			out.println("<title>" + htmlencode(dialect.getTitle()) + " Documentation</title>");
 		} else {
-			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(dialectVersion.toString()) + " Documentation</title>");
+			out.println("<title>" + htmlencode(dialect.getTitle()) + " " + htmlencode(navigationVersion.toString()) + " Documentation</title>");
 		}
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset="+HTML_ENCODING+"\">");
 		out.println("<meta name=\"generator\" content=\""+XIONDoc.XIONDOC_NAME+" "+XIONDoc.XIONDOC_VERSION+"\">");
-		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, dialectVersion)+"\">");
+		out.println("<meta name=\"keywords\" content=\""+baseKeywords(dialect, navigationVersion)+"\">");
 		if (dialect == null) {
 			if (ds.hasSummary()) {
 				out.println("<meta name=\"description\" content=\"" + htmlencode(ds.getSummary()) + "\">");
@@ -1470,21 +1548,30 @@ public class HTMLXDOMGenerator {
 	}
 	
 	private static String fnencode(String in) {
-		CharacterIterator it = new StringCharacterIterator(in);
-		StringBuffer out = new StringBuffer();
-		boolean seenLetter = false;
+		CharacterIterator it;
+		
+		boolean hasLetter = false;
+		it = new StringCharacterIterator(in.toLowerCase());
 		for (char ch = it.first(); ch != CharacterIterator.DONE; ch = it.next()) {
-			if (Character.isLetterOrDigit(ch)) {
+			if (ch > 32 && ch < 127 && Character.isLetterOrDigit(ch)) {
+				hasLetter = true;
+				break;
+			}
+		}
+		
+		StringBuffer out = new StringBuffer();
+		it = new StringCharacterIterator(in.toLowerCase());
+		for (char ch = it.first(); ch != CharacterIterator.DONE; ch = it.next()) {
+			if (ch > 32 && ch < 127 && Character.isLetterOrDigit(ch)) {
 				out.append(ch);
-				seenLetter = true;
-			} else if ((ch == ' ' || ch == '-' || ch == '_' || ch == '.') && seenLetter) {
-				out.append(ch);
+			} else if (hasLetter && (ch == ' ' || ch == '-' || ch == '_' || ch == '.' || ch == '\'')) {
+				out.append('_');
 			} else {
 				String h = "0000" + Integer.toHexString((int)ch).toUpperCase();
 				out.append('$');
 				out.append(h.substring(h.length() - 4));
 			}
 		}
-		return out.toString().trim().replaceAll("\\s+", "_");
+		return out.toString();
 	}
 }

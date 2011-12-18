@@ -2828,7 +2828,7 @@
 	<description>
 		<p>
 			The <me/> handler defines the behavior of a user-defined object
-			when property <a>propertyName</a> is set. When a script sets
+			when property <mv>propertyName</mv> is set. When a script sets
 			<a>kw:the</a> <mv>propertyName</mv> <a>kw:of</a> a user-defined
 			object, the statements in the corresponding <me/> handler are
 			executed. The new value of the property is passed through the
