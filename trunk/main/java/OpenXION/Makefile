@@ -1,7 +1,7 @@
 INSTJARDIR = /usr/lib
 INSTBINDIR = /usr/bin
 SRCFILES = src/test/*.java src/com/kreative/*/*.java src/com/kreative/*/*/*.java src/com/kreative/*/*/*/*.java
-PACKAGES = com.kreative.openxion com.kreative.openxion.ast com.kreative.openxion.audio com.kreative.openxion.io com.kreative.openxion.math com.kreative.openxion.util com.kreative.openxion.xom com.kreative.openxion.xom.inst com.kreative.openxion.xom.type com.kreative.xiondoc
+PACKAGES = com.kreative.openxion com.kreative.openxion.ast com.kreative.openxion.audio com.kreative.openxion.binpack com.kreative.openxion.format com.kreative.openxion.io com.kreative.openxion.math com.kreative.openxion.tr com.kreative.openxion.util com.kreative.openxion.xom com.kreative.openxion.xom.inst com.kreative.openxion.xom.type com.kreative.xiondoc com.kreative.xiondoc.sdom com.kreative.xiondoc.xdom
 
 all: clean bin doc osxclean OpenXION.jar XIONDoc.jar OpenXION-src.tgz XIONDoc-src.tgz OpenXION-test.tgz OpenXION-xndocs.tgz XION-Language-Module.tgz OpenXION-dist.zip OpenXION-distwin.zip
 
@@ -82,7 +82,7 @@ OpenXION-test.tgz: osxclean
 OpenXION-xndocs.tgz: XIONDoc.jar
 	java -jar XIONDoc.jar xndoc/doc.xnd > /dev/null
 	mv xndoc/doc.htmld xndoc/docs
-	tar -czf OpenXION-xndocs.tgz -C xndoc doc.xnd xiondoc-1.0.dtd docs
+	tar -czf OpenXION-xndocs.tgz -C xndoc doc.xnd xiondoc-1.3.dtd docs
 	mv xndoc/docs xndoc/doc.htmld
 
 XION-Language-Module.tgz:
