@@ -123,6 +123,7 @@ public class XNStdInOutUI implements XNUI {
 					historyAdd.invoke(historyObject, line);
 					return line;
 				} else {
+					out.println();
 					return null;
 				}
 			} catch (Exception e) {
@@ -147,6 +148,7 @@ public class XNStdInOutUI implements XNUI {
 				}
 				return line.trim();
 			} else {
+				out.println();
 				return null;
 			}
 		} else {
