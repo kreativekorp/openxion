@@ -729,20 +729,22 @@ public class XIONUtil {
 				return ufnString;
 			} else if (isWindows()) {
 				try {
-					String s1 = captureProcessOutput("net user "+System.getProperty("user.name"));
-					String s2 = captureProcessOutput("net user "+System.getProperty("user.name")+" /domain");
 					Pattern p = Pattern.compile("[Ff]ull [Nn]ame\\s+(.*)");
+					String s1 = captureProcessOutput("net user "+System.getProperty("user.name"));
 					Matcher m1 = p.matcher(s1);
-					Matcher m2 = p.matcher(s2);
 					if (m1.find()) {
 						ufnString = m1.group(1).trim();
 						return ufnString;
-					} else if (m2.find()) {
-						ufnString = m2.group(1).trim();
-						return ufnString;
 					} else {
-						ufnString = null;
-						return "";
+						String s2 = captureProcessOutput("net user "+System.getProperty("user.name")+" /domain");
+						Matcher m2 = p.matcher(s2);
+						if (m2.find()) {
+							ufnString = m2.group(1).trim();
+							return ufnString;
+						} else {
+							ufnString = null;
+							return "";
+						}
 					}
 				} catch (Exception e) {
 					ufnString = null;
@@ -750,13 +752,21 @@ public class XIONUtil {
 				}
 			} else {
 				try {
-					String[] s = captureProcessOutput(new String[]{"id", "-P"}).split(":");
-					if (s.length > 7) {
-						ufnString = s[7];
+					String[] s1 = captureProcessOutput(new String[]{"id", "-P"}).split(":");
+					if (s1.length > 7) {
+						ufnString = s1[7];
 						return ufnString;
 					} else {
-						ufnString = null;
-						return "";
+						Pattern p = Pattern.compile("\t[Nn]ame:\\s+(.*)");
+						String s2 = captureProcessOutput(new String[]{"finger", "-mlp"});
+						Matcher m2 = p.matcher(s2);
+						if (m2.find()) {
+							ufnString = m2.group(1).trim();
+							return ufnString;
+						} else {
+							ufnString = null;
+							return "";
+						}
 					}
 				} catch (Exception e) {
 					ufnString = null;
