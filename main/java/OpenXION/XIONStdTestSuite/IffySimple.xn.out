@@ -1,0 +1,25 @@
+IFFY0
+true, true
+hello
+world
+true, false
+hello
+false, true
+false, false
+IFFY1
+true, true
+hello
+world
+true, false
+hello
+false, true
+false, false
+IFFY2
+true, true
+hello
+world
+true, false
+hello
+false, true
+world
+false, false
