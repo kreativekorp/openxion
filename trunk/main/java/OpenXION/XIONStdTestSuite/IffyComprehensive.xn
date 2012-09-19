@@ -1,0 +1,166 @@
+function elseBlock inlineElse, elseStatement
+	if inlineElse then
+		if elseStatement is empty then
+			return "else"
+		else
+			return "else" && elseStatement
+		end if
+	else
+		if elseStatement is empty then
+			return "else" & newline & "end if"
+		else
+			return "else" & newline & elseStatement & newline & "end if"
+		end if
+	end if
+end elseBlock
+
+function thenBlock inlineThen, thenStatement, elseBlock
+	if inlineThen then
+		if thenStatement is empty then
+			if elseBlock is empty then
+				return "then"
+			else if line 1 of elseBlock is empty then
+				return "then" & elseBlock
+			else
+				return "then" && elseBlock
+			end if
+		else
+			if elseBlock is empty then
+				return "then" && thenStatement
+			else if line 1 of elseBlock is empty then
+				return "then" && thenStatement & elseBlock
+			else
+				return "then" && thenStatement && elseBlock
+			end if
+		end if
+	else
+		if thenStatement is empty then
+			if elseBlock is empty then
+				return "then" & newline & "end if"
+			else if line 1 of elseBlock is empty then
+				return "then" & elseBlock
+			else
+				return "then" & newline & elseBlock
+			end if
+		else
+			if elseBlock is empty then
+				return "then" & newline & thenStatement & newline & "end if"
+			else if line 1 of elseBlock is empty then
+				return "then" & newline & thenStatement & elseBlock
+			else
+				return "then" & newline & thenStatement & newline & elseBlock
+			end if
+		end if
+	end if
+end thenBlock
+
+function ifBlock condition, thenBlock
+	if line 1 of thenBlock is empty then
+		return "if" && condition & thenBlock
+	else
+		return "if" && condition && thenBlock
+	end if
+end ifBlock
+
+function ifThenBlock condition, breakBeforeThen, inlineThen, thenStatement
+	put thenBlock(inlineThen, thenStatement, empty) into thenBlock
+	if breakBeforeThen then put newline before thenBlock
+	return ifBlock(condition, thenBlock)
+end ifThenBlock
+
+function ifThenElseBlock condition, breakBeforeThen, inlineThen, thenStatement, breakBeforeElse, inlineElse, elseStatement
+	put elseBlock(inlineElse, elseStatement) into elseBlock
+	if breakBeforeElse then put newline before elseBlock
+	put thenBlock(inlineThen, thenStatement, elseBlock) into thenBlock
+	if breakBeforeThen then put newline before thenBlock
+	return ifBlock(condition, thenBlock)
+end ifThenElseBlock
+
+put "SIMPLE IF BLOCK TESTS"
+
+repeat foreach breakBeforeThen in (true, false)
+	repeat foreach inlineThen in (true, false)
+		repeat foreach thenStatement in (empty, "get \"true\"")
+			
+			put ifThenBlock("true", breakBeforeThen, inlineThen, thenStatement) into trueCode
+			put ifThenBlock("false", breakBeforeThen, inlineThen, thenStatement) into falseCode
+			if last word of trueCode is "then" then
+				try
+					do trueCode
+					put false
+				catch e
+					put true
+				end try
+			else
+				get empty
+				do trueCode
+				put (it is (if thenStatement is empty then empty else "true"))
+				get empty
+				do falseCode
+				put (it is empty)
+			end if
+			
+			repeat foreach breakBeforeElse in (true, false)
+				repeat foreach inlineElse in (true, false)
+					repeat foreach elseStatement in (empty, "get \"false\"")
+						
+						put ifThenElseBlock("true", breakBeforeThen, inlineThen, thenStatement, breakBeforeElse, inlineElse, elseStatement) into trueCode
+						put ifThenElseBlock("false", breakBeforeThen, inlineThen, thenStatement, breakBeforeElse, inlineElse, elseStatement) into falseCode
+						if last word of trueCode is "else" then
+							try
+								do trueCode
+								put false
+							catch e
+								put true
+							end try
+						else
+							get empty
+							do trueCode
+							put (it is (if thenStatement is empty then empty else "true"))
+							get empty
+							do falseCode
+							put (it is (if elseStatement is empty then empty else "false"))
+						end if
+						
+					end repeat
+				end repeat
+			end repeat
+			
+		end repeat
+	end repeat
+end repeat
+
+put "NESTED IF BLOCK TESTS"
+
+repeat foreach innerBreakBeforeThen in (true, false)
+	repeat foreach innerInlineThen in (true, false)
+		repeat foreach innerThenStatement in (empty, "get \"true\"")
+			repeat foreach innerBreakBeforeElse in (true, false)
+				repeat foreach innerInlineElse in (true, false)
+					repeat foreach innerElseStatement in (empty, "get \"false\"")
+						put ifThenElseBlock("true", innerBreakBeforeThen, innerInlineThen, innerThenStatement, innerBreakBeforeElse, innerInlineElse, innerElseStatement) into innerCode
+						if last word of innerCode is not "else" then
+							repeat foreach outerBreakBeforeThen in (true, false)
+								repeat foreach outerInlineThen in (true, false)
+									repeat foreach outerBreakBeforeElse in (true, false)
+										repeat foreach outerInlineElse in (true, false)
+											put ifThenElseBlock("true", outerBreakBeforeThen, outerInlineThen, innerCode, outerBreakBeforeElse, outerInlineElse, innerCode) into outerCode
+											if last word of outerCode is not "else" then
+												try
+													do outerCode
+													put true
+												catch e
+													put e
+												end try
+											end if
+										end repeat
+									end repeat
+								end repeat
+							end repeat
+						end if
+					end repeat
+				end repeat
+			end repeat
+		end repeat
+	end repeat
+end repeat

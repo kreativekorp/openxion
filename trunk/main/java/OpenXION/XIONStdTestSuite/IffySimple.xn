@@ -1,0 +1,52 @@
+on iffy0 a,b
+	if a then
+		put "hello"
+		if b then
+			put "world"
+		end if
+	end if
+end iffy0
+
+put "IFFY0"
+put "true, true"
+iffy0 true, true
+put "true, false"
+iffy0 true, false
+put "false, true"
+iffy0 false, true
+put "false, false"
+iffy0 false, false
+
+on iffy1 a,b
+	if a then
+		put "hello"
+		if b then put "world"
+	end if
+end iffy1
+
+put "IFFY1"
+put "true, true"
+iffy1 true, true
+put "true, false"
+iffy1 true, false
+put "false, true"
+iffy1 false, true
+put "false, false"
+iffy1 false, false
+
+on iffy2 a,b
+	if a then put "hello"
+	if b then
+		put "world"
+	end if
+end iffy2
+
+put "IFFY2"
+put "true, true"
+iffy2 true, true
+put "true, false"
+iffy2 true, false
+put "false, true"
+iffy2 false, true
+put "false, false"
+iffy2 false, false

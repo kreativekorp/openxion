@@ -2094,15 +2094,6 @@ public class XNParser {
 				Collection<String> myKeywords = new HashSet<String>();
 				if (keywords != null) myKeywords.addAll(keywords);
 				if (isNotKeyword(1, myKeywords)) block.elseBlock.add(getStatement(myKeywords, false));
-				if (lookEOL(1)) {
-					int i = 0;
-					while (lookToken(i+1).kind == XNToken.LINE_TERM && i < LOOKAHEAD_LIMIT) i++;
-					if (lookToken(i+1).kind == XNToken.ID && lookToken(i+1).image.equalsIgnoreCase("end") && lookToken(i+2).kind == XNToken.ID && lookToken(i+2).image.equalsIgnoreCase("if")) {
-						getEOL();
-						block.endIfToken = getToken();
-						getToken();
-					}
-				}
 			}
 		} else {
 			throw new XNParseError("else", lookToken(1));
@@ -2138,11 +2129,7 @@ public class XNParser {
 				} else if (lookEOL(1)) {
 					int i = 0;
 					while (lookToken(i+1).kind == XNToken.LINE_TERM && i < LOOKAHEAD_LIMIT) i++;
-					if (lookToken(i+1).kind == XNToken.ID && lookToken(i+1).image.equalsIgnoreCase("end") && lookToken(i+2).kind == XNToken.ID && lookToken(i+2).image.equalsIgnoreCase("if")) {
-						getEOL();
-						block.endIfToken = getToken();
-						getToken();
-					} else if (lookToken(i+1).kind == XNToken.ID && lookToken(i+1).image.equalsIgnoreCase("else")) {
+					if (lookToken(i+1).kind == XNToken.ID && lookToken(i+1).image.equalsIgnoreCase("else")) {
 						getEOL();
 						getElseBlock(block, keywords);
 					}
