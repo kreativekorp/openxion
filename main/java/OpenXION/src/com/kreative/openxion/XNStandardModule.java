@@ -373,10 +373,10 @@ public class XNStandardModule extends XNModule {
 		functions.put("agm",f_agm);
 		functions.put("and",f_and);
 		functions.put("annuity",f_annuity);
-		functions.put("appfile", f_applicationfile);
-		functions.put("apppath", f_applicationpath);
-		functions.put("appordocfile", f_applicationordocumentfile);
-		functions.put("appordocpath", f_applicationordocumentpath);
+		functions.put("appfile",f_applicationfile);
+		functions.put("apppath",f_applicationpath);
+		functions.put("appordocfile",f_applicationordocumentfile);
+		functions.put("appordocpath",f_applicationordocumentpath);
 		functions.put("arg",f_arg);
 		functions.put("asc",f_asc);
 		functions.put("ascending",f_asc);
@@ -402,6 +402,7 @@ public class XNStandardModule extends XNModule {
 		functions.put("chartobin",f_chartobin);
 		functions.put("chartonum",f_chartonum);
 		functions.put("choose",f_ncr);
+		functions.put("clamp",f_median);
 		functions.put("compound",f_compound);
 		functions.put("concat",f_concat);
 		functions.put("concatsp",f_concatsp);
@@ -411,7 +412,7 @@ public class XNStandardModule extends XNModule {
 		functions.put("cot",f_cot);
 		functions.put("coth",f_coth);
 		functions.put("countfields",f_countfields);
-		functions.put("cpad", f_cpad);
+		functions.put("cpad",f_cpad);
 		functions.put("csc",f_csc);
 		functions.put("csch",f_csch);
 		functions.put("cscountfields",f_cscountfields);
@@ -422,7 +423,7 @@ public class XNStandardModule extends XNModule {
 		functions.put("csreplace",f_csreplace);
 		functions.put("csreplaceall",f_csreplaceall);
 		functions.put("csrinstr",f_csrinstr);
-		functions.put("csstrcmp", f_csstrcmp);
+		functions.put("csstrcmp",f_csstrcmp);
 		functions.put("date",f_date);
 		functions.put("dateitems",f_dateitems);
 		functions.put("dec",f_dec);
@@ -432,8 +433,8 @@ public class XNStandardModule extends XNModule {
 		functions.put("decreasing",f_dec);
 		functions.put("desc",f_desc);
 		functions.put("descending",f_desc);
-		functions.put("docfile", f_documentfile);
-		functions.put("docpath", f_documentpath);
+		functions.put("docfile",f_documentfile);
+		functions.put("docpath",f_documentpath);
 		functions.put("equal",f_equal);
 		functions.put("exp",f_exp);
 		functions.put("exp1",f_exp1);
@@ -458,14 +459,14 @@ public class XNStandardModule extends XNModule {
 		functions.put("im",f_im);
 		functions.put("implode",f_implode);
 		functions.put("inc",f_inc);
-		functions.put("includefile", f_includefile);
-		functions.put("includepath", f_includepath);
+		functions.put("includefile",f_includefile);
+		functions.put("includepath",f_includepath);
 		functions.put("increasing",f_inc);
 		functions.put("instr",f_instr);
 		functions.put("int",f_trunc);
-		functions.put("isfinite", f_isfinite);
-		functions.put("isinfinite", f_isinfinite);
-		functions.put("isnan", f_isnan);
+		functions.put("isfinite",f_isfinite);
+		functions.put("isinfinite",f_isinfinite);
+		functions.put("isnan",f_isnan);
 		functions.put("lcase",f_lcase);
 		functions.put("lcm",f_lcm);
 		functions.put("lconcat",f_lconcat);
@@ -490,6 +491,7 @@ public class XNStandardModule extends XNModule {
 		functions.put("map",f_map);
 		functions.put("max",f_max);
 		functions.put("maximum",f_max);
+		functions.put("median",f_median);
 		functions.put("mid",f_mid);
 		functions.put("min",f_min);
 		functions.put("minimum",f_min);
@@ -507,15 +509,15 @@ public class XNStandardModule extends XNModule {
 		functions.put("paramcount",f_paramcount);
 		functions.put("params",f_params);
 		functions.put("parent",f_parent);
-		functions.put("path", f_applicationordocumentpath);
+		functions.put("path",f_applicationordocumentpath);
 		functions.put("pick",f_npr);
 		functions.put("pow",f_pow);
 		functions.put("prod",f_prod);
 		functions.put("product",f_prod);
-		functions.put("progfile", f_applicationfile);
-		functions.put("progpath", f_applicationpath);
-		functions.put("progordocfile", f_applicationordocumentfile);
-		functions.put("progordocpath", f_applicationordocumentpath);
+		functions.put("progfile",f_applicationfile);
+		functions.put("progpath",f_applicationpath);
+		functions.put("progordocfile",f_applicationordocumentfile);
+		functions.put("progordocpath",f_applicationordocumentpath);
 		functions.put("pstddev",f_pstddev);
 		functions.put("pvariance",f_pvariance);
 		functions.put("radius",f_hypot);
@@ -551,7 +553,7 @@ public class XNStandardModule extends XNModule {
 		functions.put("sqrt",f_sqrt);
 		functions.put("sstddev",f_sstddev);
 		functions.put("stddev",f_pstddev);
-		functions.put("strcmp", f_strcmp);
+		functions.put("strcmp",f_strcmp);
 		functions.put("substr",f_substr);
 		functions.put("substring",f_substring);
 		functions.put("sum",f_sum);
@@ -4254,6 +4256,65 @@ public class XNStandardModule extends XNModule {
 					if (XOMNumberMath.compare((XOMNumber)number, max) > 0) max = (XOMNumber)number;
 				}
 				return max;
+			}
+		}
+	};
+	
+	private static final Function f_median = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> numbers = anyNumericListParameter(ctx, functionName, parameter);
+			MathContext mc = ctx.getMathContext();
+			MathProcessor mp = ctx.getMathProcessor();
+			if (numbers.isEmpty()) return XOMNumber.NaN;
+			if (numbers.get(0) instanceof XOMComplex) {
+				List<XOMNumber> r = new Vector<XOMNumber>();
+				List<XOMNumber> i = new Vector<XOMNumber>();
+				for (XOMVariant number : numbers) {
+					XOMNumber[] num = ((XOMComplex)number).toXOMNumbers();
+					r.add(num[0]);
+					i.add(num[1]);
+				}
+				Collections.sort(r, XOMNumberMath.comparator);
+				Collections.sort(i, XOMNumberMath.comparator);
+				if ((r.size() % 2) == 1) {
+					XOMNumber rr = r.get((r.size() - 1) / 2);
+					XOMNumber ri = i.get((i.size() - 1) / 2);
+					return new XOMComplex(rr, ri);
+				} else {
+					XOMNumber ar = r.get((r.size() / 2) - 1);
+					XOMNumber br = r.get(r.size() / 2);
+					XOMNumber rr = XOMNumberMath.divide(XOMNumberMath.add(ar, br, mc, mp), new XOMNumber(2), mc, mp);
+					XOMNumber ai = i.get((i.size() / 2) - 1);
+					XOMNumber bi = i.get(i.size() / 2);
+					XOMNumber ri = XOMNumberMath.divide(XOMNumberMath.add(ai, bi, mc, mp), new XOMNumber(2), mc, mp);
+					return new XOMComplex(rr, ri);
+				}
+			} else if (numbers.get(0) instanceof XOMInteger) {
+				List<XOMInteger> n = new Vector<XOMInteger>();
+				for (XOMVariant number : numbers) {
+					n.add((XOMInteger)number);
+				}
+				Collections.sort(n, XOMIntegerMath.comparator);
+				if ((n.size() % 2) == 1) {
+					return n.get((n.size() - 1) / 2);
+				} else {
+					XOMNumber a = XOMNumberType.instance.makeInstanceFrom(ctx, n.get((n.size() / 2) - 1), true);
+					XOMNumber b = XOMNumberType.instance.makeInstanceFrom(ctx, n.get(n.size() / 2), true);
+					return XOMNumberMath.divide(XOMNumberMath.add(a, b, mc, mp), new XOMNumber(2), mc, mp);
+				}
+			} else {
+				List<XOMNumber> n = new Vector<XOMNumber>();
+				for (XOMVariant number : numbers) {
+					n.add((XOMNumber)number);
+				}
+				Collections.sort(n, XOMNumberMath.comparator);
+				if ((n.size() % 2) == 1) {
+					return n.get((n.size() - 1) / 2);
+				} else {
+					XOMNumber a = n.get((n.size() / 2) - 1);
+					XOMNumber b = n.get(n.size() / 2);
+					return XOMNumberMath.divide(XOMNumberMath.add(a, b, mc, mp), new XOMNumber(2), mc, mp);
+				}
 			}
 		}
 	};
