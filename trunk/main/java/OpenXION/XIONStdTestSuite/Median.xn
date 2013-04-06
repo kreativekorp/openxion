@@ -1,0 +1,13 @@
+put median()
+
+put median(1)
+put median(2.3)
+put median((4,5) as complex)
+
+put median(2,1)
+put median(3.4,5.6)
+put median((9,10) as complex,(7,8) as complex)
+
+put median(2,3,1)
+put median(8.9,4.5,6.7)
+put median((12,13) as complex,(10,11) as complex,(14,15) as complex)

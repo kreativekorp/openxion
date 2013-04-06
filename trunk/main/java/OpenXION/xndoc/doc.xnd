@@ -61,7 +61,7 @@
 <dialect>
 	<name>oxn</name>
 	<title>OpenXION</title>
-	<versions>1.0, 1.1, 1.2, 1.3, 1.4</versions>
+	<versions>1.0, 1.1, 1.2, 1.3, 1.4, 1.5</versions>
 	<summary>
 		This is the official documentation for OpenXION,
 		the reference implementation of the XION Scripting Language Standard.
@@ -83,7 +83,7 @@
 <module>
 	<name>oxnb</name>
 	<title>OpenXION Base</title>
-	<versions>1.0, 1.1, 1.2, 1.3, 1.4</versions>
+	<versions>1.0, 1.1, 1.2, 1.3, 1.4, 1.5</versions>
 	<summary>
 		This is the official documentation for the core
 		functionality of OpenXION.
@@ -106,7 +106,7 @@
 <module>
 	<name>oxns</name>
 	<title>OpenXION Standard Module</title>
-	<versions>1.0, 1.1, 1.2, 1.3, 1.4</versions>
+	<versions>1.0, 1.1, 1.2, 1.3, 1.4, 1.5</versions>
 	<summary>
 		This is the official documentation for the standard
 		functionality of OpenXION.
@@ -129,7 +129,7 @@
 <module>
 	<name>oxne</name>
 	<title>OpenXION Extended Module</title>
-	<versions>1.0, 1.1, 1.2, 1.3, 1.4</versions>
+	<versions>1.0, 1.1, 1.2, 1.3, 1.4, 1.5</versions>
 	<summary>
 		This is the official documentation for the nonstandard
 		functionality of OpenXION.
@@ -152,7 +152,7 @@
 <module>
 	<name>oxna</name>
 	<title>OpenXION Audio Module</title>
-	<versions>1.2, 1.3, 1.4</versions>
+	<versions>1.2, 1.3, 1.4, 1.5</versions>
 	<summary>
 		This is the official documentation for the nonstandard audio-related
 		functionality of OpenXION.
@@ -14660,6 +14660,11 @@
 			a <a>dt:complex</a> is returned.
 		</p>
 	</description>
+	<notes>
+		<p>
+			If no arguments are given, <a>cn:NaN</a> is returned.
+		</p>
+	</notes>
 	<see-also>
 		fn:geom, fn:geomean
 	</see-also>
@@ -17320,6 +17325,11 @@
 			<a>dt:complex</a>, a <a>dt:complex</a> is returned.
 		</p>
 	</description>
+	<notes>
+		<p>
+			If no arguments are given, <a>cn:NaN</a> is returned.
+		</p>
+	</notes>
 	<see-also>
 		fn:avg, fn:average
 	</see-also>
@@ -17516,6 +17526,9 @@
 		<p>
 			This function is similar to the <a>fn:abs</a> function,
 			but can take more than one argument.
+		</p>
+		<p>
+			If no arguments are given, <a>cn:zero</a> is returned.
 		</p>
 	</notes>
 	<see-also>
@@ -18462,6 +18475,58 @@
 			The elements are compared as if by the <a>op:&gt;</a> operator.
 		</p>
 	</description>
+	<notes>
+		<p>
+			If no arguments are given, <a>cn:NaN</a> is returned.
+		</p>
+	</notes>
+	<see-also>
+		fn:min, fn:minimum
+	</see-also>
+</function>
+
+<function>
+	<name dialects="xn,oxn&ge;1.5" modules="oxns&ge;1.5">clamp</name>
+	<name dialects="xn,oxn&ge;1.5" modules="oxns&ge;1.5">median</name>
+	<syntax>
+		<syn>
+			<opt>the</opt> <me/> of <mv>factor</mv>
+		</syn>
+		<syn>
+			<me/> ( <mv>expression</mv> )
+		</syn>
+		<p>
+			<mv>Factor</mv> and <mv>expression</mv> yield <a>dt:list</a>s
+			of <a>dt:integers</a>, <a>dt:numbers</a>, or <a>dt:complexes</a>.
+		</p>
+	</syntax>
+	<description>
+		<p>
+			The <me/> function returns the median of its arguments.
+			If there are an odd number of elements, the middle element
+			(in sorted order) is returned. If there are an even number
+			of elements, the average of the two possible middle elements
+			(in sorted order) is returned.
+		</p>
+		<p>
+			When given three arguments, this function is equivalent
+			to a clamping function that restricts a given value to a
+			given range. The given value and the minimum and maximum
+			of the given range may be given in any order.
+		</p>
+	</description>
+	<notes>
+		<p>
+			If at least one element is a <a>dt:complex</a>, a
+			<a>dt:complex</a> will be returned with a real part of
+			the median of the real parts of the arguments, and an
+			imaginary part of the median of the imaginary parts of
+			the arguments.
+		</p>
+		<p>
+			If no arguments are given, <a>cn:NaN</a> is returned.
+		</p>
+	</notes>
 </function>
 
 <function>
@@ -18526,6 +18591,14 @@
 			The elements are compared as if by the <a>op:&lt;</a> operator.
 		</p>
 	</description>
+	<notes>
+		<p>
+			If no arguments are given, <a>cn:NaN</a> is returned.
+		</p>
+	</notes>
+	<see-also>
+		fn:max, fn:maximum
+	</see-also>
 </function>
 
 <function>
@@ -19106,6 +19179,9 @@
 		<p>
 			This is the infinite-arity version of the <a>op:^</a> operator.
 		</p>
+		<p>
+			If no arguments are given, <a>cn:NaN</a> is returned.
+		</p>
 	</notes>
 	<see-also>
 		op:^, fn:sum, fn:product, fn:root
@@ -19147,6 +19223,9 @@
 		<p>
 			This is the infinite-arity version of the <a>op:*</a> operator.
 		</p>
+		<p>
+			If no arguments are given, <a>cn:one</a> is returned.
+		</p>
 	</notes>
 	<see-also>
 		op:*, fn:sum, fn:pow
@@ -19184,6 +19263,11 @@
 			a <a>dt:complex</a> is returned.
 		</p>
 	</description>
+	<notes>
+		<p>
+			If no arguments are given, <a>cn:NaN</a> is returned.
+		</p>
+	</notes>
 	<see-also>
 		fn:sstddev, fn:variance
 	</see-also>
@@ -19220,6 +19304,11 @@
 			a <a>dt:complex</a> is returned.
 		</p>
 	</description>
+	<notes>
+		<p>
+			If no arguments are given, <a>cn:NaN</a> is returned.
+		</p>
+	</notes>
 	<see-also>
 		fn:svariance, fn:stddev
 	</see-also>
@@ -20049,6 +20138,11 @@
 			a <a>dt:complex</a> is returned.
 		</p>
 	</description>
+	<notes>
+		<p>
+			If no arguments are given, <a>cn:NaN</a> is returned.
+		</p>
+	</notes>
 </function>
 
 <function>
@@ -20078,6 +20172,11 @@
 			a <a>dt:complex</a> is returned.
 		</p>
 	</description>
+	<notes>
+		<p>
+			If no arguments are given, <a>cn:NaN</a> is returned.
+		</p>
+	</notes>
 	<see-also>
 		op:^, fn:pow
 	</see-also>
@@ -20542,6 +20641,11 @@
 			equivalent capacitance of capacitors in series.
 		</p>
 	</description>
+	<notes>
+		<p>
+			If no arguments are given, <a>cn:zero</a> is returned.
+		</p>
+	</notes>
 </function>
 
 <function>
@@ -20854,6 +20958,11 @@
 			a <a>dt:complex</a> is returned.
 		</p>
 	</description>
+	<notes>
+		<p>
+			If no arguments are given, <a>cn:NaN</a> is returned.
+		</p>
+	</notes>
 	<see-also>
 		fn:stddev, fn:svariance
 	</see-also>
@@ -21006,6 +21115,9 @@
 		<p>
 			This is the infinite-arity version of the <a>op:+</a> operator.
 		</p>
+		<p>
+			If no arguments are given, <a>cn:zero</a> is returned.
+		</p>
 	</notes>
 	<see-also>
 		op:+, fn:product, fn:pow
@@ -21042,6 +21154,11 @@
 			a <a>dt:complex</a> is returned.
 		</p>
 	</description>
+	<notes>
+		<p>
+			If no arguments are given, <a>cn:NaN</a> is returned.
+		</p>
+	</notes>
 	<see-also>
 		fn:variance, fn:sstddev
 	</see-also>
@@ -26550,6 +26667,7 @@
 				<td><a>fn:Im</a></td>
 			</tr>
 			<tr>
+				<td><a>fn:clamp</a></td>
 				<td><a>fn:sgn</a></td>
 				<td><a>fn:signum</a></td>
 				<td><a>fn:sqrt</a></td>
@@ -26685,6 +26803,9 @@
 			<tr>
 				<td><a>fn:max</a></td>
 				<td><a>fn:maximum</a></td>
+			</tr>
+			<tr>
+				<td><a>fn:median</a></td>
 			</tr>
 			<tr>
 				<td><a>fn:stddev</a></td>
