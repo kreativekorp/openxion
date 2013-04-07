@@ -1,7 +1,7 @@
 INSTJARDIR = /usr/lib
 INSTBINDIR = /usr/bin
 SRCFILES = src/test/*.java src/com/kreative/*/*.java src/com/kreative/*/*/*.java src/com/kreative/*/*/*/*.java
-PACKAGES = com.kreative.openxion com.kreative.openxion.ast com.kreative.openxion.audio com.kreative.openxion.binpack com.kreative.openxion.format com.kreative.openxion.io com.kreative.openxion.math com.kreative.openxion.tr com.kreative.openxion.util com.kreative.openxion.xom com.kreative.openxion.xom.inst com.kreative.openxion.xom.type com.kreative.xiondoc com.kreative.xiondoc.sdom com.kreative.xiondoc.xdom
+PACKAGES = com.kreative.openxion com.kreative.openxion.ast com.kreative.openxion.audio com.kreative.openxion.binpack com.kreative.openxion.format com.kreative.openxion.io com.kreative.openxion.jsr223 com.kreative.openxion.math com.kreative.openxion.tr com.kreative.openxion.util com.kreative.openxion.xom com.kreative.openxion.xom.inst com.kreative.openxion.xom.type com.kreative.xiondoc com.kreative.xiondoc.sdom com.kreative.xiondoc.xdom
 
 all: clean bin doc osxclean OpenXION.jar XIONDoc.jar OpenXION-src.tgz XIONDoc-src.tgz OpenXION-test.tgz OpenXION-xndocs.tgz XION-Language-Module.tgz OpenXION-dist.zip OpenXION-distwin.zip
 
@@ -65,7 +65,11 @@ osxclean:
 	rm -f XIONStdTestSuite/.DS_Store
 
 OpenXION.jar: osxclean
-	jar cmf dep/MANIFEST-OXN.MF OpenXION.jar -C bin com/kreative/openxion
+	rm -rf bin/META-INF
+	mkdir -p bin/META-INF/services
+	cp dep/javax.script.ScriptEngineFactory bin/META-INF/services/
+	jar cmf dep/MANIFEST-OXN.MF OpenXION.jar -C bin META-INF -C bin com/kreative/openxion
+	rm -rf bin/META-INF
 
 XIONDoc.jar: osxclean
 	jar cmf dep/MANIFEST-XND.MF XIONDoc.jar -C bin com/kreative/xiondoc
