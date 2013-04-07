@@ -44,6 +44,7 @@ import com.kreative.openxion.XNExtendedModule;
 import com.kreative.openxion.XNInterpreter;
 import com.kreative.openxion.XNLexer;
 import com.kreative.openxion.XNParser;
+import com.kreative.openxion.XNScriptError;
 import com.kreative.openxion.XNStandardModule;
 import com.kreative.openxion.XNStdInOutUI;
 import com.kreative.openxion.XNUI;
@@ -74,20 +75,28 @@ public class XNScriptEngine extends AbstractScriptEngine {
 	
 	@Override
 	public Object eval(String script, ScriptContext context) throws ScriptException {
-		XNLexer l = new XNLexer(script, new StringReader(script));
-		XNParser p = new XNParser(ctx, l);
-		List<XNStatement> program = p.parse();
-		interp.executeScript(program);
-		return conv.toNative(ctx.getResult());
+		try {
+			XNLexer l = new XNLexer(script, new StringReader(script));
+			XNParser p = new XNParser(ctx, l);
+			List<XNStatement> program = p.parse();
+			interp.executeScript(program);
+			return conv.toNative(ctx.getResult());
+		} catch (XNScriptError e) {
+			throw new ScriptException(e);
+		}
 	}
 	
 	@Override
 	public Object eval(Reader script, ScriptContext context) throws ScriptException {
-		XNLexer l = new XNLexer(script, script);
-		XNParser p = new XNParser(ctx, l);
-		List<XNStatement> program = p.parse();
-		interp.executeScript(program);
-		return conv.toNative(ctx.getResult());
+		try {
+			XNLexer l = new XNLexer(script, script);
+			XNParser p = new XNParser(ctx, l);
+			List<XNStatement> program = p.parse();
+			interp.executeScript(program);
+			return conv.toNative(ctx.getResult());
+		} catch (XNScriptError e) {
+			throw new ScriptException(e);
+		}
 	}
 	
 	@Override
