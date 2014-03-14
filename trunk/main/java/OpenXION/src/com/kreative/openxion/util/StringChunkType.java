@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2009-2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2009-2014 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -35,14 +35,56 @@ package com.kreative.openxion.util;
  * @author Rebecca G. Bettencourt, Kreative Software
  */
 public enum StringChunkType {
-	CHARACTER,
-	LINE,
-	ITEM,
-	COLUMN,
-	ROW,
-	WORD,
-	SENTENCE,
-	PARAGRAPH;
+	CHARACTER {
+		@Override
+		public StringChunkDefinition getDefinition(String nl, String id, String cd, String rd) {
+			return StringChunkDefinition.Character.getInstance();
+		}
+	},
+	LINE {
+		@Override
+		public StringChunkDefinition getDefinition(String nl, String id, String cd, String rd) {
+			return StringChunkDefinition.Line.getInstance(nl);
+		}
+	},
+	ITEM {
+		@Override
+		public StringChunkDefinition getDefinition(String nl, String id, String cd, String rd) {
+			return StringChunkDefinition.Item.getInstance(id);
+		}
+	},
+	COLUMN {
+		@Override
+		public StringChunkDefinition getDefinition(String nl, String id, String cd, String rd) {
+			return StringChunkDefinition.Item.getInstance(cd);
+		}
+	},
+	ROW {
+		@Override
+		public StringChunkDefinition getDefinition(String nl, String id, String cd, String rd) {
+			return StringChunkDefinition.Item.getInstance(rd);
+		}
+	},
+	WORD {
+		@Override
+		public StringChunkDefinition getDefinition(String nl, String id, String cd, String rd) {
+			return StringChunkDefinition.Word.getInstance();
+		}
+	},
+	SENTENCE {
+		@Override
+		public StringChunkDefinition getDefinition(String nl, String id, String cd, String rd) {
+			return StringChunkDefinition.Sentence.getInstance();
+		}
+	},
+	PARAGRAPH {
+		@Override
+		public StringChunkDefinition getDefinition(String nl, String id, String cd, String rd) {
+			return StringChunkDefinition.Paragraph.getInstance();
+		}
+	};
+	
+	public abstract StringChunkDefinition getDefinition(String nl, String id, String cd, String rd);
 	
 	public String toString() {
 		return name().toLowerCase();
