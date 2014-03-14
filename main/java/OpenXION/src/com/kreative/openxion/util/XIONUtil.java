@@ -332,48 +332,92 @@ public class XIONUtil {
 	private static final Random indexRand = new Random();
 	
 	public static int[] index(int min, int max, int current, int recent, int start, int end) {
-		int randomIndex = ((max-min+1) > 0) ? (min + indexRand.nextInt(max-min+1)) : min;
-		int middleIndex = min + (max-min+1)/2;
 		if (start < 0) {
 			switch (start) {
-			case INDEX_ANY: start = randomIndex; break;
-			case INDEX_MIDDLE: start = middleIndex; break;
-			case INDEX_PREVIOUS: start = current-1; if (start < min) start = max; break;
-			case INDEX_CURRENT: start = current; break;
-			case INDEX_NEXT: start = current+1; if (start > max) start = min; break;
-			case INDEX_RECENT: start = recent; break;
-			default: start += max+1; break;
+			case INDEX_ANY:
+				start = ((max-min+1) > 0) ? (min + indexRand.nextInt(max-min+1)) : min;
+				if (end == INDEX_ANY) end = start;
+				break;
+			case INDEX_MIDDLE:
+				start = min + (max-min+1)/2;
+				if (end == INDEX_MIDDLE) end = start;
+				break;
+			case INDEX_PREVIOUS:
+				start = current-1;
+				if (start < min) start = max;
+				break;
+			case INDEX_CURRENT:
+				start = current;
+				break;
+			case INDEX_NEXT:
+				start = current+1;
+				if (start > max) start = min;
+				break;
+			case INDEX_RECENT:
+				start = recent;
+				break;
+			default:
+				start += max+1;
+				break;
 			}
 		}
 		if (end < 0) {
 			switch (end) {
-			case INDEX_ANY: end = randomIndex; break;
-			case INDEX_MIDDLE: end = middleIndex; break;
-			case INDEX_PREVIOUS: end = current-1; if (end < min) end = max; break;
-			case INDEX_CURRENT: end = current; break;
-			case INDEX_NEXT: end = current+1; if (end > max) end = min; break;
-			case INDEX_RECENT: end = recent; break;
-			default: end += max+1; break;
+			case INDEX_ANY:
+				end = ((max-min+1) > 0) ? (min + indexRand.nextInt(max-min+1)) : min;
+				break;
+			case INDEX_MIDDLE:
+				end = min + (max-min+1)/2;
+				break;
+			case INDEX_PREVIOUS:
+				end = current-1;
+				if (end < min) end = max;
+				break;
+			case INDEX_CURRENT:
+				end = current;
+				break;
+			case INDEX_NEXT:
+				end = current+1;
+				if (end > max) end = min;
+				break;
+			case INDEX_RECENT:
+				end = recent;
+				break;
+			default:
+				end += max+1;
+				break;
 			}
 		}
 		return new int[]{start,end};
 	}
 	
 	public static int[] index(int min, int max, int start, int end) {
-		int randomIndex = ((max-min+1) > 0) ? (min + indexRand.nextInt(max-min+1)) : min;
-		int middleIndex = min + (max-min+1)/2;
 		if (start < 0) {
 			switch (start) {
-			case INDEX_ANY: start = randomIndex; break;
-			case INDEX_MIDDLE: start = middleIndex; break;
-			default: start += max+1; break;
+			case INDEX_ANY:
+				start = ((max-min+1) > 0) ? (min + indexRand.nextInt(max-min+1)) : min;
+				if (end == INDEX_ANY) end = start;
+				break;
+			case INDEX_MIDDLE:
+				start = min + (max-min+1)/2;
+				if (end == INDEX_MIDDLE) end = start;
+				break;
+			default:
+				start += max+1;
+				break;
 			}
 		}
 		if (end < 0) {
 			switch (end) {
-			case INDEX_ANY: end = randomIndex; break;
-			case INDEX_MIDDLE: end = middleIndex; break;
-			default: end += max+1; break;
+			case INDEX_ANY:
+				end = ((max-min+1) > 0) ? (min + indexRand.nextInt(max-min+1)) : min;
+				break;
+			case INDEX_MIDDLE:
+				end = min + (max-min+1)/2;
+				break;
+			default:
+				end += max+1;
+				break;
 			}
 		}
 		return new int[]{start,end};
@@ -394,7 +438,7 @@ public class XIONUtil {
 		StringBuffer s = new StringBuffer(exactMatchString.length()*2);
 		CharacterIterator it = new StringCharacterIterator(exactMatchString);
 		for (char ch = it.first(); ch != CharacterIterator.DONE; ch = it.next()) {
-			if (REGEX_MATCH_CHARS.contains(""+ch)) {
+			if (REGEX_MATCH_CHARS.contains(Character.toString(ch))) {
 				s.append('\\');
 			}
 			s.append(ch);
@@ -406,7 +450,7 @@ public class XIONUtil {
 		StringBuffer s = new StringBuffer(exactReplaceString.length()*2);
 		CharacterIterator it = new StringCharacterIterator(exactReplaceString);
 		for (char ch = it.first(); ch != CharacterIterator.DONE; ch = it.next()) {
-			if (REGEX_REPLACE_CHARS.contains(""+ch)) {
+			if (REGEX_REPLACE_CHARS.contains(Character.toString(ch))) {
 				s.append('\\');
 			}
 			s.append(ch);
