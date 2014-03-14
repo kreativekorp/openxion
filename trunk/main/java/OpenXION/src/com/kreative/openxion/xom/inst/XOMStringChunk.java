@@ -126,10 +126,6 @@ public class XOMStringChunk extends XOMContainer implements XOMStringContainer {
 			if (chunkType == StringChunkType.LINE) {
 				String a = "";
 				int n = 1-( (puttingBefore && puttingAfter) ? Math.min(s,e) : puttingBefore ? s : puttingAfter ? e : 1 );
-				if (count == 0) {
-					n--;
-					count++;
-				}
 				while (n-- > 0) {
 					a += ctx.getLineEnding();
 					count++;
@@ -149,10 +145,6 @@ public class XOMStringChunk extends XOMContainer implements XOMStringContainer {
 				}
 				String a = "";
 				int n = 1-( (puttingBefore && puttingAfter) ? Math.min(s,e) : puttingBefore ? s : puttingAfter ? e : 1 );
-				if (count == 0) {
-					n--;
-					count++;
-				}
 				while (n-- > 0) {
 					a += d;
 					count++;

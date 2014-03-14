@@ -1,0 +1,113 @@
+local x as string
+
+put empty into x
+put "x" into character 4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" into character -4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" into word 4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" into word -4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" into item 4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" into item -4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" into line 4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" into line -4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" before character 4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" before character -4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" before word 4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" before word -4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" before item 4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" before item -4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" before line 4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" before line -4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" after character 4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" after character -4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" after word 4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" after word -4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" after item 4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" after item -4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" after line 4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" after line -4 of x
+put replaceAll(x, lineFeed, "\\n")
+
+put empty into x
+put "x" into item 4 of x
+put item 4 of x
+
+put empty into x
+put "x" into item -4 of x
+put item -4 of x
+
+put empty into x
+put "x" into line 4 of x
+put line 4 of x
+
+put empty into x
+put "x" into line -4 of x
+put line -4 of x
