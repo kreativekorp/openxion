@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2009-2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2009-2014 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -28,8 +28,8 @@
 package com.kreative.openxion.xom.type;
 
 import com.kreative.openxion.XNContext;
+import com.kreative.openxion.util.StringChunkDefinition;
 import com.kreative.openxion.util.StringChunkType;
-import com.kreative.openxion.util.StringChunkEx;
 import com.kreative.openxion.util.XIONUtil;
 import com.kreative.openxion.xom.XOMContainerDataType;
 import com.kreative.openxion.xom.XOMGetError;
@@ -63,6 +63,14 @@ public class XOMStringChunkType extends XOMContainerDataType<XOMStringChunk> {
 		this.ct = ct;
 	}
 	
+	private StringChunkDefinition getDefinition(XNContext ctx) {
+		String nl = ctx.getLineEnding();
+		String id = Character.toString(ctx.getItemDelimiter());
+		String cd = Character.toString(ctx.getColumnDelimiter());
+		String rd = Character.toString(ctx.getRowDelimiter());
+		return ct.getDefinition(nl, id, cd, rd);
+	}
+	
 	public boolean canGetChildMassVariant(XNContext ctx, XOMVariant parent) {
 		return true;
 	}
@@ -71,19 +79,15 @@ public class XOMStringChunkType extends XOMContainerDataType<XOMStringChunk> {
 	}
 	public boolean canGetChildVariantByIndex(XNContext ctx, XOMVariant parent, int index) {
 		String s = parent.toTextString(ctx);
-		char id = ctx.getItemDelimiter();
-		char cd = ctx.getColumnDelimiter();
-		char rd = ctx.getRowDelimiter();
-		int n = StringChunkEx.count(s, ct, id, cd, rd);
+		StringChunkDefinition def = getDefinition(ctx);
+		int n = def.countChunks(s, 0, s.length());
 		index = XIONUtil.index(1, n, index, index)[0];
 		return (index > 0 && index <= n);
 	}
 	public boolean canGetChildVariantByIndex(XNContext ctx, XOMVariant parent, int startIndex, int endIndex) {
 		String s = parent.toTextString(ctx);
-		char id = ctx.getItemDelimiter();
-		char cd = ctx.getColumnDelimiter();
-		char rd = ctx.getRowDelimiter();
-		int n = StringChunkEx.count(s, ct, id, cd, rd);
+		StringChunkDefinition def = getDefinition(ctx);
+		int n = def.countChunks(s, 0, s.length());
 		int[] index = XIONUtil.index(1, n, startIndex, endIndex);
 		return (index[0] > 0 && index[1] <= n);
 	}
@@ -95,32 +99,18 @@ public class XOMStringChunkType extends XOMContainerDataType<XOMStringChunk> {
 	}
 	public boolean canGetChildVariantByName(XNContext ctx, XOMVariant parent, String name) {
 		String s = parent.toTextString(ctx);
-		char id = ctx.getItemDelimiter();
-		char cd = ctx.getColumnDelimiter();
-		char rd = ctx.getRowDelimiter();
-		int n = StringChunkEx.count(s, ct, id, cd, rd);
-		for (int i = 1; i <= n; i++) {
-			int st = StringChunkEx.start(s, ct, i, id, cd, rd);
-			int en = StringChunkEx.end(s, ct, i, id, cd, rd);
-			if (s.substring(st, en).equalsIgnoreCase(name)) {
-				return true;
-			}
-		}
-		return false;
+		StringChunkDefinition def = getDefinition(ctx);
+		StringChunkDefinition.ChunkLocation location = def.findChunkByContentIgnoreCase(s, 0, s.length(), name);
+		return location != null;
 	}
 	public XOMVariant getChildVariantByName(XNContext ctx, XOMVariant parent, String name) {
 		String s = parent.toTextString(ctx);
-		char id = ctx.getItemDelimiter();
-		char cd = ctx.getColumnDelimiter();
-		char rd = ctx.getRowDelimiter();
-		int n = StringChunkEx.count(s, ct, id, cd, rd);
-		for (int i = 1; i <= n; i++) {
-			int st = StringChunkEx.start(s, ct, i, id, cd, rd);
-			int en = StringChunkEx.end(s, ct, i, id, cd, rd);
-			if (s.substring(st, en).equalsIgnoreCase(name)) {
-				return new XOMStringChunk(parent, ct, i, i);
-			}
+		StringChunkDefinition def = getDefinition(ctx);
+		StringChunkDefinition.ChunkLocation location = def.findChunkByContentIgnoreCase(s, 0, s.length(), name);
+		if (location != null) {
+			return new XOMStringChunk(parent, ct, location.getFirstChunkIndex(), location.getLastChunkIndex());
+		} else {
+			throw new XOMGetError(typeName);
 		}
-		throw new XOMGetError(typeName);
 	}
 }
