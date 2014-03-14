@@ -401,7 +401,7 @@ public abstract class StringChunkDefinition {
 			}
 			if ((forPrepend && firstChunkIndex < 1) || (forAppend && lastChunkIndex < 1)) {
 				StringBuffer a = new StringBuffer();
-				int m = 1 - ((forPrepend && forAppend) ? Math.min(firstChunkIndex, lastChunkIndex) : forPrepend ? firstChunkIndex : forAppend ? lastChunkIndex: 1);
+				int m = 1 - ((forPrepend && forAppend) ? Math.min(firstChunkIndex, lastChunkIndex) : forPrepend ? firstChunkIndex : forAppend ? lastChunkIndex : 1);
 				while (m-- > 0) {
 					a.append(getDelimiter());
 					n++;
