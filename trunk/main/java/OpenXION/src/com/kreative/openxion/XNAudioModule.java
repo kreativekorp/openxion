@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2011-2014 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -36,6 +36,7 @@ import com.kreative.openxion.ast.XNExpression;
 import com.kreative.openxion.ast.XNModifier;
 import com.kreative.openxion.ast.XNNumberExpression;
 import com.kreative.openxion.ast.XNStringExpression;
+import com.kreative.openxion.audio.Note;
 import com.kreative.openxion.audio.NoteParser;
 import com.kreative.openxion.audio.XNAudioManager;
 import com.kreative.openxion.xom.XOMVariant;
@@ -357,12 +358,12 @@ public class XNAudioModule extends XNModule {
 			} else {
 				String inst = interp.evaluateExpression(parameters.get(0)).toTextString(ctx);
 				float tempo = (float)XOMNumberType.instance.makeInstanceFrom(ctx, interp.evaluateExpression(parameters.get(2)).asPrimitive(ctx), true).toDouble();
-				StringBuffer notes = new StringBuffer();
+				List<String> noteStrings = new Vector<String>();
 				for (int i = 3; i < parameters.size(); i++) {
-					notes.append(" ");
-					notes.append(interp.evaluateExpression(parameters.get(i)).toTextString(ctx).trim());
+					noteStrings.add(interp.evaluateExpression(parameters.get(i)).toTextString(ctx));
 				}
-				mgr.getPlayer().play(inst, tempo, new NoteParser().parseNotes(notes.toString()));
+				Note[] notes = new NoteParser().parseNotes(noteStrings).toArray(new Note[0]);
+				mgr.getPlayer().play(inst, tempo, notes);
 			}
 			return null;
 		}
