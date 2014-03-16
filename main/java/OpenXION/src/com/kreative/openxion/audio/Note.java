@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2011-2014 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -29,12 +29,37 @@ package com.kreative.openxion.audio;
 
 public class Note {
 	public static final int WHOLE_NOTE_DURATION = 256;
-	public boolean rest;
-	public int note;
-	public int duration;
-	public int velocity;
-	public boolean stoccato;
-	public boolean fermata;
-	public boolean silent;
-	public boolean chord;
+	
+	public final boolean rest;
+	public final int pitch;
+	public final int duration;
+	public final int velocity;
+	public final boolean stoccato;
+	public final boolean fermata;
+	public final boolean silent;
+	public final boolean chord;
+	
+	public Note(boolean rest, int pitch, int duration, int velocity) {
+		this(rest, pitch, duration, velocity, false, false, false, false);
+	}
+	
+	public Note(boolean rest, int pitch, int duration, int velocity, boolean stoccato, boolean fermata, boolean silent, boolean chord) {
+		this.rest = rest;
+		this.pitch = pitch;
+		this.duration = duration;
+		this.velocity = velocity;
+		this.stoccato = stoccato;
+		this.fermata = fermata;
+		this.silent = silent;
+		this.chord = chord;
+	}
+	
+	public int playDuration() {
+		if (stoccato) {
+			if (duration >= 64) return duration - 4;
+			if (duration >= 16) return duration - duration / 16;
+			if (duration >=  2) return duration - 1;
+		}
+		return duration;
+	}
 }

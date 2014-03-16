@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2011-2014 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -105,9 +105,7 @@ public class MIDIPlayer implements Player {
 	public synchronized void play(String instrument) {
 		instrument = instrument.trim().replaceAll("[^A-Za-z0-9]", "").toLowerCase();
 		int inst = nameToIdTable.containsKey(instrument) ? nameToIdTable.get(instrument).intValue() : 0;
-		Note n = new Note();
-		n.rest = false; n.note = 60; n.duration = Note.WHOLE_NOTE_DURATION/4; n.velocity = 127;
-		n.stoccato = false; n.fermata = false; n.silent = false; n.chord = false;
+		Note n = new Note(false, 60, Note.WHOLE_NOTE_DURATION / 4, 127);
 		q.add(new CynthiaSequence(inst, 120, new Note[]{n}));
 		if (qt == null || !qt.isAlive()) {
 			qt = new CynthiaThread();
@@ -166,9 +164,9 @@ public class MIDIPlayer implements Player {
 	// QUEUE
 	
 	private static class CynthiaSequence {
-		public int instrument;
-		public float bpm;
-		public Note[] notes;
+		public final int instrument;
+		public final float bpm;
+		public final Note[] notes;
 		public CynthiaSequence(int inst, float bpm, Note[] notes) {
 			this.instrument = inst;
 			this.bpm = bpm;
@@ -210,9 +208,9 @@ public class MIDIPlayer implements Player {
 		return new MidiEvent(m, tick);
 	}
 	
-	private static MidiEvent makeNoteEvent(int channel, int note, int vel, long tick) throws InvalidMidiDataException {
+	private static MidiEvent makeNoteEvent(int channel, int pitch, int vel, long tick) throws InvalidMidiDataException {
 		ShortMessage m = new ShortMessage();
-		m.setMessage(ShortMessage.NOTE_ON, channel, note, vel);
+		m.setMessage(ShortMessage.NOTE_ON, channel, pitch, vel);
 		return new MidiEvent(m, tick);
 	}
 	
@@ -221,13 +219,8 @@ public class MIDIPlayer implements Player {
 			if (note.rest) {
 				time += note.duration;
 			} else {
-				if (!note.silent) trk.add(makeNoteEvent(channel, note.note, note.velocity, time));
-				if (!note.fermata) {
-					if (!note.stoccato)
-						trk.add(makeNoteEvent(channel, note.note, 0, time+note.duration));
-					else
-						trk.add(makeNoteEvent(channel, note.note, 0, time+Math.max(1,note.duration-4)));
-				}
+				if (!note.silent) trk.add(makeNoteEvent(channel, note.pitch, note.velocity, time));
+				if (!note.fermata) trk.add(makeNoteEvent(channel, note.pitch, 0, time + note.playDuration()));
 				if (!note.chord) time += note.duration;
 			}
 		}
@@ -235,7 +228,7 @@ public class MIDIPlayer implements Player {
 	}
 	
 	private static Sequence createSequence(int inst, Note[] notes) throws InvalidMidiDataException {
-		Sequence seq = new Sequence(Sequence.PPQ, Note.WHOLE_NOTE_DURATION/4);
+		Sequence seq = new Sequence(Sequence.PPQ, Note.WHOLE_NOTE_DURATION / 4);
 		Track trk = seq.createTrack();
 		trk.add(makeInstEvent(1, inst, 0));
 		addToTrack(trk, 1, 0, notes);
