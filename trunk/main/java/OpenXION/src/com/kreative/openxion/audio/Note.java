@@ -28,22 +28,22 @@
 package com.kreative.openxion.audio;
 
 public class Note {
-	public static final int WHOLE_NOTE_DURATION = 256;
+	public static final double WHOLE_NOTE_DURATION = 256;
 	
 	public final boolean rest;
 	public final int pitch;
-	public final int duration;
+	public final double duration;
 	public final int velocity;
 	public final boolean stoccato;
 	public final boolean fermata;
 	public final boolean silent;
 	public final boolean chord;
 	
-	public Note(boolean rest, int pitch, int duration, int velocity) {
+	public Note(boolean rest, int pitch, double duration, int velocity) {
 		this(rest, pitch, duration, velocity, false, false, false, false);
 	}
 	
-	public Note(boolean rest, int pitch, int duration, int velocity, boolean stoccato, boolean fermata, boolean silent, boolean chord) {
+	public Note(boolean rest, int pitch, double duration, int velocity, boolean stoccato, boolean fermata, boolean silent, boolean chord) {
 		this.rest = rest;
 		this.pitch = pitch;
 		this.duration = duration;
@@ -54,12 +54,8 @@ public class Note {
 		this.chord = chord;
 	}
 	
-	public int playDuration() {
-		if (stoccato) {
-			if (duration >= 64) return duration - 4;
-			if (duration >= 16) return duration - duration / 16;
-			if (duration >=  2) return duration - 1;
-		}
+	public double playDuration() {
+		if (stoccato) return duration / 2;
 		return duration;
 	}
 }

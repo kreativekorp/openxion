@@ -33,7 +33,7 @@ import java.util.List;
 public class NoteParser {
 	private int step = 0;
 	private int octave = 4;
-	private int dur = Note.WHOLE_NOTE_DURATION / 4;
+	private double dur = Note.WHOLE_NOTE_DURATION / 4;
 	private int vel = 127;
 	
 	public void reset() {
@@ -102,10 +102,10 @@ public class NoteParser {
 					p++;
 				}
 				if (p < n && Character.isDigit(noteIn.charAt(p))) {
-					octave = 0;
-					while (p < n && Character.isDigit(noteIn.charAt(p))) {
-						octave *= 10;
-						octave += Character.getNumericValue(noteIn.charAt(p));
+					octave = Character.getNumericValue(noteIn.charAt(p));
+					p++;
+					if (octave == 0 && p < n && Character.isDigit(noteIn.charAt(p)) && Character.getNumericValue(noteIn.charAt(p)) == 0) {
+						octave--;
 						p++;
 					}
 				}
@@ -121,6 +121,9 @@ public class NoteParser {
 				octave = midiValue / 12 - 1;
 			}
 		}
+		int pitch = octave * 12 + step + 12;
+		if (pitch < 0) pitch = 0;
+		if (pitch > 127) pitch = 127;
 		/* Duration */
 		if (p < n) {
 			if (isDuration(noteIn.charAt(p))) {
@@ -188,6 +191,8 @@ public class NoteParser {
 						vel += Character.getNumericValue(noteIn.charAt(p));
 						p++;
 					}
+					if (vel < 0) vel = 0;
+					if (vel > 127) vel = 127;
 					break;
 			}
 		}
@@ -203,14 +208,9 @@ public class NoteParser {
 				}
 				p++;
 			}
-			return new Note(
-				false, octave * 12 + step + 12, dur, vel,
-				stoccato, fermata, silent, chord
-			);
+			return new Note(false, pitch, dur, vel, stoccato, fermata, silent, chord);
 		} else {
-			return new Note(
-				true, octave * 12 + step + 12, dur, vel
-			);
+			return new Note(true, pitch, dur, vel);
 		}
 	}
 	
@@ -257,7 +257,7 @@ public class NoteParser {
 			|| ch == 's' || ch == 't' || ch == 'x' || ch == 'o';
 	}
 	
-	private static int durationValue(char ch) {
+	private static double durationValue(char ch) {
 		switch (ch) {
 			case 'z': return Note.WHOLE_NOTE_DURATION * 8;
 			case 'l': return Note.WHOLE_NOTE_DURATION * 6;
@@ -276,14 +276,15 @@ public class NoteParser {
 	}
 	
 	private static boolean isDurationModifier(char ch) {
-		return ch == '.' || (Character.isDigit(ch) && Character.getNumericValue(ch) > 1);
+		return ch == '.' || ch == ':' || (Character.isDigit(ch) && Character.getNumericValue(ch) >= 1);
 	}
 	
-	private static int durationModifierValue(char ch, int dur) {
+	private static double durationModifierValue(char ch, double dur) {
 		if (ch == '.') return dur + dur / 2;
+		if (ch == ':') return dur * 2;
 		if (Character.isDigit(ch)) {
 			int divisor = Character.getNumericValue(ch);
-			if (divisor > 1) return dur / divisor;
+			if (divisor >= 1) return dur / divisor;
 		}
 		return dur;
 	}
