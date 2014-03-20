@@ -202,19 +202,19 @@ public class MIDIPlayer implements Player {
 	
 	// MIDI
 	
-	private static MidiEvent makeInstEvent(int channel, int instNum, long tick) throws InvalidMidiDataException {
+	private static MidiEvent makeInstEvent(int channel, int instNum, double tick) throws InvalidMidiDataException {
 		ShortMessage m = new ShortMessage();
 		m.setMessage(ShortMessage.PROGRAM_CHANGE, channel, instNum, 0);
-		return new MidiEvent(m, tick);
+		return new MidiEvent(m, (long)Math.round(tick));
 	}
 	
-	private static MidiEvent makeNoteEvent(int channel, int pitch, int vel, long tick) throws InvalidMidiDataException {
+	private static MidiEvent makeNoteEvent(int channel, int pitch, int vel, double tick) throws InvalidMidiDataException {
 		ShortMessage m = new ShortMessage();
 		m.setMessage(ShortMessage.NOTE_ON, channel, pitch, vel);
-		return new MidiEvent(m, tick);
+		return new MidiEvent(m, (long)Math.round(tick));
 	}
 	
-	private static long addToTrack(Track trk, int channel, long time, Note[] notes) throws InvalidMidiDataException {
+	private static double addToTrack(Track trk, int channel, double time, Note[] notes) throws InvalidMidiDataException {
 		for (Note note : notes) {
 			if (note.rest) {
 				time += note.duration;
@@ -228,7 +228,7 @@ public class MIDIPlayer implements Player {
 	}
 	
 	private static Sequence createSequence(int inst, Note[] notes) throws InvalidMidiDataException {
-		Sequence seq = new Sequence(Sequence.PPQ, Note.WHOLE_NOTE_DURATION / 4);
+		Sequence seq = new Sequence(Sequence.PPQ, (int)Math.round(Note.WHOLE_NOTE_DURATION / 4));
 		Track trk = seq.createTrack();
 		trk.add(makeInstEvent(1, inst, 0));
 		addToTrack(trk, 1, 0, notes);
