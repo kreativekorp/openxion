@@ -27,10 +27,11 @@
 
 package com.kreative.openxion.audio;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.Vector;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -43,56 +44,122 @@ import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 
 public class MIDIPlayer implements Player {
-	private static final String[] stdNames = {
+	private static final String[] DISPLAY_NAMES = {
 		"Acoustic Grand Piano", "Bright Acoustic Piano", "Electric Grand Piano",
-		"Honky-Tonk Piano", "Rhodes Piano", "Chorused Piano", "Harpsichord",
-		"Clavinet", "Celesta", "Glockenspiel", "Music Box",
-		"Vibraphone", "Marimba", "Xylophone", "Tubular Bells",
-		"Dulcimer", "Draw Organ", "Percussive Organ", "Rock Organ",
-		"Church Organ", "Reed Organ", "Accordion", "Harmonica",
-		"Tango Accordion", "Accoustic Nylon Guitar", "Accoustic Steel Guitar", "Electric Jazz Guitar",
-		"Electric Clean Guitar", "Electric Guitar Muted", "Overdriven Guitar", "Distortion Guitar",
-		"Guitar Harmonics", "Wood Bass", "Electric Bass Fingered", "Electric Bass Picked",
+		"Honky-Tonk Piano", "Electric Piano 1", "Electric Piano 2", "Harpsichord",
+		"Clavi", "Celesta", "Glockenspiel", "Music Box", "Vibraphone", "Marimba",
+		"Xylophone", "Tubular Bells", "Dulcimer", "Drawbar Organ", "Percussive Organ",
+		"Rock Organ", "Church Organ", "Reed Organ", "Accordion", "Harmonica",
+		"Tango Accordion", "Acoustic Guitar (Nylon)", "Acoustic Guitar (Steel)",
+		"Electric Guitar (Jazz)", "Electric Guitar (Clean)", "Electric Guitar (Muted)",
+		"Overdriven Guitar", "Distortion Guitar", "Guitar Harmonics",
+		"Acoustic Bass", "Electric Bass (Finger)", "Electric Bass (Pick)",
 		"Fretless Bass", "Slap Bass 1", "Slap Bass 2", "Synth Bass 1",
-		"Synth Bass 2", "Violin", "Viola", "Cello",
-		"Contrabass", "Tremolo Strings", "Pizzicato Strings", "Orchestral Harp",
-		"Timpani", "Acoustic String Ensemble 1", "Acoustic String Ensemble 2", "Synth Strings 1",
-		"Synth Strings 2", "Aah Choir", "Ooh Choir", "Synvox",
-		"Orchestra Hit", "Trumpet", "Trombone", "Tuba",
-		"Muted Trumpet", "French Horn", "Brass Section", "Synth Brass 1",
-		"Synth Brass 2", "Soprano Sax", "Alto Sax", "Tenor Sax",
-		"Baritone Sax", "Oboe", "English Horn", "Bassoon",
-		"Clarinet", "Piccolo", "Flute", "Recorder",
-		"Pan Flute", "Bottle Blow", "Shakuhachi", "Whistle",
-		"Ocarina", "Square Lead", "Saw Lead", "Calliope",
-		"Chiffer", "Synth Lead 5", "Synth Lead 6", "Synth Lead 7",
-		"Synth Lead 8", "Synth Pad 1", "Synth Pad 2", "Synth Pad 3",
-		"Synth Pad 4", "Synth Pad 5", "Synth Pad 6", "Synth Pad 7",
-		"Synth Pad 8", "Ice Rain", "Soundtracks", "Crystal",
-		"Atmosphere", "Bright", "Goblin", "Echoes",
-		"Space", "Sitar", "Banjo", "Shamisen",
-		"Koto", "Kalimba", "Bagpipe", "Fiddle",
-		"Shanai", "Tinkle Bell", "Agogo", "Steel Drums",
-		"Woodblock", "Taiko Drum", "Melodic Tom", "Synth Tom",
-		"Reverse Cymbal", "Guitar Fret Noise", "Breath Noise", "Seashore",
-		"Bird Tweet", "Telephone Ring", "Helicopter", "Applause", "Gunshot"
+		"Synth Bass 2", "Violin", "Viola", "Cello", "Contrabass", "Tremolo Strings",
+		"Pizzicato Strings", "Orchestral Harp", "Timpani", "String Ensemble 1",
+		"String Ensemble 2", "Synth Strings 1", "Synth Strings 2", "Choir Aahs",
+		"Voice Oohs", "Synth Voice", "Orchestra Hit", "Trumpet", "Trombone",
+		"Tuba", "Muted Trumpet", "French Horn", "Brass Section", "Synth Brass 1",
+		"Synth Brass 2", "Soprano Sax", "Alto Sax", "Tenor Sax", "Baritone Sax",
+		"Oboe", "English Horn", "Bassoon", "Clarinet", "Piccolo", "Flute",
+		"Recorder", "Pan Flute", "Blown Bottle", "Shakuhachi", "Whistle",
+		"Ocarina", "Lead 1 (Square)", "Lead 2 (Sawtooth)", "Lead 3 (Calliope)",
+		"Lead 4 (Chiff)", "Lead 5 (Charang)", "Lead 6 (Voice)", "Lead 7 (Fifths)",
+		"Lead 8 (Bass + Lead)", "Pad 1 (New Age)", "Pad 2 (Warm)", "Pad 3 (Polysynth)",
+		"Pad 4 (Choir)", "Pad 5 (Bowed)", "Pad 6 (Metallic)", "Pad 7 (Halo)",
+		"Pad 8 (Sweep)", "FX 1 (Rain)", "FX 2 (Soundtrack)", "FX 3 (Crystal)",
+		"FX 4 (Atmosphere)", "FX 5 (Brightness)", "FX 6 (Goblins)", "FX 7 (Echoes)",
+		"FX 8 (Sci-Fi)", "Sitar", "Banjo", "Shamisen", "Koto", "Kalimba",
+		"Bagpipe", "Fiddle", "Shanai", "Tinkle Bell", "Agogo", "Steel Drums",
+		"Woodblock", "Taiko Drum", "Melodic Tom", "Synth Drum", "Reverse Cymbal",
+		"Guitar Fret Noise", "Breath Noise", "Seashore", "Bird Tweet",
+		"Telephone Ring", "Helicopter", "Applause", "Gunshot"
 	};
-	private static SortedMap<Integer,String> idToNameTable;
-	private static Map<String,Integer> nameToIdTable;
+	private static final String[][] NORMALIZED_NAMES = {
+		{ "acousticgrandpiano", "acousticgrand", "accousticgrandpiano", "accousticgrand" },
+		{ "brightacousticpiano", "brightacoustic", "brightaccousticpiano", "brightaccoustic" },
+		{ "electricgrandpiano", "electricgrand" }, { "honkytonkpiano" },
+		{ "electricpiano1", "rhodespiano" }, { "electricpiano2", "chorusedpiano" },
+		{ "harpsichord" }, { "clavi", "clavinet" }, { "celesta" }, { "glockenspiel" },
+		{ "musicbox" }, { "vibraphone" }, { "marimba" }, { "xylophone" }, { "tubularbells" },
+		{ "dulcimer" }, { "drawbarorgan", "draworgan" }, { "percussiveorgan" }, { "rockorgan" },
+		{ "churchorgan" }, { "reedorgan" }, { "accordion" }, { "harmonica" }, { "tangoaccordion" },
+		{ "acousticguitarnylon", "acousticnylonguitar", "accousticguitarnylon", "accousticnylonguitar" },
+		{ "acousticguitarsteel", "acousticsteelguitar", "accousticguitarsteel", "accousticsteelguitar" },
+		{ "electricguitarjazz", "electricjazzguitar" }, { "electricguitarclean", "electriccleanguitar" },
+		{ "electricguitarmuted", "electricmutedguitar" }, { "overdrivenguitar" }, { "distortionguitar" },
+		{ "guitarharmonics" }, { "acousticbass", "accousticbass", "woodbass" },
+		{ "electricbassfinger", "electricbassfingered" }, { "electricbasspick", "electricbasspicked" },
+		{ "fretlessbass" }, { "slapbass1" }, { "slapbass2" }, { "synthbass1" }, { "synthbass2" },
+		{ "violin" }, { "viola" }, { "cello" }, { "contrabass" }, { "tremolostrings" },
+		{ "pizzicatostrings" }, { "orchestralharp" }, { "timpani" },
+		{ "stringensemble1", "acousticstringensemble1", "accousticstringensemble1" },
+		{ "stringensemble2", "acousticstringensemble2", "accousticstringensemble2" },
+		{ "synthstrings1" }, { "synthstrings2" }, { "choiraahs", "aahchoir" },
+		{ "voiceoohs", "oohchoir" }, { "synthvoice", "synvox" }, { "orchestrahit" },
+		{ "trumpet" }, { "trombone" }, { "tuba" }, { "mutedtrumpet" }, { "frenchhorn" },
+		{ "brasssection" }, { "synthbrass1" }, { "synthbrass2" }, { "sopranosax", "sopranosaxophone" },
+		{ "altosax", "altosaxophone" }, { "tenorsax", "tenorsaxophone" }, { "baritonesax", "baritonesaxophone" },
+		{ "oboe" }, { "englishhorn" }, { "bassoon" }, { "clarinet" }, { "piccolo", "piccollo" },
+		{ "flute" }, { "recorder" }, { "panflute" }, { "blownbottle", "bottleblow" },
+		{ "shakuhachi" }, { "whistle" }, { "ocarina" },
+		{ "lead1", "synthlead1", "lead1square", "synthlead1square", "square", "lead1squarelead", "synthlead1squarelead", "squarelead" },
+		{ "lead2", "synthlead2", "lead2sawtooth", "synthlead2sawtooth", "sawtooth", "lead2sawlead", "synthlead2sawlead", "sawlead" },
+		{ "lead3", "synthlead3", "lead3calliope", "synthlead3calliope", "calliope" },
+		{ "lead4", "synthlead4", "lead4chiff", "synthlead4chiff", "chiff", "lead4chiffer", "synthlead4chiffer", "chiffer" },
+		{ "lead5", "synthlead5", "lead5charang", "synthlead5charang", "charang" },
+		{ "lead6", "synthlead6", "lead6voice", "synthlead6voice", "voice" },
+		{ "lead7", "synthlead7", "lead7fifths", "synthlead7fifths", "fifths" },
+		{ "lead8", "synthlead8", "lead8basslead", "synthlead8basslead", "basslead" },
+		{ "pad1", "synthpad1", "pad1newage", "synthpad1newage", "newage" },
+		{ "pad2", "synthpad2", "pad2warm", "synthpad2warm", "warm" },
+		{ "pad3", "synthpad3", "pad3polysynth", "synthpad3polysynth", "polysynth" },
+		{ "pad4", "synthpad4", "pad4choir", "synthpad4choir", "choir" },
+		{ "pad5", "synthpad5", "pad5bowed", "synthpad5bowed", "bowed" },
+		{ "pad6", "synthpad6", "pad6metallic", "synthpad6metallic", "metallic" },
+		{ "pad7", "synthpad7", "pad7halo", "synthpad7halo", "halo" },
+		{ "pad8", "synthpad8", "pad8sweep", "synthpad8sweep", "sweep" },
+		{ "fx1", "synthfx1", "fx1rain", "synthfx1rain", "rain", "fx1icerain", "synthfx1icerain", "icerain" },
+		{ "fx2", "synthfx2", "fx2soundtrack", "synthfx2soundtrack", "soundtrack", "fx2soundtracks", "synthfx2soundtracks", "soundtracks" },
+		{ "fx3", "synthfx3", "fx3crystal", "synthfx3crystal", "crystal" },
+		{ "fx4", "synthfx4", "fx4atmosphere", "synthfx4atmosphere", "atmosphere" },
+		{ "fx5", "synthfx5", "fx5brightness", "synthfx5brightness", "brightness", "fx5bright", "synthfx5bright", "bright" },
+		{ "fx6", "synthfx6", "fx6goblins", "synthfx6goblins", "goblins", "fx6goblin", "synthfx6goblin", "goblin" },
+		{ "fx7", "synthfx7", "fx7echoes", "synthfx7echoes", "echoes" },
+		{ "fx8", "synthfx8", "fx8scifi", "synthfx8scifi", "scifi", "fx8space", "synthfx8space", "space" },
+		{ "sitar" }, { "banjo" }, { "shamisen" }, { "koto" }, { "kalimba" }, { "bagpipe" },
+		{ "fiddle" }, { "shanai" }, { "tinklebell" }, { "agogo" }, { "steeldrums" },
+		{ "woodblock" }, { "taikodrum" }, { "melodictom" }, { "synthdrum", "synthtom" },
+		{ "reversecymbal" }, { "guitarfretnoise" }, { "breathnoise" }, { "seashore" },
+		{ "birdtweet" }, { "telephonering" }, { "helicopter" }, { "applause" }, { "gunshot" }
+	};
+
+	private static final Map<Integer,String> idToNameTable;
+	private static final Map<String,Integer> nameToIdTable;
+	private static final SortedSet<String> displayNameSet;
 	static {
-		idToNameTable = new TreeMap<Integer,String>();
-		nameToIdTable = new HashMap<String,Integer>();
-		for (int id = 0; id < stdNames.length; id++) {
-			String name = stdNames[id];
-			String normalizedname = name.trim().replaceAll("[^A-Za-z0-9]", "").toLowerCase();
-			idToNameTable.put(id, name);
-			nameToIdTable.put(normalizedname, id);
+		Map<Integer,String> itn = new HashMap<Integer,String>();
+		for (int id = 0; id < DISPLAY_NAMES.length; id++) {
+			itn.put(id, DISPLAY_NAMES[id]);
 		}
+		idToNameTable = Collections.unmodifiableMap(itn);
+		Map<String,Integer> nti = new HashMap<String,Integer>();
+		for (int id = 0; id < NORMALIZED_NAMES.length; id++) {
+			for (String name : NORMALIZED_NAMES[id]) {
+				nti.put(name, id);
+			}
+		}
+		nameToIdTable = Collections.unmodifiableMap(nti);
+		SortedSet<String> dns = new TreeSet<String>();
+		for (String name : DISPLAY_NAMES) {
+			dns.add(name);
+		}
+		displayNameSet = Collections.unmodifiableSortedSet(dns);
 	}
 
 	@Override
 	public String[] getInstruments() {
-		return idToNameTable.values().toArray(new String[0]);
+		return displayNameSet.toArray(new String[0]);
 	}
 
 	@Override
