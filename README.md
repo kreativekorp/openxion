@@ -17,3 +17,5 @@ A typical XION function looks like:
     end isprime
 
 Version 1.x of OpenXION is written in Java for maximum portability and exposure. This also allows us to easily squash the most glaring bugs early in the interpreter's development. Version 2 will be ported to a lower-level language.
+
+**[Download Latest Release Here](https://github.com/kreativekorp/openxion/wiki/Downloads)**
