@@ -1,0 +1,308 @@
+.play-line-panel {
+	display: block;
+	width: 640px;
+	margin-top: 4px;
+	margin-left: auto;
+	margin-right: auto;
+}
+.play-line-presets {
+	text-align: center;
+	margin-bottom: 4px;
+}
+.preset-selector {
+	width: 200px;
+}
+.play-line {
+	text-align: center;
+}
+.instrument-selector {
+	width: 200px !important;
+}
+.tempo-input {
+	width: 60px !important;
+	text-align: right;
+}
+.note-input {
+	width: 320px !important;
+}
+.play-line-ctrl2 {
+	text-align: center;
+	margin-top: 4px;
+}
+.download-link-temp {
+	font-size: 80%;
+}
+.play-line-ctrl {
+	text-align: center;
+	margin-top: 4px;
+}
+.output-device-selector {
+	width: 200px;
+}
+.note-panel {
+	display: block;
+	width: 640px;
+	height: 192px;
+	border: solid 2px gray;
+	overflow-x: scroll;
+	overflow-y: hidden;
+	text-align: left;
+	white-space: nowrap;
+	margin-left: auto;
+	margin-right: auto;
+}
+.note-panel:before {
+	content: '';
+	display: inline-block;
+	width: 0;
+	height: 176px;
+	vertical-align: middle;
+}
+.note-panel .staff-start {
+	display: inline-block;
+	width: 48px;
+	height: 112px;
+	vertical-align: middle;
+	background: url(demo-clef.png) 0 0 no-repeat;
+}
+.note-panel .staff {
+	display: inline-block;
+	height: 112px;
+	vertical-align: middle;
+	background: url(demo-staff.png) 0 0 repeat-x;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+.note-panel .staff-end {
+	display: inline-block;
+	width: 12px;
+	height: 112px;
+	vertical-align: middle;
+	background: url(demo-bdbl.png) 0 0 no-repeat;
+}
+.note-panel .note {
+	display: inline-block;
+	height: 112px;
+	vertical-align: top;
+	margin-left: 4px;
+	margin-right: 4px;
+	position: relative;
+}
+.note-panel .note .note-velocity {
+	display: block;
+	position: absolute;
+	left: 0;
+	width: 160px;
+	bottom: 96px;
+	font-family: serif;
+	font-size: 14px;
+	font-weight: bold;
+	font-style: italic;
+	text-align: left;
+}
+.note-panel .note .note-tuplet {
+	display: block;
+	position: absolute;
+	left: 50%;
+	width: 160px;
+	margin-left: -80px;
+	bottom: 96px;
+	font-family: serif;
+	font-size: 12px;
+	font-weight: bold;
+	font-style: italic;
+	text-align: center;
+}
+.note-panel .note .note-rest {
+	display: inline-block;
+	height: 112px;
+	vertical-align: top;
+	background: url(demo-rests.png) 0 0 no-repeat;
+}
+.note-panel .note .note-rest-z { width: 24px; background-position: -8px 0; }
+.note-panel .note .note-rest-l { width: 20px; background-position: -40px 0; }
+.note-panel .note .note-rest-i { width: 16px; background-position: -68px 0; }
+.note-panel .note .note-rest-u { width: 16px; background-position: -92px 0; }
+.note-panel .note .note-rest-w { width: 16px; background-position: -116px 0; }
+.note-panel .note .note-rest-h { width: 16px; background-position: -140px 0; }
+.note-panel .note .note-rest-q { width: 12px; background-position: -164px 0; }
+.note-panel .note .note-rest-e { width: 12px; background-position: -184px 0; }
+.note-panel .note .note-rest-s { width: 12px; background-position: -204px 0; }
+.note-panel .note .note-rest-t { width: 16px; background-position: -224px 0; }
+.note-panel .note .note-rest-x { width: 16px; background-position: -248px 0; }
+.note-panel .note .note-rest-o { width: 20px; background-position: -272px 0; }
+.note-panel .note .note-rest-d {
+	width: 24px;
+	background-position: -348px 0;
+	text-align: center;
+}
+.note-panel .note .note-rest-digit {
+	display: inline-block;
+	width: 4px;
+	height: 112px;
+	vertical-align: top;
+	background: url(demo-rests.png) 0 0 no-repeat;
+}
+.note-panel .note .note-rest-digit-0 { background-position: -380px 0; }
+.note-panel .note .note-rest-digit-1 { background-position: -388px 0; }
+.note-panel .note .note-rest-digit-2 { background-position: -396px 0; }
+.note-panel .note .note-rest-digit-3 { background-position: -404px 0; }
+.note-panel .note .note-rest-digit-4 { background-position: -412px 0; }
+.note-panel .note .note-rest-digit-5 { background-position: -420px 0; }
+.note-panel .note .note-rest-digit-6 { background-position: -428px 0; }
+.note-panel .note .note-rest-digit-7 { background-position: -436px 0; }
+.note-panel .note .note-rest-digit-8 { background-position: -444px 0; }
+.note-panel .note .note-rest-digit-9 { background-position: -452px 0; }
+.note-panel .note .note-rest-colon {
+	display: inline-block;
+	width: 4px;
+	height: 112px;
+	vertical-align: top;
+	background: url(demo-rests.png) -324px 0 no-repeat;
+}
+.note-panel .note .note-rest-dot {
+	display: inline-block;
+	width: 4px;
+	height: 112px;
+	vertical-align: top;
+	background: url(demo-rests.png) -300px 0 no-repeat;
+}
+.note-panel .note .note-inner {
+	display: inline-block;
+	height: 112px;
+	vertical-align: top;
+	position: relative;
+}
+.note-panel .note .note-flat {
+	display: inline-block;
+	width: 8px;
+	height: 112px;
+	vertical-align: top;
+	background: url(demo-notes.png) -312px 0 no-repeat;
+}
+.note-panel .note .note-sharp {
+	display: inline-block;
+	width: 8px;
+	height: 112px;
+	vertical-align: top;
+	background: url(demo-notes.png) -328px 0 no-repeat;
+}
+.note-panel .note .note-value {
+	display: inline-block;
+	height: 112px;
+	vertical-align: top;
+	background: url(demo-notes.png) 0 0 no-repeat;
+	position: relative;
+}
+.note-panel .note .note-value-z { width: 20px; background-position: -8px 0; }
+.note-panel .note .note-value-l { width: 16px; background-position: -36px 0; }
+.note-panel .note .note-value-i { width: 12px; background-position: -60px 0; }
+.note-panel .note .note-value-u { width: 20px; background-position: -80px 0; }
+.note-panel .note .note-value-w { width: 16px; background-position: -108px 0; }
+.note-panel .note .note-value-h { width: 12px; background-position: -132px 0; }
+.note-panel .note .note-value-q { width: 12px; background-position: -152px 0; }
+.note-panel .note .note-value-e { width: 20px; background-position: -172px 0; }
+.note-panel .note .note-value-s { width: 20px; background-position: -200px 0; }
+.note-panel .note .note-value-t { width: 20px; background-position: -228px 0; }
+.note-panel .note .note-value-x { width: 20px; background-position: -256px 0; }
+.note-panel .note .note-value-o { width: 20px; background-position: -284px 0; }
+.note-panel .note .note-value-d {
+	width: 24px;
+	background-position: -412px 0;
+	text-align: center;
+}
+.note-panel .note .note-value-digit {
+	display: inline-block;
+	width: 4px;
+	height: 112px;
+	vertical-align: top;
+	background: url(demo-notes.png) 0 0 no-repeat;
+}
+.note-panel .note .note-value-digit-0 { background-position: -444px 0; }
+.note-panel .note .note-value-digit-1 { background-position: -452px 0; }
+.note-panel .note .note-value-digit-2 { background-position: -460px 0; }
+.note-panel .note .note-value-digit-3 { background-position: -468px 0; }
+.note-panel .note .note-value-digit-4 { background-position: -476px 0; }
+.note-panel .note .note-value-digit-5 { background-position: -484px 0; }
+.note-panel .note .note-value-digit-6 { background-position: -492px 0; }
+.note-panel .note .note-value-digit-7 { background-position: -500px 0; }
+.note-panel .note .note-value-digit-8 { background-position: -508px 0; }
+.note-panel .note .note-value-digit-9 { background-position: -516px 0; }
+.note-panel .note .note-stoccato {
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 50%;
+	width: 4px;
+	height: 112px;
+	margin-left: -2px;
+	background: url(demo-notes.png) -396px 0 no-repeat;
+}
+.note-panel .note .note-value-e .note-stoccato,
+.note-panel .note .note-value-s .note-stoccato,
+.note-panel .note .note-value-t .note-stoccato,
+.note-panel .note .note-value-x .note-stoccato,
+.note-panel .note .note-value-o .note-stoccato {
+	left: 6px;
+}
+.note-panel .note .note-ledger-lines {
+	display: block;
+	position: absolute;
+	left: -2px;
+	right: -2px;
+	background: url(demo-ledger.png) 0 0 repeat;
+}
+.note-panel .note .note-value-e .note-ledger-lines,
+.note-panel .note .note-value-s .note-ledger-lines,
+.note-panel .note .note-value-t .note-ledger-lines,
+.note-panel .note .note-value-x .note-ledger-lines,
+.note-panel .note .note-value-o .note-ledger-lines {
+	right: 6px;
+}
+.note-panel .note .note-colon {
+	display: inline-block;
+	width: 4px;
+	height: 112px;
+	vertical-align: top;
+	background: url(demo-notes.png) -380px 0 no-repeat;
+}
+.note-panel .note .note-inner-even .note-colon {
+	background-position: -368px 0;
+}
+.note-panel .note .note-dot {
+	display: inline-block;
+	width: 4px;
+	height: 112px;
+	vertical-align: top;
+	background: url(demo-notes.png) -356px 0 no-repeat;
+}
+.note-panel .note .note-inner-even .note-dot {
+	background-position: -344px 0;
+}
+.note-panel .note .note-fermata {
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 50%;
+	width: 16px;
+	height: 16px;
+	margin-left: -8px;
+	background: url(demo-dyns.png) -416px 0 no-repeat;
+}
+.note-panel .note-chord {
+	display: inline-block;
+	height: 112px;
+	vertical-align: top;
+	position: relative;
+}
+.image {
+	text-align: center;
+}
+table table {
+	margin: 0;
+	padding: 0;
+}
+.table-instrument-names {
+	font-size: 60%;
+	white-space: nowrap;
+}

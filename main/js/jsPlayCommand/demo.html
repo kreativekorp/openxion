@@ -1,0 +1,526 @@
+<html>
+<head>
+<title>jsPlayCommand: xTalk Scripted Music Notation in JavaScript</title>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="WebMIDIAPI.js"></script>
+<script type="text/javascript" src="jsPlayCommand.js"></script>
+<script type="text/javascript" src="demo.js"></script>
+<link rel="stylesheet" type="text/css" href="demo.css">
+</head>
+<body>
+
+<p><img src="demo.png" width="464" height="96" alt="jsPlayCommand: xTalk Scripted Music Notation in JavaScript"></p>
+<p>
+	The <b>jsPlayCommand</b> library is a JavaScript implementation of the
+	<code>play</code> command from HyperTalk, which used a kind of notation
+	now known in the xTalk community as <b>scripted music notation</b>.
+	HyperTalk used sound resources, but with our Modern Technology&trade;
+	<a href="#footnote" style="text-decoration: none;">*</a> we can use MIDI!
+</p>
+<p>
+	You can play around with jsPlayCommand using the editor below. Load a preset song or
+	enter your own using scripted music notation. The equivalent traditional music notation will
+	appear above the text field as you type. Scroll down the page for a <a href="#notation">reference
+	to scripted music notation</a>. Then, hit the <b>Play</b> button to see how it sounds!
+	You will have to either use <b><a href="http://www.google.com/chrome/">Google Chrome</a></b>
+	or install <b><a href="http://jazz-soft.net/">Jazz-Soft.net Jazz-Plugin</a></b>
+	to be able to actually play the notes. Alternatively, you can click the <b>Generate MIDI File</b>
+	button and download your creation as a standard MIDI file you can play anywhere!
+</p>
+
+<div class="note-panel"><div class="staff-start"></div><div class="staff"></div><div class="staff-end"></div></div>
+<div class="play-line-panel">
+	<div class="play-line-presets">
+		Load preset:
+		<select class="preset-selector"></select>
+	</div>
+	<div class="play-line">
+		<input type="hidden" value="0" class="channel-input">
+		<select class="instrument-selector"></select>
+		<input type="number" value="120" class="tempo-input">
+		<input type="text" class="note-input">
+	</div>
+	<div class="play-line">
+		<input type="hidden" value="1" class="channel-input">
+		<select class="instrument-selector"></select>
+		<input type="number" value="120" class="tempo-input">
+		<input type="text" class="note-input">
+	</div>
+	<div class="play-line">
+		<input type="hidden" value="2" class="channel-input">
+		<select class="instrument-selector"></select>
+		<input type="number" value="120" class="tempo-input">
+		<input type="text" class="note-input">
+	</div>
+	<div class="play-line">
+		<input type="hidden" value="3" class="channel-input">
+		<select class="instrument-selector"></select>
+		<input type="number" value="120" class="tempo-input">
+		<input type="text" class="note-input">
+	</div>
+	<div class="play-line-ctrl2">
+		<button class="add-channel-button">More Channels!</button>
+		<button class="remove-channel-button">Fewer Channels!</button>
+		<button class="download-button">Generate MIDI File</button>
+	</div>
+	<div class="play-line-ctrl loading" style="display: none;">
+		Looking for MIDI devices...
+	</div>
+	<div class="play-line-ctrl loaded" style="display: none;">
+		Select output device:
+		<select class="output-device-selector"></select>
+		<button class="play-button">Play</button>
+	</div>
+	<div class="play-line-ctrl error" style="display: none;">
+		Could not get access to MIDI devices.
+		<button class="reload-button">Try Again</button>
+	</div>
+</div>
+
+<h2 id="notation">Using Scripted Music Notation</h2>
+<p>
+	Scripted music notation uses a sequence of note strings separated by
+	whitespace to represent a sequence of notes. Each note string representing
+	a sounded note is composed of four parts: a <i>pitch</i>, a <i>duration</i>,
+	a <i>velocity</i>, and an <i>effect</i>. A note string representing a rest
+	is composed of two parts: a <i>duration</i> and the letter <code>r</code>.
+</p>
+<p class="image">
+	<img src="demo-notestring.png" width="312" height="144">
+</p>
+<ul>
+	<li>
+		The <i>pitch</i> is specified as a note name (<code>C</code>,
+		<code>D</code>, <code>E</code>, <code>F</code>, <code>G</code>,
+		<code>A</code>, <code>B</code>), followed by zero or more <code>b</code>
+		or <code>#</code> symbols (representing flats and sharps respectively),
+		optionally followed by an octave number (<code>00</code>,
+		<code>0</code>, <code>1</code>, <code>2</code>, <code>3</code>,
+		<code>4</code>, <code>5</code>, <code>6</code>, <code>7</code>,
+		<code>8</code>, <code>9</code>) (where octave 4 is the octave starting
+		with middle C and containing A440). Alternatively, the pitch may be
+		given as the letter <code>M</code>, <code>N</code>, or <code>P</code>
+		followed by the MIDI value; <code>M60</code> is equivalent to
+		<code>C4</code> and <code>M69</code> is equivalent to <code>A4</code>.
+		If the note value or octave is not specified, the previous value is used.
+	</li>
+	<li>
+		The <i>duration</i> is specified as one of the following letters,
+		followed by zero or more <code>:</code> symbols (which double the note
+		value), <code>.</code> symbols (to create a dotted note), or digits
+		<code>1</code> through <code>9</code> (to create a tuplet note). (Note
+		that a digit will create an individual note in a tuplet, not the whole
+		tuplet.)
+		<table><tr>
+			<td><table>
+				<tr><td><code>z</code></td><td>octuple whole note</td></tr>
+				<tr><td><code>l</code></td><td>sextuple whole note</td></tr>
+				<tr><td><code>i</code></td><td>quadruple whole note</td></tr>
+				<tr><td><code>u</code></td><td>double whole note</td></tr>
+			</table></td>
+			<td><table>
+				<tr><td><code>w</code></td><td>whole note</td></tr>
+				<tr><td><code>h</code></td><td>half note</td></tr>
+				<tr><td><code>q</code></td><td>quarter note</td></tr>
+				<tr><td><code>e</code></td><td>eighth note</td></tr>
+			</table></td>
+			<td><table>
+				<tr><td><code>s</code></td><td>16th note</td></tr>
+				<tr><td><code>t</code></td><td>32nd note</td></tr>
+				<tr><td><code>x</code></td><td>64th note</td></tr>
+				<tr><td><code>o</code></td><td>128th note</td></tr>
+			</table></td>
+		</tr></table>
+		Alternatively, the duration may be given as the letter <code>d</code>
+		followed by the duration of the note in 64ths of a quarter note.
+		If the duration is not specified, the previous value is used.
+	</li>
+	<li>
+		The <i>velocity</i> is specified as one of the following strings, from
+		softest to loudest: <code>ppp</code>, <code>pp</code>, <code>p</code>,
+		<code>mpp</code>, <code>mp</code>, <code>m</code>, <code>mf</code>,
+		<code>mff</code>, <code>f</code>, <code>ff</code>, <code>fff</code>.
+		Alternatively, the velocity may be given as the letter <code>v</code>
+		followed by the MIDI value from <code>0</code> (completely silent) to
+		<code>127</code> (the loudest, equivalent to <code>fff</code>).
+		If the velocity is not specified, the previous value is used.
+	</li>
+	<li>
+		The <i>effect</i> is specified as zero or more of the following symbols.
+		<table>
+			<tr><td><code>,</code></td><td>The note is counted for its full duration, but only played for half its duration (stoccato).</td></tr>
+			<tr><td><code>*</code></td><td>The note keeps playing even after its duration is passed, until a <code>!</code> is encountered (fermata).</td></tr>
+			<tr><td><code>!</code></td><td>Stops a note started by <code>*</code> after the specified duration has passed.</td></tr>
+			<tr><td><code>+</code></td><td>The next note will start playing simultaneously with this note (chord).</td></tr>
+		</table>
+		If the effect is not specified, no effect is applied.
+	</li>
+</ul>
+
+<h2 id="install">Using jsPlayCommand</h2>
+<p>
+	To use jsPlayCommand, embed the following script tags on your page:
+</p>
+<blockquote><pre>
+&lt;script type="text/javascript" src="http://www.kreativekorp.com/lib/jsPlayCommand/WebMIDIAPI.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="http://www.kreativekorp.com/lib/jsPlayCommand/jsPlayCommand.js"&gt;&lt;/script&gt;
+</pre></blockquote>
+<p>
+	Or, if you prefer to host it yourself, download <a href="jsPlayCommand.zip"><b>jsPlayCommand.zip</b></a>.
+</p>
+<p>
+	You may need to install <b><a href="http://jazz-soft.net/">Jazz-Soft.net Jazz-Plugin</a></b>
+	to be able to use jsPlayCommand (unless, of course, your browser already supports the
+	<a href="http://webaudio.github.io/web-midi-api/">Web MIDI API</a>, currently found only in
+	<b><a href="https://www.google.com/intl/en/chrome/browser/canary.html">Chrome Canary</a></b>).
+</p>
+<p>
+	Before jsPlayCommand can actually play any notes,
+	it must be initialized using the following APIs:
+</p>
+<dl>
+	<dt><code>jsPlayCommand.start(<i>success</i>, <i>failure</i>)</code></dt>
+	<dd>
+		Requests access to MIDI controllers and initializes jsPlayCommand.
+		The <i>success</i> function is called if this completed successfully.
+		Otherwise, the <i>failure</i> function is called.
+	</dd>
+	<dt><code>jsPlayCommand.running()</code></dt>
+	<dd>
+		Returns true if <code>jsPlayCommand.start()</code> has been called successfully.
+	</dd>
+	<dt><code>jsPlayCommand.stop()</code></dt>
+	<dd>
+		Resets jsPlayCommand to its uninitialized state.
+	</dd>
+</dl>
+<p>
+	Once jsPlayCommand is initialized, use one of the following APIs:
+</p>
+<dl>
+	<dt><code>jsPlayCommand.play(<i>instrument</i>, <i>notes</i>)</code><br>
+		<code>jsPlayCommand.play(<i>instrument</i>, <i>tempo</i>, <i>notes</i>)</code><br>
+		<code>jsPlayCommand.play(<i>channel</i>, <i>instrument</i>, <i>tempo</i>, <i>notes</i>)</code><br>
+		<code>jsPlayCommand.play(<i>bankSelect</i>, <i>channel</i>, <i>instrument</i>, <i>tempo</i>, <i>notes</i>)</code><br>
+		<code>jsPlayCommand.play(<i>output</i>, <i>bankSelect</i>, <i>channel</i>, <i>instrument</i>, <i>tempo</i>, <i>notes</i>)</code></dt>
+	<dd>
+		Plays a sequence of notes on a MIDI device. The sequence is played
+		asynchronously, so this API returns almost immediately. The parameters
+		to this API are:
+		<ul>
+			<li><i>Output</i> is one of the devices returned by <code>jsPlayCommand.outputs()</code>.</li>
+			<li>
+				<i>BankSelect</i> is the bank select mode,
+				which is one of the following:
+				<table>
+					<tr>
+						<td><code>jsPlayCommand.BANK_SELECT_GM</code></td>
+						<td>General MIDI mode. No bank select commands are sent.</td>
+					</tr>
+					<tr>
+						<td><code>jsPlayCommand.BANK_SELECT_GS</code></td>
+						<td>GS mode. CC0 is used for bank select; CC32 is not used.</td>
+					</tr>
+					<tr>
+						<td><code>jsPlayCommand.BANK_SELECT_XG</code></td>
+						<td>XG mode. CC32 is used for bank select; CC0 is not used.</td>
+					</tr>
+					<tr>
+						<td><code>jsPlayCommand.BANK_SELECT_MMA</code></td>
+						<td>MMA or GM2 mode. CC0 is used for MSB; CC32 is used for LSB.</td>
+					</tr>
+				</table>
+			</li>
+			<li><i>Channel</i> is the MIDI channel number from 0 to 15.</li>
+			<li>
+				<i>Instrument</i> is an integer, an object with a
+				<code>bank</code> and <code>instrument</code>, or
+				one of the following instrument names:
+				<table class="table-instrument-names"><tr>
+					<td><table>
+						<tr><td>0</td><td>Acoustic Grand Piano</td></tr>
+						<tr><td>1</td><td>Bright Acoustic Piano</td></tr>
+						<tr><td>2</td><td>Electric Grand Piano</td></tr>
+						<tr><td>3</td><td>Honky-Tonk Piano</td></tr>
+						<tr><td>4</td><td>Electric Piano 1</td></tr>
+						<tr><td>5</td><td>Electric Piano 2</td></tr>
+						<tr><td>6</td><td>Harpsichord</td></tr>
+						<tr><td>7</td><td>Clavi</td></tr>
+						<tr><td>8</td><td>Celesta</td></tr>
+						<tr><td>9</td><td>Glockenspiel</td></tr>
+						<tr><td>10</td><td>Music Box</td></tr>
+						<tr><td>11</td><td>Vibraphone</td></tr>
+						<tr><td>12</td><td>Marimba</td></tr>
+						<tr><td>13</td><td>Xylophone</td></tr>
+						<tr><td>14</td><td>Tubular Bells</td></tr>
+						<tr><td>15</td><td>Dulcimer</td></tr>
+						<tr><td>16</td><td>Drawbar Organ</td></tr>
+						<tr><td>17</td><td>Percussive Organ</td></tr>
+						<tr><td>18</td><td>Rock Organ</td></tr>
+						<tr><td>19</td><td>Church Organ</td></tr>
+						<tr><td>20</td><td>Reed Organ</td></tr>
+						<tr><td>21</td><td>Accordion</td></tr>
+						<tr><td>22</td><td>Harmonica</td></tr>
+						<tr><td>23</td><td>Tango Accordion</td></tr>
+						<tr><td>24</td><td>Acoustic Guitar (Nylon)</td></tr>
+						<tr><td>25</td><td>Acoustic Guitar (Steel)</td></tr>
+						<tr><td>26</td><td>Electric Guitar (Jazz)</td></tr>
+						<tr><td>27</td><td>Electric Guitar (Clean)</td></tr>
+						<tr><td>28</td><td>Electric Guitar (Muted)</td></tr>
+						<tr><td>29</td><td>Overdriven Guitar</td></tr>
+						<tr><td>30</td><td>Distortion Guitar</td></tr>
+						<tr><td>31</td><td>Guitar Harmonics</td></tr>
+					</table></td>
+					<td><table>
+						<tr><td>32</td><td>Acoustic Bass</td></tr>
+						<tr><td>33</td><td>Electric Bass (Finger)</td></tr>
+						<tr><td>34</td><td>Electric Bass (Pick)</td></tr>
+						<tr><td>35</td><td>Fretless Bass</td></tr>
+						<tr><td>36</td><td>Slap Bass 1</td></tr>
+						<tr><td>37</td><td>Slap Bass 2</td></tr>
+						<tr><td>38</td><td>Synth Bass 1</td></tr>
+						<tr><td>39</td><td>Synth Bass 2</td></tr>
+						<tr><td>40</td><td>Violin</td></tr>
+						<tr><td>41</td><td>Viola</td></tr>
+						<tr><td>42</td><td>Cello</td></tr>
+						<tr><td>43</td><td>Contrabass</td></tr>
+						<tr><td>44</td><td>Tremolo Strings</td></tr>
+						<tr><td>45</td><td>Pizzicato Strings</td></tr>
+						<tr><td>46</td><td>Orchestral Harp</td></tr>
+						<tr><td>47</td><td>Timpani</td></tr>
+						<tr><td>48</td><td>String Ensemble 1</td></tr>
+						<tr><td>49</td><td>String Ensemble 2</td></tr>
+						<tr><td>50</td><td>Synth Strings 1</td></tr>
+						<tr><td>51</td><td>Synth Strings 2</td></tr>
+						<tr><td>52</td><td>Choir Aahs</td></tr>
+						<tr><td>53</td><td>Voice Oohs</td></tr>
+						<tr><td>54</td><td>Synth Voice</td></tr>
+						<tr><td>55</td><td>Orchestra Hit</td></tr>
+						<tr><td>56</td><td>Trumpet</td></tr>
+						<tr><td>57</td><td>Trombone</td></tr>
+						<tr><td>58</td><td>Tuba</td></tr>
+						<tr><td>59</td><td>Muted Trumpet</td></tr>
+						<tr><td>60</td><td>French Horn</td></tr>
+						<tr><td>61</td><td>Brass Section</td></tr>
+						<tr><td>62</td><td>Synth Brass 1</td></tr>
+						<tr><td>63</td><td>Synth Brass 2</td></tr>
+					</table></td>
+					<td><table>
+						<tr><td>64</td><td>Soprano Sax</td></tr>
+						<tr><td>65</td><td>Alto Sax</td></tr>
+						<tr><td>66</td><td>Tenor Sax</td></tr>
+						<tr><td>67</td><td>Baritone Sax</td></tr>
+						<tr><td>68</td><td>Oboe</td></tr>
+						<tr><td>69</td><td>English Horn</td></tr>
+						<tr><td>70</td><td>Bassoon</td></tr>
+						<tr><td>71</td><td>Clarinet</td></tr>
+						<tr><td>72</td><td>Piccolo</td></tr>
+						<tr><td>73</td><td>Flute</td></tr>
+						<tr><td>74</td><td>Recorder</td></tr>
+						<tr><td>75</td><td>Pan Flute</td></tr>
+						<tr><td>76</td><td>Blown Bottle</td></tr>
+						<tr><td>77</td><td>Shakuhachi</td></tr>
+						<tr><td>78</td><td>Whistle</td></tr>
+						<tr><td>79</td><td>Ocarina</td></tr>
+						<tr><td>80</td><td>Lead 1 (Square)</td></tr>
+						<tr><td>81</td><td>Lead 2 (Sawtooth)</td></tr>
+						<tr><td>82</td><td>Lead 3 (Calliope)</td></tr>
+						<tr><td>83</td><td>Lead 4 (Chiff)</td></tr>
+						<tr><td>84</td><td>Lead 5 (Charang)</td></tr>
+						<tr><td>85</td><td>Lead 6 (Voice)</td></tr>
+						<tr><td>86</td><td>Lead 7 (Fifths)</td></tr>
+						<tr><td>87</td><td>Lead 8 (Bass + Lead)</td></tr>
+						<tr><td>88</td><td>Pad 1 (New Age)</td></tr>
+						<tr><td>89</td><td>Pad 2 (Warm)</td></tr>
+						<tr><td>90</td><td>Pad 3 (Polysynth)</td></tr>
+						<tr><td>91</td><td>Pad 4 (Choir)</td></tr>
+						<tr><td>92</td><td>Pad 5 (Bowed)</td></tr>
+						<tr><td>93</td><td>Pad 6 (Metallic)</td></tr>
+						<tr><td>94</td><td>Pad 7 (Halo)</td></tr>
+						<tr><td>95</td><td>Pad 8 (Sweep)</td></tr>
+					</table></td>
+					<td><table>
+						<tr><td>96</td><td>FX 1 (Rain)</td></tr>
+						<tr><td>97</td><td>FX 2 (Soundtrack)</td></tr>
+						<tr><td>98</td><td>FX 3 (Crystal)</td></tr>
+						<tr><td>99</td><td>FX 4 (Atmosphere)</td></tr>
+						<tr><td>100</td><td>FX 5 (Brightness)</td></tr>
+						<tr><td>101</td><td>FX 6 (Goblins)</td></tr>
+						<tr><td>102</td><td>FX 7 (Echoes)</td></tr>
+						<tr><td>103</td><td>FX 8 (Sci-Fi)</td></tr>
+						<tr><td>104</td><td>Sitar</td></tr>
+						<tr><td>105</td><td>Banjo</td></tr>
+						<tr><td>106</td><td>Shamisen</td></tr>
+						<tr><td>107</td><td>Koto</td></tr>
+						<tr><td>108</td><td>Kalimba</td></tr>
+						<tr><td>109</td><td>Bagpipe</td></tr>
+						<tr><td>110</td><td>Fiddle</td></tr>
+						<tr><td>111</td><td>Shanai</td></tr>
+						<tr><td>112</td><td>Tinkle Bell</td></tr>
+						<tr><td>113</td><td>Agogo</td></tr>
+						<tr><td>114</td><td>Steel Drums</td></tr>
+						<tr><td>115</td><td>Woodblock</td></tr>
+						<tr><td>116</td><td>Taiko Drum</td></tr>
+						<tr><td>117</td><td>Melodic Tom</td></tr>
+						<tr><td>118</td><td>Synth Drum</td></tr>
+						<tr><td>119</td><td>Reverse Cymbal</td></tr>
+						<tr><td>120</td><td>Guitar Fret Noise</td></tr>
+						<tr><td>121</td><td>Breath Noise</td></tr>
+						<tr><td>122</td><td>Seashore</td></tr>
+						<tr><td>123</td><td>Bird Tweet</td></tr>
+						<tr><td>124</td><td>Telephone Ring</td></tr>
+						<tr><td>125</td><td>Helicopter</td></tr>
+						<tr><td>126</td><td>Applause</td></tr>
+						<tr><td>127</td><td>Gunshot</td></tr>
+					</table></td>
+				</tr></table>
+				When matching an instrument name, case, whitespace, and
+				punctuation are ignored, so <code>"Alto Sax"</code>,
+				<code>" alto_sax "</code>, and <code>"ALTO.SAX"</code>
+				all map to instrument 65.
+			</li>
+			<li><i>Tempo</i> is the tempo of the note sequence in beats per minute.</li>
+			<li><i>Notes</i> is a sequence of notes in scripted music notation.</li>
+		</ul>
+	</dd>
+	<dt><code>jsPlayCommand.playMultiple(<i>arguments</i>)</code><br>
+		<code>jsPlayCommand.playMultiple(<i>arguments</i>, <i>arguments</i>)</code><br>
+		<code>jsPlayCommand.playMultiple(<i>arguments</i>, <i>arguments</i>, <i>arguments</i>, </code>...<code>)</code></dt>
+	<dd>
+		Executes several play commands in parallel. Even though the play
+		command is asynchronous, there is still a delay introduced by
+		processing arguments, parsing note strings, and so on; this ensures
+		that all the sequences passed in start playing at exactly the same time.
+		Each argument to this API is an array of arguments as given to
+		<code>jsPlayCommand.play()</code>. If you need to pass in an array
+		of arrays, as this demo does, use
+		<code>jsPlayCommand.playMultiple.apply(jsPlayCommand, <i>arrays</i>)</code>.
+	</dd>
+	<dt><code>jsPlayCommand.compile(<i>instrument</i>, <i>notes</i>)</code><br>
+		<code>jsPlayCommand.compile(<i>instrument</i>, <i>tempo</i>, <i>notes</i>)</code><br>
+		<code>jsPlayCommand.compile(<i>channel</i>, <i>instrument</i>, <i>tempo</i>, <i>notes</i>)</code><br>
+		<code>jsPlayCommand.compile(<i>bankSelect</i>, <i>channel</i>, <i>instrument</i>, <i>tempo</i>, <i>notes</i>)</code><br>
+		<code>jsPlayCommand.compile(<i>trackName</i>, <i>bankSelect</i>, <i>channel</i>, <i>instrument</i>, <i>tempo</i>, <i>notes</i>)</code></dt>
+	<dd>
+		Compiles a sequence of notes into a MIDI file and returns the MIDI file
+		as an array of byte values. The parameters to this API are similar to
+		the parameters to <code>jsPlayCommand.play()</code>, except that a track
+		name is given in place of an output device. This API will always work,
+		independently of jsPlayCommand initialization or MIDI support.
+	</dd>
+	<dt><code>jsPlayCommand.compileMultiple(<i>arguments</i>)</code><br>
+		<code>jsPlayCommand.compileMultiple(<i>arguments</i>, <i>arguments</i>)</code><br>
+		<code>jsPlayCommand.compileMultiple(<i>arguments</i>, <i>arguments</i>, <i>arguments</i>, </code>...<code>)</code></dt>
+	<dd>
+		Compiles multiple sequences of notes into a MIDI file and returns the
+		MIDI file as an array of byte values. The parameters to this API are
+		similar to the parameters to <code>jsPlayCommand.playMultiple()</code>,
+		except that track names are given in place of output devices. This API
+		will always work, independently of jsPlayCommand initialization or MIDI
+		support.
+	</dd>
+	<dt><code>jsPlayCommand.compileBase64(<i>instrument</i>, <i>notes</i>)</code><br>
+		<code>jsPlayCommand.compileBase64(<i>instrument</i>, <i>tempo</i>, <i>notes</i>)</code><br>
+		<code>jsPlayCommand.compileBase64(<i>channel</i>, <i>instrument</i>, <i>tempo</i>, <i>notes</i>)</code><br>
+		<code>jsPlayCommand.compileBase64(<i>bankSelect</i>, <i>channel</i>, <i>instrument</i>, <i>tempo</i>, <i>notes</i>)</code><br>
+		<code>jsPlayCommand.compileBase64(<i>trackName</i>, <i>bankSelect</i>, <i>channel</i>, <i>instrument</i>, <i>tempo</i>, <i>notes</i>)</code></dt>
+	<dd>
+		Compiles a sequence of notes into a MIDI file and returns the MIDI file
+		as a base64-encoded string. The parameters to this API are similar to
+		the parameters to <code>jsPlayCommand.play()</code>, except that a track
+		name is given in place of an output device. This API will always work,
+		independently of jsPlayCommand initialization or MIDI support.
+	</dd>
+	<dt><code>jsPlayCommand.compileMultipleBase64(<i>arguments</i>)</code><br>
+		<code>jsPlayCommand.compileMultipleBase64(<i>arguments</i>, <i>arguments</i>)</code><br>
+		<code>jsPlayCommand.compileMultipleBase64(<i>arguments</i>, <i>arguments</i>, <i>arguments</i>, </code>...<code>)</code></dt>
+	<dd>
+		Compiles multiple sequences of notes into a MIDI file and returns the
+		MIDI file as a base64-encoded string. The parameters to this API are
+		similar to the parameters to <code>jsPlayCommand.playMultiple()</code>,
+		except that track names are given in place of output devices. This API
+		will always work, independently of jsPlayCommand initialization or MIDI
+		support.
+	</dd>
+</dl>
+<p>
+	By default, jsPlayCommand uses the first output device it finds,
+	does not use any bank select commands, and plays on channel 0
+	with instrument 0 at a tempo of 120 bpm, unless a play command specifies
+	otherwise. These defaults can be changed with the following APIs:
+</p>
+<dl>
+	<dt><code>jsPlayCommand.outputs()</code></dt>
+	<dd>
+		Returns a list of MIDI output devices where jsPlayCommand can send its output.
+	</dd>
+	<dt><code>jsPlayCommand.getDefaultOutput()</code><br>
+		<code>jsPlayCommand.setDefaultOutput(<i>output</i>)</code></dt>
+	<dd>
+		Gets or sets the default MIDI output device.
+	</dd>
+	<dt><code>jsPlayCommand.getDefaultBankSelect()</code><br>
+		<code>jsPlayCommand.setDefaultBankSelect(<i>bankSelect</i>)</code></dt>
+	<dd>
+		Gets or sets the default bank select mode. This must be one of the following:
+		<table>
+			<tr>
+				<td><code>jsPlayCommand.BANK_SELECT_GM</code></td>
+				<td>General MIDI mode. No bank select commands are sent.</td>
+			</tr>
+			<tr>
+				<td><code>jsPlayCommand.BANK_SELECT_GS</code></td>
+				<td>GS mode. CC0 is used for bank select; CC32 is not used.</td>
+			</tr>
+			<tr>
+				<td><code>jsPlayCommand.BANK_SELECT_XG</code></td>
+				<td>XG mode. CC32 is used for bank select; CC0 is not used.</td>
+			</tr>
+			<tr>
+				<td><code>jsPlayCommand.BANK_SELECT_MMA</code></td>
+				<td>MMA or GM2 mode. CC0 is used for MSB; CC32 is used for LSB.</td>
+			</tr>
+		</table>
+	</dd>
+	<dt><code>jsPlayCommand.getDefaultChannel()</code><br>
+		<code>jsPlayCommand.setDefaultChannel(<i>channel</i>)</code></dt>
+	<dd>
+		Gets or sets the default MIDI channel.
+	</dd>
+	<dt><code>jsPlayCommand.getDefaultInstrument()</code><br>
+		<code>jsPlayCommand.setDefaultInstrument(<i>instrument</i>)</code></dt>
+	<dd>
+		Gets or sets the default instrument.
+	</dd>
+	<dt><code>jsPlayCommand.getDefaultTempo()</code><br>
+		<code>jsPlayCommand.setDefaultTempo(<i>tempo</i>)</code></dt>
+	<dd>
+		Gets or sets the default tempo.
+	</dd>
+</dl>
+<p>
+	If you would like to play around with the API, there is a
+	<a href="http://jsfiddle.net/eLdq6/" target="_blank">jsPlayCommand JSFiddle</a>
+	for you!
+</p>
+
+<h2 id="resources">Additional Resources</h2>
+
+<p>
+	<b><a href="/swdownload/soundfonts/HyperSound.zip">HyperSound</a></b>
+	is a soundfont recreation of the original three sampled sounds included
+	with HyperCard for use with the <code>play</code> command.
+	The "harpsichord" sound is mapped to bank 73, instrument 6 (Harpsichord);
+	the "boing" sound is mapped to bank 73, instrument 103 (FX 8);
+	the "flute" sound is mapped to bank 73, instrument 73 (Flute).
+	(There is also a GM version with the same mappings in bank 0.)
+	jsPlayCommand recognizes these instruments in bank 73 as "HyperFlute",
+	"HyperBoing", and, naturally, "Hypsichord". You can load these in your
+	synthesizer and your play commands will sound just like they did in
+	HyperCard!
+</p>
+
+<p id="footnote"><small>* MIDI (1982) is actually older than HyperTalk (1987). Neither is all that modern.</small></p>
+
+</body>
+</html>

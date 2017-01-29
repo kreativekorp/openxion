@@ -1,0 +1,45 @@
+.chunk-demo {
+	width: 480px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 2em;
+	margin-bottom: 0.5em;
+	border: solid 2px gray;
+	padding: 8px;
+	font-size: 14px;
+	line-height: 20px;
+	white-space: pre-wrap;
+}
+.chunk-content-0 {
+	background-color: #ffffcc;
+}
+.chunk-content-1 {
+	background-color: #ccccff;
+}
+.chunk-content-2 {
+	background-color: #ccffcc;
+}
+.chunk-content-3 {
+	background-color: #ffccff;
+}
+.chunk-content-4 {
+	background-color: #ccffff;
+}
+.buttons {
+	width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 0.5em;
+	margin-bottom: 2em;
+	text-align: center;
+}
+.buttons button {
+	width: 80px;
+	margin: 0 2px;
+}
+.buttons button:first-child {
+	margin-left: 0;
+}
+.buttons button:last-child {
+	margin-right: 0;
+}

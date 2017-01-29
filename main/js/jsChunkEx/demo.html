@@ -1,0 +1,142 @@
+<html>
+<head>
+<title>jsChunkEx: xTalk Chunk Expressions in JavaScript</title>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="jsChunkEx.js"></script>
+<script type="text/javascript" src="jsChunkExTest.js"></script>
+<script type="text/javascript" src="demo.js"></script>
+<link rel="stylesheet" type="text/css" href="demo.css">
+</head>
+<body>
+
+<p><img src="demo.png" width="408" height="96" alt="jsChunkEx: xTalk Chunk Expressions in JavaScript"></p>
+<p>
+	The <b>jsChunkEx</b> library is a JavaScript implementation of a feature of
+	xTalk languages known as <b>chunk expressions</b>. Chunk expressions are
+	used to manipulate text strings using natural-language concepts such as
+	characters, words, items, sentences, lines, and paragraphs.
+</p>
+<p>
+	Click each button to see how a body of text is split into chunks below.
+	Hover over each chunk to reveal its descriptor (type and index). Chunk
+	expressions, originating from natural language, start at index 1.
+</p>
+<div contentEditable="true" id="demo" class="chunk-demo">All human beings are born free and equal in dignity and rights. They are endowed with reason and conscience and should act towards one another in a spirit of brotherhood.<br><br>Everyone is entitled to all the rights and freedoms set forth in this Declaration, without distinction of any kind, such as race, colour, sex, language, religion, political or other opinion, national or social origin, property, birth or other status. Furthermore, no distinction shall be made on the basis of the political, jurisdictional or international status of the country or territory to which a person belongs, whether it be independent, trust, non-self-governing or under any other limitation of sovereignty.</div>
+<p class="buttons"><!--
+	--><button onclick="jsChunkExDemo.highlightChunks($('#demo'), jsChunkEx.CHARACTER);">Characters</button><!--
+	--><button onclick="jsChunkExDemo.highlightChunks($('#demo'), jsChunkEx.WORD);">Words</button><!--
+	--><button onclick="jsChunkExDemo.highlightChunks($('#demo'), jsChunkEx.ITEM);">Items</button><!--
+	--><button onclick="jsChunkExDemo.highlightChunks($('#demo'), jsChunkEx.SENTENCE);">Sentences</button><!--
+	--><button onclick="jsChunkExDemo.highlightChunks($('#demo'), jsChunkEx.LINE);">Lines</button><!--
+	--><button onclick="jsChunkExDemo.highlightChunks($('#demo'), jsChunkEx.PARAGRAPH);">Paragraphs</button><!--
+--></p>
+
+<h2>How To Use</h2>
+<p>
+	To use jsChunkEx, embed the following script tag on your page:
+</p>
+<blockquote><pre>
+&lt;script type="text/javascript" src="http://www.kreativekorp.com/lib/jsChunkEx/jsChunkEx.js"&gt;&lt;/script&gt;
+</pre></blockquote>
+<p>
+	Or, if you prefer to host it yourself, download <a href="jsChunkEx.zip"><b>jsChunkEx.zip</b></a>.
+</p>
+<p>
+	Call jsChunkEx using any of the following APIs:
+</p>
+<dl>
+	<dt><code>jsChunkEx.countChunks(<i>text</i>, <i>descriptors</i>, <i>chunkType</i>)</code></dt>
+		<dd>Count the number of chunks in a string.</dd>
+	<dt><code>jsChunkEx.splitChunks(<i>text</i>, <i>descriptors</i>, <i>chunkType</i>)</code></dt>
+		<dd>Split a string into an array of its constituent chunks.</dd>
+	<dt><code>jsChunkEx.findChunk(<i>text</i>, <i>descriptors</i>)</code></dt>
+		<dd>Determine the start and end offset of a chunk in a string.</dd>
+	<dt><code>jsChunkEx.findChunkToDelete(<i>text</i>, <i>descriptors</i>)</code></dt>
+		<dd>Determine the start offsets of a chunk and the following chunk.</dd>
+	<dt><code>jsChunkEx.getChunk(<i>text</i>, <i>descriptors</i>)</code></dt>
+		<dd>Return the substring corresponding to a chunk of a string.</dd>
+	<dt><code>jsChunkEx.deleteChunk(<i>text</i>, <i>descriptors</i>)</code></dt>
+		<dd>Return a string with the specified chunk removed.</dd>
+	<dt><code>jsChunkEx.replaceChunk(<i>text</i>, <i>descriptors</i>, <i>replacement</i>)</code></dt>
+		<dd>Return a string with a chunk replaced with another string.</dd>
+	<dt><code>jsChunkEx.prependToChunk(<i>text</i>, <i>descriptors</i>, <i>replacement</i>)</code></dt>
+		<dd>Return a string with a chunk prepended with another string.</dd>
+	<dt><code>jsChunkEx.appendToChunk(<i>text</i>, <i>descriptors</i>, <i>replacement</i>)</code></dt>
+		<dd>Return a string with a chunk appended with another string.</dd>
+</dl>
+<p>
+	Where <code><i>descriptors</i></code> is a series of arguments of the following forms:
+</p>
+<dl>
+	<dt><code><i>chunkType</i>, <i>index</i></code></dt>
+		<dd>a single chunk at the given index</dd>
+	<dt><code><i>chunkType</i>, <i>startIndex</i>, <i>endIndex</i></code></dt>
+		<dd>a range of chunks between two indices</dd>
+	<dt><code><i>chunkType</i>, jsChunkEx.BY_CONTENT, <i>stringToMatch</i></code></dt>
+		<dd>a chunk matching a given string</dd>
+	<dt><code><i>chunkType</i>, jsChunkEx.BY_CONTENT, <i>regExpToMatch</i></code></dt>
+		<dd>a chunk matching a given regular expression</dd>
+	<dt><code>jsChunkEx.LINE_ENDING, <i>lineEnding</i></code></dt>
+		<dd>Change the line ending used by the <code>jsChunkEx.LINE</code> chunk type.</dd>
+	<dt><code>jsChunkEx.ITEM_DELIMITER, <i>itemDelimiter</i></code></dt>
+		<dd>Change the delimiter used by the <code>jsChunkEx.ITEM</code> chunk type.</dd>
+	<dt><code>jsChunkEx.COLUMN_DELIMITER, <i>columnDelimiter</i></code></dt>
+		<dd>Change the delimiter used by the <code>jsChunkEx.COLUMN</code> chunk type.</dd>
+	<dt><code>jsChunkEx.ROW_DELIMITER, <i>rowDelimiter</i></code></dt>
+		<dd>Change the delimiter used by the <code>jsChunkEx.ROW</code> chunk type.</dd>
+</dl>
+<p>
+	And <code><i>chunkType</i></code> is one of the following:
+</p>
+<dl>
+	<dt><code>jsChunkEx.CHARACTER</code></dt>
+		<dd>A Unicode character.</dd>
+	<dt><code>jsChunkEx.WORD</code></dt>
+		<dd>Sequences of non-whitespace characters separated by whitespace.</dd>
+	<dt><code>jsChunkEx.ITEM</code></dt>
+		<dd>Sequences of characters delimited by the <code>jsChunkEx.ITEM_DELIMITER</code>.</dd>
+	<dt><code>jsChunkEx.SENTENCE</code></dt>
+		<dd>Sequences of characters ending with a period, exclamation point, or question mark.</dd>
+	<dt><code>jsChunkEx.LINE</code></dt>
+		<dd>Sequences of characters delimited by newline, carriage return, CRLF, or the Unicode line separator or paragraph separator character.</dd>
+	<dt><code>jsChunkEx.PARAGRAPH</code></dt>
+		<dd>Sequences of characters separated by newline, carriage return, or Unicode line separator or paragraph separator characters.</dd>
+	<dt><code>jsChunkEx.COLUMN</code></dt>
+		<dd>Sequences of characters delimited by the <code>jsChunkEx.COLUMN_DELIMITER</code>.</dd>
+	<dt><code>jsChunkEx.ROW</code></dt>
+		<dd>Sequences of characters delimited by the <code>jsChunkEx.ROW_DELIMITER</code>.</dd>
+</dl>
+<p>
+	And <code><i>index</i></code> is a positive integer for a chunk counted from the beginning of a string,
+	a negative integer for a chunk counted from the end of a string, or one of the following special values:
+</p>
+<dl>
+	<dt><code>jsChunkEx.ANY</code></dt>
+		<dd>A random chunk.</dd>
+	<dt><code>jsChunkEx.FIRST</code></dt>
+		<dd>The first chunk.</dd>
+	<dt><code>jsChunkEx.MIDDLE</code></dt>
+		<dd>The middle chunk.</dd>
+	<dt><code>jsChunkEx.LAST</code></dt>
+		<dd>The last chunk.</dd>
+</dl>
+
+<h2>Examples</h2>
+<dl>
+	<dt><code>jsChunkEx.countChunks('Hello, my name is Rebecca.', jsChunkEx.WORD)</code></dt>
+		<dd>returns <code>5</code></dd>
+	<dt><code>jsChunkEx.getChunk('Hello, my name is Rebecca.', jsChunkEx.WORD, 3)</code></dt>
+		<dd>returns <code>"name"</code></dd>
+	<dt><code>jsChunkEx.countChunks('Hello, my name is Rebecca.', jsChunkEx.WORD, 3, jsChunkEx.CHARACTER)</code></dt>
+		<dd>returns <code>4</code></dd>
+	<dt><code>jsChunkEx.deleteChunk('Hello, my name is Rebecca.', jsChunkEx.WORD, 2, 4)</code></dt>
+		<dd>returns <code>"Hello, Rebecca."</code></dd>
+	<dt><code>jsChunkEx.replaceChunk('Hello, my name is Rebecca.', jsChunkEx.WORD, jsChunkEx.LAST, 'Ginny.')</code></dt>
+		<dd>returns <code>"Hello, my name is Ginny."</code></dd>
+</dl>
+<p>
+	By all means feel free to <a href="http://jsfiddle.net/vm6EH/" target="_blank">play around with jsChunkEx on JSFiddle</a>.
+</p>
+
+</body>
+</html>
