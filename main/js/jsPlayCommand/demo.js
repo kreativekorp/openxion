@@ -575,10 +575,17 @@ jsPlayCommandDemo = {
 				{ instrument: 0, tempo: 120, notes: 'c5 d e f g a b c6' },
 				{ instrument: 0, tempo: 120, notes: 'c2 d e f g a b c3' },
 			],
+			'Public Domain': [
+				{ instrument: 113, tempo: 200, notes: 'c4e c dq c f eh' },
+				{ instrument: 115, tempo: 200, notes: 'c4e c dq c f eh' },
+			],
 			'Inigo\'s Song': [
 				{ instrument: 6, tempo: 120, notes: 'c4 a3 f c4 a3 f c4 d c c c' },
 				{ instrument: 10, tempo: 120, notes: 'c4 a3 f c4 a3 f c4 d c c c' },
 				{ instrument: 0, tempo: 120, notes: 'c2h. h. h q q q' },
+			],
+			'iMarimba': [
+				{ instrument: 12, tempo: 90, notes: 'bs g d5+ g g4 d5+ g e+ b d+ g g4 e5+ b d+ g g4 d5+ g qr'},
 			],
 			'Tune GS': [
 				{ instrument: 44, tempo: 110, notes: 'f4e a4e f4e c5e f4e f5e e5s d5s c5s d5s c5s b4s a4s b4s a4s g4s f4e' },
