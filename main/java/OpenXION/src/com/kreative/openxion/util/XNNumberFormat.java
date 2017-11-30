@@ -37,8 +37,6 @@ import java.text.*;
  * @author Rebecca G. Bettencourt, Kreative Software
  */
 public class XNNumberFormat {
-	private static final long serialVersionUID = 1L;
-	
 	private String pattern;
 	private DecimalFormat nonExpFormat;
 	private DecimalFormat expFormat;

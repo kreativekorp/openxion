@@ -2,5 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="dep/jline.jar"/>
+	<classpathentry kind="lib" path="dep/nrserial.jar"/>
+	<classpathentry kind="lib" path="dep/comm.jar"/>
+	<classpathentry kind="lib" path="dep/freetts/jsapi.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

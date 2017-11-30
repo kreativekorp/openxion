@@ -1299,6 +1299,8 @@ public class XNInterpreter {
 				break;
 			case NEXTED:
 				throw new XNScriptError("Found next "+exit.blockTypeValue()+" outside a "+exit.blockTypeValue()+" block");
+			default:
+				break;
 			}
 		} catch (XNExitedToInterpreterException exex) {}
 	}
@@ -1326,6 +1328,8 @@ public class XNInterpreter {
 				break;
 			case NEXTED:
 				throw new XNScriptError("Found next "+exit.blockTypeValue()+" outside a "+exit.blockTypeValue()+" block");
+			default:
+				break;
 			}
 		}
 		finally {
@@ -1354,6 +1358,8 @@ public class XNInterpreter {
 				break;
 			case NEXTED:
 				throw new XNScriptError("Found next "+exit.blockTypeValue()+" outside a "+exit.blockTypeValue()+" block");
+			default:
+				break;
 			}
 		}
 		finally {

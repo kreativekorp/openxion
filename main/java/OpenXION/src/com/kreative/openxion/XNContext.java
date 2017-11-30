@@ -178,6 +178,7 @@ public class XNContext implements Serializable, Cloneable {
 			switch (security.get(type)) {
 			case ALLOW: return true;
 			case DENY: return false;
+			default: break;
 			}
 		}
 		XNSecurityKey[] t = new XNSecurityKey[]{ type };
