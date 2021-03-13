@@ -324,7 +324,7 @@ public class FPUtilities {
 	private static int ilog2(BigDecimal v, MathContext mc) {
 		// provide a first approximation
 		// (v.precision()-v.scale()-1) is essentially the base-10 logarithm of v
-		// by multiplying this by 100000/30103 (dividing by 30103/100000, or log2(10) Å 0.30103)
+		// by multiplying this by 100000/30103 (dividing by 30103/100000, or log2(10) â‰ˆ 0.30103)
 		// we can approximate the base 2 logarithm
 		// naively, this would give us 0, 0, 0, 0, 3, 3, 3, 6, 6, 6, 10, 10, 10, 10, etc.
 		// so we add the first digit of the (base-10) mantissa for a better approximation

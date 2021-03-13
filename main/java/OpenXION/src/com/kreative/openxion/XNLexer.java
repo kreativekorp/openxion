@@ -199,15 +199,15 @@ public class XNLexer {
 				int nextToLastChar = firstChar;
 				int lastChar = secondChar;
 				// loop invariant: [nextToLastChar, lastChar] contain the last two characters read
-				// at this point, we've read [°, °]
+				// at this point, we've read [âˆž, âˆž]
 				while (nextToLastChar == firstChar && lastChar == firstChar) {
 					nextToLastChar = lastChar; lastChar = reader.read(); numChars++;
 				}
-				// at this point, we're read [°, something else]
+				// at this point, we're read [âˆž, something else]
 				while ((nextToLastChar >= 0 && nextToLastChar != firstChar) || (lastChar >= 0 && lastChar != firstChar)) {
 					nextToLastChar = lastChar; lastChar = reader.read(); numChars++;
 				}
-				// at this point, we've read [°, °] or maybe [eof, eof] or even [°, eof]
+				// at this point, we've read [âˆž, âˆž] or maybe [eof, eof] or even [âˆž, eof]
 				// end loop invariant
 				while (reader.read() == firstChar) numChars++;
 				char[] cbuf = new char[numChars];

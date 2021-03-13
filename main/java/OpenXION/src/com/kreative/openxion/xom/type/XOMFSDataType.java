@@ -42,8 +42,6 @@ import com.kreative.openxion.xom.inst.XOMReference;
  * XOMFSDataType handles polymorphic methods for file system types.
  * @since OpenXION 1.3
  * @author Rebecca G. Bettencourt, Kreative Software
- * @param <IT> the corresponding subclass of XOMVariant
- * used to represent the values this data type produces.
  */
 public abstract class XOMFSDataType extends XOMDataType<XOMFile> {
 	private static final long serialVersionUID = 1L;

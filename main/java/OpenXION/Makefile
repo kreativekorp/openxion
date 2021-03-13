@@ -1,7 +1,9 @@
 INSTJARDIR = /usr/lib
 INSTBINDIR = /usr/bin
-SRCFILES = src/test/*.java src/com/kreative/*/*.java src/com/kreative/*/*/*.java src/com/kreative/*/*/*/*.java
-PACKAGES = com.kreative.openxion com.kreative.openxion.ast com.kreative.openxion.audio com.kreative.openxion.binpack com.kreative.openxion.format com.kreative.openxion.io com.kreative.openxion.jsr223 com.kreative.openxion.math com.kreative.openxion.tr com.kreative.openxion.util com.kreative.openxion.xom com.kreative.openxion.xom.inst com.kreative.openxion.xom.type com.kreative.xiondoc com.kreative.xiondoc.sdom com.kreative.xiondoc.xdom
+CLASSPATH := $(shell find dep -name \*.jar | tr '\n' : | sed s/:$$//)
+SRCFILES := $(shell find src -name \*.java)
+RESFILES := $(shell find src -type f \! -name .\* \! -name \*.java | sed s/^src\\///)
+PACKAGES := $(shell find src -name \*.java | sed -E s/^src\\/\|\\/[^\\/]+$$//g | sort | uniq | tr / .)
 
 all: clean bin doc osxclean OpenXION.jar XIONDoc.jar OpenXION-src.tgz XIONDoc-src.tgz OpenXION-test.tgz OpenXION-xndocs.tgz XION-Language-Module.tgz OpenXION-dist.zip OpenXION-distwin.zip
 
@@ -33,36 +35,19 @@ eclipseclean:
 
 bin:
 	mkdir -p bin
-	javac -target 1.5 -sourcepath src $(SRCFILES) -d bin
-	cp src/com/kreative/xiondoc/*.css bin/com/kreative/xiondoc/
-	cp src/com/kreative/xiondoc/*.dtd bin/com/kreative/xiondoc/
+	javac -cp "./bin:$(CLASSPATH)" -sourcepath src $(SRCFILES) -d bin
+	$(foreach res,$(RESFILES),cp src/$(res) bin/$(res);)
 
 doc:
 	mkdir -p doc
-	javadoc -sourcepath src $(PACKAGES) -d doc
+	javadoc -cp "./bin:$(CLASSPATH)" -sourcepath src $(PACKAGES) -d doc
 
 osxclean:
 	export COPYFILE_DISABLE=true
-	rm -f src/.DS_Store
-	rm -f src/*/.DS_Store
-	rm -f src/*/*/.DS_Store
-	rm -f src/*/*/*/.DS_Store
-	rm -f src/*/*/*/*/.DS_Store
-	rm -f src/*/*/*/*/*/.DS_Store
-	rm -f src/*/*/*/*/*/*/.DS_Store
-	rm -f src/*/*/*/*/*/*/*/.DS_Store
-	rm -f src/*/*/*/*/*/*/*/*/.DS_Store
-	rm -f bin/.DS_Store
-	rm -f bin/*/.DS_Store
-	rm -f bin/*/*/.DS_Store
-	rm -f bin/*/*/*/.DS_Store
-	rm -f bin/*/*/*/*/.DS_Store
-	rm -f bin/*/*/*/*/*/.DS_Store
-	rm -f bin/*/*/*/*/*/*/.DS_Store
-	rm -f bin/*/*/*/*/*/*/*/.DS_Store
-	rm -f bin/*/*/*/*/*/*/*/*/.DS_Store
-	rm -f "Sample Scripts"/.DS_Store
-	rm -f XIONStdTestSuite/.DS_Store
+	find src -name .DS_Store -delete
+	find bin -name .DS_Store -delete
+	find "Sample Scripts" -name .DS_Store -delete
+	find XIONStdTestSuite -name .DS_Store -delete
 
 OpenXION.jar: osxclean
 	rm -rf bin/META-INF
