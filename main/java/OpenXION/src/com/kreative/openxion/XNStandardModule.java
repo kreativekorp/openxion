@@ -451,6 +451,8 @@ public class XNStandardModule extends XNModule {
 		functions.put("gcd",f_gcd);
 		functions.put("geom",f_geom);
 		functions.put("geomean",f_geom);
+		functions.put("harm",f_harm);
+		functions.put("harmean",f_harm);
 		functions.put("hash",f_hash);
 		functions.put("head",f_head);
 		functions.put("hex",f_hex);
@@ -3804,6 +3806,28 @@ public class XNStandardModule extends XNModule {
 					product = XOMNumberMath.multiply(product, (XOMNumber)number, mc, mp);
 				}
 				return XOMNumberMath.pow(product, XOMNumberMath.divide(XOMNumber.ONE, new XOMNumber(numbers.size()), mc, mp), mc, mp);
+			}
+		}
+	};
+	
+	private static final Function f_harm = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
+			MathContext mc = ctx.getMathContext();
+			MathProcessor mp = ctx.getMathProcessor();
+			if (numbers.isEmpty()) return XOMNumber.ZERO;
+			if (numbers.get(0) instanceof XOMComplex) {
+				XOMComplex sum = XOMComplex.ZERO;
+				for (XOMVariant number : numbers) {
+					sum = XOMComplexMath.add(sum, XOMComplexMath.divide(XOMComplex.ONE, (XOMComplex)number, mc, mp), mc, mp);
+				}
+				return XOMComplexMath.divide(new XOMComplex(numbers.size(),0), sum, mc, mp);
+			} else {
+				XOMNumber sum = XOMNumber.ZERO;
+				for (XOMVariant number : numbers) {
+					sum = XOMNumberMath.add(sum, XOMNumberMath.divide(XOMNumber.ONE, (XOMNumber)number, mc, mp), mc, mp);
+				}
+				return XOMNumberMath.divide(new XOMNumber(numbers.size()), sum, mc, mp);
 			}
 		}
 	};
