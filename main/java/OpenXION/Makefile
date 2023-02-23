@@ -3,11 +3,11 @@ INSTBINDIR = /usr/bin
 CLASSPATH := $(shell find dep -name \*.jar | tr '\n' : | sed s/:$$//)
 SRCFILES := $(shell find src -name \*.java)
 RESFILES := $(shell find src -type f \! -name .\* \! -name \*.java | sed s/^src\\///)
-PACKAGES := $(shell find src -name \*.java | sed -E s/^src\\/\|\\/[^\\/]+$$//g | sort | uniq | tr / .)
+PACKAGES := $(shell find src -name \*.java | sed -E s/^src\\/\|\\/[^\\/]+$$//g | grep -v \\.java$$ | sort | uniq | tr / .)
 
-all: clean bin doc osxclean OpenXION.jar XIONDoc.jar OpenXION-src.tgz XIONDoc-src.tgz OpenXION-test.tgz OpenXION-xndocs.tgz XION-Language-Module.tgz OpenXION-dist.zip OpenXION-distwin.zip
+all: clean bin doc OpenXION.jar XIONDoc.jar OpenXION-src.tgz XIONDoc-src.tgz OpenXION-test.tgz OpenXION-xndocs.tgz XION-Language-Module.tgz OpenXION-dist.zip OpenXION-distwin.zip
 
-eclipseall: eclipseclean osxclean OpenXION.jar XIONDoc.jar OpenXION-src.tgz XIONDoc-src.tgz OpenXION-test.tgz OpenXION-xndocs.tgz XION-Language-Module.tgz OpenXION-dist.zip OpenXION-distwin.zip
+eclipseall: eclipseclean OpenXION.jar XIONDoc.jar OpenXION-src.tgz XIONDoc-src.tgz OpenXION-test.tgz OpenXION-xndocs.tgz XION-Language-Module.tgz OpenXION-dist.zip OpenXION-distwin.zip
 
 clean:
 	rm -rf bin
@@ -33,48 +33,61 @@ eclipseclean:
 	rm -rf xndoc/doc.htmld
 	rm -rf dist
 
-bin:
+bin: src
 	mkdir -p bin
-	javac -cp "./bin:$(CLASSPATH)" -sourcepath src $(SRCFILES) -d bin
+ifeq ($(origin JAVACFLAGS), undefined)
+	$(eval JAVACFLAGS = $(shell dep/minJavaVerOpts))
+endif
+	javac $(JAVACFLAGS) -classpath "./bin:$(CLASSPATH)" -sourcepath src $(SRCFILES) -d bin
 	$(foreach res,$(RESFILES),cp src/$(res) bin/$(res);)
 
-doc:
+doc: src
 	mkdir -p doc
-	javadoc -cp "./bin:$(CLASSPATH)" -sourcepath src $(PACKAGES) -d doc
+	javadoc $(JAVADOCFLAGS) -classpath "./bin:$(CLASSPATH)" -sourcepath src $(PACKAGES) -d doc
 
-osxclean:
+OpenXION.jar: bin
 	export COPYFILE_DISABLE=true
-	find src -name .DS_Store -delete
 	find bin -name .DS_Store -delete
-	find "Sample Scripts" -name .DS_Store -delete
-	find XIONStdTestSuite -name .DS_Store -delete
-
-OpenXION.jar: osxclean
 	rm -rf bin/META-INF
 	mkdir -p bin/META-INF/services
 	cp dep/javax.script.ScriptEngineFactory bin/META-INF/services/
 	jar cmf dep/MANIFEST-OXN.MF OpenXION.jar -C bin META-INF -C bin com/kreative/openxion
 	rm -rf bin/META-INF
+	chmod +x OpenXION.jar
 
-XIONDoc.jar: osxclean
+XIONDoc.jar: bin
+	export COPYFILE_DISABLE=true
+	find bin -name .DS_Store -delete
 	jar cmf dep/MANIFEST-XND.MF XIONDoc.jar -C bin com/kreative/xiondoc
+	chmod +x XIONDoc.jar
 
-OpenXION-src.tgz: osxclean
-	tar -czf OpenXION-src.tgz src/com/kreative/openxion LICENSE
+OpenXION-src.tgz: src
+	export COPYFILE_DISABLE=true
+	find src -name .DS_Store -delete
+	tar -czf OpenXION-src.tgz LICENSE src/com/kreative/openxion
 
-XIONDoc-src.tgz: osxclean
-	tar -czf XIONDoc-src.tgz src/com/kreative/xiondoc LICENSE
+XIONDoc-src.tgz: src
+	export COPYFILE_DISABLE=true
+	find src -name .DS_Store -delete
+	tar -czf XIONDoc-src.tgz LICENSE src/com/kreative/xiondoc
 
-OpenXION-test.tgz: osxclean
+OpenXION-test.tgz:
+	export COPYFILE_DISABLE=true
+	find "Sample Scripts" -name .DS_Store -delete
+	find XIONStdTestSuite -name .DS_Store -delete
 	tar -czf OpenXION-test.tgz "Sample Scripts" XIONStdTestSuite
 
 OpenXION-xndocs.tgz: XIONDoc.jar
+	export COPYFILE_DISABLE=true
+	find xndoc -name .DS_Store -delete
 	java -jar XIONDoc.jar xndoc/doc.xnd > /dev/null
 	mv xndoc/doc.htmld xndoc/docs
 	tar -czf OpenXION-xndocs.tgz -C xndoc doc.xnd xiondoc-1.3.dtd docs
 	mv xndoc/docs xndoc/doc.htmld
 
 XION-Language-Module.tgz:
+	export COPYFILE_DISABLE=true
+	find bbedit -name .DS_Store -delete
 	tar -czf XION-Language-Module.tgz -C bbedit XION.plist
 
 OpenXION-dist.zip: OpenXION.jar XIONDoc.jar
@@ -186,4 +199,4 @@ install: OpenXION.jar XIONDoc.jar
 	chmod +x $(INSTBINDIR)/xion
 	chmod +x $(INSTBINDIR)/xiondoc
 
-.PHONY: all eclipseall clean eclipseclean osxclean test xndocs localuninstall localinstall uninstall install
+.PHONY: all eclipseall clean eclipseclean test xndocs localuninstall localinstall uninstall install
