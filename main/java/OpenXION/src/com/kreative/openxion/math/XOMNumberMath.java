@@ -267,6 +267,50 @@ public class XOMNumberMath {
 		}
 	}
 	
+	public static XOMNumber qtrt(XOMNumber n, MathContext mc, MathProcessor mp) {
+		if (n.isUndefined()) {
+			if (n.getSign() == XOMNumber.SIGN_POSITIVE) return XOMNumber.POSITIVE_INFINITY;
+			else return XOMNumber.NaN;
+		}
+		else {
+			BigDecimal d = mp.sqrt(mp.sqrt(n.toBigDecimal(), mc), mc);
+			if (d == null) return XOMNumber.NaN;
+			else return new XOMNumber(d);
+		}
+	}
+	
+	public static XOMNumber twrt(XOMNumber n, MathContext mc, MathProcessor mp) {
+		if (n.isUndefined()) {
+			if (n.getSign() == XOMNumber.SIGN_POSITIVE) return XOMNumber.POSITIVE_INFINITY;
+			else return XOMNumber.NaN;
+		}
+		else {
+			BigDecimal d = mp.sqrt(mp.sqrt(mp.cbrt(n.toBigDecimal(), mc), mc), mc);
+			if (d == null) return XOMNumber.NaN;
+			else return new XOMNumber(d);
+		}
+	}
+	
+	public static XOMNumber fma(XOMNumber a, XOMNumber b, XOMNumber c, MathContext mc, MathProcessor mp) {
+		return add(multiply(a, b, mc, mp), c, mc, mp);
+	}
+	
+	public static XOMNumber eml(XOMNumber a, XOMNumber b, MathContext mc, MathProcessor mp) {
+		return subtract(exp(a, mc, mp), log(b, mc, mp), mc, mp);
+	}
+	
+	public static XOMNumber edl(XOMNumber a, XOMNumber b, MathContext mc, MathProcessor mp) {
+		return divide(exp(a, mc, mp), log(b, mc, mp), mc, mp);
+	}
+	
+	public static XOMNumber lme(XOMNumber a, XOMNumber b, MathContext mc, MathProcessor mp) {
+		return subtract(log(a, mc, mp), exp(b, mc, mp), mc, mp);
+	}
+	
+	public static XOMNumber lde(XOMNumber a, XOMNumber b, MathContext mc, MathProcessor mp) {
+		return divide(log(a, mc, mp), exp(b, mc, mp), mc, mp);
+	}
+	
 	public static XOMNumber agm(XOMNumber a, XOMNumber b, MathContext mc, MathProcessor mp) {
 		XOMNumber t = new XOMNumber(2);
 		while (true) {
@@ -697,6 +741,34 @@ public class XOMNumberMath {
 			BigDecimal asech = mp.log(rxm1trxp1.add(rx,mc),mc);
 			if (asech == null) return XOMNumber.NaN;
 			else return new XOMNumber(asech);
+		}
+	}
+	
+	public static XOMNumber erf(XOMNumber n, MathContext mc, MathProcessor mp) {
+		if (n.isUndefined()) {
+			if (n.getSign() == XOMNumber.SIGN_POSITIVE) return XOMNumber.ONE;
+			else if (n.getSign() == XOMNumber.SIGN_NEGATIVE) return XOMNumber.ONE.negate();
+			else return XOMNumber.NaN;
+		}
+		else if (n.isZero()) return XOMNumber.ZERO;
+		else {
+			BigDecimal d = mp.erf(n.toBigDecimal(), mc);
+			if (d == null) return XOMNumber.NaN;
+			else return new XOMNumber(d);
+		}
+	}
+	
+	public static XOMNumber erfc(XOMNumber n, MathContext mc, MathProcessor mp) {
+		if (n.isUndefined()) {
+			if (n.getSign() == XOMNumber.SIGN_POSITIVE) return XOMNumber.ZERO;
+			else if (n.getSign() == XOMNumber.SIGN_NEGATIVE) return new XOMNumber(2);
+			else return XOMNumber.NaN;
+		}
+		else if (n.isZero()) return XOMNumber.ONE;
+		else {
+			BigDecimal d = mp.erfc(n.toBigDecimal(), mc);
+			if (d == null) return XOMNumber.NaN;
+			else return new XOMNumber(d);
 		}
 	}
 	

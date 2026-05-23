@@ -364,7 +364,38 @@ public class BigMath extends MathProcessor {
 		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
 		else return BigDecimal.valueOf(r);
 	}
-	
+
+	@Override
+	public BigDecimal erf(BigDecimal arg, MathContext mc) {
+		double r = 1 - erfc(arg.doubleValue());
+		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
+		else return BigDecimal.valueOf(r);
+	}
+
+	@Override
+	public BigDecimal erfc(BigDecimal arg, MathContext mc) {
+		double r = erfc(arg.doubleValue());
+		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
+		else return BigDecimal.valueOf(r);
+	}
+
+	private static double erfc(double x) {
+		if (Double.isNaN(x)) return Double.NaN;
+		else if (x < 0) return 2 - erfc(-x);
+		else if (x == 0) return 1;
+		else if (Double.isInfinite(x)) return 0;
+		else {
+			double y = Math.exp(-x*x);
+			y *= 0.56418958354775629 / (x + 2.06955023132914151);
+			y *= (x*x + 2.71078540045147805*x + 5.80755613130301624) / (x*x + 3.47954057099518960*x + 12.06166887286239555);
+			y *= (x*x + 3.47469513777439592*x + 12.07402036406381411) / (x*x + 3.72068443960225092*x + 8.44319781003968454);
+			y *= (x*x + 4.00561509202259545*x + 9.30596659485887898) / (x*x + 3.90225704029924078*x + 6.36161630953880464);
+			y *= (x*x + 5.16722705817812584*x + 9.12661617673673262) / (x*x + 4.03296893109262491*x + 5.13578530585681539);
+			y *= (x*x + 5.95908795446633271*x + 9.19435612886969243) / (x*x + 4.11240942957450885*x + 4.48640329523408675);
+			return y;
+		}
+	}
+
 	private static final int G = 7;
 	private static final double[] P = new double[] {
 		0.99999999999980993, 676.5203681218851, -1259.1392167224028,

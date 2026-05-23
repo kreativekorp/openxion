@@ -435,7 +435,11 @@ public class XNStandardModule extends XNModule {
 		functions.put("descending",f_desc);
 		functions.put("docfile",f_documentfile);
 		functions.put("docpath",f_documentpath);
+		functions.put("edl",f_edl);
+		functions.put("eml",f_eml);
 		functions.put("equal",f_equal);
+		functions.put("erf",f_erf);
+		functions.put("erfc",f_erfc);
 		functions.put("exp",f_exp);
 		functions.put("exp1",f_exp1);
 		functions.put("exp10",f_exp10);
@@ -445,6 +449,7 @@ public class XNStandardModule extends XNModule {
 		functions.put("factorial",f_fact);
 		functions.put("filter",f_filter);
 		functions.put("floor",f_floor);
+		functions.put("fma",f_fma);
 		functions.put("format",f_format);
 		functions.put("frac",f_frac);
 		functions.put("gamma",f_gamma);
@@ -472,10 +477,12 @@ public class XNStandardModule extends XNModule {
 		functions.put("lcase",f_lcase);
 		functions.put("lcm",f_lcm);
 		functions.put("lconcat",f_lconcat);
+		functions.put("lde",f_lde);
 		functions.put("left",f_left);
 		functions.put("len",f_len);
 		functions.put("length",f_len);
 		functions.put("llength",f_number);
+		functions.put("lme",f_lme);
 		functions.put("ln",f_ln);
 		functions.put("ln\u03B3",f_lngamma);
 		functions.put("ln\u03B2",f_lnbeta);
@@ -522,6 +529,7 @@ public class XNStandardModule extends XNModule {
 		functions.put("progordocpath",f_applicationordocumentpath);
 		functions.put("pstddev",f_pstddev);
 		functions.put("pvariance",f_pvariance);
+		functions.put("qtrt",f_qtrt);
 		functions.put("radius",f_hypot);
 		functions.put("random",f_random);
 		functions.put("randomdecimal",f_randomdecimal);
@@ -575,6 +583,7 @@ public class XNStandardModule extends XNModule {
 		functions.put("toradians",f_torad);
 		functions.put("trim",f_trim);
 		functions.put("trunc",f_trunc);
+		functions.put("twrt",f_twrt);
 		functions.put("ucase",f_ucase);
 		functions.put("unitobin",f_unitobin);
 		functions.put("unitonum",f_unitonum);
@@ -3623,6 +3632,44 @@ public class XNStandardModule extends XNModule {
 		}
 	};
 	
+	private static final Function f_edl = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
+			MathContext mc = ctx.getMathContext();
+			MathProcessor mp = ctx.getMathProcessor();
+			XOMVariant a = fpNumericParameter(ctx, functionName, l.get(0));
+			XOMVariant b = fpNumericParameter(ctx, functionName, l.get(1));
+			if (a instanceof XOMComplex || b instanceof XOMComplex) {
+				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, a, true);
+				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, b, true);
+				return XOMComplexMath.edl(ac, bc, mc, mp);
+			} else {
+				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, a, true);
+				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, b, true);
+				return XOMNumberMath.edl(an, bn, mc, mp);
+			}
+		}
+	};
+	
+	private static final Function f_eml = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
+			MathContext mc = ctx.getMathContext();
+			MathProcessor mp = ctx.getMathProcessor();
+			XOMVariant a = fpNumericParameter(ctx, functionName, l.get(0));
+			XOMVariant b = fpNumericParameter(ctx, functionName, l.get(1));
+			if (a instanceof XOMComplex || b instanceof XOMComplex) {
+				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, a, true);
+				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, b, true);
+				return XOMComplexMath.eml(ac, bc, mc, mp);
+			} else {
+				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, a, true);
+				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, b, true);
+				return XOMNumberMath.eml(an, bn, mc, mp);
+			}
+		}
+	};
+	
 	private static final Function f_equal = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) return XOMBoolean.TRUE;
@@ -3638,6 +3685,28 @@ public class XNStandardModule extends XNModule {
 			} catch (XNInterpreter.NaNComparisonException nce) {
 				return XOMBoolean.FALSE;
 			}
+		}
+	};
+	
+	private static final Function f_erf = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			parameter = fpNumericParameter(ctx, functionName, parameter);
+			MathContext mc = ctx.getMathContext();
+			MathProcessor mp = ctx.getMathProcessor();
+			if (parameter instanceof XOMNumber) return XOMNumberMath.erf((XOMNumber)parameter,mc,mp);
+			else if (parameter instanceof XOMComplex) return XOMComplexMath.erf((XOMComplex)parameter,mc,mp);
+			else throw new XOMMorphError("number");
+		}
+	};
+	
+	private static final Function f_erfc = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			parameter = fpNumericParameter(ctx, functionName, parameter);
+			MathContext mc = ctx.getMathContext();
+			MathProcessor mp = ctx.getMathProcessor();
+			if (parameter instanceof XOMNumber) return XOMNumberMath.erfc((XOMNumber)parameter,mc,mp);
+			else if (parameter instanceof XOMComplex) return XOMComplexMath.erfc((XOMComplex)parameter,mc,mp);
+			else throw new XOMMorphError("number");
 		}
 	};
 	
@@ -3734,6 +3803,28 @@ public class XNStandardModule extends XNModule {
 			else if (parameter instanceof XOMNumber) return ((XOMNumber)parameter).floor();
 			else if (parameter instanceof XOMComplex) return ((XOMComplex)parameter).floor();
 			else throw new XOMMorphError("number");
+		}
+	};
+	
+	private static final Function f_fma = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 3, true);
+			MathContext mc = ctx.getMathContext();
+			MathProcessor mp = ctx.getMathProcessor();
+			XOMVariant a = fpNumericParameter(ctx, functionName, l.get(0));
+			XOMVariant b = fpNumericParameter(ctx, functionName, l.get(1));
+			XOMVariant c = fpNumericParameter(ctx, functionName, l.get(2));
+			if (a instanceof XOMComplex || b instanceof XOMComplex || c instanceof XOMComplex) {
+				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, a, true);
+				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, b, true);
+				XOMComplex cc = XOMComplexType.instance.makeInstanceFrom(ctx, c, true);
+				return XOMComplexMath.fma(ac, bc, cc, mc, mp);
+			} else {
+				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, a, true);
+				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, b, true);
+				XOMNumber cn = XOMNumberType.instance.makeInstanceFrom(ctx, c, true);
+				return XOMNumberMath.fma(an, bn, cn, mc, mp);
+			}
 		}
 	};
 	
@@ -4082,6 +4173,25 @@ public class XNStandardModule extends XNModule {
 		}
 	};
 	
+	private static final Function f_lde = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
+			MathContext mc = ctx.getMathContext();
+			MathProcessor mp = ctx.getMathProcessor();
+			XOMVariant a = fpNumericParameter(ctx, functionName, l.get(0));
+			XOMVariant b = fpNumericParameter(ctx, functionName, l.get(1));
+			if (a instanceof XOMComplex || b instanceof XOMComplex) {
+				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, a, true);
+				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, b, true);
+				return XOMComplexMath.lde(ac, bc, mc, mp);
+			} else {
+				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, a, true);
+				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, b, true);
+				return XOMNumberMath.lde(an, bn, mc, mp);
+			}
+		}
+	};
+	
 	private static final Function f_left = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
@@ -4097,6 +4207,25 @@ public class XNStandardModule extends XNModule {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) throw new XNScriptError("Can't understand arguments to length");
 			else return new XOMInteger(parameter.toTextString(ctx).length());
+		}
+	};
+	
+	private static final Function f_lme = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
+			MathContext mc = ctx.getMathContext();
+			MathProcessor mp = ctx.getMathProcessor();
+			XOMVariant a = fpNumericParameter(ctx, functionName, l.get(0));
+			XOMVariant b = fpNumericParameter(ctx, functionName, l.get(1));
+			if (a instanceof XOMComplex || b instanceof XOMComplex) {
+				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, a, true);
+				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, b, true);
+				return XOMComplexMath.lme(ac, bc, mc, mp);
+			} else {
+				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, a, true);
+				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, b, true);
+				return XOMNumberMath.lme(an, bn, mc, mp);
+			}
 		}
 	};
 	
@@ -4698,6 +4827,17 @@ public class XNStandardModule extends XNModule {
 				}
 				return XOMNumberMath.divide(sumsqdiff, new XOMNumber(numbers.size()), mc, mp);
 			}
+		}
+	};
+	
+	private static final Function f_qtrt = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			parameter = fpNumericParameter(ctx, functionName, parameter);
+			MathContext mc = ctx.getMathContext();
+			MathProcessor mp = ctx.getMathProcessor();
+			if (parameter instanceof XOMNumber) return XOMNumberMath.qtrt((XOMNumber)parameter,mc,mp);
+			else if (parameter instanceof XOMComplex) return XOMComplexMath.qtrt((XOMComplex)parameter,mc,mp);
+			else throw new XOMMorphError("number");
 		}
 	};
 	
@@ -5331,6 +5471,17 @@ public class XNStandardModule extends XNModule {
 		}
 	};
 	
+	private static final Function f_twrt = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			parameter = fpNumericParameter(ctx, functionName, parameter);
+			MathContext mc = ctx.getMathContext();
+			MathProcessor mp = ctx.getMathProcessor();
+			if (parameter instanceof XOMNumber) return XOMNumberMath.twrt((XOMNumber)parameter,mc,mp);
+			else if (parameter instanceof XOMComplex) return XOMComplexMath.twrt((XOMComplex)parameter,mc,mp);
+			else throw new XOMMorphError("number");
+		}
+	};
+	
 	private static final Function f_ucase = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			if (parameter == null) throw new XNScriptError("Can't understand arguments to ucase");
@@ -5645,7 +5796,6 @@ public class XNStandardModule extends XNModule {
 			}
 			try {
 				MathProcessor mp = (MathProcessor)Class.forName(s).newInstance();
-				ctx.setMathProcessor(mp);
 				ctx.setMathProcessor(mp);
 			} catch (Exception e) {
 				throw new XNScriptError(e, "Unsupported math processor "+s);

@@ -284,6 +284,34 @@ public class XOMComplexMath {
 		}
 	}
 	
+	public static XOMComplex qtrt(XOMComplex n, MathContext mc, MathProcessor mp) {
+		return sqrt(sqrt(n, mc, mp), mc, mp);
+	}
+	
+	public static XOMComplex twrt(XOMComplex n, MathContext mc, MathProcessor mp) {
+		return sqrt(sqrt(cbrt(n, mc, mp), mc, mp), mc, mp);
+	}
+	
+	public static XOMComplex fma(XOMComplex a, XOMComplex b, XOMComplex c, MathContext mc, MathProcessor mp) {
+		return add(multiply(a, b, mc, mp), c, mc, mp);
+	}
+	
+	public static XOMComplex eml(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
+		return subtract(exp(a, mc, mp), log(b, mc, mp), mc, mp);
+	}
+	
+	public static XOMComplex edl(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
+		return divide(exp(a, mc, mp), log(b, mc, mp), mc, mp);
+	}
+	
+	public static XOMComplex lme(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
+		return subtract(log(a, mc, mp), exp(b, mc, mp), mc, mp);
+	}
+	
+	public static XOMComplex lde(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
+		return divide(log(a, mc, mp), exp(b, mc, mp), mc, mp);
+	}
+	
 	public static XOMComplex agm(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
 		XOMComplex t = new XOMComplex(2,0);
 		while (true) {
@@ -308,6 +336,7 @@ public class XOMComplexMath {
 			BigDecimal e = mp.exp(n.realPart(), mc);
 			BigDecimal c = mp.cos(n.imaginaryPart(), mc);
 			BigDecimal s = mp.sin(n.imaginaryPart(), mc);
+			if (e == null || c == null || s == null) return XOMComplex.NaN;
 			return new XOMComplex(e.multiply(c, mc), e.multiply(s, mc));
 		}
 	}
@@ -325,6 +354,7 @@ public class XOMComplexMath {
 			BigDecimal e = mp.exp(n.realPart(), mc);
 			BigDecimal c = mp.cos(n.imaginaryPart(), mc);
 			BigDecimal s = mp.sin(n.imaginaryPart(), mc);
+			if (e == null || c == null || s == null) return XOMComplex.NaN;
 			return new XOMComplex(e.multiply(c, mc).subtract(BigDecimal.ONE), e.multiply(s, mc));
 		}
 	}
@@ -666,6 +696,59 @@ public class XOMComplexMath {
 			XOMComplex sqrtrxp1 = sqrt(add(rx,XOMComplex.ONE,mc,mp),mc,mp);
 			XOMComplex rxm1trxp1 = multiply(sqrtrxm1,sqrtrxp1,mc,mp);
 			return log(add(rxm1trxp1,rx,mc,mp),mc,mp);
+		}
+	}
+	
+	public static XOMComplex erf(XOMComplex z, MathContext mc, MathProcessor mp) {
+		if (z.isNaN()) return XOMComplex.NaN;
+		else if (z.isInfinite()) {
+			switch (z.getQuadrant()) {
+				case XOMComplex.QUADRANT_POSITIVE_REAL: return XOMComplex.ONE;
+				case XOMComplex.QUADRANT_NEGATIVE_REAL: return XOMComplex.ONE.negate();
+				case XOMComplex.QUADRANT_POSITIVE_IMAGINARY: return XOMComplex.makeInfinity(0,+1);
+				case XOMComplex.QUADRANT_NEGATIVE_IMAGINARY: return XOMComplex.makeInfinity(0,-1);
+				default: return XOMComplex.NaN;
+			}
+		}
+		else if (z.isZero()) return XOMComplex.ZERO;
+		else return subtract(XOMComplex.ONE,erfc(z,mc,mp),mc,mp);
+	}
+	
+	private static final XOMComplex[] ERFC = new XOMComplex[] {
+		new XOMComplex(0.56418958354775629,0.0), new XOMComplex(2.06955023132914151,0.0),
+		new XOMComplex(2.71078540045147805,0.0), new XOMComplex(5.80755613130301624,0.0),
+		new XOMComplex(3.47954057099518960,0.0), new XOMComplex(12.06166887286239555,0.0),
+		new XOMComplex(3.47469513777439592,0.0), new XOMComplex(12.07402036406381411,0.0),
+		new XOMComplex(3.72068443960225092,0.0), new XOMComplex(8.44319781003968454,0.0),
+		new XOMComplex(4.00561509202259545,0.0), new XOMComplex(9.30596659485887898,0.0),
+		new XOMComplex(3.90225704029924078,0.0), new XOMComplex(6.36161630953880464,0.0),
+		new XOMComplex(5.16722705817812584,0.0), new XOMComplex(9.12661617673673262,0.0),
+		new XOMComplex(4.03296893109262491,0.0), new XOMComplex(5.13578530585681539,0.0),
+		new XOMComplex(5.95908795446633271,0.0), new XOMComplex(9.19435612886969243,0.0),
+		new XOMComplex(4.11240942957450885,0.0), new XOMComplex(4.48640329523408675,0.0)
+	};
+	
+	public static XOMComplex erfc(XOMComplex z, MathContext mc, MathProcessor mp) {
+		if (z.isNaN()) return XOMComplex.NaN;
+		else if (z.isInfinite()) {
+			switch (z.getQuadrant()) {
+				case XOMComplex.QUADRANT_POSITIVE_REAL: return XOMComplex.ZERO;
+				case XOMComplex.QUADRANT_NEGATIVE_REAL: return new XOMComplex(2,0);
+				default: return XOMComplex.NaN;
+			}
+		}
+		else if (z.isZero()) return XOMComplex.ONE;
+		else if (z.realPart().doubleValue() < 0) return subtract(new XOMComplex(2,0),erfc(z.negate(),mc,mp),mc,mp);
+		else {
+			XOMComplex zz = multiply(z,z,mc,mp);
+			XOMComplex w = exp(zz.negate(),mc,mp);
+			w = multiply(w,divide(ERFC[0],add(z,ERFC[1],mc,mp),mc,mp),mc,mp);
+			w = multiply(w,divide(add(add(zz,multiply(ERFC[2],z,mc,mp),mc,mp),ERFC[3],mc,mp),add(add(zz,multiply(ERFC[4],z,mc,mp),mc,mp),ERFC[5],mc,mp),mc,mp),mc,mp);
+			w = multiply(w,divide(add(add(zz,multiply(ERFC[6],z,mc,mp),mc,mp),ERFC[7],mc,mp),add(add(zz,multiply(ERFC[8],z,mc,mp),mc,mp),ERFC[9],mc,mp),mc,mp),mc,mp);
+			w = multiply(w,divide(add(add(zz,multiply(ERFC[10],z,mc,mp),mc,mp),ERFC[11],mc,mp),add(add(zz,multiply(ERFC[12],z,mc,mp),mc,mp),ERFC[13],mc,mp),mc,mp),mc,mp);
+			w = multiply(w,divide(add(add(zz,multiply(ERFC[14],z,mc,mp),mc,mp),ERFC[15],mc,mp),add(add(zz,multiply(ERFC[16],z,mc,mp),mc,mp),ERFC[17],mc,mp),mc,mp),mc,mp);
+			w = multiply(w,divide(add(add(zz,multiply(ERFC[18],z,mc,mp),mc,mp),ERFC[19],mc,mp),add(add(zz,multiply(ERFC[20],z,mc,mp),mc,mp),ERFC[21],mc,mp),mc,mp),mc,mp);
+			return w;
 		}
 	}
 	
