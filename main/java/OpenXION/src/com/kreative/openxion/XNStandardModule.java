@@ -440,6 +440,8 @@ public class XNStandardModule extends XNModule {
 		functions.put("equal",f_equal);
 		functions.put("erf",f_erf);
 		functions.put("erfc",f_erfc);
+		functions.put("erfcx",f_erfcx);
+		functions.put("erfi", f_erfi);
 		functions.put("exp",f_exp);
 		functions.put("exp1",f_exp1);
 		functions.put("exp10",f_exp10);
@@ -3706,6 +3708,28 @@ public class XNStandardModule extends XNModule {
 			MathProcessor mp = ctx.getMathProcessor();
 			if (parameter instanceof XOMNumber) return XOMNumberMath.erfc((XOMNumber)parameter,mc,mp);
 			else if (parameter instanceof XOMComplex) return XOMComplexMath.erfc((XOMComplex)parameter,mc,mp);
+			else throw new XOMMorphError("number");
+		}
+	};
+	
+	private static final Function f_erfcx = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			parameter = fpNumericParameter(ctx, functionName, parameter);
+			MathContext mc = ctx.getMathContext();
+			MathProcessor mp = ctx.getMathProcessor();
+			if (parameter instanceof XOMNumber) return XOMNumberMath.erfcx((XOMNumber)parameter,mc,mp);
+			else if (parameter instanceof XOMComplex) return XOMComplexMath.erfcx((XOMComplex)parameter,mc,mp);
+			else throw new XOMMorphError("number");
+		}
+	};
+	
+	private static final Function f_erfi = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			parameter = fpNumericParameter(ctx, functionName, parameter);
+			MathContext mc = ctx.getMathContext();
+			MathProcessor mp = ctx.getMathProcessor();
+			if (parameter instanceof XOMNumber) return XOMNumberMath.erfi((XOMNumber)parameter,mc,mp);
+			else if (parameter instanceof XOMComplex) return XOMComplexMath.erfi((XOMComplex)parameter,mc,mp);
 			else throw new XOMMorphError("number");
 		}
 	};

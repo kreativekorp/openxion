@@ -202,14 +202,28 @@ public class FastMath extends MathProcessor {
 		else return BigDecimal.valueOf(r);
 	}
 
+	@Override
+	public BigDecimal erfcx(BigDecimal arg, MathContext mc) {
+		double r = erfcx(arg.doubleValue());
+		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
+		else return BigDecimal.valueOf(r);
+	}
+
 	private static double erfc(double x) {
 		if (Double.isNaN(x)) return Double.NaN;
 		else if (x < 0) return 2 - erfc(-x);
 		else if (x == 0) return 1;
 		else if (Double.isInfinite(x)) return 0;
+		else return Math.exp(-x*x) * erfcx(x);
+	}
+
+	private static double erfcx(double x) {
+		if (Double.isNaN(x)) return Double.NaN;
+		else if (x < 0) return Math.exp(x*x) * erfc(x);
+		else if (x == 0) return 1;
+		else if (Double.isInfinite(x)) return 0;
 		else {
-			double y = Math.exp(-x*x);
-			y *= 0.56418958354775629 / (x + 2.06955023132914151);
+			double y = 0.56418958354775629 / (x + 2.06955023132914151);
 			y *= (x*x + 2.71078540045147805*x + 5.80755613130301624) / (x*x + 3.47954057099518960*x + 12.06166887286239555);
 			y *= (x*x + 3.47469513777439592*x + 12.07402036406381411) / (x*x + 3.72068443960225092*x + 8.44319781003968454);
 			y *= (x*x + 4.00561509202259545*x + 9.30596659485887898) / (x*x + 3.90225704029924078*x + 6.36161630953880464);

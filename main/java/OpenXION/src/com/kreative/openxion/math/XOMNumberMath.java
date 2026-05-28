@@ -29,6 +29,7 @@ package com.kreative.openxion.math;
 
 import java.math.*;
 import java.util.Comparator;
+import com.kreative.openxion.xom.inst.XOMComplex;
 import com.kreative.openxion.xom.inst.XOMNumber;
 
 /**
@@ -770,6 +771,25 @@ public class XOMNumberMath {
 			if (d == null) return XOMNumber.NaN;
 			else return new XOMNumber(d);
 		}
+	}
+	
+	public static XOMNumber erfcx(XOMNumber n, MathContext mc, MathProcessor mp) {
+		if (n.isUndefined()) {
+			if (n.getSign() == XOMNumber.SIGN_POSITIVE) return XOMNumber.ZERO;
+			else if (n.getSign() == XOMNumber.SIGN_NEGATIVE) return XOMNumber.POSITIVE_INFINITY;
+			else return XOMNumber.NaN;
+		}
+		else if (n.isZero()) return XOMNumber.ONE;
+		else {
+			BigDecimal d = mp.erfcx(n.toBigDecimal(), mc);
+			if (d == null) return XOMNumber.NaN;
+			else return new XOMNumber(d);
+		}
+	}
+	
+	public static XOMNumber erfi(XOMNumber n, MathContext mc, MathProcessor mp) {
+		if (n.isUndefined() || n.isZero()) return n;
+		else return XOMComplexMath.erfi(new XOMComplex(n,XOMNumber.ZERO),mc,mp).Re();
 	}
 	
 	public static XOMNumber gamma(XOMNumber n, MathContext mc, MathProcessor mp) {

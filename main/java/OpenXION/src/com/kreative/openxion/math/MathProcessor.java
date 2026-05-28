@@ -46,6 +46,7 @@ public abstract class MathProcessor {
 	public abstract BigDecimal cosh(BigDecimal arg, MathContext mc);
 	public abstract BigDecimal erf(BigDecimal arg, MathContext mc);
 	public abstract BigDecimal erfc(BigDecimal arg, MathContext mc);
+	public abstract BigDecimal erfcx(BigDecimal arg, MathContext mc);
 	public abstract BigDecimal exp(BigDecimal arg, MathContext mc);
 	public abstract BigDecimal expm1(BigDecimal arg, MathContext mc);
 	public abstract BigDecimal gamma(BigDecimal arg, MathContext mc);

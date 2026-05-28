@@ -739,10 +739,23 @@ public class XOMComplexMath {
 		}
 		else if (z.isZero()) return XOMComplex.ONE;
 		else if (z.realPart().doubleValue() < 0) return subtract(new XOMComplex(2,0),erfc(z.negate(),mc,mp),mc,mp);
+		else return multiply(exp(multiply(z,z,mc,mp).negate(),mc,mp),erfcx(z,mc,mp),mc,mp);
+	}
+	
+	public static XOMComplex erfcx(XOMComplex z, MathContext mc, MathProcessor mp) {
+		if (z.isNaN()) return XOMComplex.NaN;
+		else if (z.isInfinite()) {
+			switch (z.getQuadrant()) {
+				case XOMComplex.QUADRANT_POSITIVE_REAL: return XOMComplex.ZERO;
+				case XOMComplex.QUADRANT_NEGATIVE_REAL: return XOMComplex.POSITIVE_INFINITY;
+				default: return XOMComplex.NaN;
+			}
+		}
+		else if (z.isZero()) return XOMComplex.ONE;
+		else if (z.realPart().doubleValue() < 0) return multiply(exp(multiply(z,z,mc,mp),mc,mp),erfc(z,mc,mp),mc,mp);
 		else {
 			XOMComplex zz = multiply(z,z,mc,mp);
-			XOMComplex w = exp(zz.negate(),mc,mp);
-			w = multiply(w,divide(ERFC[0],add(z,ERFC[1],mc,mp),mc,mp),mc,mp);
+			XOMComplex w = divide(ERFC[0],add(z,ERFC[1],mc,mp),mc,mp);
 			w = multiply(w,divide(add(add(zz,multiply(ERFC[2],z,mc,mp),mc,mp),ERFC[3],mc,mp),add(add(zz,multiply(ERFC[4],z,mc,mp),mc,mp),ERFC[5],mc,mp),mc,mp),mc,mp);
 			w = multiply(w,divide(add(add(zz,multiply(ERFC[6],z,mc,mp),mc,mp),ERFC[7],mc,mp),add(add(zz,multiply(ERFC[8],z,mc,mp),mc,mp),ERFC[9],mc,mp),mc,mp),mc,mp);
 			w = multiply(w,divide(add(add(zz,multiply(ERFC[10],z,mc,mp),mc,mp),ERFC[11],mc,mp),add(add(zz,multiply(ERFC[12],z,mc,mp),mc,mp),ERFC[13],mc,mp),mc,mp),mc,mp);
@@ -750,6 +763,21 @@ public class XOMComplexMath {
 			w = multiply(w,divide(add(add(zz,multiply(ERFC[18],z,mc,mp),mc,mp),ERFC[19],mc,mp),add(add(zz,multiply(ERFC[20],z,mc,mp),mc,mp),ERFC[21],mc,mp),mc,mp),mc,mp);
 			return w;
 		}
+	}
+	
+	public static XOMComplex erfi(XOMComplex z, MathContext mc, MathProcessor mp) {
+		if (z.isNaN()) return XOMComplex.NaN;
+		else if (z.isInfinite()) {
+			switch (z.getQuadrant()) {
+				case XOMComplex.QUADRANT_POSITIVE_REAL: return XOMComplex.POSITIVE_INFINITY;
+				case XOMComplex.QUADRANT_NEGATIVE_REAL: return XOMComplex.NEGATIVE_INFINITY;
+				case XOMComplex.QUADRANT_POSITIVE_IMAGINARY: return XOMComplex.I;
+				case XOMComplex.QUADRANT_NEGATIVE_IMAGINARY: return XOMComplex.I.negate();
+				default: return XOMComplex.NaN;
+			}
+		}
+		else if (z.isZero()) return XOMComplex.ZERO;
+		else return multiply(XOMComplex.I.negate(),erf(multiply(XOMComplex.I,z,mc,mp),mc,mp),mc,mp);
 	}
 	
 	private static final int G = 7;
