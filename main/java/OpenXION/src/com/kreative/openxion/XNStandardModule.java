@@ -490,9 +490,13 @@ public class XNStandardModule extends XNModule {
 		functions.put("ln\u03B2",f_lnbeta);
 		functions.put("ln1",f_ln1);
 		functions.put("lnbeta",f_lnbeta);
+		functions.put("lnchoose", f_lnncr);
 		functions.put("lnfact",f_lnfact);
 		functions.put("lnfactorial",f_lnfact);
 		functions.put("lngamma",f_lngamma);
+		functions.put("lnncr",f_lnncr);
+		functions.put("lnnpr",f_lnnpr);
+		functions.put("lnpick", f_lnnpr);
 		functions.put("log",f_log);
 		functions.put("log10",f_log10);
 		functions.put("log2",f_log2);
@@ -4313,6 +4317,44 @@ public class XNStandardModule extends XNModule {
 			if (parameter instanceof XOMNumber) return XOMNumberMath.loggamma((XOMNumber)parameter,mc,mp);
 			else if (parameter instanceof XOMComplex) return XOMComplexMath.loggamma((XOMComplex)parameter,mc,mp);
 			else throw new XOMMorphError("number");
+		}
+	};
+	
+	private static final Function f_lnncr = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
+			MathContext mc = ctx.getMathContext();
+			MathProcessor mp = ctx.getMathProcessor();
+			XOMVariant a = fpNumericParameter(ctx, functionName, l.get(0));
+			XOMVariant b = fpNumericParameter(ctx, functionName, l.get(1));
+			if (a instanceof XOMComplex || b instanceof XOMComplex) {
+				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, a, true);
+				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, b, true);
+				return XOMComplexMath.lognCr(ac, bc, mc, mp);
+			} else {
+				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, a, true);
+				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, b, true);
+				return XOMNumberMath.lognCr(an, bn, mc, mp);
+			}
+		}
+	};
+	
+	private static final Function f_lnnpr = new Function() {
+		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
+			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
+			MathContext mc = ctx.getMathContext();
+			MathProcessor mp = ctx.getMathProcessor();
+			XOMVariant a = fpNumericParameter(ctx, functionName, l.get(0));
+			XOMVariant b = fpNumericParameter(ctx, functionName, l.get(1));
+			if (a instanceof XOMComplex || b instanceof XOMComplex) {
+				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, a, true);
+				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, b, true);
+				return XOMComplexMath.lognPr(ac, bc, mc, mp);
+			} else {
+				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, a, true);
+				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, b, true);
+				return XOMNumberMath.lognPr(an, bn, mc, mp);
+			}
 		}
 	};
 	

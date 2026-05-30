@@ -233,30 +233,43 @@ public class FastMath extends MathProcessor {
 		}
 	}
 
-	private static final int G = 7;
-	private static final double[] P = new double[] {
-		0.99999999999980993, 676.5203681218851, -1259.1392167224028,
-		771.32342877765313, -176.61502916214059, 12.507343278686905,
-		-0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7
+	private static final double GAMMA_G = 7;
+	private static final double[] GAMMA_P = {
+		0.99999999999980993227684700473478,
+		676.520368121885098567009190444019,
+		-1259.13921672240287047156078755283,
+		771.3234287776530788486528258894,
+		-176.61502916214059906584551354,
+		12.507343278686904814458936853,
+		-0.13857109526572011689554707,
+		9.984369578019570859563e-6,
+		1.50563273514931155834e-7
 	};
+	private static double[] gammaTZX(double z) {
+		z--;
+		double x = GAMMA_P[0];
+		for (int i = 1; i < GAMMA_P.length; i++) x += GAMMA_P[i] / (z + i);
+		return new double[] { z + GAMMA_G + 0.5, z + 0.5, x };
+	}
+
 	private static double gamma(double z) {
-		if (Double.isNaN(z)) return Double.NaN;
-		else if (Double.isInfinite(z)) return (z > 0.0) ? Double.POSITIVE_INFINITY : Double.NaN;
-		else if (z < 0.0 && Math.round(z) == z) return Double.NaN;
-		else if (z == 0.0) return Double.POSITIVE_INFINITY;
-		else if (z == 1.0 || z == 2.0) return 1.0;
-		else if (z < 0.5) {
-			return Math.PI / (Math.sin(Math.PI * z) * gamma(1.0-z));
-		}
-		else {
-			z -= 1.0;
-			double x = P[0];
-			for (int i = 1; i < G+2; i++) {
-				x += P[i]/(z+i);
-			}
-			double t = z + G + 0.5;
-			return Math.sqrt(2*Math.PI) * Math.pow(t, z+0.5) * Math.exp(-t) * x;
-		}
+		if (Double.isNaN(z)) return z;
+		if (z <= 0 && Math.ceil(z) == Math.floor(z)) return Double.NaN;
+		if (z == 1 || z == 2) return 1;
+		if (Double.isInfinite(z)) return z;
+		if (z < 0.5) return Math.PI / (Math.sin(Math.PI * z) * gamma(1 - z));
+		double[] tzx = gammaTZX(z);
+		return Math.sqrt(Math.PI * 2) * Math.pow(tzx[0], tzx[1]) * Math.exp(-tzx[0]) * tzx[2];
+	}
+
+	private static double loggamma(double z) {
+		if (Double.isNaN(z)) return z;
+		if (z <= 0 && Math.ceil(z) == Math.floor(z)) return Double.NaN;
+		if (z == 1 || z == 2) return 0;
+		if (Double.isInfinite(z)) return z;
+		if (z < 0.5) return Math.log(Math.abs(Math.PI / Math.sin(Math.PI * z))) - loggamma(1 - z);
+		double[] tzx = gammaTZX(z);
+		return Math.log(Math.sqrt(Math.PI * 2)) + tzx[1] * Math.log(tzx[0]) - tzx[0] + Math.log(tzx[2]);
 	}
 
 	@Override
@@ -268,7 +281,7 @@ public class FastMath extends MathProcessor {
 
 	@Override
 	public BigDecimal loggamma(BigDecimal arg, MathContext mc) {
-		double r = Math.log(gamma(arg.doubleValue()));
+		double r = loggamma(arg.doubleValue());
 		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
 		else return BigDecimal.valueOf(r);
 	}

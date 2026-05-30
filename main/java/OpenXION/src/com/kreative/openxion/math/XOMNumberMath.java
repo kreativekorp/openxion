@@ -269,27 +269,11 @@ public class XOMNumberMath {
 	}
 	
 	public static XOMNumber qtrt(XOMNumber n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) {
-			if (n.getSign() == XOMNumber.SIGN_POSITIVE) return XOMNumber.POSITIVE_INFINITY;
-			else return XOMNumber.NaN;
-		}
-		else {
-			BigDecimal d = mp.sqrt(mp.sqrt(n.toBigDecimal(), mc), mc);
-			if (d == null) return XOMNumber.NaN;
-			else return new XOMNumber(d);
-		}
+		return sqrt(sqrt(n, mc, mp), mc, mp);
 	}
 	
 	public static XOMNumber twrt(XOMNumber n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) {
-			if (n.getSign() == XOMNumber.SIGN_POSITIVE) return XOMNumber.POSITIVE_INFINITY;
-			else return XOMNumber.NaN;
-		}
-		else {
-			BigDecimal d = mp.sqrt(mp.sqrt(mp.cbrt(n.toBigDecimal(), mc), mc), mc);
-			if (d == null) return XOMNumber.NaN;
-			else return new XOMNumber(d);
-		}
+		return sqrt(sqrt(cbrt(n, mc, mp), mc, mp), mc, mp);
 	}
 	
 	public static XOMNumber fma(XOMNumber a, XOMNumber b, XOMNumber c, MathContext mc, MathProcessor mp) {
@@ -797,7 +781,6 @@ public class XOMNumberMath {
 			if (n.getSign() == XOMNumber.SIGN_POSITIVE) return XOMNumber.POSITIVE_INFINITY;
 			else return XOMNumber.NaN;
 		}
-		else if (n.isZero()) return XOMNumber.POSITIVE_INFINITY;
 		else {
 			BigDecimal d = mp.gamma(n.toBigDecimal(), mc);
 			if (d == null) return XOMNumber.NaN;
@@ -810,7 +793,6 @@ public class XOMNumberMath {
 			if (n.getSign() == XOMNumber.SIGN_POSITIVE) return XOMNumber.POSITIVE_INFINITY;
 			else return XOMNumber.NaN;
 		}
-		else if (n.isZero()) return XOMNumber.POSITIVE_INFINITY;
 		else {
 			BigDecimal d = mp.loggamma(n.toBigDecimal(), mc);
 			if (d == null) return XOMNumber.NaN;
@@ -838,7 +820,15 @@ public class XOMNumberMath {
 		return divide(gamma(add(n,XOMNumber.ONE,mc,mp),mc,mp),gamma(add(subtract(n,r,mc,mp),XOMNumber.ONE,mc,mp),mc,mp),mc,mp);
 	}
 	
+	public static XOMNumber lognPr(XOMNumber n, XOMNumber r, MathContext mc, MathProcessor mp) {
+		return subtract(loggamma(add(n,XOMNumber.ONE,mc,mp),mc,mp),loggamma(add(subtract(n,r,mc,mp),XOMNumber.ONE,mc,mp),mc,mp),mc,mp);
+	}
+	
 	public static XOMNumber nCr(XOMNumber n, XOMNumber r, MathContext mc, MathProcessor mp) {
 		return divide(divide(gamma(add(n,XOMNumber.ONE,mc,mp),mc,mp),gamma(add(r,XOMNumber.ONE,mc,mp),mc,mp),mc,mp),gamma(add(subtract(n,r,mc,mp),XOMNumber.ONE,mc,mp),mc,mp),mc,mp);
+	}
+	
+	public static XOMNumber lognCr(XOMNumber n, XOMNumber r, MathContext mc, MathProcessor mp) {
+		return subtract(subtract(loggamma(add(n,XOMNumber.ONE,mc,mp),mc,mp),loggamma(add(r,XOMNumber.ONE,mc,mp),mc,mp),mc,mp),loggamma(add(subtract(n,r,mc,mp),XOMNumber.ONE,mc,mp),mc,mp),mc,mp);
 	}
 }
