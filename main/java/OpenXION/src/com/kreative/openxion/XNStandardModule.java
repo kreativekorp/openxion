@@ -1584,32 +1584,27 @@ public class XNStandardModule extends XNModule {
 				throw new XNScriptError("Can't understand arguments to add");
 			}
 			MathContext mc = ctx.getMathContext();
-			MathProcessor mp = ctx.getMathProcessor();
 			XOMVariant bv = interp.evaluateExpression(parameters.get(0)).asPrimitive(ctx);
 			XOMVariant av = interp.evaluateExpression(parameters.get(2)).asContainer(ctx, false);
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				XOMComplex rc = XOMComplexMath.add(ac, bc, mc, mp);
-				av.putIntoContents(ctx, rc);
+				av.putIntoContents(ctx, ac.add(bc, mc));
 			}
 			else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
 				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				XOMNumber rn = XOMNumberMath.add(an, bn, mc, mp);
-				av.putIntoContents(ctx, rn);
+				av.putIntoContents(ctx, an.add(bn, mc));
 			}
 			else if (XOMNumberType.instance.canMakeInstanceFrom(ctx, av, true) && XOMNumberType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				XOMNumber rn = XOMNumberMath.add(an, bn, mc, mp);
-				av.putIntoContents(ctx, rn);
+				av.putIntoContents(ctx, an.add(bn, mc));
 			}
 			else if (XOMComplexType.instance.canMakeInstanceFrom(ctx, av, true) && XOMComplexType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				XOMComplex rc = XOMComplexMath.add(ac, bc, mc, mp);
-				av.putIntoContents(ctx, rc);
+				av.putIntoContents(ctx, ac.add(bc, mc));
 			}
 			else {
 				throw new XOMMorphError("number");
@@ -2081,34 +2076,33 @@ public class XNStandardModule extends XNModule {
 				}
 			}
 			MathContext mc = ctx.getMathContext();
-			MathProcessor mp = ctx.getMathProcessor();
 			XOMVariant av = interp.evaluateExpression(parameters.get(0)).asContainer(ctx, false);
 			XOMVariant bv = interp.evaluateExpression(parameters.get(2)).asPrimitive(ctx);
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				XOMComplex rc = XOMComplexMath.divide(ac, bc, mc, mp);
+				XOMComplex rc = ac.divide(bc, mc);
 				if (rm != null) rc = rc.round(rm);
 				av.putIntoContents(ctx, rc);
 			}
 			else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
 				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				XOMNumber rn = XOMNumberMath.divide(an, bn, mc, mp);
+				XOMNumber rn = an.divide(bn, mc);
 				if (rm != null) rn = rn.round(rm);
 				av.putIntoContents(ctx, rn);
 			}
 			else if (XOMNumberType.instance.canMakeInstanceFrom(ctx, av, true) && XOMNumberType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				XOMNumber rn = XOMNumberMath.divide(an, bn, mc, mp);
+				XOMNumber rn = an.divide(bn, mc);
 				if (rm != null) rn = rn.round(rm);
 				av.putIntoContents(ctx, rn);
 			}
 			else if (XOMComplexType.instance.canMakeInstanceFrom(ctx, av, true) && XOMComplexType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				XOMComplex rc = XOMComplexMath.divide(ac, bc, mc, mp);
+				XOMComplex rc = ac.divide(bc, mc);
 				if (rm != null) rc = rc.round(rm);
 				av.putIntoContents(ctx, rc);
 			}
@@ -2158,31 +2152,30 @@ public class XNStandardModule extends XNModule {
 				}
 			}
 			MathContext mc = ctx.getMathContext();
-			MathProcessor mp = ctx.getMathProcessor();
 			XOMVariant av = interp.evaluateExpression(parameters.get(0)).asContainer(ctx, false);
 			XOMVariant bv = interp.evaluateExpression(parameters.get(2)).asPrimitive(ctx);
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				XOMComplex rc = XOMComplexMath.subtract(ac, XOMComplexMath.multiply(bc, XOMComplexMath.divide(ac, bc, mc, mp).round(rm), mc, mp), mc, mp);
+				XOMComplex rc = ac.subtract(bc.multiply(ac.divide(bc, mc).round(rm), mc), mc);
 				av.putIntoContents(ctx, rc);
 			}
 			else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
 				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				XOMNumber rn = XOMNumberMath.subtract(an, XOMNumberMath.multiply(bn, XOMNumberMath.divide(an, bn, mc, mp).round(rm), mc, mp), mc, mp);
+				XOMNumber rn = an.subtract(bn.multiply(an.divide(bn, mc).round(rm), mc), mc);
 				av.putIntoContents(ctx, rn);
 			}
 			else if (XOMNumberType.instance.canMakeInstanceFrom(ctx, av, true) && XOMNumberType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				XOMNumber rn = XOMNumberMath.subtract(an, XOMNumberMath.multiply(bn, XOMNumberMath.divide(an, bn, mc, mp).round(rm), mc, mp), mc, mp);
+				XOMNumber rn = an.subtract(bn.multiply(an.divide(bn, mc).round(rm), mc), mc);
 				av.putIntoContents(ctx, rn);
 			}
 			else if (XOMComplexType.instance.canMakeInstanceFrom(ctx, av, true) && XOMComplexType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				XOMComplex rc = XOMComplexMath.subtract(ac, XOMComplexMath.multiply(bc, XOMComplexMath.divide(ac, bc, mc, mp).round(rm), mc, mp), mc, mp);
+				XOMComplex rc = ac.subtract(bc.multiply(ac.divide(bc, mc).round(rm), mc), mc);
 				av.putIntoContents(ctx, rc);
 			}
 			else {
@@ -2198,32 +2191,27 @@ public class XNStandardModule extends XNModule {
 				throw new XNScriptError("Can't understand arguments to multiply");
 			}
 			MathContext mc = ctx.getMathContext();
-			MathProcessor mp = ctx.getMathProcessor();
 			XOMVariant av = interp.evaluateExpression(parameters.get(0)).asContainer(ctx, false);
 			XOMVariant bv = interp.evaluateExpression(parameters.get(2)).asPrimitive(ctx);
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				XOMComplex rc = XOMComplexMath.multiply(ac, bc, mc, mp);
-				av.putIntoContents(ctx, rc);
+				av.putIntoContents(ctx, ac.multiply(bc, mc));
 			}
 			else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
 				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				XOMNumber rn = XOMNumberMath.multiply(an, bn, mc, mp);
-				av.putIntoContents(ctx, rn);
+				av.putIntoContents(ctx, an.multiply(bn, mc));
 			}
 			else if (XOMNumberType.instance.canMakeInstanceFrom(ctx, av, true) && XOMNumberType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				XOMNumber rn = XOMNumberMath.multiply(an, bn, mc, mp);
-				av.putIntoContents(ctx, rn);
+				av.putIntoContents(ctx, an.multiply(bn, mc));
 			}
 			else if (XOMComplexType.instance.canMakeInstanceFrom(ctx, av, true) && XOMComplexType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				XOMComplex rc = XOMComplexMath.multiply(ac, bc, mc, mp);
-				av.putIntoContents(ctx, rc);
+				av.putIntoContents(ctx, ac.multiply(bc, mc));
 			}
 			else {
 				throw new XOMMorphError("number");
@@ -2285,32 +2273,27 @@ public class XNStandardModule extends XNModule {
 				throw new XNScriptError("Can't understand arguments to subtract");
 			}
 			MathContext mc = ctx.getMathContext();
-			MathProcessor mp = ctx.getMathProcessor();
 			XOMVariant bv = interp.evaluateExpression(parameters.get(0)).asPrimitive(ctx);
 			XOMVariant av = interp.evaluateExpression(parameters.get(2)).asContainer(ctx, false);
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				XOMComplex rc = XOMComplexMath.subtract(ac, bc, mc, mp);
-				av.putIntoContents(ctx, rc);
+				av.putIntoContents(ctx, ac.subtract(bc, mc));
 			}
 			else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
 				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				XOMNumber rn = XOMNumberMath.subtract(an, bn, mc, mp);
-				av.putIntoContents(ctx, rn);
+				av.putIntoContents(ctx, an.subtract(bn, mc));
 			}
 			else if (XOMNumberType.instance.canMakeInstanceFrom(ctx, av, true) && XOMNumberType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				XOMNumber rn = XOMNumberMath.subtract(an, bn, mc, mp);
-				av.putIntoContents(ctx, rn);
+				av.putIntoContents(ctx, an.subtract(bn, mc));
 			}
 			else if (XOMComplexType.instance.canMakeInstanceFrom(ctx, av, true) && XOMComplexType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				XOMComplex rc = XOMComplexMath.subtract(ac, bc, mc, mp);
-				av.putIntoContents(ctx, rc);
+				av.putIntoContents(ctx, ac.subtract(bc, mc));
 			}
 			else {
 				throw new XOMMorphError("number");
@@ -2971,11 +2954,10 @@ public class XNStandardModule extends XNModule {
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
 			if (parameter instanceof XOMNumber) {
-				switch (((XOMNumber)parameter).getSign()) {
-				case XOMNumber.SIGN_NaN: return XOMNumber.NaN;
-				case XOMNumber.SIGN_NEGATIVE: return XOMNumber.PI;
-				default: return XOMNumber.ZERO;
-				}
+				XOMNumber n = (XOMNumber)parameter;
+				if (n.isNaN()) return XOMNumber.NaN;
+				if (n.isNeg()) return XOMNumber.PI;
+				return XOMNumber.ZERO;
 			}
 			else if (parameter instanceof XOMComplex) return XOMComplexMath.arg((XOMComplex)parameter, mc, mp);
 			else throw new XOMMorphError("number");
@@ -2991,8 +2973,8 @@ public class XNStandardModule extends XNModule {
 				XOMNumber[] prev = ((XOMComplex)ni.next()).toXOMNumbers();
 				while (ni.hasNext()) {
 					XOMNumber[] num = ((XOMComplex)ni.next()).toXOMNumbers();
-					if (XOMNumberMath.compare(num[0], prev[0]) < 0) return XOMBoolean.FALSE;
-					if (XOMNumberMath.compare(num[1], prev[1]) < 0) return XOMBoolean.FALSE;
+					if (num[0].compareTo(prev[0]) < 0) return XOMBoolean.FALSE;
+					if (num[1].compareTo(prev[1]) < 0) return XOMBoolean.FALSE;
 					prev = num;
 				}
 				return XOMBoolean.TRUE;
@@ -3001,7 +2983,7 @@ public class XNStandardModule extends XNModule {
 				XOMInteger prev = (XOMInteger)ni.next();
 				while (ni.hasNext()) {
 					XOMInteger num = (XOMInteger)ni.next();
-					if (XOMIntegerMath.compare(num, prev) < 0) return XOMBoolean.FALSE;
+					if (num.compareTo(prev) < 0) return XOMBoolean.FALSE;
 					prev = num;
 				}
 				return XOMBoolean.TRUE;
@@ -3010,7 +2992,7 @@ public class XNStandardModule extends XNModule {
 				XOMNumber prev = (XOMNumber)ni.next();
 				while (ni.hasNext()) {
 					XOMNumber num = (XOMNumber)ni.next();
-					if (XOMNumberMath.compare(num, prev) < 0) return XOMBoolean.FALSE;
+					if (num.compareTo(prev) < 0) return XOMBoolean.FALSE;
 					prev = num;
 				}
 				return XOMBoolean.TRUE;
@@ -3109,20 +3091,19 @@ public class XNStandardModule extends XNModule {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			List<? extends XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
 			MathContext mc = ctx.getMathContext();
-			MathProcessor mp = ctx.getMathProcessor();
 			if (numbers.isEmpty()) return XOMNumber.NaN;
 			if (numbers.get(0) instanceof XOMComplex) {
 				XOMComplex sum = XOMComplex.ZERO;
 				for (XOMVariant number : numbers) {
-					sum = XOMComplexMath.add(sum, (XOMComplex)number, mc, mp);
+					sum = sum.add((XOMComplex)number, mc);
 				}
-				return XOMComplexMath.divide(sum, new XOMComplex(numbers.size(),0), mc, mp);
+				return sum.divide(new XOMComplex(numbers.size(), 0), mc);
 			} else {
 				XOMNumber sum = XOMNumber.ZERO;
 				for (XOMVariant number : numbers) {
-					sum = XOMNumberMath.add(sum, (XOMNumber)number, mc, mp);
+					sum = sum.add((XOMNumber)number, mc);
 				}
-				return XOMNumberMath.divide(sum, new XOMNumber(numbers.size()), mc, mp);
+				return sum.divide(new XOMNumber(numbers.size()), mc);
 			}
 		}
 	};
@@ -3165,20 +3146,20 @@ public class XNStandardModule extends XNModule {
 			parameter = anyNumericParameter(ctx, functionName, parameter);
 			if (parameter instanceof XOMInteger) {
 				XOMInteger i = ((XOMInteger)parameter);
-				if (i.isUndefined()) return i;
+				if (!i.isFinite()) return i;
 				return new XOMString(BaseConvert.bc(i.toBigInteger(), 2, ctx.getMathContext()));
 			}
 			else if (parameter instanceof XOMNumber) {
 				XOMNumber n = ((XOMNumber)parameter);
-				if (n.isUndefined()) return n;
+				if (!n.isFinite()) return n;
 				return new XOMString(BaseConvert.bc(n.toBigDecimal(), 2, ctx.getMathContext()));
 			}
 			else if (parameter instanceof XOMComplex) {
 				XOMComplex c = ((XOMComplex)parameter);
-				if (c.isUndefined()) return c;
+				if (!c.isFinite()) return c;
 				return new XOMString(
-						BaseConvert.bc(c.realPart(), 2, ctx.getMathContext()) + "," +
-						BaseConvert.bc(c.imaginaryPart(), 2, ctx.getMathContext())
+					BaseConvert.bc(c.re().toBigDecimal(), 2, ctx.getMathContext()) + "," +
+					BaseConvert.bc(c.im().toBigDecimal(), 2, ctx.getMathContext())
 				);
 			}
 			else throw new XOMMorphError("number");
@@ -3553,8 +3534,8 @@ public class XNStandardModule extends XNModule {
 				XOMNumber[] prev = ((XOMComplex)ni.next()).toXOMNumbers();
 				while (ni.hasNext()) {
 					XOMNumber[] num = ((XOMComplex)ni.next()).toXOMNumbers();
-					if (XOMNumberMath.compare(num[0], prev[0]) >= 0) return XOMBoolean.FALSE;
-					if (XOMNumberMath.compare(num[1], prev[1]) >= 0) return XOMBoolean.FALSE;
+					if (num[0].compareTo(prev[0]) >= 0) return XOMBoolean.FALSE;
+					if (num[1].compareTo(prev[1]) >= 0) return XOMBoolean.FALSE;
 					prev = num;
 				}
 				return XOMBoolean.TRUE;
@@ -3563,7 +3544,7 @@ public class XNStandardModule extends XNModule {
 				XOMInteger prev = (XOMInteger)ni.next();
 				while (ni.hasNext()) {
 					XOMInteger num = (XOMInteger)ni.next();
-					if (XOMIntegerMath.compare(num, prev) >= 0) return XOMBoolean.FALSE;
+					if (num.compareTo(prev) >= 0) return XOMBoolean.FALSE;
 					prev = num;
 				}
 				return XOMBoolean.TRUE;
@@ -3572,7 +3553,7 @@ public class XNStandardModule extends XNModule {
 				XOMNumber prev = (XOMNumber)ni.next();
 				while (ni.hasNext()) {
 					XOMNumber num = (XOMNumber)ni.next();
-					if (XOMNumberMath.compare(num, prev) >= 0) return XOMBoolean.FALSE;
+					if (num.compareTo(prev) >= 0) return XOMBoolean.FALSE;
 					prev = num;
 				}
 				return XOMBoolean.TRUE;
@@ -3589,8 +3570,8 @@ public class XNStandardModule extends XNModule {
 				XOMNumber[] prev = ((XOMComplex)ni.next()).toXOMNumbers();
 				while (ni.hasNext()) {
 					XOMNumber[] num = ((XOMComplex)ni.next()).toXOMNumbers();
-					if (XOMNumberMath.compare(num[0], prev[0]) > 0) return XOMBoolean.FALSE;
-					if (XOMNumberMath.compare(num[1], prev[1]) > 0) return XOMBoolean.FALSE;
+					if (num[0].compareTo(prev[0]) > 0) return XOMBoolean.FALSE;
+					if (num[1].compareTo(prev[1]) > 0) return XOMBoolean.FALSE;
 					prev = num;
 				}
 				return XOMBoolean.TRUE;
@@ -3599,7 +3580,7 @@ public class XNStandardModule extends XNModule {
 				XOMInteger prev = (XOMInteger)ni.next();
 				while (ni.hasNext()) {
 					XOMInteger num = (XOMInteger)ni.next();
-					if (XOMIntegerMath.compare(num, prev) > 0) return XOMBoolean.FALSE;
+					if (num.compareTo(prev) > 0) return XOMBoolean.FALSE;
 					prev = num;
 				}
 				return XOMBoolean.TRUE;
@@ -3608,7 +3589,7 @@ public class XNStandardModule extends XNModule {
 				XOMNumber prev = (XOMNumber)ni.next();
 				while (ni.hasNext()) {
 					XOMNumber num = (XOMNumber)ni.next();
-					if (XOMNumberMath.compare(num, prev) > 0) return XOMBoolean.FALSE;
+					if (num.compareTo(prev) > 0) return XOMBoolean.FALSE;
 					prev = num;
 				}
 				return XOMBoolean.TRUE;
@@ -3838,7 +3819,6 @@ public class XNStandardModule extends XNModule {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 3, true);
 			MathContext mc = ctx.getMathContext();
-			MathProcessor mp = ctx.getMathProcessor();
 			XOMVariant a = fpNumericParameter(ctx, functionName, l.get(0));
 			XOMVariant b = fpNumericParameter(ctx, functionName, l.get(1));
 			XOMVariant c = fpNumericParameter(ctx, functionName, l.get(2));
@@ -3846,12 +3826,12 @@ public class XNStandardModule extends XNModule {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, a, true);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, b, true);
 				XOMComplex cc = XOMComplexType.instance.makeInstanceFrom(ctx, c, true);
-				return XOMComplexMath.fma(ac, bc, cc, mc, mp);
+				return XOMComplexMath.fma(ac, bc, cc, mc);
 			} else {
 				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, a, true);
 				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, b, true);
 				XOMNumber cn = XOMNumberType.instance.makeInstanceFrom(ctx, c, true);
-				return XOMNumberMath.fma(an, bn, cn, mc, mp);
+				return XOMNumberMath.fma(an, bn, cn, mc);
 			}
 		}
 	};
@@ -3896,14 +3876,9 @@ public class XNStandardModule extends XNModule {
 			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
 			XOMInteger xa = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(0), true);
 			XOMInteger xb = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(1), true);
-			if (xa.isUndefined() || xb.isUndefined()) return XOMInteger.NaN;
-			else try {
-				BigInteger a = xa.toBigInteger();
-				BigInteger b = xb.toBigInteger();
-				return new XOMInteger(a.gcd(b));
-			} catch (ArithmeticException ae) {
-				return XOMInteger.ZERO;
-			}
+			if (!xa.isFinite() || !xb.isFinite()) return XOMInteger.NaN;
+			try { return new XOMInteger(xa.toBigInteger().gcd(xb.toBigInteger())); }
+			catch (ArithmeticException ae) { return XOMInteger.ZERO; }
 		}
 	};
 	
@@ -3916,15 +3891,17 @@ public class XNStandardModule extends XNModule {
 			if (numbers.get(0) instanceof XOMComplex) {
 				XOMComplex product = XOMComplex.ONE;
 				for (XOMVariant number : numbers) {
-					product = XOMComplexMath.multiply(product, (XOMComplex)number, mc, mp);
+					product = product.multiply((XOMComplex)number, mc);
 				}
-				return XOMComplexMath.pow(product, XOMComplexMath.divide(XOMComplex.ONE, new XOMComplex(numbers.size(), 0), mc, mp), mc, mp);
+				XOMComplex p = XOMComplex.ONE.divide(new XOMComplex(numbers.size(), 0), mc);
+				return XOMComplexMath.pow(product, p, mc, mp);
 			} else {
 				XOMNumber product = XOMNumber.ONE;
 				for (XOMVariant number : numbers) {
-					product = XOMNumberMath.multiply(product, (XOMNumber)number, mc, mp);
+					product = product.multiply((XOMNumber)number, mc);
 				}
-				return XOMNumberMath.pow(product, XOMNumberMath.divide(XOMNumber.ONE, new XOMNumber(numbers.size()), mc, mp), mc, mp);
+				XOMNumber p = XOMNumber.ONE.divide(new XOMNumber(numbers.size()), mc);
+				return XOMNumberMath.pow(product, p, mc, mp);
 			}
 		}
 	};
@@ -3933,20 +3910,19 @@ public class XNStandardModule extends XNModule {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			List<? extends XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
 			MathContext mc = ctx.getMathContext();
-			MathProcessor mp = ctx.getMathProcessor();
 			if (numbers.isEmpty()) return XOMNumber.ZERO;
 			if (numbers.get(0) instanceof XOMComplex) {
 				XOMComplex sum = XOMComplex.ZERO;
 				for (XOMVariant number : numbers) {
-					sum = XOMComplexMath.add(sum, XOMComplexMath.divide(XOMComplex.ONE, (XOMComplex)number, mc, mp), mc, mp);
+					sum = sum.add(XOMComplex.ONE.divide((XOMComplex)number, mc), mc);
 				}
-				return XOMComplexMath.divide(new XOMComplex(numbers.size(),0), sum, mc, mp);
+				return new XOMComplex(numbers.size(), 0).divide(sum, mc);
 			} else {
 				XOMNumber sum = XOMNumber.ZERO;
 				for (XOMVariant number : numbers) {
-					sum = XOMNumberMath.add(sum, XOMNumberMath.divide(XOMNumber.ONE, (XOMNumber)number, mc, mp), mc, mp);
+					sum = sum.add(XOMNumber.ONE.divide((XOMNumber)number, mc), mc);
 				}
-				return XOMNumberMath.divide(new XOMNumber(numbers.size()), sum, mc, mp);
+				return new XOMNumber(numbers.size()).divide(sum, mc);
 			}
 		}
 	};
@@ -3994,20 +3970,20 @@ public class XNStandardModule extends XNModule {
 			parameter = anyNumericParameter(ctx, functionName, parameter);
 			if (parameter instanceof XOMInteger) {
 				XOMInteger i = ((XOMInteger)parameter);
-				if (i.isUndefined()) return i;
+				if (!i.isFinite()) return i;
 				return new XOMString(BaseConvert.bc(i.toBigInteger(), 16, ctx.getMathContext()));
 			}
 			else if (parameter instanceof XOMNumber) {
 				XOMNumber n = ((XOMNumber)parameter);
-				if (n.isUndefined()) return n;
+				if (!n.isFinite()) return n;
 				return new XOMString(BaseConvert.bc(n.toBigDecimal(), 16, ctx.getMathContext()));
 			}
 			else if (parameter instanceof XOMComplex) {
 				XOMComplex c = ((XOMComplex)parameter);
-				if (c.isUndefined()) return c;
+				if (!c.isFinite()) return c;
 				return new XOMString(
-						BaseConvert.bc(c.realPart(), 16, ctx.getMathContext()) + "," +
-						BaseConvert.bc(c.imaginaryPart(), 16, ctx.getMathContext())
+					BaseConvert.bc(c.re().toBigDecimal(), 16, ctx.getMathContext()) + "," +
+					BaseConvert.bc(c.im().toBigDecimal(), 16, ctx.getMathContext())
 				);
 			}
 			else throw new XOMMorphError("number");
@@ -4030,13 +4006,15 @@ public class XNStandardModule extends XNModule {
 			if (numbers.get(0) instanceof XOMComplex) {
 				XOMComplex sum = XOMComplex.ZERO;
 				for (XOMVariant number : numbers) {
-					sum = XOMComplexMath.add(sum, XOMComplexMath.multiply((XOMComplex)number,(XOMComplex)number,mc,mp), mc, mp);
+					XOMComplex c = (XOMComplex)number;
+					sum = sum.add(c.multiply(c, mc), mc);
 				}
 				return XOMComplexMath.sqrt(sum, mc, mp);
 			} else {
 				XOMNumber sum = XOMNumber.ZERO;
 				for (XOMVariant number : numbers) {
-					sum = XOMNumberMath.add(sum, XOMNumberMath.multiply((XOMNumber)number, (XOMNumber)number, mc, mp), mc, mp);
+					XOMNumber n = (XOMNumber)number;
+					sum = sum.add(n.multiply(n, mc), mc);
 				}
 				return XOMNumberMath.sqrt(sum, mc, mp);
 			}
@@ -4048,7 +4026,7 @@ public class XNStandardModule extends XNModule {
 			parameter = anyNumericParameter(ctx, functionName, parameter);
 			if (parameter instanceof XOMInteger) return XOMInteger.ZERO;
 			else if (parameter instanceof XOMNumber) return XOMNumber.ZERO;
-			else if (parameter instanceof XOMComplex) return ((XOMComplex)parameter).Im();
+			else if (parameter instanceof XOMComplex) return ((XOMComplex)parameter).im();
 			else throw new XOMMorphError("number");
 		}
 	};
@@ -4079,8 +4057,8 @@ public class XNStandardModule extends XNModule {
 				XOMNumber[] prev = ((XOMComplex)ni.next()).toXOMNumbers();
 				while (ni.hasNext()) {
 					XOMNumber[] num = ((XOMComplex)ni.next()).toXOMNumbers();
-					if (XOMNumberMath.compare(num[0], prev[0]) <= 0) return XOMBoolean.FALSE;
-					if (XOMNumberMath.compare(num[1], prev[1]) <= 0) return XOMBoolean.FALSE;
+					if (num[0].compareTo(prev[0]) <= 0) return XOMBoolean.FALSE;
+					if (num[1].compareTo(prev[1]) <= 0) return XOMBoolean.FALSE;
 					prev = num;
 				}
 				return XOMBoolean.TRUE;
@@ -4089,7 +4067,7 @@ public class XNStandardModule extends XNModule {
 				XOMInteger prev = (XOMInteger)ni.next();
 				while (ni.hasNext()) {
 					XOMInteger num = (XOMInteger)ni.next();
-					if (XOMIntegerMath.compare(num, prev) <= 0) return XOMBoolean.FALSE;
+					if (num.compareTo(prev) <= 0) return XOMBoolean.FALSE;
 					prev = num;
 				}
 				return XOMBoolean.TRUE;
@@ -4098,7 +4076,7 @@ public class XNStandardModule extends XNModule {
 				XOMNumber prev = (XOMNumber)ni.next();
 				while (ni.hasNext()) {
 					XOMNumber num = (XOMNumber)ni.next();
-					if (XOMNumberMath.compare(num, prev) <= 0) return XOMBoolean.FALSE;
+					if (num.compareTo(prev) <= 0) return XOMBoolean.FALSE;
 					prev = num;
 				}
 				return XOMBoolean.TRUE;
@@ -4138,9 +4116,9 @@ public class XNStandardModule extends XNModule {
 	private static final Function f_isfinite = new Function() {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			parameter = anyNumericParameter(ctx, functionName, parameter);
-			if (parameter instanceof XOMInteger) return ((XOMInteger)parameter).isUndefined() ? XOMBoolean.FALSE : XOMBoolean.TRUE;
-			else if (parameter instanceof XOMNumber) return ((XOMNumber)parameter).isUndefined() ? XOMBoolean.FALSE : XOMBoolean.TRUE;
-			else if (parameter instanceof XOMComplex) return ((XOMComplex)parameter).isUndefined() ? XOMBoolean.FALSE : XOMBoolean.TRUE;
+			if (parameter instanceof XOMInteger) return ((XOMInteger)parameter).isFinite() ? XOMBoolean.TRUE : XOMBoolean.FALSE;
+			else if (parameter instanceof XOMNumber) return ((XOMNumber)parameter).isFinite() ? XOMBoolean.TRUE : XOMBoolean.FALSE;
+			else if (parameter instanceof XOMComplex) return ((XOMComplex)parameter).isFinite() ? XOMBoolean.TRUE : XOMBoolean.FALSE;
 			else throw new XOMMorphError("number");
 		}
 	};
@@ -4177,12 +4155,11 @@ public class XNStandardModule extends XNModule {
 			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
 			XOMInteger xa = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(0), true);
 			XOMInteger xb = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(1), true);
-			if (xa.isUndefined() || xb.isUndefined()) return XOMInteger.NaN;
-			else try {
+			if (!xa.isFinite() || !xb.isFinite()) return XOMInteger.NaN;
+			try {
 				BigInteger a = xa.toBigInteger();
 				BigInteger b = xb.toBigInteger();
-				BigInteger gcd = a.gcd(b);
-				return new XOMInteger(a.divide(gcd).multiply(b));
+				return new XOMInteger(a.divide(a.gcd(b)).multiply(b));
 			} catch (ArithmeticException ae) {
 				return XOMInteger.ZERO;
 			}
@@ -4368,11 +4345,11 @@ public class XNStandardModule extends XNModule {
 			if (a instanceof XOMComplex || b instanceof XOMComplex) {
 				XOMComplex ac = XOMComplexType.instance.makeInstanceFrom(ctx, a, true);
 				XOMComplex bc = XOMComplexType.instance.makeInstanceFrom(ctx, b, true);
-				return XOMComplexMath.divide(XOMComplexMath.log(ac,mc,mp), XOMComplexMath.log(bc,mc,mp), mc, mp);
+				return XOMComplexMath.log(ac, mc, mp).divide(XOMComplexMath.log(bc, mc, mp), mc);
 			} else {
 				XOMNumber an = XOMNumberType.instance.makeInstanceFrom(ctx, a, true);
 				XOMNumber bn = XOMNumberType.instance.makeInstanceFrom(ctx, b, true);
-				return XOMNumberMath.divide(XOMNumberMath.log(an,mc,mp), XOMNumberMath.log(bn,mc,mp), mc, mp);
+				return XOMNumberMath.log(an, mc, mp).divide(XOMNumberMath.log(bn, mc, mp), mc);
 			}
 		}
 	};
@@ -4459,20 +4436,20 @@ public class XNStandardModule extends XNModule {
 				XOMNumber[] max = ((XOMComplex)numbers.get(0)).toXOMNumbers();
 				for (XOMVariant number : numbers) {
 					XOMNumber[] num = ((XOMComplex)number).toXOMNumbers();
-					if (XOMNumberMath.compare(num[0], max[0]) > 0) max[0] = num[0];
-					if (XOMNumberMath.compare(num[1], max[1]) > 0) max[1] = num[1];
+					if (num[0].compareTo(max[0]) > 0) max[0] = num[0];
+					if (num[1].compareTo(max[1]) > 0) max[1] = num[1];
 				}
-				return new XOMComplex(max[0],max[1]);
+				return new XOMComplex(max[0].toNumber(), max[1].toNumber());
 			} else if (numbers.get(0) instanceof XOMInteger) {
 				XOMInteger max = (XOMInteger)numbers.get(0);
 				for (XOMVariant number : numbers) {
-					if (XOMIntegerMath.compare((XOMInteger)number, max) > 0) max = (XOMInteger)number;
+					if (((XOMInteger)number).compareTo(max) > 0) max = (XOMInteger)number;
 				}
 				return max;
 			} else {
 				XOMNumber max = (XOMNumber)numbers.get(0);
 				for (XOMVariant number : numbers) {
-					if (XOMNumberMath.compare((XOMNumber)number, max) > 0) max = (XOMNumber)number;
+					if (((XOMNumber)number).compareTo(max) > 0) max = (XOMNumber)number;
 				}
 				return max;
 			}
@@ -4483,7 +4460,6 @@ public class XNStandardModule extends XNModule {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			List<? extends XOMVariant> numbers = anyNumericListParameter(ctx, functionName, parameter);
 			MathContext mc = ctx.getMathContext();
-			MathProcessor mp = ctx.getMathProcessor();
 			if (numbers.isEmpty()) return XOMNumber.NaN;
 			if (numbers.get(0) instanceof XOMComplex) {
 				List<XOMNumber> r = new Vector<XOMNumber>();
@@ -4493,46 +4469,46 @@ public class XNStandardModule extends XNModule {
 					r.add(num[0]);
 					i.add(num[1]);
 				}
-				Collections.sort(r, XOMNumberMath.comparator);
-				Collections.sort(i, XOMNumberMath.comparator);
+				Collections.sort(r);
+				Collections.sort(i);
 				if ((r.size() % 2) == 1) {
 					XOMNumber rr = r.get((r.size() - 1) / 2);
 					XOMNumber ri = i.get((i.size() - 1) / 2);
-					return new XOMComplex(rr, ri);
+					return new XOMComplex(rr.toNumber(), ri.toNumber());
 				} else {
 					XOMNumber ar = r.get((r.size() / 2) - 1);
 					XOMNumber br = r.get(r.size() / 2);
-					XOMNumber rr = XOMNumberMath.divide(XOMNumberMath.add(ar, br, mc, mp), new XOMNumber(2), mc, mp);
+					XOMNumber rr = ar.add(br, mc).divide(XOMNumber.TWO, mc);
 					XOMNumber ai = i.get((i.size() / 2) - 1);
 					XOMNumber bi = i.get(i.size() / 2);
-					XOMNumber ri = XOMNumberMath.divide(XOMNumberMath.add(ai, bi, mc, mp), new XOMNumber(2), mc, mp);
-					return new XOMComplex(rr, ri);
+					XOMNumber ri = ai.add(bi, mc).divide(XOMNumber.TWO, mc);
+					return new XOMComplex(rr.toNumber(), ri.toNumber());
 				}
 			} else if (numbers.get(0) instanceof XOMInteger) {
 				List<XOMInteger> n = new Vector<XOMInteger>();
 				for (XOMVariant number : numbers) {
 					n.add((XOMInteger)number);
 				}
-				Collections.sort(n, XOMIntegerMath.comparator);
+				Collections.sort(n);
 				if ((n.size() % 2) == 1) {
 					return n.get((n.size() - 1) / 2);
 				} else {
 					XOMNumber a = XOMNumberType.instance.makeInstanceFrom(ctx, n.get((n.size() / 2) - 1), true);
 					XOMNumber b = XOMNumberType.instance.makeInstanceFrom(ctx, n.get(n.size() / 2), true);
-					return XOMNumberMath.divide(XOMNumberMath.add(a, b, mc, mp), new XOMNumber(2), mc, mp);
+					return a.add(b, mc).divide(XOMNumber.TWO, mc);
 				}
 			} else {
 				List<XOMNumber> n = new Vector<XOMNumber>();
 				for (XOMVariant number : numbers) {
 					n.add((XOMNumber)number);
 				}
-				Collections.sort(n, XOMNumberMath.comparator);
+				Collections.sort(n);
 				if ((n.size() % 2) == 1) {
 					return n.get((n.size() - 1) / 2);
 				} else {
 					XOMNumber a = n.get((n.size() / 2) - 1);
 					XOMNumber b = n.get(n.size() / 2);
-					return XOMNumberMath.divide(XOMNumberMath.add(a, b, mc, mp), new XOMNumber(2), mc, mp);
+					return a.add(b, mc).divide(XOMNumber.TWO, mc);
 				}
 			}
 		}
@@ -4568,20 +4544,20 @@ public class XNStandardModule extends XNModule {
 				XOMNumber[] min = ((XOMComplex)numbers.get(0)).toXOMNumbers();
 				for (XOMVariant number : numbers) {
 					XOMNumber[] num = ((XOMComplex)number).toXOMNumbers();
-					if (XOMNumberMath.compare(num[0], min[0]) < 0) min[0] = num[0];
-					if (XOMNumberMath.compare(num[1], min[1]) < 0) min[1] = num[1];
+					if (num[0].compareTo(min[0]) < 0) min[0] = num[0];
+					if (num[1].compareTo(min[1]) < 0) min[1] = num[1];
 				}
-				return new XOMComplex(min[0],min[1]);
+				return new XOMComplex(min[0].toNumber(), min[1].toNumber());
 			} else if (numbers.get(0) instanceof XOMInteger) {
 				XOMInteger min = (XOMInteger)numbers.get(0);
 				for (XOMVariant number : numbers) {
-					if (XOMIntegerMath.compare((XOMInteger)number, min) < 0) min = (XOMInteger)number;
+					if (((XOMInteger)number).compareTo(min) < 0) min = (XOMInteger)number;
 				}
 				return min;
 			} else {
 				XOMNumber min = (XOMNumber)numbers.get(0);
 				for (XOMVariant number : numbers) {
-					if (XOMNumberMath.compare((XOMNumber)number, min) < 0) min = (XOMNumber)number;
+					if (((XOMNumber)number).compareTo(min) < 0) min = (XOMNumber)number;
 				}
 				return min;
 			}
@@ -4692,20 +4668,20 @@ public class XNStandardModule extends XNModule {
 			parameter = anyNumericParameter(ctx, functionName, parameter);
 			if (parameter instanceof XOMInteger) {
 				XOMInteger i = ((XOMInteger)parameter);
-				if (i.isUndefined()) return i;
+				if (!i.isFinite()) return i;
 				return new XOMString(BaseConvert.bc(i.toBigInteger(), 8, ctx.getMathContext()));
 			}
 			else if (parameter instanceof XOMNumber) {
 				XOMNumber n = ((XOMNumber)parameter);
-				if (n.isUndefined()) return n;
+				if (!n.isFinite()) return n;
 				return new XOMString(BaseConvert.bc(n.toBigDecimal(), 8, ctx.getMathContext()));
 			}
 			else if (parameter instanceof XOMComplex) {
 				XOMComplex c = ((XOMComplex)parameter);
-				if (c.isUndefined()) return c;
+				if (!c.isFinite()) return c;
 				return new XOMString(
-						BaseConvert.bc(c.realPart(), 8, ctx.getMathContext()) + "," +
-						BaseConvert.bc(c.imaginaryPart(), 8, ctx.getMathContext())
+					BaseConvert.bc(c.re().toBigDecimal(), 8, ctx.getMathContext()) + "," +
+					BaseConvert.bc(c.im().toBigDecimal(), 8, ctx.getMathContext())
 				);
 			}
 			else throw new XOMMorphError("number");
@@ -4804,18 +4780,17 @@ public class XNStandardModule extends XNModule {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			List<? extends XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
 			MathContext mc = ctx.getMathContext();
-			MathProcessor mp = ctx.getMathProcessor();
 			if (numbers.isEmpty()) return XOMNumber.ONE;
 			if (numbers.get(0) instanceof XOMComplex) {
 				XOMComplex product = XOMComplex.ONE;
 				for (XOMVariant number : numbers) {
-					product = XOMComplexMath.multiply(product, (XOMComplex)number, mc, mp);
+					product = product.multiply((XOMComplex)number, mc);
 				}
 				return product;
 			} else {
 				XOMNumber product = XOMNumber.ONE;
 				for (XOMVariant number : numbers) {
-					product = XOMNumberMath.multiply(product, (XOMNumber)number, mc, mp);
+					product = product.multiply((XOMNumber)number, mc);
 				}
 				return product;
 			}
@@ -4831,30 +4806,28 @@ public class XNStandardModule extends XNModule {
 			if (numbers.get(0) instanceof XOMComplex) {
 				XOMComplex sum = XOMComplex.ZERO;
 				for (XOMVariant number : numbers) {
-					sum = XOMComplexMath.add(sum, (XOMComplex)number, mc, mp);
+					sum = sum.add((XOMComplex)number, mc);
 				}
-				XOMComplex avg = XOMComplexMath.divide(sum, new XOMComplex(numbers.size(),0), mc, mp);
+				XOMComplex avg = sum.divide(new XOMComplex(numbers.size(), 0), mc);
 				XOMComplex sumsqdiff = XOMComplex.ZERO;
 				for (XOMVariant number : numbers) {
-					XOMComplex sqdiff = XOMComplexMath.subtract(avg, (XOMComplex)number, mc, mp);
-					sqdiff = XOMComplexMath.multiply(sqdiff, sqdiff, mc, mp);
-					sumsqdiff = XOMComplexMath.add(sumsqdiff, sqdiff, mc, mp);
+					XOMComplex diff = avg.subtract((XOMComplex)number, mc);
+					sumsqdiff = sumsqdiff.add(diff.multiply(diff, mc), mc);
 				}
-				XOMComplex avgsumsqdiff = XOMComplexMath.divide(sumsqdiff, new XOMComplex(numbers.size(),0), mc, mp);
+				XOMComplex avgsumsqdiff = sumsqdiff.divide(new XOMComplex(numbers.size(), 0), mc);
 				return XOMComplexMath.sqrt(avgsumsqdiff, mc, mp);
 			} else {
 				XOMNumber sum = XOMNumber.ZERO;
 				for (XOMVariant number : numbers) {
-					sum = XOMNumberMath.add(sum, (XOMNumber)number, mc, mp);
+					sum = sum.add((XOMNumber)number, mc);
 				}
-				XOMNumber avg = XOMNumberMath.divide(sum, new XOMNumber(numbers.size()), mc, mp);
+				XOMNumber avg = sum.divide(new XOMNumber(numbers.size()), mc);
 				XOMNumber sumsqdiff = XOMNumber.ZERO;
 				for (XOMVariant number : numbers) {
-					XOMNumber sqdiff = XOMNumberMath.subtract(avg, (XOMNumber)number, mc, mp);
-					sqdiff = XOMNumberMath.multiply(sqdiff, sqdiff, mc, mp);
-					sumsqdiff = XOMNumberMath.add(sumsqdiff, sqdiff, mc, mp);
+					XOMNumber diff = avg.subtract((XOMNumber)number, mc);
+					sumsqdiff = sumsqdiff.add(diff.multiply(diff, mc), mc);
 				}
-				XOMNumber avgsumsqdiff = XOMNumberMath.divide(sumsqdiff, new XOMNumber(numbers.size()), mc, mp);
+				XOMNumber avgsumsqdiff = sumsqdiff.divide(new XOMNumber(numbers.size()), mc);
 				return XOMNumberMath.sqrt(avgsumsqdiff, mc, mp);
 			}
 		}
@@ -4864,34 +4837,31 @@ public class XNStandardModule extends XNModule {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			List<? extends XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
 			MathContext mc = ctx.getMathContext();
-			MathProcessor mp = ctx.getMathProcessor();
 			if (numbers.isEmpty()) return XOMNumber.NaN;
 			if (numbers.get(0) instanceof XOMComplex) {
 				XOMComplex sum = XOMComplex.ZERO;
 				for (XOMVariant number : numbers) {
-					sum = XOMComplexMath.add(sum, (XOMComplex)number, mc, mp);
+					sum = sum.add((XOMComplex)number, mc);
 				}
-				XOMComplex avg = XOMComplexMath.divide(sum, new XOMComplex(numbers.size(),0), mc, mp);
+				XOMComplex avg = sum.divide(new XOMComplex(numbers.size(), 0), mc);
 				XOMComplex sumsqdiff = XOMComplex.ZERO;
 				for (XOMVariant number : numbers) {
-					XOMComplex sqdiff = XOMComplexMath.subtract(avg, (XOMComplex)number, mc, mp);
-					sqdiff = XOMComplexMath.multiply(sqdiff, sqdiff, mc, mp);
-					sumsqdiff = XOMComplexMath.add(sumsqdiff, sqdiff, mc, mp);
+					XOMComplex diff = avg.subtract((XOMComplex)number, mc);
+					sumsqdiff = sumsqdiff.add(diff.multiply(diff, mc), mc);
 				}
-				return XOMComplexMath.divide(sumsqdiff, new XOMComplex(numbers.size(),0), mc, mp);
+				return sumsqdiff.divide(new XOMComplex(numbers.size(), 0), mc);
 			} else {
 				XOMNumber sum = XOMNumber.ZERO;
 				for (XOMVariant number : numbers) {
-					sum = XOMNumberMath.add(sum, (XOMNumber)number, mc, mp);
+					sum = sum.add((XOMNumber)number, mc);
 				}
-				XOMNumber avg = XOMNumberMath.divide(sum, new XOMNumber(numbers.size()), mc, mp);
+				XOMNumber avg = sum.divide(new XOMNumber(numbers.size()), mc);
 				XOMNumber sumsqdiff = XOMNumber.ZERO;
 				for (XOMVariant number : numbers) {
-					XOMNumber sqdiff = XOMNumberMath.subtract(avg, (XOMNumber)number, mc, mp);
-					sqdiff = XOMNumberMath.multiply(sqdiff, sqdiff, mc, mp);
-					sumsqdiff = XOMNumberMath.add(sumsqdiff, sqdiff, mc, mp);
+					XOMNumber diff = avg.subtract((XOMNumber)number, mc);
+					sumsqdiff = sumsqdiff.add(diff.multiply(diff, mc), mc);
 				}
-				return XOMNumberMath.divide(sumsqdiff, new XOMNumber(numbers.size()), mc, mp);
+				return sumsqdiff.divide(new XOMNumber(numbers.size()), mc);
 			}
 		}
 	};
@@ -4944,7 +4914,7 @@ public class XNStandardModule extends XNModule {
 			parameter = anyNumericParameter(ctx, functionName, parameter);
 			if (parameter instanceof XOMInteger) return parameter;
 			else if (parameter instanceof XOMNumber) return parameter;
-			else if (parameter instanceof XOMComplex) return ((XOMComplex)parameter).Re();
+			else if (parameter instanceof XOMComplex) return ((XOMComplex)parameter).re();
 			else throw new XOMMorphError("number");
 		}
 	};
@@ -5007,7 +4977,7 @@ public class XNStandardModule extends XNModule {
 			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
 			XOMInteger xa = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(0), true);
 			XOMInteger xb = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(1), true);
-			if (xa.isUndefined() || xb.isUndefined() || xb.getSign() == XOMInteger.SIGN_NEGATIVE) return XOMInteger.NaN;
+			if (!xa.isFinite() || !xb.isFinite() || xb.isNeg()) return XOMInteger.NaN;
 			BigInteger ff = BigInteger.valueOf(0xFF);
 			BigInteger srcint = xa.toBigInteger();
 			ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -5026,7 +4996,7 @@ public class XNStandardModule extends XNModule {
 			List<? extends XOMVariant> l = listParameter(ctx, functionName, parameter, 2, true);
 			XOMInteger xa = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(0), true);
 			XOMInteger xb = XOMIntegerType.instance.makeInstanceFrom(ctx, l.get(1), true);
-			if (xa.isUndefined() || xb.isUndefined() || xb.getSign() == XOMInteger.SIGN_NEGATIVE) return XOMInteger.NaN;
+			if (!xa.isFinite() || !xb.isFinite() || xb.isNeg()) return XOMInteger.NaN;
 			BigInteger ff = BigInteger.valueOf(0xFF);
 			BigInteger srcint = xa.toBigInteger();
 			ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -5076,15 +5046,17 @@ public class XNStandardModule extends XNModule {
 			if (numbers.get(0) instanceof XOMComplex) {
 				XOMComplex sum = XOMComplex.ZERO;
 				for (XOMVariant number : numbers) {
-					sum = XOMComplexMath.add(sum, XOMComplexMath.multiply((XOMComplex)number,(XOMComplex)number,mc,mp), mc, mp);
+					XOMComplex c = (XOMComplex)number;
+					sum = sum.add(c.multiply(c, mc), mc);
 				}
-				return XOMComplexMath.sqrt(XOMComplexMath.divide(sum,new XOMComplex(numbers.size(),0),mc,mp),mc,mp);
+				return XOMComplexMath.sqrt(sum.divide(new XOMComplex(numbers.size(), 0), mc), mc, mp);
 			} else {
 				XOMNumber sum = XOMNumber.ZERO;
 				for (XOMVariant number : numbers) {
-					sum = XOMNumberMath.add(sum, XOMNumberMath.multiply((XOMNumber)number, (XOMNumber)number, mc, mp), mc, mp);
+					XOMNumber n = (XOMNumber)number;
+					sum = sum.add(n.multiply(n, mc), mc);
 				}
-				return XOMNumberMath.sqrt(XOMNumberMath.divide(sum,new XOMNumber(numbers.size()),mc,mp),mc,mp);
+				return XOMNumberMath.sqrt(sum.divide(new XOMNumber(numbers.size()), mc), mc, mp);
 			}
 		}
 	};
@@ -5097,16 +5069,16 @@ public class XNStandardModule extends XNModule {
 			if (numbers.isEmpty()) return XOMNumber.NaN;
 			if (numbers.get(0) instanceof XOMComplex) {
 				XOMComplex p = XOMComplex.ONE;
-				for (int i = numbers.size()-1; i >= 0; i--) {
+				for (int i = numbers.size() - 1; i >= 0; i--) {
 					XOMVariant number = numbers.get(i);
-					p = XOMComplexMath.pow((XOMComplex)number, XOMComplexMath.divide(XOMComplex.ONE, p, mc, mp), mc, mp);
+					p = XOMComplexMath.pow((XOMComplex)number, XOMComplex.ONE.divide(p, mc), mc, mp);
 				}
 				return p;
 			} else {
 				XOMNumber p = XOMNumber.ONE;
-				for (int i = numbers.size()-1; i >= 0; i--) {
+				for (int i = numbers.size() - 1; i >= 0; i--) {
 					XOMVariant number = numbers.get(i);
-					p = XOMNumberMath.pow((XOMNumber)number, XOMNumberMath.divide(XOMNumber.ONE, p, mc, mp), mc, mp);
+					p = XOMNumberMath.pow((XOMNumber)number, XOMNumber.ONE.divide(p, mc), mc, mp);
 				}
 				return p;
 			}
@@ -5149,20 +5121,19 @@ public class XNStandardModule extends XNModule {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			List<? extends XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
 			MathContext mc = ctx.getMathContext();
-			MathProcessor mp = ctx.getMathProcessor();
 			if (numbers.isEmpty()) return XOMNumber.ZERO;
 			if (numbers.get(0) instanceof XOMComplex) {
 				XOMComplex sum = XOMComplex.ZERO;
 				for (XOMVariant number : numbers) {
-					sum = XOMComplexMath.add(sum, XOMComplexMath.divide(XOMComplex.ONE, (XOMComplex)number, mc, mp), mc, mp);
+					sum = sum.add(XOMComplex.ONE.divide((XOMComplex)number, mc), mc);
 				}
-				return XOMComplexMath.divide(XOMComplex.ONE, sum, mc, mp);
+				return XOMComplex.ONE.divide(sum, mc);
 			} else {
 				XOMNumber sum = XOMNumber.ZERO;
 				for (XOMVariant number : numbers) {
-					sum = XOMNumberMath.add(sum, XOMNumberMath.divide(XOMNumber.ONE, (XOMNumber)number, mc, mp), mc, mp);
+					sum = sum.add(XOMNumber.ONE.divide((XOMNumber)number, mc), mc);
 				}
-				return XOMNumberMath.divide(XOMNumber.ONE, sum, mc, mp);
+				return XOMNumber.ONE.divide(sum, mc);
 			}
 		}
 	};
@@ -5262,30 +5233,28 @@ public class XNStandardModule extends XNModule {
 			if (numbers.get(0) instanceof XOMComplex) {
 				XOMComplex sum = XOMComplex.ZERO;
 				for (XOMVariant number : numbers) {
-					sum = XOMComplexMath.add(sum, (XOMComplex)number, mc, mp);
+					sum = sum.add((XOMComplex)number, mc);
 				}
-				XOMComplex avg = XOMComplexMath.divide(sum, new XOMComplex(numbers.size(),0), mc, mp);
+				XOMComplex avg = sum.divide(new XOMComplex(numbers.size(), 0), mc);
 				XOMComplex sumsqdiff = XOMComplex.ZERO;
 				for (XOMVariant number : numbers) {
-					XOMComplex sqdiff = XOMComplexMath.subtract(avg, (XOMComplex)number, mc, mp);
-					sqdiff = XOMComplexMath.multiply(sqdiff, sqdiff, mc, mp);
-					sumsqdiff = XOMComplexMath.add(sumsqdiff, sqdiff, mc, mp);
+					XOMComplex diff = avg.subtract((XOMComplex)number, mc);
+					sumsqdiff = sumsqdiff.add(diff.multiply(diff, mc), mc);
 				}
-				XOMComplex avgsumsqdiff = XOMComplexMath.divide(sumsqdiff, new XOMComplex(numbers.size()-1,0), mc, mp);
+				XOMComplex avgsumsqdiff = sumsqdiff.divide(new XOMComplex(numbers.size() - 1, 0), mc);
 				return XOMComplexMath.sqrt(avgsumsqdiff, mc, mp);
 			} else {
 				XOMNumber sum = XOMNumber.ZERO;
 				for (XOMVariant number : numbers) {
-					sum = XOMNumberMath.add(sum, (XOMNumber)number, mc, mp);
+					sum = sum.add((XOMNumber)number, mc);
 				}
-				XOMNumber avg = XOMNumberMath.divide(sum, new XOMNumber(numbers.size()), mc, mp);
+				XOMNumber avg = sum.divide(new XOMNumber(numbers.size()), mc);
 				XOMNumber sumsqdiff = XOMNumber.ZERO;
 				for (XOMVariant number : numbers) {
-					XOMNumber sqdiff = XOMNumberMath.subtract(avg, (XOMNumber)number, mc, mp);
-					sqdiff = XOMNumberMath.multiply(sqdiff, sqdiff, mc, mp);
-					sumsqdiff = XOMNumberMath.add(sumsqdiff, sqdiff, mc, mp);
+					XOMNumber diff = avg.subtract((XOMNumber)number, mc);
+					sumsqdiff = sumsqdiff.add(diff.multiply(diff, mc), mc);
 				}
-				XOMNumber avgsumsqdiff = XOMNumberMath.divide(sumsqdiff, new XOMNumber(numbers.size()-1), mc, mp);
+				XOMNumber avgsumsqdiff = sumsqdiff.divide(new XOMNumber(numbers.size() - 1), mc);
 				return XOMNumberMath.sqrt(avgsumsqdiff, mc, mp);
 			}
 		}
@@ -5346,18 +5315,17 @@ public class XNStandardModule extends XNModule {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			List<? extends XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
 			MathContext mc = ctx.getMathContext();
-			MathProcessor mp = ctx.getMathProcessor();
 			if (numbers.isEmpty()) return XOMNumber.ZERO;
 			if (numbers.get(0) instanceof XOMComplex) {
 				XOMComplex sum = XOMComplex.ZERO;
 				for (XOMVariant number : numbers) {
-					sum = XOMComplexMath.add(sum, (XOMComplex)number, mc, mp);
+					sum = sum.add((XOMComplex)number, mc);
 				}
 				return sum;
 			} else {
 				XOMNumber sum = XOMNumber.ZERO;
 				for (XOMVariant number : numbers) {
-					sum = XOMNumberMath.add(sum, (XOMNumber)number, mc, mp);
+					sum = sum.add((XOMNumber)number, mc);
 				}
 				return sum;
 			}
@@ -5368,34 +5336,31 @@ public class XNStandardModule extends XNModule {
 		public XOMVariant evaluateFunction(XNContext ctx, String functionName, XNModifier modifier, XOMVariant parameter) {
 			List<? extends XOMVariant> numbers = fpNumericListParameter(ctx, functionName, parameter);
 			MathContext mc = ctx.getMathContext();
-			MathProcessor mp = ctx.getMathProcessor();
 			if (numbers.isEmpty()) return XOMNumber.NaN;
 			if (numbers.get(0) instanceof XOMComplex) {
 				XOMComplex sum = XOMComplex.ZERO;
 				for (XOMVariant number : numbers) {
-					sum = XOMComplexMath.add(sum, (XOMComplex)number, mc, mp);
+					sum = sum.add((XOMComplex)number, mc);
 				}
-				XOMComplex avg = XOMComplexMath.divide(sum, new XOMComplex(numbers.size(),0), mc, mp);
+				XOMComplex avg = sum.divide(new XOMComplex(numbers.size(), 0), mc);
 				XOMComplex sumsqdiff = XOMComplex.ZERO;
 				for (XOMVariant number : numbers) {
-					XOMComplex sqdiff = XOMComplexMath.subtract(avg, (XOMComplex)number, mc, mp);
-					sqdiff = XOMComplexMath.multiply(sqdiff, sqdiff, mc, mp);
-					sumsqdiff = XOMComplexMath.add(sumsqdiff, sqdiff, mc, mp);
+					XOMComplex diff = avg.subtract((XOMComplex)number, mc);
+					sumsqdiff = sumsqdiff.add(diff.multiply(diff, mc), mc);
 				}
-				return XOMComplexMath.divide(sumsqdiff, new XOMComplex(numbers.size()-1,0), mc, mp);
+				return sumsqdiff.divide(new XOMComplex(numbers.size() - 1, 0), mc);
 			} else {
 				XOMNumber sum = XOMNumber.ZERO;
 				for (XOMVariant number : numbers) {
-					sum = XOMNumberMath.add(sum, (XOMNumber)number, mc, mp);
+					sum = sum.add((XOMNumber)number, mc);
 				}
-				XOMNumber avg = XOMNumberMath.divide(sum, new XOMNumber(numbers.size()), mc, mp);
+				XOMNumber avg = sum.divide(new XOMNumber(numbers.size()), mc);
 				XOMNumber sumsqdiff = XOMNumber.ZERO;
 				for (XOMVariant number : numbers) {
-					XOMNumber sqdiff = XOMNumberMath.subtract(avg, (XOMNumber)number, mc, mp);
-					sqdiff = XOMNumberMath.multiply(sqdiff, sqdiff, mc, mp);
-					sumsqdiff = XOMNumberMath.add(sumsqdiff, sqdiff, mc, mp);
+					XOMNumber diff = avg.subtract((XOMNumber)number, mc);
+					sumsqdiff = sumsqdiff.add(diff.multiply(diff, mc), mc);
 				}
-				return XOMNumberMath.divide(sumsqdiff, new XOMNumber(numbers.size()-1), mc, mp);
+				return sumsqdiff.divide(new XOMNumber(numbers.size() - 1), mc);
 			}
 		}
 	};
@@ -5496,7 +5461,7 @@ public class XNStandardModule extends XNModule {
 			parameter = realNumericParameter(ctx, functionName, parameter);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
-			if (parameter instanceof XOMNumber) return XOMNumberMath.toDeg((XOMNumber)parameter,mc,mp);
+			if (parameter instanceof XOMNumber) return XOMNumberMath.toDegrees((XOMNumber)parameter, mc, mp);
 			else throw new XOMMorphError("number");
 		}
 	};
@@ -5506,7 +5471,7 @@ public class XNStandardModule extends XNModule {
 			parameter = realNumericParameter(ctx, functionName, parameter);
 			MathContext mc = ctx.getMathContext();
 			MathProcessor mp = ctx.getMathProcessor();
-			if (parameter instanceof XOMNumber) return XOMNumberMath.toRad((XOMNumber)parameter,mc,mp);
+			if (parameter instanceof XOMNumber) return XOMNumberMath.toRadians((XOMNumber)parameter, mc, mp);
 			else throw new XOMMorphError("number");
 		}
 	};
@@ -5622,7 +5587,7 @@ public class XNStandardModule extends XNModule {
 			MathProcessor mp = ctx.getMathProcessor();
 			XOMNumber r = XOMNumberType.instance.makeInstanceFrom(ctx, l.get(0), true);
 			XOMNumber t = XOMNumberType.instance.makeInstanceFrom(ctx, l.get(1), true);
-			return XOMNumberMath.multiply(r,XOMNumberMath.cos(t,mc,mp),mc,mp);
+			return XOMNumberMath.cos(t, mc, mp).multiply(r, mc);
 		}
 	};
 	
@@ -5647,7 +5612,7 @@ public class XNStandardModule extends XNModule {
 			MathProcessor mp = ctx.getMathProcessor();
 			XOMNumber r = XOMNumberType.instance.makeInstanceFrom(ctx, l.get(0), true);
 			XOMNumber t = XOMNumberType.instance.makeInstanceFrom(ctx, l.get(1), true);
-			return XOMNumberMath.multiply(r,XOMNumberMath.sin(t,mc,mp),mc,mp);
+			return XOMNumberMath.sin(t, mc, mp).multiply(r, mc);
 		}
 	};
 	

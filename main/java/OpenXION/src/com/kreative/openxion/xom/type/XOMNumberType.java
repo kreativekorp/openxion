@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2009-2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2009-2026 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -27,7 +27,6 @@
 
 package com.kreative.openxion.xom.type;
 
-import java.math.*;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMMorphError;
@@ -46,58 +45,53 @@ public class XOMNumberType extends XOMNumericDataType<XOMNumber> {
 	}
 	
 	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance, boolean acceptEmpty) {
-		if (instance instanceof XOMInteger) {
-			return true;
-		} else if (instance instanceof XOMComplex) {
-			if (((XOMComplex)instance).isReal()) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
+		if (instance instanceof XOMInteger) return true;
+		if (instance instanceof XOMNumber) return true;
+		if (instance instanceof XOMComplex) return ((XOMComplex)instance).isRe();
+		return false;
 	}
+	
 	protected boolean canMakeInstanceFromImpl(XNContext ctx, String s, boolean acceptEmpty) {
 		if (s.equals("")) return acceptEmpty;
-		if (s.equalsIgnoreCase("inf") || s.equalsIgnoreCase("-inf") || s.equalsIgnoreCase("nan")) return true;
+		if (s.equalsIgnoreCase("nan")) return true;
+		if (s.equalsIgnoreCase("inf")) return true;
+		if (s.equalsIgnoreCase("+inf")) return true;
+		if (s.equalsIgnoreCase("-inf")) return true;
 		s = s.replace("''", "E-").replace("'", "E+");
-		try {
-			ctx.getNumberFormat().parseBigDecimal(s);
-			return true;
-		} catch (Exception e1) {
-			return false;
-		}
+		try { ctx.getNumberFormat().parseBigDecimal(s); return true; }
+		catch (Exception e) { return false; }
 	}
+	
 	protected XOMNumber makeInstanceFromImpl(XNContext ctx) {
 		return XOMNumber.ZERO;
 	}
+	
 	protected XOMNumber makeInstanceFromImpl(XNContext ctx, XOMVariant instance, boolean acceptEmpty) {
 		if (instance instanceof XOMInteger) {
-			return new XOMNumber(new BigDecimal(((XOMInteger)instance).toBigInteger()));
-		} else if (instance instanceof XOMComplex) {
-			if (((XOMComplex)instance).isReal()) {
-				return new XOMNumber(((XOMComplex)instance).toBigDecimals()[0]);
-			} else {
-				throw new XOMMorphError(typeName);
-			}
-		} else {
-			throw new XOMMorphError(typeName);
+			XOMInteger i = (XOMInteger)instance;
+			return new XOMNumber(i.toNumber());
 		}
+		if (instance instanceof XOMNumber) {
+			return (XOMNumber)instance;
+		}
+		if (instance instanceof XOMComplex) {
+			XOMComplex c = (XOMComplex)instance;
+			if (c.isRe()) return c.re();
+		}
+		throw new XOMMorphError(typeName);
 	}
+	
 	protected XOMNumber makeInstanceFromImpl(XNContext ctx, String s, boolean acceptEmpty) {
 		if (s.equals("")) {
 			if (acceptEmpty) return XOMNumber.ZERO;
-			else throw new XOMMorphError(typeName);
-		}
-		else if (s.equalsIgnoreCase("inf")) return XOMNumber.POSITIVE_INFINITY;
-		else if (s.equalsIgnoreCase("-inf")) return XOMNumber.NEGATIVE_INFINITY;
-		else if (s.equalsIgnoreCase("nan")) return XOMNumber.NaN;
-		s = s.replace("''", "E-").replace("'", "E+");
-		try {
-			return new XOMNumber(ctx.getNumberFormat().parseBigDecimal(s));
-		} catch (Exception e1) {
 			throw new XOMMorphError(typeName);
 		}
+		if (s.equalsIgnoreCase("nan")) return XOMNumber.NaN;
+		if (s.equalsIgnoreCase("inf")) return XOMNumber.POSITIVE_INFINITY;
+		if (s.equalsIgnoreCase("+inf")) return XOMNumber.POSITIVE_INFINITY;
+		if (s.equalsIgnoreCase("-inf")) return XOMNumber.NEGATIVE_INFINITY;
+		s = s.replace("''", "E-").replace("'", "E+");
+		try { return new XOMNumber(ctx.getNumberFormat().parseBigDecimal(s)); }
+		catch (Exception e) { throw new XOMMorphError(typeName); }
 	}
 }

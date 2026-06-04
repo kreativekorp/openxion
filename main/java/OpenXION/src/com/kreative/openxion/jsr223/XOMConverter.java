@@ -138,9 +138,7 @@ public class XOMConverter {
 			for (int i = 0; i < b.length; i++) b[i] = ((Byte[])o)[i];
 			return new XOMBinary(b);
 		} else if (o instanceof Number[] && ((Number[])o).length == 2) {
-			XOMNumber r = new XOMNumber(((Number[])o)[0]);
-			XOMNumber i = new XOMNumber(((Number[])o)[1]);
-			return new XOMComplex(r, i);
+			return new XOMComplex(((Number[])o)[0], ((Number[])o)[1]);
 		} else if (o instanceof Object[]) {
 			List<XOMVariant> l = new Vector<XOMVariant>();
 			for (Object oo : (Object[])o) l.add(fromNative(oo));

@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2009-2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2009-2026 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -27,10 +27,14 @@
 
 package com.kreative.openxion.math;
 
-import java.math.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.MathContext;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Methods for mathematical functions of BigDecimals
+ * Methods for mathematical functions of arbitrary numbers
  * using power series, Newton's method, etc. (the most accurate method).
  * @since OpenXION 0.9
  * @author Rebecca G. Bettencourt, Kreative Software
@@ -38,428 +42,287 @@ import java.math.*;
 public class BigMath extends MathProcessor {
 	public static final BigMath instance = new BigMath();
 	
-	private static final BigDecimal TWO = BigDecimal.valueOf(2.0);
-	private static final BigDecimal THREE = BigDecimal.valueOf(3.0);
-	private static final BigDecimal FOUR = BigDecimal.valueOf(4.0);
+	private static final BigDecimal TWO = BigDecimal.valueOf(2);
+	private static final BigDecimal THREE = BigDecimal.valueOf(3);
+	private static final BigDecimal FOUR = BigDecimal.valueOf(4);
+	private static final BigDecimal NEGATIVE_ONE = BigDecimal.valueOf(-1);
 	
-	/**
-	 * Calculates cube root using Newton's method.
-	 */
-	public BigDecimal cbrt(BigDecimal n, MathContext mc) {
-		double dg = Math.cbrt(n.doubleValue());
-		if (Double.isNaN(dg)) return null;
-		if (dg == 0.0) return BigDecimal.ZERO;
-		if (Double.isInfinite(dg)) dg = Double.MAX_VALUE;
-		BigDecimal g = BigDecimal.valueOf(dg);
-		BigDecimal r = n.divide(g,mc).divide(g,mc).add(g,mc).add(g,mc).divide(THREE,mc);
-		while (g.compareTo(r) != 0) {
-			g = r;
-			r = n.divide(g,mc).divide(g,mc).add(g,mc).add(g,mc).divide(THREE,mc);
-		}
-		return r;
-	}
+	private static final Map<MathContext,BigDecimal> eCache = new HashMap<MathContext,BigDecimal>();
+	private static final Map<MathContext,BigDecimal> piCache = new HashMap<MathContext,BigDecimal>();
 	
-	/**
-	 * Calculates cosine using Taylor series.
-	 */
-	public BigDecimal cos(BigDecimal n, MathContext mc) {
-		n = n.abs();
-		BigDecimal pi = pi(mc);
-		BigDecimal twopi = TWO.multiply(pi,mc);
-		BigDecimal pitwo = pi.divide(TWO,mc);
-		BigDecimal threepitwo = pi.add(pitwo,mc);
-		if (n.compareTo(BigDecimal.ZERO) == 0 || n.compareTo(twopi) == 0) {
-			return BigDecimal.ONE;
-		}
-		else if (n.compareTo(pitwo) == 0 || n.compareTo(threepitwo) == 0) {
-			return BigDecimal.ZERO;
-		}
-		else if (n.compareTo(pi) == 0) {
-			return BigDecimal.ONE.negate();
-		}
-		else if (n.compareTo(twopi) > 0) {
-			BigDecimal ntp = n.divideToIntegralValue(twopi);
-			return cos(n.subtract((twopi.multiply(ntp,mc)),mc),mc);
-		}
-		else {
-			BigDecimal i = BigDecimal.ZERO;
-			BigDecimal f = BigDecimal.ONE;
-			BigDecimal p = BigDecimal.ONE;
-			BigDecimal a = BigDecimal.ZERO;
-			BigDecimal b = BigDecimal.ONE;
-			while (a.compareTo(b) != 0) {
-				i = i.add(BigDecimal.ONE);
-				f = f.divide(i,mc);
-				i = i.add(BigDecimal.ONE);
-				f = f.negate().divide(i,mc);
-				p = p.multiply(n,mc).multiply(n,mc);
-				a = b;
-				b = b.add(p.multiply(f,mc),mc);
-			}
-			return b;
-		}
-	}
-	
-	/**
-	 * Calculates hyperbolic cosine.
-	 */
-	public BigDecimal cosh(BigDecimal n, MathContext mc) {
-		BigDecimal numer = exp(TWO.multiply(n,mc),mc);
-		BigDecimal denom = TWO.multiply(exp(n,mc),mc);
-		return numer.add(BigDecimal.ONE,mc).divide(denom,mc);
-	}
-	
-	/**
-	 * Calculates e using Taylor series.
-	 */
+	/* Calculates e using Taylor series. */
 	public BigDecimal e(MathContext mc) {
+		BigDecimal c = eCache.get(mc);
+		if (c != null) return c;
 		BigDecimal a = BigDecimal.ZERO;
 		BigDecimal b = BigDecimal.ONE;
 		BigDecimal i = BigDecimal.ONE;
 		BigDecimal f = BigDecimal.ONE;
 		while (a.compareTo(b) != 0) {
 			a = b;
-			b = b.add(f,mc);
+			b = b.add(f, mc);
 			i = i.add(BigDecimal.ONE);
-			f = f.divide(i,mc);
+			f = f.divide(i, mc);
+		}
+		eCache.put(mc, b);
+		return b;
+	}
+	
+	/* Calculates pi using... whatever this method is. */
+	public BigDecimal pi(MathContext mc) {
+		BigDecimal c = piCache.get(mc);
+		if (c != null) return c;
+		BigDecimal a = BigDecimal.ONE;
+		BigDecimal b = BigDecimal.ONE.divide((BigDecimal)sqrt(TWO, mc), mc);
+		BigDecimal t = BigDecimal.valueOf(0.25);
+		BigDecimal x = BigDecimal.ONE;
+		while (a.compareTo(b) != 0) {
+			BigDecimal y = a;
+			a = a.add(b, mc).divide(TWO, mc);
+			b = (BigDecimal)sqrt(b.multiply(y, mc), mc);
+			BigDecimal ya = y.subtract(a, mc);
+			t = t.subtract(x.multiply(ya, mc).multiply(ya, mc), mc);
+			x = x.multiply(TWO, mc);
+		}
+		BigDecimal ab = a.add(b, mc);
+		c = ab.multiply(ab, mc).divide(t.multiply(FOUR, mc), mc);
+		piCache.put(mc, c);
+		return c;
+	}
+	
+	/* Converts n to a BigDecimal. If n is not a finite number, returns null. */
+	private BigDecimal toBigDecimal(Number n) {
+		if (n == null) return null;
+		if (n instanceof BigDecimal) return (BigDecimal)n;
+		if (n instanceof BigInteger) return new BigDecimal((BigInteger)n);
+		if (n instanceof Double || n instanceof Float) {
+			if (Double.isNaN(n.doubleValue())) return null;
+			if (Double.isInfinite(n.doubleValue())) return null;
+			return BigDecimal.valueOf(n.doubleValue());
+		}
+		if (n instanceof Long || n instanceof Integer || n instanceof Short || n instanceof Byte) {
+			return BigDecimal.valueOf(n.longValue());
+		}
+		throw new IllegalArgumentException("unknown subclass of java.lang.Number: " + n.getClass());
+	}
+	
+	public Number acos(Number a, MathContext mc) { return FastMath.instance.acos(a, mc); }
+	public Number asin(Number a, MathContext mc) { return FastMath.instance.asin(a, mc); }
+	public Number atan(Number a, MathContext mc) { return FastMath.instance.atan(a, mc); }
+	public Number atan2(Number y, Number x, MathContext mc) { return FastMath.instance.atan2(y, x, mc); }
+	
+	/* Calculates cube root using Newton's method. */
+	public Number cbrt(Number a, MathContext mc) {
+		BigDecimal n = toBigDecimal(a);
+		if (n == null) return Math.cbrt(a.doubleValue());
+		int signum = n.signum(); // odd function
+		if (signum < 0) n = n.negate();
+		if (signum == 0) return BigDecimal.ZERO;
+		BigDecimal g = BigDecimal.valueOf(Math.cbrt(n.doubleValue()));
+		BigDecimal r = n.divide(g, mc).divide(g, mc).add(g, mc).add(g, mc).divide(THREE, mc);
+		while (g.compareTo(r) != 0) {
+			g = r;
+			r = n.divide(g, mc).divide(g, mc).add(g, mc).add(g, mc).divide(THREE, mc);
+		}
+		return (signum < 0) ? r.negate() : r;
+	}
+	
+	/* Calculates cosine using Taylor series. */
+	public Number cos(Number x, MathContext mc) {
+		BigDecimal n = toBigDecimal(x);
+		if (n == null) return Math.cos(x.doubleValue());
+		n = n.abs(); // even function
+		BigDecimal pi = pi(mc);
+		BigDecimal twopi = pi.multiply(TWO, mc);
+		if (n.compareTo(twopi) > 0) {
+			BigDecimal ntp = n.divideToIntegralValue(twopi);
+			n = n.subtract(twopi.multiply(ntp, mc), mc);
+		}
+		if (n.signum() == 0) return BigDecimal.ONE;
+		if (n.compareTo(pi) == 0) return NEGATIVE_ONE;
+		if (n.compareTo(twopi) == 0) return BigDecimal.ONE;
+		BigDecimal halfpi = pi.divide(TWO, mc);
+		BigDecimal threehalfpi = pi.add(halfpi, mc);
+		if (n.compareTo(halfpi) == 0) return BigDecimal.ZERO;
+		if (n.compareTo(threehalfpi) == 0) return BigDecimal.ZERO;
+		BigDecimal i = BigDecimal.ZERO;
+		BigDecimal f = BigDecimal.ONE;
+		BigDecimal p = BigDecimal.ONE;
+		BigDecimal a = BigDecimal.ZERO;
+		BigDecimal b = BigDecimal.ONE;
+		while (a.compareTo(b) != 0) {
+			i = i.add(BigDecimal.ONE);
+			f = f.divide(i, mc);
+			i = i.add(BigDecimal.ONE);
+			f = f.negate().divide(i, mc);
+			p = p.multiply(n, mc).multiply(n, mc);
+			a = b;
+			b = b.add(p.multiply(f, mc), mc);
 		}
 		return b;
 	}
 	
-	/**
-	 * Calculates e^x using Taylor series.
-	 */
-	public BigDecimal exp(BigDecimal n, MathContext mc) {
-		int cmp = n.compareTo(BigDecimal.ZERO);
-		if (cmp == 0) return BigDecimal.ONE;
-		else if (cmp < 0) return BigDecimal.ONE.divide(exp(n.negate(),mc),mc);
-		else {
-			BigDecimal a = BigDecimal.ZERO;
-			BigDecimal b = BigDecimal.ONE;
-			BigDecimal i = BigDecimal.ONE;
-			BigDecimal f = BigDecimal.ONE;
-			BigDecimal p = n;
-			while (a.compareTo(b) != 0) {
-				a = b;
-				b = b.add(p.multiply(f,mc),mc);
-				i = i.add(BigDecimal.ONE);
-				f = f.divide(i,mc);
-				p = p.multiply(n,mc);
-			}
-			return b;
+	public Number cosh(Number a, MathContext mc) {
+		BigDecimal n = toBigDecimal(a);
+		if (n == null) return Math.cosh(a.doubleValue());
+		BigDecimal numer = (BigDecimal)exp(TWO.multiply(n, mc), mc);
+		BigDecimal denom = TWO.multiply((BigDecimal)exp(n, mc), mc);
+		return numer.add(BigDecimal.ONE, mc).divide(denom, mc);
+	}
+	
+	public Number erf(Number a, MathContext mc) { return FastMath.instance.erf(a, mc); }
+	public Number erfc(Number a, MathContext mc) { return FastMath.instance.erfc(a, mc); }
+	public Number erfcx(Number a, MathContext mc) { return FastMath.instance.erfcx(a, mc); }
+	
+	/* Calculates e^x using Taylor series. */
+	public Number exp(Number x, MathContext mc) {
+		BigDecimal n = toBigDecimal(x);
+		if (n == null) return Math.exp(x.doubleValue());
+		int signum = n.signum();
+		if (signum < 0) n = n.negate();
+		if (signum == 0) return BigDecimal.ONE;
+		BigDecimal a = BigDecimal.ZERO;
+		BigDecimal b = BigDecimal.ONE;
+		BigDecimal i = BigDecimal.ONE;
+		BigDecimal f = BigDecimal.ONE;
+		BigDecimal p = n;
+		while (a.compareTo(b) != 0) {
+			a = b;
+			b = b.add(p.multiply(f, mc), mc);
+			i = i.add(BigDecimal.ONE);
+			f = f.divide(i, mc);
+			p = p.multiply(n, mc);
 		}
+		return (signum < 0) ? BigDecimal.ONE.divide(b, mc) : b;
 	}
 	
-	/**
-	 * Calculates e^x - 1.
-	 */
-	public BigDecimal expm1(BigDecimal n, MathContext mc) {
-		return exp(n,mc).subtract(BigDecimal.ONE);
+	public Number expm1(Number a, MathContext mc) {
+		BigDecimal n = toBigDecimal(a);
+		if (n == null) return Math.expm1(a.doubleValue());
+		return ((BigDecimal)exp(n, mc)).subtract(BigDecimal.ONE, mc);
 	}
 	
-	/**
-	 * Calculates sqrt(a^2 + b^2).
-	 */
-	public BigDecimal hypot(BigDecimal x, BigDecimal y, MathContext mc) {
-		return sqrt(x.multiply(x,mc).add(y.multiply(y,mc),mc),mc);
+	public Number gamma(Number a, MathContext mc) { return FastMath.instance.gamma(a, mc); }
+	
+	public Number hypot(Number y, Number x, MathContext mc) {
+		BigDecimal n = toBigDecimal(y);
+		BigDecimal m = toBigDecimal(x);
+		if (n == null || m == null) return Math.hypot(y.doubleValue(), x.doubleValue());
+		return sqrt(n.multiply(n, mc).add(m.multiply(m, mc), mc), mc);
 	}
 	
-	/**
-	 * Calculates natural logarithm using Newton's method.
-	 */
-	public BigDecimal log(BigDecimal n, MathContext mc) {
-		double dg = Math.log(n.doubleValue());
-		if (Double.isNaN(dg)) return null;
-		if (Double.isInfinite(dg) && dg < 0) return null;
-		if (Double.isInfinite(dg) && dg > 0) dg = Double.MAX_VALUE;
-		// additional digits of precision are needed here
-		// to avoid the common problem of g and r alternating
-		// between the same two equally good approximations
-		// that differ only in the last few digits
-		// (I'm sure there's a mathematical term for that)
-		MathContext dmc = new MathContext(mc.getPrecision()+(int)Math.log(mc.getPrecision()), mc.getRoundingMode());
-		BigDecimal g = BigDecimal.valueOf(dg);
-		BigDecimal r = g.subtract(BigDecimal.ONE,dmc).add(n.divide(exp(g,dmc),dmc));
-		while (g.subtract(r,mc).compareTo(BigDecimal.ZERO) != 0) {
+	/* Calculates natural logarithm using Newton's method. */
+	public Number log(Number a, MathContext mc) {
+		BigDecimal n = toBigDecimal(a);
+		if (n == null || n.signum() <= 0) return Math.log(a.doubleValue());
+		// Use additional precision to hide oscillations.
+		int d = mc.getPrecision() + (int)Math.ceil(Math.sqrt(mc.getPrecision())) + 1;
+		MathContext dmc = new MathContext(d, mc.getRoundingMode());
+		BigDecimal g = BigDecimal.valueOf(Math.log(n.doubleValue()));
+		BigDecimal r = g.subtract(BigDecimal.ONE, dmc).add(n.divide((BigDecimal)exp(g, dmc), dmc), dmc);
+		while (g.round(mc).compareTo(r.round(mc)) != 0) {
 			g = r;
-			r = g.subtract(BigDecimal.ONE,dmc).add(n.divide(exp(g,dmc),dmc));
+			r = g.subtract(BigDecimal.ONE, dmc).add(n.divide((BigDecimal)exp(g, dmc), dmc), dmc);
 		}
 		return r.round(mc);
 	}
 	
-	/**
-	 * Calculates natural logarithm of 1+n.
-	 */
-	public BigDecimal log1p(BigDecimal n, MathContext mc) {
-		return log(n.add(BigDecimal.ONE),mc);
+	public Number log10(Number a, MathContext mc) {
+		BigDecimal n = toBigDecimal(a);
+		if (n == null || n.signum() <= 0) return Math.log(a.doubleValue());
+		return ((BigDecimal)log(n, mc)).divide((BigDecimal)log(BigDecimal.TEN, mc), mc);
 	}
 	
-	/**
-	 * Calculates pi.
-	 */
-	public BigDecimal pi(MathContext mc) {
-		BigDecimal a = BigDecimal.ONE;
-		BigDecimal b = a.divide(sqrt(TWO,mc),mc);
-		BigDecimal t = BigDecimal.valueOf(0.25);
-		BigDecimal x = BigDecimal.ONE;
-		BigDecimal y;
-		while (a.compareTo(b) != 0) {
-			y = a;
-			a = a.add(b,mc).divide(TWO,mc);
-			b = sqrt(b.multiply(y,mc),mc);
-			t = t.subtract(x.multiply(y.subtract(a,mc).multiply(y.subtract(a,mc),mc),mc),mc);
-			x = x.multiply(TWO,mc);
-		}
-		return a.add(b,mc).multiply(a.add(b,mc),mc).divide(t.multiply(FOUR,mc),mc);
+	public Number log1p(Number a, MathContext mc) {
+		BigDecimal n = toBigDecimal(a);
+		if (n == null) return Math.log1p(a.doubleValue());
+		return log(n.add(BigDecimal.ONE, mc), mc);
 	}
 	
-	/**
-	 * Calculates sine using Taylor series.
-	 */
-	public BigDecimal sin(BigDecimal n, MathContext mc) {
-		BigDecimal na = n.abs();
+	public Number log2(Number a, MathContext mc) {
+		BigDecimal n = toBigDecimal(a);
+		if (n == null || n.signum() <= 0) return Math.log(a.doubleValue());
+		return ((BigDecimal)log(n, mc)).divide((BigDecimal)log(TWO, mc), mc);
+	}
+	
+	public Number loggamma(Number a, MathContext mc) { return FastMath.instance.loggamma(a, mc); }
+	public Number pow(Number b, Number a, MathContext mc) { return FastMath.instance.pow(b, a, mc); }
+	
+	/* Calculates sine using Taylor series. */
+	public Number sin(Number x, MathContext mc) {
+		BigDecimal n = toBigDecimal(x);
+		if (n == null) return Math.sin(x.doubleValue());
+		int signum = n.signum(); // odd function
+		if (signum < 0) n = n.negate();
+		if (signum == 0) return BigDecimal.ZERO;
 		BigDecimal pi = pi(mc);
-		BigDecimal twopi = TWO.multiply(pi,mc);
-		BigDecimal pitwo = pi.divide(TWO,mc);
-		BigDecimal threepitwo = pi.add(pitwo,mc);
-		if (na.compareTo(BigDecimal.ZERO) == 0 || na.compareTo(pi) == 0 || na.compareTo(twopi) == 0) {
-			return BigDecimal.ZERO;
-		}
-		else if (n.compareTo(pitwo) == 0 || n.compareTo(threepitwo.negate()) == 0) {
-			return BigDecimal.ONE;
-		}
-		else if (n.compareTo(pitwo.negate()) == 0 || n.compareTo(threepitwo) == 0) {
-			return BigDecimal.ONE.negate();
-		}
-		if (n.abs().compareTo(twopi) > 0) {
+		BigDecimal twopi = pi.multiply(TWO, mc);
+		if (n.compareTo(twopi) > 0) {
 			BigDecimal ntp = n.divideToIntegralValue(twopi);
-			return sin(n.subtract((twopi.multiply(ntp,mc)),mc),mc);
+			n = n.subtract(twopi.multiply(ntp, mc), mc);
 		}
-		else {
-			BigDecimal i = BigDecimal.ONE;
-			BigDecimal f = BigDecimal.ONE;
-			BigDecimal p = n;
-			BigDecimal a = BigDecimal.ZERO;
-			BigDecimal b = n;
-			while (a.compareTo(b) != 0) {
-				i = i.add(BigDecimal.ONE);
-				f = f.divide(i,mc);
-				i = i.add(BigDecimal.ONE);
-				f = f.negate().divide(i,mc);
-				p = p.multiply(n,mc).multiply(n,mc);
-				a = b;
-				b = b.add(p.multiply(f,mc),mc);
-			}
-			return b;
+		if (n.signum() == 0) return BigDecimal.ZERO;
+		if (n.compareTo(pi) == 0) return BigDecimal.ZERO;
+		if (n.compareTo(twopi) == 0) return BigDecimal.ZERO;
+		BigDecimal halfpi = pi.divide(TWO, mc);
+		BigDecimal threehalfpi = pi.add(halfpi, mc);
+		if (n.compareTo(halfpi) == 0) return (signum < 0) ? NEGATIVE_ONE : BigDecimal.ONE;
+		if (n.compareTo(threehalfpi) == 0) return (signum < 0) ? BigDecimal.ONE : NEGATIVE_ONE;
+		BigDecimal i = BigDecimal.ONE;
+		BigDecimal f = BigDecimal.ONE;
+		BigDecimal p = n;
+		BigDecimal a = BigDecimal.ZERO;
+		BigDecimal b = n;
+		while (a.compareTo(b) != 0) {
+			i = i.add(BigDecimal.ONE);
+			f = f.divide(i, mc);
+			i = i.add(BigDecimal.ONE);
+			f = f.negate().divide(i, mc);
+			p = p.multiply(n, mc).multiply(n, mc);
+			a = b;
+			b = b.add(p.multiply(f, mc), mc);
 		}
+		return (signum < 0) ? b.negate() : b;
 	}
 	
-	/**
-	 * Calculates hyperbolic sine.
-	 */
-	public BigDecimal sinh(BigDecimal n, MathContext mc) {
-		BigDecimal numer = exp(TWO.multiply(n,mc),mc);
-		BigDecimal denom = TWO.multiply(exp(n,mc),mc);
-		return numer.subtract(BigDecimal.ONE,mc).divide(denom,mc);
+	public Number sinh(Number a, MathContext mc) {
+		BigDecimal n = toBigDecimal(a);
+		if (n == null) return Math.sinh(a.doubleValue());
+		BigDecimal numer = (BigDecimal)exp(TWO.multiply(n, mc), mc);
+		BigDecimal denom = TWO.multiply((BigDecimal)exp(n, mc), mc);
+		return numer.subtract(BigDecimal.ONE, mc).divide(denom, mc);
 	}
 	
-	/**
-	 * Calculates square root using Newton's method.
-	 */
-	public BigDecimal sqrt(BigDecimal n, MathContext mc) {
-		double dg = Math.sqrt(n.doubleValue());
-		if (Double.isNaN(dg)) return null;
-		if (dg == 0.0) return BigDecimal.ZERO;
-		if (Double.isInfinite(dg)) dg = Double.MAX_VALUE;
-		BigDecimal g = BigDecimal.valueOf(dg);
-		BigDecimal r = n.divide(g,mc).add(g,mc).divide(TWO,mc);
+	/* Calculates square root using Newton's method. */
+	public Number sqrt(Number a, MathContext mc) {
+		BigDecimal n = toBigDecimal(a);
+		if (n == null) return Math.sqrt(a.doubleValue());
+		int signum = n.signum();
+		if (signum < 0) return Double.NaN;
+		if (signum == 0) return BigDecimal.ZERO;
+		BigDecimal g = BigDecimal.valueOf(Math.sqrt(a.doubleValue()));
+		BigDecimal r = n.divide(g, mc).add(g, mc).divide(TWO, mc);
 		while (g.compareTo(r) != 0) {
 			g = r;
-			r = n.divide(g,mc).add(g,mc).divide(TWO,mc);
+			r = n.divide(g, mc).add(g, mc).divide(TWO, mc);
 		}
 		return r;
 	}
 	
-	/**
-	 * Calculates tangent.
-	 */
-	public BigDecimal tan(BigDecimal n, MathContext mc) {
-		BigDecimal na = n.abs();
-		BigDecimal pi = pi(mc);
-		BigDecimal twopi = TWO.multiply(pi,mc);
-		BigDecimal pitwo = pi.divide(TWO,mc);
-		BigDecimal threepitwo = pi.add(pitwo,mc);
-		if (na.compareTo(BigDecimal.ZERO) == 0 || na.compareTo(pi) == 0 || na.compareTo(twopi) == 0) {
-			return BigDecimal.ZERO;
-		}
-		else if (na.compareTo(pitwo) == 0 || na.compareTo(threepitwo) == 0) {
-			return null;
-		}
-		else {
-			BigDecimal s = sin(n,mc);
-			BigDecimal c = cos(n,mc);
-			if (s.compareTo(BigDecimal.ZERO) == 0) return null;
-			else return s.divide(c,mc);
-		}
+	public Number tan(Number a, MathContext mc) {
+		BigDecimal n = toBigDecimal(a);
+		if (n == null) return Math.tan(a.doubleValue());
+		BigDecimal s = (BigDecimal)sin(n, mc);
+		BigDecimal c = (BigDecimal)cos(n, mc);
+		if (s.signum() == 0) return BigDecimal.ZERO;
+		if (c.signum() == 0) return Double.NaN;
+		return s.divide(c, mc);
 	}
 	
-	/**
-	 * Calculates hyperbolic tangent.
-	 */
-	public BigDecimal tanh(BigDecimal n, MathContext mc) {
-		BigDecimal numer = exp(TWO.multiply(n,mc),mc);
-		return numer.subtract(BigDecimal.ONE,mc).divide(numer.add(BigDecimal.ONE,mc),mc);
-	}
-	
-	/*
-	 * I have obviously given up at this point.
-	 * It was arctangent that did me in.
-	 */
-	
-	@Override
-	public BigDecimal acos(BigDecimal arg, MathContext mc) {
-		double r = java.lang.Math.acos(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal asin(BigDecimal arg, MathContext mc) {
-		double r = java.lang.Math.asin(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal atan(BigDecimal arg, MathContext mc) {
-		double r = java.lang.Math.atan(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal atan2(BigDecimal y, BigDecimal x, MathContext mc) {
-		double r = java.lang.Math.atan2(y.doubleValue(), x.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal log10(BigDecimal arg, MathContext mc) {
-		double r = java.lang.Math.log10(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal log2(BigDecimal arg, MathContext mc) {
-		double r = java.lang.Math.log(arg.doubleValue()) / java.lang.Math.log(2);
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal pow(BigDecimal a, BigDecimal b, MathContext mc) {
-		double r = java.lang.Math.pow(a.doubleValue(), b.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal erf(BigDecimal arg, MathContext mc) {
-		double r = 1 - erfc(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal erfc(BigDecimal arg, MathContext mc) {
-		double r = erfc(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal erfcx(BigDecimal arg, MathContext mc) {
-		double r = erfcx(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	private static double erfc(double x) {
-		if (Double.isNaN(x)) return Double.NaN;
-		else if (x < 0) return 2 - erfc(-x);
-		else if (x == 0) return 1;
-		else if (Double.isInfinite(x)) return 0;
-		else return Math.exp(-x*x) * erfcx(x);
-	}
-
-	private static double erfcx(double x) {
-		if (Double.isNaN(x)) return Double.NaN;
-		else if (x < 0) return Math.exp(x*x) * erfc(x);
-		else if (x == 0) return 1;
-		else if (Double.isInfinite(x)) return 0;
-		else {
-			double y = 0.56418958354775629 / (x + 2.06955023132914151);
-			y *= (x*x + 2.71078540045147805*x + 5.80755613130301624) / (x*x + 3.47954057099518960*x + 12.06166887286239555);
-			y *= (x*x + 3.47469513777439592*x + 12.07402036406381411) / (x*x + 3.72068443960225092*x + 8.44319781003968454);
-			y *= (x*x + 4.00561509202259545*x + 9.30596659485887898) / (x*x + 3.90225704029924078*x + 6.36161630953880464);
-			y *= (x*x + 5.16722705817812584*x + 9.12661617673673262) / (x*x + 4.03296893109262491*x + 5.13578530585681539);
-			y *= (x*x + 5.95908795446633271*x + 9.19435612886969243) / (x*x + 4.11240942957450885*x + 4.48640329523408675);
-			return y;
-		}
-	}
-
-	private static final double GAMMA_G = 7;
-	private static final double[] GAMMA_P = {
-		0.99999999999980993227684700473478,
-		676.520368121885098567009190444019,
-		-1259.13921672240287047156078755283,
-		771.3234287776530788486528258894,
-		-176.61502916214059906584551354,
-		12.507343278686904814458936853,
-		-0.13857109526572011689554707,
-		9.984369578019570859563e-6,
-		1.50563273514931155834e-7
-	};
-	private static double[] gammaTZX(double z) {
-		z--;
-		double x = GAMMA_P[0];
-		for (int i = 1; i < GAMMA_P.length; i++) x += GAMMA_P[i] / (z + i);
-		return new double[] { z + GAMMA_G + 0.5, z + 0.5, x };
-	}
-
-	private static double gamma(double z) {
-		if (Double.isNaN(z)) return z;
-		if (z <= 0 && Math.ceil(z) == Math.floor(z)) return Double.NaN;
-		if (z == 1 || z == 2) return 1;
-		if (Double.isInfinite(z)) return z;
-		if (z < 0.5) return Math.PI / (Math.sin(Math.PI * z) * gamma(1 - z));
-		double[] tzx = gammaTZX(z);
-		return Math.sqrt(Math.PI * 2) * Math.pow(tzx[0], tzx[1]) * Math.exp(-tzx[0]) * tzx[2];
-	}
-
-	private static double loggamma(double z) {
-		if (Double.isNaN(z)) return z;
-		if (z <= 0 && Math.ceil(z) == Math.floor(z)) return Double.NaN;
-		if (z == 1 || z == 2) return 0;
-		if (Double.isInfinite(z)) return z;
-		if (z < 0.5) return Math.log(Math.abs(Math.PI / Math.sin(Math.PI * z))) - loggamma(1 - z);
-		double[] tzx = gammaTZX(z);
-		return Math.log(Math.sqrt(Math.PI * 2)) + tzx[1] * Math.log(tzx[0]) - tzx[0] + Math.log(tzx[2]);
-	}
-
-	@Override
-	public BigDecimal gamma(BigDecimal arg, MathContext mc) {
-		double r = gamma(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal loggamma(BigDecimal arg, MathContext mc) {
-		double r = loggamma(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
+	public Number tanh(Number a, MathContext mc) {
+		BigDecimal n = toBigDecimal(a);
+		if (n == null) return Math.tanh(a.doubleValue());
+		BigDecimal numer = (BigDecimal)exp(TWO.multiply(n, mc), mc);
+		return numer.subtract(BigDecimal.ONE, mc).divide(numer.add(BigDecimal.ONE, mc), mc);
 	}
 }

@@ -115,7 +115,7 @@ public abstract class Formatter {
 		@Override
 		public String format(XNContext ctx, XOMVariant v) {
 			XOMInteger i = XOMIntegerType.instance.makeInstanceFrom(ctx, v, true);
-			if (i.isUndefined()) {
+			if (!i.isFinite()) {
 				return i.toTextString(ctx);
 			} else {
 				return NumberFormat.getIntegerInstance().format(i.toLong());
@@ -135,7 +135,7 @@ public abstract class Formatter {
 		@Override
 		public String format(XNContext ctx, XOMVariant v) {
 			XOMNumber n = XOMNumberType.instance.makeInstanceFrom(ctx, v, true);
-			if (n.isUndefined()) {
+			if (!n.isFinite()) {
 				return n.toTextString(ctx);
 			} else {
 				return NumberFormat.getNumberInstance().format(n.toDouble());
@@ -179,9 +179,9 @@ public abstract class Formatter {
 		@Override
 		public String format(XNContext ctx, XOMVariant v) {
 			XOMComplex c = XOMComplexType.instance.makeInstanceFrom(ctx, v, true);
-			if (c.isUndefined()) {
+			if (!c.isFinite()) {
 				return c.toTextString(ctx);
-			} else if (c.isReal()) {
+			} else if (c.isRe()) {
 				return NumberFormat.getNumberInstance().format(c.toDoubles()[0]);
 			} else {
 				double[] cc = c.toDoubles();

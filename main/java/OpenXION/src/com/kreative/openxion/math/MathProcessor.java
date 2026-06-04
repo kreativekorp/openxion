@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2009-2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2009-2026 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -27,39 +27,39 @@
 
 package com.kreative.openxion.math;
 
-import java.math.*;
+import java.math.MathContext;
 
 /**
- * Methods for mathematical functions of BigDecimals.
+ * Methods for mathematical functions of arbitrary numbers.
  * @since OpenXION 0.9
  * @author Rebecca G. Bettencourt, Kreative Software
  */
 public abstract class MathProcessor {
-	public abstract BigDecimal e(MathContext mc);
-	public abstract BigDecimal pi(MathContext mc);
-	public abstract BigDecimal acos(BigDecimal arg, MathContext mc);
-	public abstract BigDecimal asin(BigDecimal arg, MathContext mc);
-	public abstract BigDecimal atan(BigDecimal arg, MathContext mc);
-	public abstract BigDecimal atan2(BigDecimal y, BigDecimal x, MathContext mc);
-	public abstract BigDecimal cbrt(BigDecimal arg, MathContext mc);
-	public abstract BigDecimal cos(BigDecimal arg, MathContext mc);
-	public abstract BigDecimal cosh(BigDecimal arg, MathContext mc);
-	public abstract BigDecimal erf(BigDecimal arg, MathContext mc);
-	public abstract BigDecimal erfc(BigDecimal arg, MathContext mc);
-	public abstract BigDecimal erfcx(BigDecimal arg, MathContext mc);
-	public abstract BigDecimal exp(BigDecimal arg, MathContext mc);
-	public abstract BigDecimal expm1(BigDecimal arg, MathContext mc);
-	public abstract BigDecimal gamma(BigDecimal arg, MathContext mc);
-	public abstract BigDecimal hypot(BigDecimal x, BigDecimal y, MathContext mc);
-	public abstract BigDecimal log(BigDecimal arg, MathContext mc);
-	public abstract BigDecimal log10(BigDecimal arg, MathContext mc);
-	public abstract BigDecimal log1p(BigDecimal arg, MathContext mc);
-	public abstract BigDecimal log2(BigDecimal arg, MathContext mc);
-	public abstract BigDecimal loggamma(BigDecimal arg, MathContext mc);
-	public abstract BigDecimal pow(BigDecimal a, BigDecimal b, MathContext mc);
-	public abstract BigDecimal sin(BigDecimal arg, MathContext mc);
-	public abstract BigDecimal sinh(BigDecimal arg, MathContext mc);
-	public abstract BigDecimal sqrt(BigDecimal arg, MathContext mc);
-	public abstract BigDecimal tan(BigDecimal arg, MathContext mc);
-	public abstract BigDecimal tanh(BigDecimal arg, MathContext mc);
+	public abstract Number e(MathContext mc);
+	public abstract Number pi(MathContext mc);
+	public abstract Number acos(Number a, MathContext mc);
+	public abstract Number asin(Number a, MathContext mc);
+	public abstract Number atan(Number a, MathContext mc);
+	public abstract Number atan2(Number y, Number x, MathContext mc);
+	public abstract Number cbrt(Number a, MathContext mc);
+	public abstract Number cos(Number a, MathContext mc);
+	public abstract Number cosh(Number a, MathContext mc);
+	public abstract Number erf(Number a, MathContext mc);
+	public abstract Number erfc(Number a, MathContext mc);
+	public abstract Number erfcx(Number a, MathContext mc);
+	public abstract Number exp(Number a, MathContext mc);
+	public abstract Number expm1(Number a, MathContext mc);
+	public abstract Number gamma(Number a, MathContext mc);
+	public abstract Number hypot(Number y, Number x, MathContext mc);
+	public abstract Number log(Number a, MathContext mc);
+	public abstract Number log10(Number a, MathContext mc);
+	public abstract Number log1p(Number a, MathContext mc);
+	public abstract Number log2(Number a, MathContext mc);
+	public abstract Number loggamma(Number a, MathContext mc);
+	public abstract Number pow(Number b, Number a, MathContext mc);
+	public abstract Number sin(Number a, MathContext mc);
+	public abstract Number sinh(Number a, MathContext mc);
+	public abstract Number sqrt(Number a, MathContext mc);
+	public abstract Number tan(Number a, MathContext mc);
+	public abstract Number tanh(Number a, MathContext mc);
 }

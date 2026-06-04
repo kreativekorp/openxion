@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2009-2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2009-2026 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -27,212 +27,79 @@
 
 package com.kreative.openxion.math;
 
-import java.math.*;
+import java.math.MathContext;
 
 /**
- * Methods for mathematical functions of BigDecimals
- * by converting to double and back (the fastest method by far!).
+ * Methods for mathematical functions of arbitrary numbers
+ * using double precision floating point (the fastest method).
  * @since OpenXION 0.9
  * @author Rebecca G. Bettencourt, Kreative Software
  */
 public class FastMath extends MathProcessor {
 	public static final FastMath instance = new FastMath();
 	
-	@Override
-	public BigDecimal acos(BigDecimal arg, MathContext mc) {
-		double r = Math.acos(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
+	public Double e(MathContext mc) { return Math.E; }
+	public Double pi(MathContext mc) { return Math.PI; }
+	public Double acos(Number a, MathContext mc) { return Math.acos(a.doubleValue()); }
+	public Double asin(Number a, MathContext mc) { return Math.asin(a.doubleValue()); }
+	public Double atan(Number a, MathContext mc) { return Math.atan(a.doubleValue()); }
+	
+	public Double atan2(Number y, Number x, MathContext mc) {
+		return Math.atan2(y.doubleValue(), x.doubleValue());
 	}
-
-	@Override
-	public BigDecimal asin(BigDecimal arg, MathContext mc) {
-		double r = Math.asin(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
+	
+	public Double cbrt(Number a, MathContext mc) { return Math.cbrt(a.doubleValue()); }
+	public Double cos(Number a, MathContext mc) { return Math.cos(a.doubleValue()); }
+	public Double cosh(Number a, MathContext mc) { return Math.cosh(a.doubleValue()); }
+	public Double erf(Number a, MathContext mc) { return 1-erfc(a.doubleValue()); }
+	public Double erfc(Number a, MathContext mc) { return erfc(a.doubleValue()); }
+	public Double erfcx(Number a, MathContext mc) { return erfcx(a.doubleValue()); }
+	public Double exp(Number a, MathContext mc) { return Math.exp(a.doubleValue()); }
+	public Double expm1(Number a, MathContext mc) { return Math.expm1(a.doubleValue()); }
+	public Double gamma(Number a, MathContext mc) { return gamma(a.doubleValue()); }
+	
+	public Double hypot(Number y, Number x, MathContext mc) {
+		return Math.hypot(y.doubleValue(), x.doubleValue());
 	}
-
-	@Override
-	public BigDecimal atan(BigDecimal arg, MathContext mc) {
-		double r = Math.atan(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
+	
+	public Double log(Number a, MathContext mc) { return Math.log(a.doubleValue()); }
+	public Double log10(Number a, MathContext mc) { return Math.log10(a.doubleValue()); }
+	public Double log1p(Number a, MathContext mc) { return Math.log1p(a.doubleValue()); }
+	public Double log2(Number a, MathContext mc) { return Math.log(a.doubleValue())/Math.log(2); }
+	public Double loggamma(Number a, MathContext mc) { return loggamma(a.doubleValue()); }
+	
+	public Double pow(Number b, Number a, MathContext mc) {
+		return Math.pow(b.doubleValue(), a.doubleValue());
 	}
-
-	@Override
-	public BigDecimal atan2(BigDecimal y, BigDecimal x, MathContext mc) {
-		double r = Math.atan2(y.doubleValue(), x.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal cbrt(BigDecimal arg, MathContext mc) {
-		double r = Math.cbrt(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal cos(BigDecimal arg, MathContext mc) {
-		double r = Math.cos(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal cosh(BigDecimal arg, MathContext mc) {
-		double r = Math.cosh(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal e(MathContext mc) {
-		return BigDecimal.valueOf(Math.E);
-	}
-
-	@Override
-	public BigDecimal exp(BigDecimal arg, MathContext mc) {
-		double r = Math.exp(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal expm1(BigDecimal arg, MathContext mc) {
-		double r = Math.expm1(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal hypot(BigDecimal x, BigDecimal y, MathContext mc) {
-		double r = Math.hypot(x.doubleValue(), y.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal log(BigDecimal arg, MathContext mc) {
-		double r = Math.log(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal log10(BigDecimal arg, MathContext mc) {
-		double r = Math.log10(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal log1p(BigDecimal arg, MathContext mc) {
-		double r = Math.log1p(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal log2(BigDecimal arg, MathContext mc) {
-		double r = Math.log(arg.doubleValue()) / Math.log(2);
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal pi(MathContext mc) {
-		return BigDecimal.valueOf(Math.PI);
-	}
-
-	@Override
-	public BigDecimal pow(BigDecimal a, BigDecimal b, MathContext mc) {
-		double r = Math.pow(a.doubleValue(), b.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal sin(BigDecimal arg, MathContext mc) {
-		double r = Math.sin(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal sinh(BigDecimal arg, MathContext mc) {
-		double r = Math.sinh(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal sqrt(BigDecimal arg, MathContext mc) {
-		double r = Math.sqrt(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal tan(BigDecimal arg, MathContext mc) {
-		double r = Math.tan(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal tanh(BigDecimal arg, MathContext mc) {
-		double r = Math.tanh(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal erf(BigDecimal arg, MathContext mc) {
-		double r = 1 - erfc(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal erfc(BigDecimal arg, MathContext mc) {
-		double r = erfc(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal erfcx(BigDecimal arg, MathContext mc) {
-		double r = erfcx(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
+	
+	public Double sin(Number a, MathContext mc) { return Math.sin(a.doubleValue()); }
+	public Double sinh(Number a, MathContext mc) { return Math.sinh(a.doubleValue()); }
+	public Double sqrt(Number a, MathContext mc) { return Math.sqrt(a.doubleValue()); }
+	public Double tan(Number a, MathContext mc) { return Math.tan(a.doubleValue()); }
+	public Double tanh(Number a, MathContext mc) { return Math.tanh(a.doubleValue()); }
+	
 	private static double erfc(double x) {
-		if (Double.isNaN(x)) return Double.NaN;
-		else if (x < 0) return 2 - erfc(-x);
-		else if (x == 0) return 1;
-		else if (Double.isInfinite(x)) return 0;
-		else return Math.exp(-x*x) * erfcx(x);
+		if (Double.isNaN(x)) return x;
+		if (x < 0) return 2 - erfc(-x);
+		if (x == 0) return 1;
+		if (Double.isInfinite(x)) return 0;
+		return Math.exp(-x*x) * erfcx(x);
 	}
-
+	
 	private static double erfcx(double x) {
-		if (Double.isNaN(x)) return Double.NaN;
-		else if (x < 0) return Math.exp(x*x) * erfc(x);
-		else if (x == 0) return 1;
-		else if (Double.isInfinite(x)) return 0;
-		else {
-			double y = 0.56418958354775629 / (x + 2.06955023132914151);
-			y *= (x*x + 2.71078540045147805*x + 5.80755613130301624) / (x*x + 3.47954057099518960*x + 12.06166887286239555);
-			y *= (x*x + 3.47469513777439592*x + 12.07402036406381411) / (x*x + 3.72068443960225092*x + 8.44319781003968454);
-			y *= (x*x + 4.00561509202259545*x + 9.30596659485887898) / (x*x + 3.90225704029924078*x + 6.36161630953880464);
-			y *= (x*x + 5.16722705817812584*x + 9.12661617673673262) / (x*x + 4.03296893109262491*x + 5.13578530585681539);
-			y *= (x*x + 5.95908795446633271*x + 9.19435612886969243) / (x*x + 4.11240942957450885*x + 4.48640329523408675);
-			return y;
-		}
+		if (Double.isNaN(x)) return x;
+		if (x < 0) return Math.exp(x*x) * erfc(x);
+		if (x == 0) return 1;
+		if (Double.isInfinite(x)) return 0;
+		double y = 0.56418958354775629 / (x + 2.06955023132914151);
+		y *= (x*x + 2.71078540045147805*x + 5.80755613130301624) / (x*x + 3.47954057099518960*x + 12.06166887286239555);
+		y *= (x*x + 3.47469513777439592*x + 12.07402036406381411) / (x*x + 3.72068443960225092*x + 8.44319781003968454);
+		y *= (x*x + 4.00561509202259545*x + 9.30596659485887898) / (x*x + 3.90225704029924078*x + 6.36161630953880464);
+		y *= (x*x + 5.16722705817812584*x + 9.12661617673673262) / (x*x + 4.03296893109262491*x + 5.13578530585681539);
+		y *= (x*x + 5.95908795446633271*x + 9.19435612886969243) / (x*x + 4.11240942957450885*x + 4.48640329523408675);
+		return y;
 	}
-
+	
 	private static final double GAMMA_G = 7;
 	private static final double[] GAMMA_P = {
 		0.99999999999980993227684700473478,
@@ -245,13 +112,16 @@ public class FastMath extends MathProcessor {
 		9.984369578019570859563e-6,
 		1.50563273514931155834e-7
 	};
+	
 	private static double[] gammaTZX(double z) {
 		z--;
 		double x = GAMMA_P[0];
 		for (int i = 1; i < GAMMA_P.length; i++) x += GAMMA_P[i] / (z + i);
 		return new double[] { z + GAMMA_G + 0.5, z + 0.5, x };
 	}
-
+	
+	private static final double SQRT_TWO_PI = 2.5066282746310005024157652848110453;
+	
 	private static double gamma(double z) {
 		if (Double.isNaN(z)) return z;
 		if (z <= 0 && Math.ceil(z) == Math.floor(z)) return Double.NaN;
@@ -259,9 +129,11 @@ public class FastMath extends MathProcessor {
 		if (Double.isInfinite(z)) return z;
 		if (z < 0.5) return Math.PI / (Math.sin(Math.PI * z) * gamma(1 - z));
 		double[] tzx = gammaTZX(z);
-		return Math.sqrt(Math.PI * 2) * Math.pow(tzx[0], tzx[1]) * Math.exp(-tzx[0]) * tzx[2];
+		return SQRT_TWO_PI * Math.pow(tzx[0], tzx[1]) * Math.exp(-tzx[0]) * tzx[2];
 	}
-
+	
+	private static final double LOG_SQRT_TWO_PI = 0.9189385332046727417803297364056176;
+	
 	private static double loggamma(double z) {
 		if (Double.isNaN(z)) return z;
 		if (z <= 0 && Math.ceil(z) == Math.floor(z)) return Double.NaN;
@@ -269,20 +141,6 @@ public class FastMath extends MathProcessor {
 		if (Double.isInfinite(z)) return z;
 		if (z < 0.5) return Math.log(Math.abs(Math.PI / Math.sin(Math.PI * z))) - loggamma(1 - z);
 		double[] tzx = gammaTZX(z);
-		return Math.log(Math.sqrt(Math.PI * 2)) + tzx[1] * Math.log(tzx[0]) - tzx[0] + Math.log(tzx[2]);
-	}
-
-	@Override
-	public BigDecimal gamma(BigDecimal arg, MathContext mc) {
-		double r = gamma(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
-	}
-
-	@Override
-	public BigDecimal loggamma(BigDecimal arg, MathContext mc) {
-		double r = loggamma(arg.doubleValue());
-		if (Double.isNaN(r) || Double.isInfinite(r)) return null;
-		else return BigDecimal.valueOf(r);
+		return LOG_SQRT_TWO_PI + tzx[1] * Math.log(tzx[0]) - tzx[0] + Math.log(tzx[2]);
 	}
 }

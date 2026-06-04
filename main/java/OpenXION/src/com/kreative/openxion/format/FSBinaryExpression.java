@@ -115,22 +115,22 @@ public class FSBinaryExpression implements FSExpression {
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMComplexMath.multiply(ac, bc, mc, mp);
+				return ac.multiply(bc, mc);
 			}
 			else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
 				an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMNumberMath.multiply(an, bn, mc, mp);
+				return an.multiply(bn, mc);
 			}
 			else if (XOMNumberType.instance.canMakeInstanceFrom(ctx, av, true) && XOMNumberType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMNumberMath.multiply(an, bn, mc, mp);
+				return an.multiply(bn, mc);
 			}
 			else if (XOMComplexType.instance.canMakeInstanceFrom(ctx, av, true) && XOMComplexType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMComplexMath.multiply(ac, bc, mc, mp);
+				return ac.multiply(bc, mc);
 			}
 			else {
 				throw new XOMMorphError("number");
@@ -141,22 +141,22 @@ public class FSBinaryExpression implements FSExpression {
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMComplexMath.divide(ac, bc, mc, mp);
+				return ac.divide(bc, mc);
 			}
 			else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
 				an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMNumberMath.divide(an, bn, mc, mp);
+				return an.divide(bn, mc);
 			}
 			else if (XOMNumberType.instance.canMakeInstanceFrom(ctx, av, true) && XOMNumberType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMNumberMath.divide(an, bn, mc, mp);
+				return an.divide(bn, mc);
 			}
 			else if (XOMComplexType.instance.canMakeInstanceFrom(ctx, av, true) && XOMComplexType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMComplexMath.divide(ac, bc, mc, mp);
+				return ac.divide(bc, mc);
 			}
 			else {
 				throw new XOMMorphError("number");
@@ -167,22 +167,22 @@ public class FSBinaryExpression implements FSExpression {
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMComplexMath.divide(ac, bc, mc, mp).trunc();
+				return ac.divide(bc, mc).trunc();
 			}
 			else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
 				an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMNumberMath.divide(an, bn, mc, mp).trunc();
+				return an.divide(bn, mc).trunc();
 			}
 			else if (XOMNumberType.instance.canMakeInstanceFrom(ctx, av, true) && XOMNumberType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMNumberMath.divide(an, bn, mc, mp).trunc();
+				return an.divide(bn, mc).trunc();
 			}
 			else if (XOMComplexType.instance.canMakeInstanceFrom(ctx, av, true) && XOMComplexType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMComplexMath.divide(ac, bc, mc, mp).trunc();
+				return ac.divide(bc, mc).trunc();
 			}
 			else {
 				throw new XOMMorphError("number");
@@ -193,22 +193,22 @@ public class FSBinaryExpression implements FSExpression {
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMComplexMath.subtract(ac, XOMComplexMath.multiply(bc, XOMComplexMath.divide(ac, bc, mc, mp).trunc(), mc, mp), mc, mp);
+				return ac.subtract(bc.multiply(ac.divide(bc, mc).trunc(), mc), mc);
 			}
 			else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
 				an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMNumberMath.subtract(an, XOMNumberMath.multiply(bn, XOMNumberMath.divide(an, bn, mc, mp).trunc(), mc, mp), mc, mp);
+				return an.subtract(bn.multiply(an.divide(bn, mc).trunc(), mc), mc);
 			}
 			else if (XOMNumberType.instance.canMakeInstanceFrom(ctx, av, true) && XOMNumberType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMNumberMath.subtract(an, XOMNumberMath.multiply(bn, XOMNumberMath.divide(an, bn, mc, mp).trunc(), mc, mp), mc, mp);
+				return an.subtract(bn.multiply(an.divide(bn, mc).trunc(), mc), mc);
 			}
 			else if (XOMComplexType.instance.canMakeInstanceFrom(ctx, av, true) && XOMComplexType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMComplexMath.subtract(ac, XOMComplexMath.multiply(bc, XOMComplexMath.divide(ac, bc, mc, mp).trunc(), mc, mp), mc, mp);
+				return ac.subtract(bc.multiply(ac.divide(bc, mc).trunc(), mc), mc);
 			}
 			else {
 				throw new XOMMorphError("number");
@@ -219,22 +219,22 @@ public class FSBinaryExpression implements FSExpression {
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMComplexMath.divide(ac, bc, mc, mp).floor();
+				return ac.divide(bc, mc).floor();
 			}
 			else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
 				an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMNumberMath.divide(an, bn, mc, mp).floor();
+				return an.divide(bn, mc).floor();
 			}
 			else if (XOMNumberType.instance.canMakeInstanceFrom(ctx, av, true) && XOMNumberType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMNumberMath.divide(an, bn, mc, mp).floor();
+				return an.divide(bn, mc).floor();
 			}
 			else if (XOMComplexType.instance.canMakeInstanceFrom(ctx, av, true) && XOMComplexType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMComplexMath.divide(ac, bc, mc, mp).floor();
+				return ac.divide(bc, mc).floor();
 			}
 			else {
 				throw new XOMMorphError("number");
@@ -245,22 +245,22 @@ public class FSBinaryExpression implements FSExpression {
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMComplexMath.subtract(ac, XOMComplexMath.multiply(bc, XOMComplexMath.divide(ac, bc, mc, mp).floor(), mc, mp), mc, mp);
+				return ac.subtract(bc.multiply(ac.divide(bc, mc).floor(), mc), mc);
 			}
 			else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
 				an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMNumberMath.subtract(an, XOMNumberMath.multiply(bn, XOMNumberMath.divide(an, bn, mc, mp).floor(), mc, mp), mc, mp);
+				return an.subtract(bn.multiply(an.divide(bn, mc).floor(), mc), mc);
 			}
 			else if (XOMNumberType.instance.canMakeInstanceFrom(ctx, av, true) && XOMNumberType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMNumberMath.subtract(an, XOMNumberMath.multiply(bn, XOMNumberMath.divide(an, bn, mc, mp).floor(), mc, mp), mc, mp);
+				return an.subtract(bn.multiply(an.divide(bn, mc).floor(), mc), mc);
 			}
 			else if (XOMComplexType.instance.canMakeInstanceFrom(ctx, av, true) && XOMComplexType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMComplexMath.subtract(ac, XOMComplexMath.multiply(bc, XOMComplexMath.divide(ac, bc, mc, mp).floor(), mc, mp), mc, mp);
+				return ac.subtract(bc.multiply(ac.divide(bc, mc).floor(), mc), mc);
 			}
 			else {
 				throw new XOMMorphError("number");
@@ -271,22 +271,22 @@ public class FSBinaryExpression implements FSExpression {
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMComplexMath.add(ac, bc, mc, mp);
+				return ac.add(bc, mc);
 			}
 			else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
 				an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMNumberMath.add(an, bn, mc, mp);
+				return an.add(bn, mc);
 			}
 			else if (XOMNumberType.instance.canMakeInstanceFrom(ctx, av, true) && XOMNumberType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMNumberMath.add(an, bn, mc, mp);
+				return an.add(bn, mc);
 			}
 			else if (XOMComplexType.instance.canMakeInstanceFrom(ctx, av, true) && XOMComplexType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMComplexMath.add(ac, bc, mc, mp);
+				return ac.add(bc, mc);
 			}
 			else {
 				throw new XOMMorphError("number");
@@ -297,22 +297,22 @@ public class FSBinaryExpression implements FSExpression {
 			if (av instanceof XOMComplex && bv instanceof XOMComplex) {
 				ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMComplexMath.subtract(ac, bc, mc, mp);
+				return ac.subtract(bc, mc);
 			}
 			else if (av instanceof XOMNumber && bv instanceof XOMNumber) {
 				an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMNumberMath.subtract(an, bn, mc, mp);
+				return an.subtract(bn, mc);
 			}
 			else if (XOMNumberType.instance.canMakeInstanceFrom(ctx, av, true) && XOMNumberType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				an = XOMNumberType.instance.makeInstanceFrom(ctx, av, true);
 				bn = XOMNumberType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMNumberMath.subtract(an, bn, mc, mp);
+				return an.subtract(bn, mc);
 			}
 			else if (XOMComplexType.instance.canMakeInstanceFrom(ctx, av, true) && XOMComplexType.instance.canMakeInstanceFrom(ctx, bv, true)) {
 				ac = XOMComplexType.instance.makeInstanceFrom(ctx, av, true);
 				bc = XOMComplexType.instance.makeInstanceFrom(ctx, bv, true);
-				return XOMComplexMath.subtract(ac, bc, mc, mp);
+				return ac.subtract(bc, mc);
 			}
 			else {
 				throw new XOMMorphError("number");

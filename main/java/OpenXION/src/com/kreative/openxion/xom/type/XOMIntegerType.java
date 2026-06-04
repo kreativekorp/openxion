@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2009-2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2009-2026 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -27,7 +27,6 @@
 
 package com.kreative.openxion.xom.type;
 
-import java.math.*;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.xom.XOMVariant;
 import com.kreative.openxion.xom.XOMMorphError;
@@ -46,79 +45,55 @@ public class XOMIntegerType extends XOMNumericDataType<XOMInteger> {
 	}
 	
 	protected boolean canMakeInstanceFromImpl(XNContext ctx, XOMVariant instance, boolean acceptEmpty) {
-		if (instance instanceof XOMNumber) {
-			try {
-				((XOMNumber)instance).toBigDecimal().toBigIntegerExact();
-				return true;
-			} catch (Exception e) {
-				return false;
-			}
-		} else if (instance instanceof XOMComplex) {
-			if (((XOMComplex)instance).isReal()) {
-				try {
-					((XOMComplex)instance).toBigDecimals()[0].toBigIntegerExact();
-					return true;
-				} catch (Exception e) {
-					return false;
-				}
-			} else {
-				return false;
-			}
-		} else {
-			return false;
+		if (instance instanceof XOMInteger) {
+			return true;
 		}
+		if (instance instanceof XOMNumber) {
+			XOMNumber n = (XOMNumber)instance;
+			return n.isFinite() && n.frac().isZero();
+		}
+		if (instance instanceof XOMComplex) {
+			XOMComplex c = (XOMComplex)instance;
+			return c.isRe() && c.re().isFinite() && c.re().frac().isZero();
+		}
+		return false;
 	}
+	
 	protected boolean canMakeInstanceFromImpl(XNContext ctx, String s, boolean acceptEmpty) {
 		if (s.equals("")) return acceptEmpty;
-		if (s.equalsIgnoreCase("inf") || s.equalsIgnoreCase("-inf") || s.equalsIgnoreCase("nan")) return true;
 		s = s.replace("''", "E-").replace("'", "E+");
-		try {
-			ctx.getNumberFormat().parseBigInteger(s);
-			return true;
-		} catch (Exception e1) {
-			return false;
-		}
+		try { ctx.getNumberFormat().parseBigInteger(s); return true; }
+		catch (Exception e) { return false; }
 	}
+	
 	protected XOMInteger makeInstanceFromImpl(XNContext ctx) {
 		return XOMInteger.ZERO;
 	}
+	
 	protected XOMInteger makeInstanceFromImpl(XNContext ctx, XOMVariant instance, boolean acceptEmpty) {
-		if (instance instanceof XOMNumber) {
-			try {
-				BigInteger i = ((XOMNumber)instance).toBigDecimal().toBigIntegerExact();
-				return new XOMInteger(i);
-			} catch (Exception e) {
-				throw new XOMMorphError(typeName);
-			}
-		} else if (instance instanceof XOMComplex) {
-			if (((XOMComplex)instance).isReal()) {
-				try {
-					BigInteger i = ((XOMComplex)instance).toBigDecimals()[0].toBigIntegerExact();
-					return new XOMInteger(i);
-				} catch (Exception e) {
-					throw new XOMMorphError(typeName);
-				}
-			} else {
-				throw new XOMMorphError(typeName);
-			}
-		} else {
-			throw new XOMMorphError(typeName);
+		if (instance instanceof XOMInteger) {
+			return (XOMInteger)instance;
 		}
+		if (instance instanceof XOMNumber) {
+			XOMNumber n = (XOMNumber)instance;
+			if (n.isFinite() && n.frac().isZero())
+				return new XOMInteger(n.toNumber());
+		}
+		if (instance instanceof XOMComplex) {
+			XOMComplex c = (XOMComplex)instance;
+			if (c.isRe() && c.re().isFinite() && c.re().frac().isZero())
+				return new XOMInteger(c.re().toNumber());
+		}
+		throw new XOMMorphError(typeName);
 	}
+	
 	protected XOMInteger makeInstanceFromImpl(XNContext ctx, String s, boolean acceptEmpty) {
 		if (s.equals("")) {
 			if (acceptEmpty) return XOMInteger.ZERO;
-			else throw new XOMMorphError(typeName);
-		}
-		else if (s.equalsIgnoreCase("inf")) return XOMInteger.POSITIVE_INFINITY;
-		else if (s.equalsIgnoreCase("-inf")) return XOMInteger.NEGATIVE_INFINITY;
-		else if (s.equalsIgnoreCase("nan")) return XOMInteger.NaN;
-		s = s.replace("''", "E-").replace("'", "E+");
-		try {
-			BigInteger i = ctx.getNumberFormat().parseBigInteger(s);
-			return new XOMInteger(i);
-		} catch (Exception e1) {
 			throw new XOMMorphError(typeName);
 		}
+		s = s.replace("''", "E-").replace("'", "E+");
+		try { return new XOMInteger(ctx.getNumberFormat().parseBigInteger(s)); }
+		catch (Exception e) { throw new XOMMorphError(typeName); }
 	}
 }

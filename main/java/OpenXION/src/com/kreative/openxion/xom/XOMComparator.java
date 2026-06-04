@@ -37,7 +37,6 @@ import com.kreative.openxion.XNInterpreter;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.ast.XNExpression;
 import com.kreative.openxion.ast.XNVariableScope;
-import com.kreative.openxion.xom.inst.XOMNumber;
 import com.kreative.openxion.xom.type.XOMStringType;
 import com.kreative.openxion.xom.type.XOMNumberType;
 import com.kreative.openxion.xom.type.XOMDateType;
@@ -134,10 +133,9 @@ public class XOMComparator implements Comparator<XOMVariant> {
 				}
 			case TYPE_NUMERIC:
 				try {
-					XOMNumber n = XOMNumberType.instance.makeInstanceFrom(ctx,o,false);
-					Object q = n.isUndefined() ? n.toDouble() : n.toBigDecimal();
-					map.put(o, q);
-					return q;
+					Number n = XOMNumberType.instance.makeInstanceFrom(ctx,o,false).toNumber();
+					map.put(o, n);
+					return n;
 				} catch (Exception e) {
 					String s = o.toTextString(ctx);
 					map.put(o, s);

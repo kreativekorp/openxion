@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2009-2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2009-2026 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -27,241 +27,188 @@
 
 package com.kreative.openxion.xom.inst;
 
-import java.math.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.xom.XOMValue;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMInteger extends XOMValue {
+public class XOMInteger extends XOMValue implements Comparable<XOMInteger> {
 	private static final long serialVersionUID = 1L;
 	
-	public static final XOMInteger ZERO = new XOMInteger(BigInteger.ZERO);
-	public static final XOMInteger ONE = new XOMInteger(BigInteger.ONE);
-	public static final XOMInteger TEN = new XOMInteger(BigInteger.TEN);
-	public static final XOMInteger POSITIVE_INFINITY = new XOMInteger(false, false);
-	public static final XOMInteger NEGATIVE_INFINITY = new XOMInteger(false, true);
-	public static final XOMInteger NaN = new XOMInteger(true, false);
+	public static final XOMInteger ZERO = new XOMInteger(0);
+	public static final XOMInteger ONE = new XOMInteger(1);
+	public static final XOMInteger TWO = new XOMInteger(2);
+	public static final XOMInteger TEN = new XOMInteger(10);
+	public static final XOMInteger NEGATIVE_ONE = new XOMInteger(-1);
+	public static final XOMInteger POSITIVE_INFINITY = new XOMInteger(Double.POSITIVE_INFINITY);
+	public static final XOMInteger NEGATIVE_INFINITY = new XOMInteger(Double.NEGATIVE_INFINITY);
+	public static final XOMInteger NaN = new XOMInteger(null);
 	
-	private BigInteger theInteger;
-	private boolean undefined;
+	private final BigInteger bigValue;
+	private final double doubleValue;
 	
 	public XOMInteger(Number n) {
 		if (n == null) {
-			this.theInteger = BigInteger.ZERO;
-			this.undefined = true;
+			this.bigValue = null;
+			this.doubleValue = Double.NaN;
 		} else if (n instanceof BigInteger) {
-			this.theInteger = (BigInteger)n;
-			this.undefined = false;
+			this.bigValue = (BigInteger)n;
+			this.doubleValue = bigValue.doubleValue();
 		} else if (n instanceof BigDecimal) {
-			this.theInteger = ((BigDecimal)n).toBigInteger();
-			this.undefined = false;
-		} else if (n instanceof Double) {
-			double d = n.doubleValue();
-			if (Double.isNaN(d) || Double.isInfinite(d)) {
-				this.theInteger = Double.isNaN(d) ? BigInteger.ZERO : (d < 0) ? BigInteger.ONE.negate() : BigInteger.ONE;
-				this.undefined = true;
+			this.bigValue = ((BigDecimal)n).toBigInteger();
+			this.doubleValue = bigValue.doubleValue();
+		} else if (n instanceof Double || n instanceof Float) {
+			double v = n.doubleValue();
+			if (Double.isNaN(v) || Double.isInfinite(v)) {
+				this.bigValue = null;
+				this.doubleValue = v;
+			} else if (v == 0) {
+				this.bigValue = BigInteger.ZERO;
+				this.doubleValue = v;
 			} else {
-				this.theInteger = BigDecimal.valueOf(d).toBigInteger();
-				this.undefined = false;
+				this.bigValue = BigDecimal.valueOf(v).toBigInteger();
+				this.doubleValue = bigValue.doubleValue();
 			}
-		} else if (n instanceof Float) {
-			float f = n.floatValue();
-			if (Float.isNaN(f) || Float.isInfinite(f)) {
-				this.theInteger = Float.isNaN(f) ? BigInteger.ZERO : (f < 0) ? BigInteger.ONE.negate() : BigInteger.ONE;
-				this.undefined = true;
-			} else {
-				this.theInteger = new BigDecimal(Float.toString(f)).toBigInteger();
-				this.undefined = false;
-			}
+		} else if (n instanceof Long || n instanceof Integer || n instanceof Short || n instanceof Byte) {
+			this.bigValue = BigInteger.valueOf(n.longValue());
+			this.doubleValue = bigValue.doubleValue();
 		} else {
-			this.theInteger = BigInteger.valueOf(n.longValue());
-			this.undefined = false;
+			throw new IllegalArgumentException("unknown subclass of java.lang.Number: " + n.getClass());
 		}
-	}
-	
-	private XOMInteger(boolean nan, boolean neg) {
-		this.theInteger = nan ? BigInteger.ZERO : neg ? BigInteger.ONE.negate() : BigInteger.ONE;
-		this.undefined = true;
-	}
-	
-	public boolean isUndefined() {
-		return theInteger == null || undefined;
 	}
 	
 	public boolean isNaN() {
-		return theInteger == null || (undefined && theInteger.equals(BigInteger.ZERO));
+		return bigValue == null && Double.isNaN(doubleValue);
 	}
 	
 	public boolean isInfinite() {
-		return theInteger != null && (undefined && !theInteger.equals(BigInteger.ZERO));
+		return bigValue == null && Double.isInfinite(doubleValue);
+	}
+	
+	public boolean isFinite() {
+		return bigValue != null;
 	}
 	
 	public boolean isZero() {
-		return theInteger != null && !undefined && theInteger.equals(BigInteger.ZERO);
+		return (bigValue != null) ? (bigValue.signum() == 0) : (doubleValue == 0);
 	}
 	
-	public static final int SIGN_NaN = Integer.MIN_VALUE;
-	public static final int SIGN_NEGATIVE = -1;
-	public static final int SIGN_ZERO = 0;
-	public static final int SIGN_POSITIVE = 1;
-	
-	public int getSign() {
-		if (theInteger == null) return SIGN_NaN;
-		else if (undefined) {
-			int cmp = theInteger.compareTo(BigInteger.ZERO);
-			if (cmp < 0) return SIGN_NEGATIVE;
-			else if (cmp > 0) return SIGN_POSITIVE;
-			else return SIGN_NaN;
-		}
-		else {
-			int cmp = theInteger.compareTo(BigInteger.ZERO);
-			if (cmp < 0) return SIGN_NEGATIVE;
-			else if (cmp > 0) return SIGN_POSITIVE;
-			else return SIGN_ZERO;
-		}
+	public boolean isPos() {
+		return (bigValue != null) ? (bigValue.signum() > 0) : (doubleValue > 0);
 	}
 	
-	public int getOppositeSign() {
-		if (theInteger == null) return SIGN_NaN;
-		else if (undefined) {
-			int cmp = theInteger.compareTo(BigInteger.ZERO);
-			if (cmp < 0) return SIGN_POSITIVE;
-			else if (cmp > 0) return SIGN_NEGATIVE;
-			else return SIGN_NaN;
-		}
-		else {
-			int cmp = theInteger.compareTo(BigInteger.ZERO);
-			if (cmp < 0) return SIGN_POSITIVE;
-			else if (cmp > 0) return SIGN_NEGATIVE;
-			else return SIGN_ZERO;
-		}
+	public boolean isNeg() {
+		return (bigValue != null) ? (bigValue.signum() < 0) : (doubleValue < 0);
 	}
 	
 	public XOMInteger abs() {
-		if (theInteger == null) return NaN;
-		else if (undefined) {
-			int cmp = theInteger.compareTo(BigInteger.ZERO);
-			if (cmp == 0) return NaN;
-			else return POSITIVE_INFINITY;
-		}
-		else return new XOMInteger(theInteger.abs());
+		if (bigValue != null && bigValue.signum() != 0) return new XOMInteger(bigValue.abs());
+		return new XOMInteger(Math.abs(doubleValue));
 	}
 	
 	public XOMInteger negate() {
-		if (theInteger == null) return NaN;
-		else if (undefined) {
-			int cmp = theInteger.compareTo(BigInteger.ZERO);
-			if (cmp < 0) return POSITIVE_INFINITY;
-			else if (cmp > 0) return NEGATIVE_INFINITY;
-			else return NaN;
-		}
-		else return new XOMInteger(theInteger.negate());
+		if (bigValue != null && bigValue.signum() != 0) return new XOMInteger(bigValue.negate());
+		return new XOMInteger(-doubleValue);
 	}
 	
 	public XOMInteger signum() {
-		if (theInteger == null) return NaN;
-		else if (undefined) {
-			int cmp = theInteger.compareTo(BigInteger.ZERO);
-			if (cmp > 0) return ONE;
-			else if (cmp < 0) return ONE.negate();
-			else return NaN;
-		}
-		else {
-			int cmp = theInteger.compareTo(BigInteger.ZERO);
-			if (cmp > 0) return ONE;
-			else if (cmp < 0) return ONE.negate();
-			else return ZERO;
-		}
+		if (bigValue != null && bigValue.signum() != 0) return new XOMInteger(bigValue.signum());
+		return new XOMInteger(Math.signum(doubleValue));
 	}
 	
 	public Number toNumber() {
-		if (theInteger == null) return Double.NaN;
-		else if (undefined) {
-			int cmp = theInteger.compareTo(BigInteger.ZERO);
-			if (cmp < 0) return Double.NEGATIVE_INFINITY;
-			else if (cmp > 0) return Double.POSITIVE_INFINITY;
-			else return Double.NaN;
-		}
-		else return theInteger;
+		return (bigValue != null && bigValue.signum() != 0) ? bigValue : doubleValue;
 	}
 	
 	public BigInteger toBigInteger() {
-		if (theInteger == null || undefined) return null;
-		else return theInteger;
+		return bigValue;
 	}
 	
 	public double toDouble() {
-		if (theInteger == null) return Double.NaN;
-		else if (undefined) {
-			int cmp = theInteger.compareTo(BigInteger.ZERO);
-			if (cmp < 0) return Double.NEGATIVE_INFINITY;
-			else if (cmp > 0) return Double.POSITIVE_INFINITY;
-			else return Double.NaN;
-		}
-		else return theInteger.doubleValue();
+		return doubleValue;
+	}
+	
+	public double toClampedDouble() {
+		if (bigValue == null || bigValue.signum() == 0) return doubleValue;
+		if (doubleValue == 0) return bigValue.signum() * Double.MIN_VALUE;
+		if (Double.isInfinite(doubleValue)) return bigValue.signum() * Double.MAX_VALUE;
+		return doubleValue;
 	}
 	
 	public long toLong() {
-		if (theInteger == null || undefined) return 0;
-		else return theInteger.longValue();
+		return (bigValue != null) ? bigValue.longValue() : 0;
 	}
 	
 	public int toInt() {
-		if (theInteger == null || undefined) return 0;
-		else return theInteger.intValue();
+		return (bigValue != null) ? bigValue.intValue() : 0;
 	}
 	
 	public String toLanguageString() {
-		if (theInteger == null) return "NAN";
-		else if (undefined) {
-			int cmp = theInteger.compareTo(BigInteger.ZERO);
-			if (cmp < 0) return "-INF";
-			else if (cmp > 0) return "INF";
-			else return "NAN";
-		}
-		else return theInteger.toString();
+		if (bigValue != null) return bigValue.toString();
+		return (doubleValue < 0) ? "-INF" : (doubleValue > 0) ? "INF" : "NAN";
 	}
+	
 	public String toTextString(XNContext ctx) {
-		if (theInteger == null) return "NAN";
-		else if (undefined) {
-			int cmp = theInteger.compareTo(BigInteger.ZERO);
-			if (cmp < 0) return "-INF";
-			else if (cmp > 0) return "INF";
-			else return "NAN";
-		}
-		else return ctx.getNumberFormat().format(theInteger);
+		if (bigValue != null) return ctx.getNumberFormat().format(bigValue);
+		return (doubleValue < 0) ? "-INF" : (doubleValue > 0) ? "INF" : "NAN";
 	}
+	
 	public List<? extends XOMVariant> toVariantList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
+	
 	public List<? extends XOMVariant> toPrimitiveList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
+	
 	public int hashCode() {
-		return (theInteger == null) ? 0 : undefined ? theInteger.signum() : theInteger.hashCode();
+		return (bigValue != null) ? bigValue.hashCode() : 0;
 	}
+	
 	public boolean equals(Object o) {
 		if (o instanceof XOMInteger) {
 			XOMInteger other = (XOMInteger)o;
-			if (this.isNaN() && other.isNaN()) {
-				return true;
-			}
-			else if (this.isNaN() || other.isNaN()) {
-				return false;
-			}
-			else if (this.undefined && other.undefined) {
-				return (this.theInteger.compareTo(BigInteger.ZERO) == other.theInteger.compareTo(BigInteger.ZERO));
-			}
-			else if (this.undefined || other.undefined) {
-				return false;
-			}
-			else {
-				return this.theInteger.compareTo(other.theInteger) == 0;
-			}
+			if (this.isFinite() && other.isFinite()) return (
+				this.bigValue.compareTo(other.bigValue) == 0);
+			if (this.isFinite() || other.isFinite()) return false;
+			return this.doubleValue == other.doubleValue;
 		} else {
 			return false;
 		}
+	}
+	
+	public int compareTo(XOMInteger other) {
+		if (this.isFinite() && other.isFinite())
+			return this.bigValue.compareTo(other.bigValue);
+		Double a = Double.valueOf(this.toClampedDouble());
+		Double b = Double.valueOf(other.toClampedDouble());
+		return a.compareTo(b);
+	}
+	
+	public XOMInteger add(XOMInteger other) {
+		if (this.isFinite() && other.isFinite())
+			return new XOMInteger(this.bigValue.add(other.bigValue));
+		return new XOMInteger(this.toClampedDouble() + other.toClampedDouble());
+	}
+	
+	public XOMInteger subtract(XOMInteger other) {
+		if (this.isFinite() && other.isFinite())
+			return new XOMInteger(this.bigValue.subtract(other.bigValue));
+		return new XOMInteger(this.toClampedDouble() - other.toClampedDouble());
+	}
+	
+	public XOMInteger multiply(XOMInteger other) {
+		if (this.isFinite() && !this.isZero() && other.isFinite() && !other.isZero())
+			return new XOMInteger(this.bigValue.multiply(other.bigValue));
+		return new XOMInteger(this.toClampedDouble() * other.toClampedDouble());
+	}
+	
+	public XOMInteger divide(XOMInteger other) {
+		if (this.isFinite() && !this.isZero() && other.isFinite() && !other.isZero())
+			return new XOMInteger(this.bigValue.divide(other.bigValue));
+		return new XOMInteger(this.toClampedDouble() / other.toClampedDouble());
 	}
 }

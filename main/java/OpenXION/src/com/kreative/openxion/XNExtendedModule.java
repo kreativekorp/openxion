@@ -1550,10 +1550,7 @@ public class XNExtendedModule extends XNModule {
 			case UFIXED: return new XOMNumber((Number)o);
 			case SFIXED: return new XOMNumber((Number)o);
 			case FLOAT: return new XOMNumber((Number)o);
-			case COMPLEX: return new XOMComplex(
-					new XOMNumber(((Number[])o)[0]),
-					new XOMNumber(((Number[])o)[1])
-				);
+			case COMPLEX: return new XOMComplex(((Number[])o)[0], ((Number[])o)[1]);
 			case CHAR: return new XOMString(o.toString());
 			case PSTRING: return new XOMString(o.toString());
 			case CSTRING: return new XOMString(o.toString());

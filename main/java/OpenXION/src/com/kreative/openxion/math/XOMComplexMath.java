@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2009-2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2009-2026 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -27,8 +27,9 @@
 
 package com.kreative.openxion.math;
 
-import java.math.*;
+import java.math.MathContext;
 import com.kreative.openxion.xom.inst.XOMComplex;
+import com.kreative.openxion.xom.inst.XOMNumber;
 
 /**
  * Methods for mathematical operations on and functions of XOMComplexes.
@@ -38,768 +39,393 @@ import com.kreative.openxion.xom.inst.XOMComplex;
 public class XOMComplexMath {
 	private XOMComplexMath(){}
 	
-	public static XOMComplex add(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
-		if (a.isNaN() || b.isNaN()) return XOMComplex.NaN;
-		else if (a.isInfinite() && b.isInfinite()) {
-			if (a.getQuadrant() == b.getQuadrant()) return a;
-			else return XOMComplex.NaN;
-		}
-		else if (a.isInfinite()) {
-			return a;
-		}
-		else if (b.isInfinite()) {
-			return b;
-		}
-		else {
-			BigDecimal r = a.realPart().add(b.realPart(), mc);
-			BigDecimal i = a.imaginaryPart().add(b.imaginaryPart(), mc);
-			return new XOMComplex(r, i);
-		}
+	public static XOMComplex fma(XOMComplex a, XOMComplex b, XOMComplex c, MathContext mc) {
+		return a.multiply(b, mc).add(c, mc);
 	}
 	
-	public static XOMComplex subtract(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
-		if (a.isNaN() || b.isNaN()) return XOMComplex.NaN;
-		else if (a.isInfinite() && b.isInfinite()) {
-			if (a.getQuadrant() == b.getOppositeQuadrant()) return a;
-			else return XOMComplex.NaN;
-		}
-		else if (a.isInfinite()) {
-			return a;
-		}
-		else if (b.isInfinite()) {
-			return b.negate();
-		}
-		else {
-			BigDecimal r = a.realPart().subtract(b.realPart(), mc);
-			BigDecimal i = a.imaginaryPart().subtract(b.imaginaryPart(), mc);
-			return new XOMComplex(r, i);
-		}
+	public static XOMComplex abs(XOMComplex n, MathContext mc, MathProcessor mp) {
+		XOMNumber h = XOMNumberMath.hypot(n.im(), n.re(), mc, mp);
+		return new XOMComplex(h.toNumber(), 0);
 	}
 	
-	public static XOMComplex multiply(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
-		if (a.isNaN() || b.isNaN()) return XOMComplex.NaN;
-		else if (a.isInfinite() || b.isInfinite()) {
-			if (a.isZero() || b.isZero()) return XOMComplex.NaN;
-			else {
-				int aa = a.realPart().compareTo(BigDecimal.ZERO);
-				int bb = a.imaginaryPart().compareTo(BigDecimal.ZERO);
-				int cc = b.realPart().compareTo(BigDecimal.ZERO);
-				int dd = b.imaginaryPart().compareTo(BigDecimal.ZERO);
-				int rr = aa*cc - bb*dd;
-				int ii = aa*dd + bb*cc;
-				if (rr == 0 || ii == 0) return XOMComplex.NaN;
-				return XOMComplex.makeInfinity((double)rr, (double)ii);
-			}
-		}
-		else {
-			BigDecimal ac = a.realPart().multiply(b.realPart(), mc);
-			BigDecimal bd = a.imaginaryPart().multiply(b.imaginaryPart(), mc);
-			BigDecimal bc = a.imaginaryPart().multiply(b.realPart(), mc);
-			BigDecimal ad = a.realPart().multiply(b.imaginaryPart(), mc);
-			BigDecimal r = ac.subtract(bd, mc);
-			BigDecimal i = bc.add(ad, mc);
-			return new XOMComplex(r, i);
-		}
+	public static XOMComplex arg(XOMComplex n, MathContext mc, MathProcessor mp) {
+		XOMNumber a = XOMNumberMath.atan2(n.im(), n.re(), mc, mp);
+		return new XOMComplex(a.toNumber(), 0);
 	}
 	
-	public static XOMComplex divide(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
-		if (a.isNaN() || b.isNaN()) return XOMComplex.NaN;
-		else if ((a.isInfinite() && b.isInfinite()) || (a.isZero() && b.isZero())) {
-			return XOMComplex.NaN;
-		}
-		else if (b.isZero()) {
-			int aa = a.realPart().compareTo(BigDecimal.ZERO);
-			int bb = a.imaginaryPart().compareTo(BigDecimal.ZERO);
-			if (aa == 0 || bb == 0) return XOMComplex.NaN;
-			return XOMComplex.makeInfinity((double)aa, (double)bb);
-		}
-		else if (a.isInfinite()) {
-			if (b.isZero()) return a;
-			else {
-				int aa = a.realPart().compareTo(BigDecimal.ZERO);
-				int bb = a.imaginaryPart().compareTo(BigDecimal.ZERO);
-				int cc = b.realPart().compareTo(BigDecimal.ZERO);
-				int dd = b.imaginaryPart().compareTo(BigDecimal.ZERO);
-				int rr = aa*cc - bb*dd;
-				int ii = aa*dd + bb*cc;
-				if (rr == 0 || ii == 0) return XOMComplex.NaN;
-				return XOMComplex.makeInfinity((double)rr, (double)ii);
-			}
-		}
-		else if (b.isInfinite() || a.isZero()) {
-			return XOMComplex.ZERO;
-		}
-		else {
-			BigDecimal ac = a.realPart().multiply(b.realPart(), mc);
-			BigDecimal bd = a.imaginaryPart().multiply(b.imaginaryPart(), mc);
-			BigDecimal bc = a.imaginaryPart().multiply(b.realPart(), mc);
-			BigDecimal ad = a.realPart().multiply(b.imaginaryPart(), mc);
-			BigDecimal cc = b.realPart().multiply(b.realPart(), mc);
-			BigDecimal dd = b.imaginaryPart().multiply(b.imaginaryPart(), mc);
-			BigDecimal acbd = ac.add(bd, mc);
-			BigDecimal bcad = bc.subtract(ad, mc);
-			BigDecimal ccdd = cc.add(dd, mc);
-			BigDecimal r = acbd.divide(ccdd, mc);
-			BigDecimal i = bcad.divide(ccdd, mc);
-			return new XOMComplex(r, i);
-		}
+	public static XOMComplex signum(XOMComplex n, MathContext mc, MathProcessor mp) {
+		if (n.isRe()) return new XOMComplex(n.re().signum().toNumber(), 0);
+		if (n.isIm()) return new XOMComplex(0, n.im().signum().toNumber());
+		XOMNumber h = XOMNumberMath.hypot(n.im(), n.re(), mc, mp);
+		XOMNumber r = n.re().divide(h, mc);
+		XOMNumber i = n.im().divide(h, mc);
+		return new XOMComplex(r.toNumber(), i.toNumber());
 	}
 	
 	public static XOMComplex pow(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
 		if (a.isNaN() || b.isNaN()) return XOMComplex.NaN;
-		else if (a.isZero()) {
-			if (b.getQuadrant() == XOMComplex.QUADRANT_POSITIVE_REAL) {
-				return XOMComplex.ZERO;
-			} else if (b.getQuadrant() == XOMComplex.QUADRANT_NEGATIVE_REAL) {
-				return XOMComplex.POSITIVE_INFINITY;
-			} else {
-				return XOMComplex.NaN;
-			}
-		}
-		else if (a.isInfinite() || b.isInfinite()) {
-			if (a.getQuadrant() == XOMComplex.QUADRANT_POSITIVE_REAL) {
-				if (b.getQuadrant() == XOMComplex.QUADRANT_POSITIVE_REAL) {
-					return XOMComplex.POSITIVE_INFINITY;
-				} else if (b.getQuadrant() == XOMComplex.QUADRANT_NEGATIVE_REAL) {
-					return XOMComplex.ZERO;
-				} else {
-					return XOMComplex.NaN;
-				}
-			} else {
-				return XOMComplex.NaN;
-			}
-		}
-		else if (b.isZero()) {
-			return XOMComplex.ONE;
-		}
-		else {
-			BigDecimal aa = a.realPart();
-			BigDecimal bb = a.imaginaryPart();
-			BigDecimal cc = b.realPart();
-			BigDecimal dd = b.imaginaryPart();
-			BigDecimal r = mp.hypot(aa, bb, mc);
-			BigDecimal s = mp.atan2(bb, aa, mc);
-			BigDecimal m = mp.pow(r, cc, mc).multiply(mp.exp(s.negate().multiply(dd,mc),mc),mc);
-			BigDecimal n = dd.multiply(mp.log(r,mc),mc).add(cc.multiply(s,mc),mc);
-			BigDecimal rr = m.multiply(mp.cos(n,mc),mc);
-			BigDecimal ii = m.multiply(mp.sin(n,mc),mc);
-			return new XOMComplex(rr, ii);
-		}
-	}
-	
-	public static XOMComplex abs(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.realPart() == null || n.imaginaryPart() == null) return XOMComplex.NaN;
-		else if (n.isUndefined()) {
-			int rc = n.realPart().compareTo(BigDecimal.ZERO);
-			int ic = n.imaginaryPart().compareTo(BigDecimal.ZERO);
-			if (rc == 0 && ic == 0) return XOMComplex.NaN;
-			else return new XOMComplex(((rc != 0) ? Double.POSITIVE_INFINITY : 0.0), ((ic != 0) ? Double.POSITIVE_INFINITY : 0.0));
-		}
-		else {
-			BigDecimal theSqrt = mp.hypot(n.realPart(), n.imaginaryPart(), mc);
-			if (theSqrt == null) return XOMComplex.NaN;
-			else return new XOMComplex(theSqrt, BigDecimal.ZERO);
-		}
-	}
-	
-	public static XOMComplex arg(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.realPart() == null || n.imaginaryPart() == null) return XOMComplex.NaN;
-		else if (n.isUndefined()) {
-			int rc = n.realPart().compareTo(BigDecimal.ZERO);
-			int ic = n.imaginaryPart().compareTo(BigDecimal.ZERO);
-			if ((rc == 0 && ic == 0) || (rc != 0 && ic != 0)) return XOMComplex.NaN;
-			BigDecimal theArg = mp.atan2(n.imaginaryPart(), n.realPart(), mc);
-			if (theArg == null) return XOMComplex.NaN;
-			else return new XOMComplex(theArg, BigDecimal.ZERO);
-		}
-		else {
-			BigDecimal theArg = mp.atan2(n.imaginaryPart(), n.realPart(), mc);
-			if (theArg == null) return XOMComplex.NaN;
-			else return new XOMComplex(theArg, BigDecimal.ZERO);
-		}
-	}
-	
-	public static XOMComplex signum(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.realPart() == null || n.imaginaryPart() == null) return XOMComplex.NaN;
-		else if (n.isUndefined()) {
-			int rc = n.realPart().compareTo(BigDecimal.ZERO);
-			int ic = n.imaginaryPart().compareTo(BigDecimal.ZERO);
-			if ((rc == 0 && ic == 0) || (rc != 0 && ic != 0)) return XOMComplex.NaN;
-			else if (rc == 0 && ic != 0) return (ic < 0) ? new XOMComplex(BigDecimal.ZERO, BigDecimal.ONE.negate()) : new XOMComplex(BigDecimal.ZERO, BigDecimal.ONE);
-			else if (ic == 0 && rc != 0) return (rc < 0) ? new XOMComplex(BigDecimal.ONE.negate(), BigDecimal.ZERO) : new XOMComplex(BigDecimal.ONE, BigDecimal.ZERO);
-			else return XOMComplex.NaN;
-		}
-		else {
-			BigDecimal theSqrt = mp.hypot(n.realPart(), n.imaginaryPart(), mc);
-			if (theSqrt == null) return XOMComplex.NaN;
-			else return new XOMComplex(n.realPart().divide(theSqrt,mc), n.imaginaryPart().divide(theSqrt,mc));
-		}
+		if (b.isZero()) return (a.isFinite() && !a.isZero()) ? XOMComplex.ONE : XOMComplex.NaN;
+		if (b.equals(XOMComplex.ONE)) return a;
+		XOMNumber r = XOMNumberMath.hypot(a.im(), a.re(), mc, mp);
+		XOMNumber s = XOMNumberMath.atan2(a.im(), a.re(), mc, mp);
+		XOMNumber e = XOMNumberMath.exp(s.negate().multiply(b.im(), mc), mc, mp);
+		XOMNumber m = XOMNumberMath.pow(r, b.re(), mc, mp).multiply(e, mc);
+		XOMNumber n = XOMNumberMath.log(r, mc, mp).multiply(b.im(), mc).add(s.multiply(b.re(), mc), mc);
+		XOMNumber rp = XOMNumberMath.cos(n, mc, mp).multiply(m, mc);
+		XOMNumber ip = XOMNumberMath.sin(n, mc, mp).multiply(m, mc);
+		return new XOMComplex(rp.toNumber(), ip.toNumber());
 	}
 	
 	public static XOMComplex annuity(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
 		if (a.isZero() || b.isZero()) return b;
-		else return divide(subtract(XOMComplex.ONE,pow(add(XOMComplex.ONE,a,mc,mp),b.negate(),mc,mp),mc,mp),a,mc,mp);
+		XOMComplex opa = XOMComplex.ONE.add(a, mc);
+		XOMComplex opatnb = pow(opa, b.negate(), mc, mp);
+		XOMComplex omopatnb = XOMComplex.ONE.subtract(opatnb, mc);
+		return omopatnb.divide(a, mc);
 	}
 	
 	public static XOMComplex compound(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
 		if (a.isZero() || b.isZero()) return XOMComplex.ONE;
-		else return pow(add(XOMComplex.ONE,a,mc,mp),b,mc,mp);
+		XOMComplex opa = XOMComplex.ONE.add(a, mc);
+		return pow(opa, b, mc, mp);
 	}
 	
 	public static XOMComplex sqrt(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) {
-			if (n.getQuadrant() == XOMComplex.QUADRANT_POSITIVE_REAL) return XOMComplex.POSITIVE_INFINITY;
-			else return XOMComplex.NaN;
-		}
-		else if (n.isZero()) return XOMComplex.ZERO;
-		else {
-			BigDecimal lr2 = mp.log(mp.hypot(n.realPart(), n.imaginaryPart(), mc), mc).divide(BigDecimal.valueOf(2.0), mc);
-			BigDecimal li2 = mp.atan2(n.imaginaryPart(), n.realPart(), mc).divide(BigDecimal.valueOf(2.0), mc);
-			BigDecimal e = mp.exp(lr2, mc);
-			BigDecimal c = mp.cos(li2, mc);
-			BigDecimal s = mp.sin(li2, mc);
-			return new XOMComplex(e.multiply(c, mc), e.multiply(s, mc));
-		}
+		XOMNumber h = XOMNumberMath.hypot(n.im(), n.re(), mc, mp);
+		XOMNumber a = XOMNumberMath.atan2(n.im(), n.re(), mc, mp);
+		XOMNumber h2 = XOMNumberMath.sqrt(h, mc, mp);
+		XOMNumber a2 = a.divide(XOMNumber.TWO, mc);
+		XOMNumber r = h2.multiply(XOMNumberMath.cos(a2, mc, mp), mc);
+		XOMNumber i = h2.multiply(XOMNumberMath.sin(a2, mc, mp), mc);
+		return new XOMComplex(r.toNumber(), i.toNumber());
 	}
 	
 	public static XOMComplex cbrt(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) {
-			if (n.getQuadrant() == XOMComplex.QUADRANT_POSITIVE_REAL) return XOMComplex.POSITIVE_INFINITY;
-			else return XOMComplex.NaN;
-		}
-		else if (n.isZero()) return XOMComplex.ZERO;
-		else {
-			BigDecimal lr3 = mp.log(mp.hypot(n.realPart(), n.imaginaryPart(), mc), mc).divide(BigDecimal.valueOf(3.0), mc);
-			BigDecimal li3 = mp.atan2(n.imaginaryPart(), n.realPart(), mc).divide(BigDecimal.valueOf(3.0), mc);
-			BigDecimal e = mp.exp(lr3, mc);
-			BigDecimal c = mp.cos(li3, mc);
-			BigDecimal s = mp.sin(li3, mc);
-			return new XOMComplex(e.multiply(c, mc), e.multiply(s, mc));
-		}
+		XOMNumber h = XOMNumberMath.hypot(n.im(), n.re(), mc, mp);
+		XOMNumber a = XOMNumberMath.atan2(n.im(), n.re(), mc, mp);
+		XOMNumber h3 = XOMNumberMath.cbrt(h, mc, mp);
+		XOMNumber a3 = a.divide(XOMNumber.THREE, mc);
+		XOMNumber r = h3.multiply(XOMNumberMath.cos(a3, mc, mp), mc);
+		XOMNumber i = h3.multiply(XOMNumberMath.sin(a3, mc, mp), mc);
+		return new XOMComplex(r.toNumber(), i.toNumber());
 	}
 	
 	public static XOMComplex qtrt(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) {
-			if (n.getQuadrant() == XOMComplex.QUADRANT_POSITIVE_REAL) return XOMComplex.POSITIVE_INFINITY;
-			else return XOMComplex.NaN;
-		}
-		else if (n.isZero()) return XOMComplex.ZERO;
-		else {
-			BigDecimal lr4 = mp.log(mp.hypot(n.realPart(), n.imaginaryPart(), mc), mc).divide(BigDecimal.valueOf(4.0), mc);
-			BigDecimal li4 = mp.atan2(n.imaginaryPart(), n.realPart(), mc).divide(BigDecimal.valueOf(4.0), mc);
-			BigDecimal e = mp.exp(lr4, mc);
-			BigDecimal c = mp.cos(li4, mc);
-			BigDecimal s = mp.sin(li4, mc);
-			return new XOMComplex(e.multiply(c, mc), e.multiply(s, mc));
-		}
+		XOMNumber h = XOMNumberMath.hypot(n.im(), n.re(), mc, mp);
+		XOMNumber a = XOMNumberMath.atan2(n.im(), n.re(), mc, mp);
+		XOMNumber h4 = XOMNumberMath.qtrt(h, mc, mp);
+		XOMNumber a4 = a.divide(XOMNumber.FOUR, mc);
+		XOMNumber r = h4.multiply(XOMNumberMath.cos(a4, mc, mp), mc);
+		XOMNumber i = h4.multiply(XOMNumberMath.sin(a4, mc, mp), mc);
+		return new XOMComplex(r.toNumber(), i.toNumber());
 	}
 	
 	public static XOMComplex twrt(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) {
-			if (n.getQuadrant() == XOMComplex.QUADRANT_POSITIVE_REAL) return XOMComplex.POSITIVE_INFINITY;
-			else return XOMComplex.NaN;
-		}
-		else if (n.isZero()) return XOMComplex.ZERO;
-		else {
-			BigDecimal lr12 = mp.log(mp.hypot(n.realPart(), n.imaginaryPart(), mc), mc).divide(BigDecimal.valueOf(12.0), mc);
-			BigDecimal li12 = mp.atan2(n.imaginaryPart(), n.realPart(), mc).divide(BigDecimal.valueOf(12.0), mc);
-			BigDecimal e = mp.exp(lr12, mc);
-			BigDecimal c = mp.cos(li12, mc);
-			BigDecimal s = mp.sin(li12, mc);
-			return new XOMComplex(e.multiply(c, mc), e.multiply(s, mc));
-		}
+		XOMNumber h = XOMNumberMath.hypot(n.im(), n.re(), mc, mp);
+		XOMNumber a = XOMNumberMath.atan2(n.im(), n.re(), mc, mp);
+		XOMNumber h12 = XOMNumberMath.twrt(h, mc, mp);
+		XOMNumber a12 = a.divide(XOMNumber.TWELVE, mc);
+		XOMNumber r = h12.multiply(XOMNumberMath.cos(a12, mc, mp), mc);
+		XOMNumber i = h12.multiply(XOMNumberMath.sin(a12, mc, mp), mc);
+		return new XOMComplex(r.toNumber(), i.toNumber());
 	}
 	
-	public static XOMComplex fma(XOMComplex a, XOMComplex b, XOMComplex c, MathContext mc, MathProcessor mp) {
-		return add(multiply(a, b, mc, mp), c, mc, mp);
-	}
-	
-	public static XOMComplex eml(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
-		return subtract(exp(a, mc, mp), log(b, mc, mp), mc, mp);
-	}
-	
-	public static XOMComplex edl(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
-		return divide(exp(a, mc, mp), log(b, mc, mp), mc, mp);
-	}
-	
-	public static XOMComplex lme(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
-		return subtract(log(a, mc, mp), exp(b, mc, mp), mc, mp);
-	}
-	
-	public static XOMComplex lde(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
-		return divide(log(a, mc, mp), exp(b, mc, mp), mc, mp);
+	public static XOMComplex hypot(XOMComplex y, XOMComplex x, MathContext mc, MathProcessor mp) {
+		return sqrt(y.multiply(y, mc).add(x.multiply(x, mc), mc), mc, mp);
 	}
 	
 	public static XOMComplex agm(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
-		XOMComplex t = new XOMComplex(2,0);
 		while (true) {
 			if (a.isNaN() || b.isNaN()) return XOMComplex.NaN;
-			XOMComplex m = divide(add(a,b,mc,mp),t,mc,mp);
-			XOMComplex g = sqrt(multiply(a,b,mc,mp),mc,mp);
-			if (m.equals(g)) return m;
-			a = m; b = g;
+			if (a.equals(b)) return a;
+			XOMComplex c = a.add(b, mc).divide(XOMComplex.TWO, mc);
+			XOMComplex d = sqrt(a.multiply(b, mc), mc, mp);
+			a = c; b = d;
 		}
 	}
 	
 	public static XOMComplex exp(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.realPart() == null || n.imaginaryPart() == null) return XOMComplex.NaN;
-		else if (n.isUndefined()) {
-			int rc = n.realPart().compareTo(BigDecimal.ZERO);
-			int ic = n.imaginaryPart().compareTo(BigDecimal.ZERO);
-			if (rc == 0 || ic != 0) return XOMComplex.NaN;
-			else if (rc < 0) return XOMComplex.ZERO;
-			else return XOMComplex.POSITIVE_INFINITY;
-		}
-		else {
-			BigDecimal e = mp.exp(n.realPart(), mc);
-			BigDecimal c = mp.cos(n.imaginaryPart(), mc);
-			BigDecimal s = mp.sin(n.imaginaryPart(), mc);
-			if (e == null || c == null || s == null) return XOMComplex.NaN;
-			return new XOMComplex(e.multiply(c, mc), e.multiply(s, mc));
-		}
+		XOMNumber e = XOMNumberMath.exp(n.re(), mc, mp);
+		XOMNumber c = XOMNumberMath.cos(n.im(), mc, mp);
+		XOMNumber s = XOMNumberMath.sin(n.im(), mc, mp);
+		XOMNumber r = e.multiply(c, mc);
+		XOMNumber i = e.multiply(s, mc);
+		return new XOMComplex(r.toNumber(), i.toNumber());
 	}
 	
 	public static XOMComplex expm1(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.realPart() == null || n.imaginaryPart() == null) return XOMComplex.NaN;
-		else if (n.isUndefined()) {
-			int rc = n.realPart().compareTo(BigDecimal.ZERO);
-			int ic = n.imaginaryPart().compareTo(BigDecimal.ZERO);
-			if (rc == 0 || ic != 0) return XOMComplex.NaN;
-			else if (rc < 0) return XOMComplex.ZERO;
-			else return XOMComplex.POSITIVE_INFINITY;
-		}
-		else {
-			BigDecimal e = mp.exp(n.realPart(), mc);
-			BigDecimal c = mp.cos(n.imaginaryPart(), mc);
-			BigDecimal s = mp.sin(n.imaginaryPart(), mc);
-			if (e == null || c == null || s == null) return XOMComplex.NaN;
-			return new XOMComplex(e.multiply(c, mc).subtract(BigDecimal.ONE), e.multiply(s, mc));
-		}
+		return exp(n, mc, mp).subtract(XOMComplex.ONE, mc);
 	}
 	
 	public static XOMComplex exp2(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.realPart() == null || n.imaginaryPart() == null) return XOMComplex.NaN;
-		else if (n.isUndefined()) {
-			int rc = n.realPart().compareTo(BigDecimal.ZERO);
-			int ic = n.imaginaryPart().compareTo(BigDecimal.ZERO);
-			if (rc == 0 || ic != 0) return XOMComplex.NaN;
-			else if (rc < 0) return XOMComplex.ZERO;
-			else return XOMComplex.POSITIVE_INFINITY;
-		}
-		else {
-			return pow(new XOMComplex(2.0,0.0),n,mc,mp);
-		}
+		XOMNumber e = XOMNumberMath.exp2(n.re(), mc, mp);
+		XOMNumber a = n.im().multiply(XOMNumberMath.log(XOMNumber.TWO, mc, mp), mc);
+		XOMNumber c = XOMNumberMath.cos(a, mc, mp);
+		XOMNumber s = XOMNumberMath.sin(a, mc, mp);
+		XOMNumber r = e.multiply(c, mc);
+		XOMNumber i = e.multiply(s, mc);
+		return new XOMComplex(r.toNumber(), i.toNumber());
 	}
 	
 	public static XOMComplex exp10(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.realPart() == null || n.imaginaryPart() == null) return XOMComplex.NaN;
-		else if (n.isUndefined()) {
-			int rc = n.realPart().compareTo(BigDecimal.ZERO);
-			int ic = n.imaginaryPart().compareTo(BigDecimal.ZERO);
-			if (rc == 0 || ic != 0) return XOMComplex.NaN;
-			else if (rc < 0) return XOMComplex.ZERO;
-			else return XOMComplex.POSITIVE_INFINITY;
-		}
-		else {
-			return pow(new XOMComplex(10.0,0.0),n,mc,mp);
-		}
+		XOMNumber e = XOMNumberMath.exp10(n.re(), mc, mp);
+		XOMNumber a = n.im().multiply(XOMNumberMath.log(XOMNumber.TEN, mc, mp), mc);
+		XOMNumber c = XOMNumberMath.cos(a, mc, mp);
+		XOMNumber s = XOMNumberMath.sin(a, mc, mp);
+		XOMNumber r = e.multiply(c, mc);
+		XOMNumber i = e.multiply(s, mc);
+		return new XOMComplex(r.toNumber(), i.toNumber());
 	}
 	
 	public static XOMComplex log(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.realPart() == null || n.imaginaryPart() == null) return XOMComplex.NaN;
-		else if (n.isUndefined()) {
-			int rc = n.realPart().compareTo(BigDecimal.ZERO);
-			int ic = n.imaginaryPart().compareTo(BigDecimal.ZERO);
-			if (rc > 0 && ic == 0) return XOMComplex.POSITIVE_INFINITY;
-			else return XOMComplex.NaN;
-		}
-		else if (n.isZero()) return XOMComplex.NEGATIVE_INFINITY;
-		else {
-			BigDecimal rp = mp.log(mp.hypot(n.realPart(), n.imaginaryPart(), mc), mc);
-			BigDecimal ip = mp.atan2(n.imaginaryPart(), n.realPart(), mc);
-			return new XOMComplex(rp, ip);
-		}
+		XOMNumber h = XOMNumberMath.hypot(n.im(), n.re(), mc, mp);
+		XOMNumber a = XOMNumberMath.atan2(n.im(), n.re(), mc, mp);
+		XOMNumber r = XOMNumberMath.log(h, mc, mp);
+		return new XOMComplex(r.toNumber(), a.toNumber());
 	}
 	
 	public static XOMComplex log1p(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.realPart() == null || n.imaginaryPart() == null) return XOMComplex.NaN;
-		else if (n.isUndefined()) {
-			int rc = n.realPart().compareTo(BigDecimal.ZERO);
-			int ic = n.imaginaryPart().compareTo(BigDecimal.ZERO);
-			if (rc > 0 && ic == 0) return XOMComplex.POSITIVE_INFINITY;
-			else return XOMComplex.NaN;
-		}
-		else {
-			n = new XOMComplex(n.realPart().add(BigDecimal.ONE), n.imaginaryPart());
-			if (n.isZero()) return XOMComplex.NEGATIVE_INFINITY;
-			else {
-				BigDecimal rp = mp.log(mp.hypot(n.realPart(), n.imaginaryPart(), mc), mc);
-				BigDecimal ip = mp.atan2(n.imaginaryPart(), n.realPart(), mc);
-				return new XOMComplex(rp, ip);
-			}
-		}
+		return log(XOMComplex.ONE.add(n, mc), mc, mp);
 	}
 	
 	public static XOMComplex log2(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.realPart() == null || n.imaginaryPart() == null) return XOMComplex.NaN;
-		else if (n.isUndefined()) {
-			int rc = n.realPart().compareTo(BigDecimal.ZERO);
-			int ic = n.imaginaryPart().compareTo(BigDecimal.ZERO);
-			if (rc > 0 && ic == 0) return XOMComplex.POSITIVE_INFINITY;
-			else return XOMComplex.NaN;
-		}
-		else if (n.isZero()) return XOMComplex.NEGATIVE_INFINITY;
-		else {
-			BigDecimal rp = mp.log2(mp.hypot(n.realPart(), n.imaginaryPart(), mc), mc);
-			BigDecimal ip = mp.atan2(n.imaginaryPart(), n.realPart(), mc);
-			BigDecimal b = mp.log(BigDecimal.valueOf(2), mc);
-			return new XOMComplex(rp, ip.divide(b,mc));
-		}
+		XOMNumber h = XOMNumberMath.hypot(n.im(), n.re(), mc, mp);
+		XOMNumber a = XOMNumberMath.atan2(n.im(), n.re(), mc, mp);
+		XOMNumber r = XOMNumberMath.log2(h, mc, mp);
+		XOMNumber i = a.divide(XOMNumberMath.log(XOMNumber.TWO, mc, mp), mc);
+		return new XOMComplex(r.toNumber(), i.toNumber());
 	}
 	
 	public static XOMComplex log10(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.realPart() == null || n.imaginaryPart() == null) return XOMComplex.NaN;
-		else if (n.isUndefined()) {
-			int rc = n.realPart().compareTo(BigDecimal.ZERO);
-			int ic = n.imaginaryPart().compareTo(BigDecimal.ZERO);
-			if (rc > 0 && ic == 0) return XOMComplex.POSITIVE_INFINITY;
-			else return XOMComplex.NaN;
-		}
-		else if (n.isZero()) return XOMComplex.NEGATIVE_INFINITY;
-		else {
-			BigDecimal rp = mp.log10(mp.hypot(n.realPart(), n.imaginaryPart(), mc), mc);
-			BigDecimal ip = mp.atan2(n.imaginaryPart(), n.realPart(), mc);
-			BigDecimal b = mp.log(BigDecimal.valueOf(10), mc);
-			return new XOMComplex(rp, ip.divide(b,mc));
-		}
+		XOMNumber h = XOMNumberMath.hypot(n.im(), n.re(), mc, mp);
+		XOMNumber a = XOMNumberMath.atan2(n.im(), n.re(), mc, mp);
+		XOMNumber r = XOMNumberMath.log10(h, mc, mp);
+		XOMNumber i = a.divide(XOMNumberMath.log(XOMNumber.TEN, mc, mp), mc);
+		return new XOMComplex(r.toNumber(), i.toNumber());
+	}
+	
+	public static XOMComplex eml(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
+		return exp(a, mc, mp).subtract(log(b, mc, mp), mc);
+	}
+	
+	public static XOMComplex edl(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
+		return exp(a, mc, mp).divide(log(b, mc, mp), mc);
+	}
+	
+	public static XOMComplex lme(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
+		return log(a, mc, mp).subtract(exp(b, mc, mp), mc);
+	}
+	
+	public static XOMComplex lde(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
+		return log(a, mc, mp).divide(exp(b, mc, mp), mc);
 	}
 	
 	public static XOMComplex sin(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) return XOMComplex.NaN;
-		else {
-			BigDecimal s = mp.sin(n.realPart(), mc);
-			BigDecimal ch = mp.cosh(n.imaginaryPart(), mc);
-			BigDecimal c = mp.cos(n.realPart(), mc);
-			BigDecimal sh = mp.sinh(n.imaginaryPart(), mc);
-			return new XOMComplex(s.multiply(ch,mc), c.multiply(sh,mc));
-		}
+		XOMNumber s = XOMNumberMath.sin(n.re(), mc, mp);
+		XOMNumber ch = XOMNumberMath.cosh(n.im(), mc, mp);
+		XOMNumber c = XOMNumberMath.cos(n.re(), mc, mp);
+		XOMNumber sh = XOMNumberMath.sinh(n.im(), mc, mp);
+		XOMNumber r = s.multiply(ch, mc);
+		XOMNumber i = c.multiply(sh, mc);
+		return new XOMComplex(r.toNumber(), i.toNumber());
 	}
 	
 	public static XOMComplex cos(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) return XOMComplex.NaN;
-		else {
-			BigDecimal c = mp.cos(n.realPart(), mc);
-			BigDecimal ch = mp.cosh(n.imaginaryPart(), mc);
-			BigDecimal s = mp.sin(n.realPart(), mc);
-			BigDecimal sh = mp.sinh(n.imaginaryPart(), mc);
-			return new XOMComplex(c.multiply(ch,mc), s.multiply(sh,mc).negate());
-		}
+		XOMNumber c = XOMNumberMath.cos(n.re(), mc, mp);
+		XOMNumber ch = XOMNumberMath.cosh(n.im(), mc, mp);
+		XOMNumber s = XOMNumberMath.sin(n.re(), mc, mp);
+		XOMNumber sh = XOMNumberMath.sinh(n.im(), mc, mp);
+		XOMNumber r = c.multiply(ch, mc);
+		XOMNumber i = s.multiply(sh, mc).negate();
+		return new XOMComplex(r.toNumber(), i.toNumber());
 	}
 	
 	public static XOMComplex tan(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) return XOMComplex.NaN;
-		else return divide(sin(n,mc,mp),cos(n,mc,mp),mc,mp);
+		return sin(n, mc, mp).divide(cos(n, mc, mp), mc);
 	}
 	
 	public static XOMComplex cot(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) return XOMComplex.NaN;
-		else return divide(cos(n,mc,mp),sin(n,mc,mp),mc,mp);
-	}
-	
-	public static XOMComplex csc(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) return XOMComplex.NaN;
-		else return divide(XOMComplex.ONE,sin(n,mc,mp),mc,mp);
+		return cos(n, mc, mp).divide(sin(n, mc, mp), mc);
 	}
 	
 	public static XOMComplex sec(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) return XOMComplex.NaN;
-		else return divide(XOMComplex.ONE,cos(n,mc,mp),mc,mp);
+		return XOMComplex.ONE.divide(cos(n, mc, mp), mc);
+	}
+	
+	public static XOMComplex csc(XOMComplex n, MathContext mc, MathProcessor mp) {
+		return XOMComplex.ONE.divide(sin(n, mc, mp), mc);
 	}
 	
 	public static XOMComplex sinh(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) return XOMComplex.NaN;
-		else {
-			XOMComplex ix = new XOMComplex(n.imaginaryPart().negate(), n.realPart());
-			XOMComplex sinix = sin(ix,mc,mp);
-			XOMComplex nisinix = new XOMComplex(sinix.imaginaryPart(), sinix.realPart().negate());
-			return nisinix;
-		}
+		XOMComplex ix = new XOMComplex(n.im().negate().toNumber(), n.re().toNumber());
+		XOMComplex sinix = sin(ix, mc, mp);
+		return new XOMComplex(sinix.im().toNumber(), sinix.re().negate().toNumber());
 	}
 	
 	public static XOMComplex cosh(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) return XOMComplex.NaN;
-		else {
-			XOMComplex ix = new XOMComplex(n.imaginaryPart().negate(), n.realPart());
-			XOMComplex cosix = cos(ix,mc,mp);
-			return cosix;
-		}
+		XOMComplex ix = new XOMComplex(n.im().negate().toNumber(), n.re().toNumber());
+		return cos(ix, mc, mp);
 	}
 	
 	public static XOMComplex tanh(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) return XOMComplex.NaN;
-		else {
-			XOMComplex ix = new XOMComplex(n.imaginaryPart().negate(), n.realPart());
-			XOMComplex tanix = tan(ix,mc,mp);
-			XOMComplex nitanix = new XOMComplex(tanix.imaginaryPart(), tanix.realPart().negate());
-			return nitanix;
-		}
+		XOMComplex ix = new XOMComplex(n.im().negate().toNumber(), n.re().toNumber());
+		XOMComplex tanix = tan(ix, mc, mp);
+		return new XOMComplex(tanix.im().toNumber(), tanix.re().negate().toNumber());
 	}
 	
 	public static XOMComplex coth(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) return XOMComplex.NaN;
-		else if (n.isZero()) return XOMComplex.POSITIVE_INFINITY;
-		else {
-			XOMComplex ix = new XOMComplex(n.imaginaryPart().negate(), n.realPart());
-			XOMComplex cotix = cot(ix,mc,mp);
-			XOMComplex icotix = new XOMComplex(cotix.imaginaryPart().negate(), cotix.realPart());
-			return icotix;
-		}
-	}
-	
-	public static XOMComplex csch(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) return XOMComplex.NaN;
-		else {
-			XOMComplex ix = new XOMComplex(n.imaginaryPart().negate(), n.realPart());
-			XOMComplex cscix = csc(ix,mc,mp);
-			XOMComplex icscix = new XOMComplex(cscix.imaginaryPart().negate(), cscix.realPart());
-			return icscix;
-		}
+		XOMComplex ix = new XOMComplex(n.im().negate().toNumber(), n.re().toNumber());
+		XOMComplex cotix = cot(ix, mc, mp);
+		return new XOMComplex(cotix.im().negate().toNumber(), cotix.re().toNumber());
 	}
 	
 	public static XOMComplex sech(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) return XOMComplex.NaN;
-		else if (n.isZero()) return XOMComplex.POSITIVE_INFINITY;
-		else {
-			XOMComplex ix = new XOMComplex(n.imaginaryPart().negate(), n.realPart());
-			XOMComplex secix = sec(ix,mc,mp);
-			return secix;
-		}
+		XOMComplex ix = new XOMComplex(n.im().negate().toNumber(), n.re().toNumber());
+		return sec(ix, mc, mp);
+	}
+	
+	public static XOMComplex csch(XOMComplex n, MathContext mc, MathProcessor mp) {
+		XOMComplex ix = new XOMComplex(n.im().negate().toNumber(), n.re().toNumber());
+		XOMComplex cscix = csc(ix, mc, mp);
+		return new XOMComplex(cscix.im().negate().toNumber(), cscix.re().toNumber());
 	}
 	
 	public static XOMComplex asin(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) return XOMComplex.NaN;
-		else {
-			XOMComplex s = sqrt(subtract(XOMComplex.ONE,multiply(n,n,mc,mp),mc,mp),mc,mp);
-			XOMComplex a = add(multiply(XOMComplex.I,n,mc,mp),s,mc,mp);
-			XOMComplex l = log(a,mc,mp);
-			return multiply(XOMComplex.I.negate(),l,mc,mp);
-		}
+		XOMComplex s = sqrt(XOMComplex.ONE.subtract(n.multiply(n, mc), mc), mc, mp);
+		XOMComplex l = log(s.add(n.multiply(XOMComplex.POSITIVE_I, mc), mc), mc, mp);
+		return l.multiply(XOMComplex.NEGATIVE_I, mc);
 	}
 	
 	public static XOMComplex acos(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) return XOMComplex.NaN;
-		else {
-			XOMComplex s = sqrt(subtract(XOMComplex.ONE,multiply(n,n,mc,mp),mc,mp),mc,mp);
-			XOMComplex a = add(n,multiply(XOMComplex.I,s,mc,mp),mc,mp);
-			XOMComplex l = log(a,mc,mp);
-			return multiply(XOMComplex.I.negate(),l,mc,mp);
-		}
+		XOMComplex s = sqrt(XOMComplex.ONE.subtract(n.multiply(n, mc), mc), mc, mp);
+		XOMComplex l = log(n.add(s.multiply(XOMComplex.POSITIVE_I, mc), mc), mc, mp);
+		return l.multiply(XOMComplex.NEGATIVE_I, mc);
 	}
 	
 	public static XOMComplex atan(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) return XOMComplex.NaN;
-		else {
-			XOMComplex ix = multiply(XOMComplex.I,n,mc,mp);
-			XOMComplex ln1mix = log(subtract(XOMComplex.ONE,ix,mc,mp),mc,mp);
-			XOMComplex ln1pix = log(add(XOMComplex.ONE,ix,mc,mp),mc,mp);
-			XOMComplex a = subtract(ln1mix,ln1pix,mc,mp);
-			return divide(multiply(XOMComplex.I,a,mc,mp),new XOMComplex(2,0),mc,mp);
-		}
+		XOMComplex ix = XOMComplex.POSITIVE_I.multiply(n, mc);
+		XOMComplex ln1mix = log(XOMComplex.ONE.subtract(ix, mc), mc, mp);
+		XOMComplex ln1pix = log(XOMComplex.ONE.add(ix, mc), mc, mp);
+		XOMComplex a = ln1mix.subtract(ln1pix, mc);
+		return XOMComplex.POSITIVE_I.multiply(a, mc).divide(XOMComplex.TWO, mc);
 	}
 	
 	public static XOMComplex acot(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) return XOMComplex.NaN;
-		else {
-			XOMComplex ix = divide(XOMComplex.I,n,mc,mp);
-			XOMComplex ln1mix = log(subtract(XOMComplex.ONE,ix,mc,mp),mc,mp);
-			XOMComplex ln1pix = log(add(XOMComplex.ONE,ix,mc,mp),mc,mp);
-			XOMComplex a = subtract(ln1mix,ln1pix,mc,mp);
-			return divide(multiply(XOMComplex.I,a,mc,mp),new XOMComplex(2,0),mc,mp);
-		}
-	}
-	
-	public static XOMComplex acsc(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) return XOMComplex.NaN;
-		else {
-			XOMComplex s = sqrt(subtract(XOMComplex.ONE,divide(XOMComplex.ONE,multiply(n,n,mc,mp),mc,mp),mc,mp),mc,mp);
-			XOMComplex a = add(s,divide(XOMComplex.I,n,mc,mp),mc,mp);
-			XOMComplex l = log(a,mc,mp);
-			return multiply(XOMComplex.I.negate(),l,mc,mp);
-		}
+		XOMComplex ix = XOMComplex.POSITIVE_I.divide(n, mc);
+		XOMComplex ln1mix = log(XOMComplex.ONE.subtract(ix, mc), mc, mp);
+		XOMComplex ln1pix = log(XOMComplex.ONE.add(ix, mc), mc, mp);
+		XOMComplex a = ln1mix.subtract(ln1pix, mc);
+		return XOMComplex.POSITIVE_I.multiply(a, mc).divide(XOMComplex.TWO, mc);
 	}
 	
 	public static XOMComplex asec(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) return XOMComplex.NaN;
-		else {
-			XOMComplex s = sqrt(subtract(XOMComplex.ONE,divide(XOMComplex.ONE,multiply(n,n,mc,mp),mc,mp),mc,mp),mc,mp);
-			XOMComplex a = add(multiply(XOMComplex.I,s,mc,mp),divide(XOMComplex.ONE,n,mc,mp),mc,mp);
-			XOMComplex l = log(a,mc,mp);
-			return multiply(XOMComplex.I.negate(),l,mc,mp);
-		}
+		XOMComplex s = sqrt(XOMComplex.ONE.subtract(XOMComplex.ONE.divide(n.multiply(n, mc), mc), mc), mc, mp);
+		XOMComplex l = log(XOMComplex.ONE.divide(n, mc).add(s.multiply(XOMComplex.POSITIVE_I, mc), mc), mc, mp);
+		return l.multiply(XOMComplex.NEGATIVE_I, mc);
+	}
+	
+	public static XOMComplex acsc(XOMComplex n, MathContext mc, MathProcessor mp) {
+		XOMComplex s = sqrt(XOMComplex.ONE.subtract(XOMComplex.ONE.divide(n.multiply(n, mc), mc), mc), mc, mp);
+		XOMComplex l = log(s.add(XOMComplex.POSITIVE_I.divide(n, mc), mc), mc, mp);
+		return l.multiply(XOMComplex.NEGATIVE_I, mc);
 	}
 	
 	public static XOMComplex asinh(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) return n;
-		else {
-			XOMComplex x = n;
-			XOMComplex sqrtxsqp1 = sqrt(add(multiply(x,x,mc,mp),XOMComplex.ONE,mc,mp),mc,mp);
-			return log(add(x,sqrtxsqp1,mc,mp),mc,mp);
-		}
+		XOMComplex nspo = n.multiply(n, mc).add(XOMComplex.ONE, mc);
+		return log(sqrt(nspo, mc, mp).add(n, mc), mc, mp);
 	}
 	
 	public static XOMComplex acosh(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) {
-			if (n.getQuadrant() == XOMComplex.QUADRANT_POSITIVE_REAL) return XOMComplex.POSITIVE_INFINITY;
-			else return XOMComplex.NaN;
-		}
-		else {
-			XOMComplex x = n;
-			XOMComplex sqrtxm1 = sqrt(subtract(x,XOMComplex.ONE,mc,mp),mc,mp);
-			XOMComplex sqrtxp1 = sqrt(add(x,XOMComplex.ONE,mc,mp),mc,mp);
-			XOMComplex xm1txp1 = multiply(sqrtxm1,sqrtxp1,mc,mp);
-			return log(add(x,xm1txp1,mc,mp),mc,mp);
-		}
+		XOMComplex nsmo = n.multiply(n, mc).subtract(XOMComplex.ONE, mc);
+		return log(sqrt(nsmo, mc, mp).add(n, mc), mc, mp);
 	}
 	
 	public static XOMComplex atanh(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) return XOMComplex.NaN;
-		else {
-			if (n.imaginaryPart().compareTo(BigDecimal.ZERO) == 0 && n.realPart().abs().compareTo(BigDecimal.ONE) == 0) {
-				return (n.realPart().signum() < 0) ? XOMComplex.NEGATIVE_INFINITY : XOMComplex.POSITIVE_INFINITY;
-			}
-			XOMComplex x = n;
-			XOMComplex onemx = subtract(XOMComplex.ONE,x,mc,mp);
-			XOMComplex sqrt1mx2 = sqrt(subtract(XOMComplex.ONE,multiply(x,x,mc,mp),mc,mp),mc,mp);
-			return log(divide(sqrt1mx2,onemx,mc,mp),mc,mp);
-		}
+		XOMComplex opn = XOMComplex.ONE.add(n, mc);
+		XOMComplex omn = XOMComplex.ONE.subtract(n, mc);
+		return log(opn.divide(omn, mc), mc, mp).divide(XOMComplex.TWO, mc);
 	}
 	
 	public static XOMComplex acoth(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) {
-			if (n.isInfinite()) return XOMComplex.ZERO;
-			else return XOMComplex.NaN;
-		}
-		else {
-			if (n.imaginaryPart().compareTo(BigDecimal.ZERO) == 0 && n.realPart().abs().compareTo(BigDecimal.ONE) == 0) {
-				return (n.realPart().signum() < 0) ? XOMComplex.NEGATIVE_INFINITY : XOMComplex.POSITIVE_INFINITY;
-			}
-			XOMComplex x = n;
-			XOMComplex a = divide(add(x,XOMComplex.ONE,mc,mp),subtract(x,XOMComplex.ONE,mc,mp),mc,mp);
-			return divide(log(a,mc,mp),new XOMComplex(2,0),mc,mp);
-		}
-	}
-	
-	public static XOMComplex acsch(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) {
-			if (n.isInfinite()) return XOMComplex.ZERO;
-			else return XOMComplex.NaN;
-		}
-		else {
-			if (n.isZero()) return XOMComplex.NaN;
-			XOMComplex x = n;
-			XOMComplex rx = divide(XOMComplex.ONE,x,mc,mp);
-			XOMComplex rxx = divide(XOMComplex.ONE,multiply(x,x,mc,mp),mc,mp);
-			XOMComplex sqrt1prxx = sqrt(add(XOMComplex.ONE,rxx,mc,mp),mc,mp);
-			return log(add(sqrt1prxx,rx,mc,mp),mc,mp);
-		}
+		XOMComplex npo = n.add(XOMComplex.ONE, mc);
+		XOMComplex nmo = n.subtract(XOMComplex.ONE, mc);
+		return log(npo.divide(nmo, mc), mc, mp).divide(XOMComplex.TWO, mc);
 	}
 	
 	public static XOMComplex asech(XOMComplex n, MathContext mc, MathProcessor mp) {
-		if (n.isUndefined()) return XOMComplex.NaN;
-		else {
-			if (n.isZero()) return XOMComplex.POSITIVE_INFINITY;
-			XOMComplex x = n;
-			XOMComplex rx = divide(XOMComplex.ONE,x,mc,mp);
-			XOMComplex sqrtrxm1 = sqrt(subtract(rx,XOMComplex.ONE,mc,mp),mc,mp);
-			XOMComplex sqrtrxp1 = sqrt(add(rx,XOMComplex.ONE,mc,mp),mc,mp);
-			XOMComplex rxm1trxp1 = multiply(sqrtrxm1,sqrtrxp1,mc,mp);
-			return log(add(rxm1trxp1,rx,mc,mp),mc,mp);
-		}
+		return acosh(XOMComplex.ONE.divide(n, mc), mc, mp);
+	}
+	
+	public static XOMComplex acsch(XOMComplex n, MathContext mc, MathProcessor mp) {
+		return asinh(XOMComplex.ONE.divide(n, mc), mc, mp);
 	}
 	
 	public static XOMComplex erf(XOMComplex z, MathContext mc, MathProcessor mp) {
 		if (z.isNaN()) return XOMComplex.NaN;
-		else if (z.isInfinite()) {
-			switch (z.getQuadrant()) {
-				case XOMComplex.QUADRANT_POSITIVE_REAL: return XOMComplex.ONE;
-				case XOMComplex.QUADRANT_NEGATIVE_REAL: return XOMComplex.ONE.negate();
-				case XOMComplex.QUADRANT_POSITIVE_IMAGINARY: return XOMComplex.makeInfinity(0,+1);
-				case XOMComplex.QUADRANT_NEGATIVE_IMAGINARY: return XOMComplex.makeInfinity(0,-1);
-				default: return XOMComplex.NaN;
-			}
+		if (z.isInfinite()) {
+			if (z.isRe()) return z.re().isNeg() ? XOMComplex.NEGATIVE_ONE : XOMComplex.ONE;
+			if (z.isIm()) return z.im().isNeg() ? XOMComplex.NEGATIVE_I_INFINITY : XOMComplex.POSITIVE_I_INFINITY;
+			return XOMComplex.NaN;
 		}
-		else if (z.isZero()) return XOMComplex.ZERO;
-		else return subtract(XOMComplex.ONE,erfc(z,mc,mp),mc,mp);
+		if (z.isZero()) return XOMComplex.ZERO;
+		return XOMComplex.ONE.subtract(erfc(z, mc, mp), mc);
 	}
 	
 	private static final XOMComplex[] ERFC = new XOMComplex[] {
-		new XOMComplex(0.56418958354775629,0.0), new XOMComplex(2.06955023132914151,0.0),
-		new XOMComplex(2.71078540045147805,0.0), new XOMComplex(5.80755613130301624,0.0),
-		new XOMComplex(3.47954057099518960,0.0), new XOMComplex(12.06166887286239555,0.0),
-		new XOMComplex(3.47469513777439592,0.0), new XOMComplex(12.07402036406381411,0.0),
-		new XOMComplex(3.72068443960225092,0.0), new XOMComplex(8.44319781003968454,0.0),
-		new XOMComplex(4.00561509202259545,0.0), new XOMComplex(9.30596659485887898,0.0),
-		new XOMComplex(3.90225704029924078,0.0), new XOMComplex(6.36161630953880464,0.0),
-		new XOMComplex(5.16722705817812584,0.0), new XOMComplex(9.12661617673673262,0.0),
-		new XOMComplex(4.03296893109262491,0.0), new XOMComplex(5.13578530585681539,0.0),
-		new XOMComplex(5.95908795446633271,0.0), new XOMComplex(9.19435612886969243,0.0),
-		new XOMComplex(4.11240942957450885,0.0), new XOMComplex(4.48640329523408675,0.0)
+		new XOMComplex(0.56418958354775629, 0), new XOMComplex(2.06955023132914151, 0),
+		new XOMComplex(2.71078540045147805, 0), new XOMComplex(5.80755613130301624, 0),
+		new XOMComplex(3.47954057099518960, 0), new XOMComplex(12.06166887286239555, 0),
+		new XOMComplex(3.47469513777439592, 0), new XOMComplex(12.07402036406381411, 0),
+		new XOMComplex(3.72068443960225092, 0), new XOMComplex(8.44319781003968454, 0),
+		new XOMComplex(4.00561509202259545, 0), new XOMComplex(9.30596659485887898, 0),
+		new XOMComplex(3.90225704029924078, 0), new XOMComplex(6.36161630953880464, 0),
+		new XOMComplex(5.16722705817812584, 0), new XOMComplex(9.12661617673673262, 0),
+		new XOMComplex(4.03296893109262491, 0), new XOMComplex(5.13578530585681539, 0),
+		new XOMComplex(5.95908795446633271, 0), new XOMComplex(9.19435612886969243, 0),
+		new XOMComplex(4.11240942957450885, 0), new XOMComplex(4.48640329523408675, 0)
 	};
 	
 	public static XOMComplex erfc(XOMComplex z, MathContext mc, MathProcessor mp) {
 		if (z.isNaN()) return XOMComplex.NaN;
-		else if (z.isInfinite()) {
-			switch (z.getQuadrant()) {
-				case XOMComplex.QUADRANT_POSITIVE_REAL: return XOMComplex.ZERO;
-				case XOMComplex.QUADRANT_NEGATIVE_REAL: return new XOMComplex(2,0);
-				default: return XOMComplex.NaN;
-			}
+		if (z.isInfinite()) {
+			if (z.isRe()) return z.re().isNeg() ? XOMComplex.TWO : XOMComplex.ZERO;
+			return XOMComplex.NaN;
 		}
-		else if (z.isZero()) return XOMComplex.ONE;
-		else if (z.realPart().doubleValue() < 0) return subtract(new XOMComplex(2,0),erfc(z.negate(),mc,mp),mc,mp);
-		else return multiply(exp(multiply(z,z,mc,mp).negate(),mc,mp),erfcx(z,mc,mp),mc,mp);
+		if (z.isZero()) return XOMComplex.ONE;
+		if (z.re().isNeg()) return XOMComplex.TWO.subtract(erfc(z.negate(), mc, mp), mc);
+		return exp(z.multiply(z, mc).negate(), mc, mp).multiply(erfcx(z, mc, mp), mc);
 	}
 	
 	public static XOMComplex erfcx(XOMComplex z, MathContext mc, MathProcessor mp) {
 		if (z.isNaN()) return XOMComplex.NaN;
-		else if (z.isInfinite()) {
-			switch (z.getQuadrant()) {
-				case XOMComplex.QUADRANT_POSITIVE_REAL: return XOMComplex.ZERO;
-				case XOMComplex.QUADRANT_NEGATIVE_REAL: return XOMComplex.POSITIVE_INFINITY;
-				default: return XOMComplex.NaN;
-			}
+		if (z.isInfinite()) {
+			if (z.isRe()) return z.re().isNeg() ? XOMComplex.POSITIVE_INFINITY : XOMComplex.ZERO;
+			return XOMComplex.NaN;
 		}
-		else if (z.isZero()) return XOMComplex.ONE;
-		else if (z.realPart().doubleValue() < 0) return multiply(exp(multiply(z,z,mc,mp),mc,mp),erfc(z,mc,mp),mc,mp);
-		else {
-			XOMComplex zz = multiply(z,z,mc,mp);
-			XOMComplex w = divide(ERFC[0],add(z,ERFC[1],mc,mp),mc,mp);
-			w = multiply(w,divide(add(add(zz,multiply(ERFC[2],z,mc,mp),mc,mp),ERFC[3],mc,mp),add(add(zz,multiply(ERFC[4],z,mc,mp),mc,mp),ERFC[5],mc,mp),mc,mp),mc,mp);
-			w = multiply(w,divide(add(add(zz,multiply(ERFC[6],z,mc,mp),mc,mp),ERFC[7],mc,mp),add(add(zz,multiply(ERFC[8],z,mc,mp),mc,mp),ERFC[9],mc,mp),mc,mp),mc,mp);
-			w = multiply(w,divide(add(add(zz,multiply(ERFC[10],z,mc,mp),mc,mp),ERFC[11],mc,mp),add(add(zz,multiply(ERFC[12],z,mc,mp),mc,mp),ERFC[13],mc,mp),mc,mp),mc,mp);
-			w = multiply(w,divide(add(add(zz,multiply(ERFC[14],z,mc,mp),mc,mp),ERFC[15],mc,mp),add(add(zz,multiply(ERFC[16],z,mc,mp),mc,mp),ERFC[17],mc,mp),mc,mp),mc,mp);
-			w = multiply(w,divide(add(add(zz,multiply(ERFC[18],z,mc,mp),mc,mp),ERFC[19],mc,mp),add(add(zz,multiply(ERFC[20],z,mc,mp),mc,mp),ERFC[21],mc,mp),mc,mp),mc,mp);
-			return w;
-		}
+		if (z.isZero()) return XOMComplex.ONE;
+		if (z.re().isNeg()) return exp(z.multiply(z, mc), mc, mp).multiply(erfc(z, mc, mp), mc);
+		XOMComplex zz = z.multiply(z, mc);
+		XOMComplex w = ERFC[0].divide(ERFC[1].add(z, mc), mc);
+		w = w.multiply(zz.add(ERFC[2].multiply(z, mc), mc).add(ERFC[3], mc).divide(zz.add(ERFC[4].multiply(z, mc), mc).add(ERFC[5], mc), mc), mc);
+		w = w.multiply(zz.add(ERFC[6].multiply(z, mc), mc).add(ERFC[7], mc).divide(zz.add(ERFC[8].multiply(z, mc), mc).add(ERFC[9], mc), mc), mc);
+		w = w.multiply(zz.add(ERFC[10].multiply(z, mc), mc).add(ERFC[11], mc).divide(zz.add(ERFC[12].multiply(z, mc), mc).add(ERFC[13], mc), mc), mc);
+		w = w.multiply(zz.add(ERFC[14].multiply(z, mc), mc).add(ERFC[15], mc).divide(zz.add(ERFC[16].multiply(z, mc), mc).add(ERFC[17], mc), mc), mc);
+		w = w.multiply(zz.add(ERFC[18].multiply(z, mc), mc).add(ERFC[19], mc).divide(zz.add(ERFC[20].multiply(z, mc), mc).add(ERFC[21], mc), mc), mc);
+		return w;
 	}
 	
 	public static XOMComplex erfi(XOMComplex z, MathContext mc, MathProcessor mp) {
 		if (z.isNaN()) return XOMComplex.NaN;
-		else if (z.isInfinite()) {
-			switch (z.getQuadrant()) {
-				case XOMComplex.QUADRANT_POSITIVE_REAL: return XOMComplex.POSITIVE_INFINITY;
-				case XOMComplex.QUADRANT_NEGATIVE_REAL: return XOMComplex.NEGATIVE_INFINITY;
-				case XOMComplex.QUADRANT_POSITIVE_IMAGINARY: return XOMComplex.I;
-				case XOMComplex.QUADRANT_NEGATIVE_IMAGINARY: return XOMComplex.I.negate();
-				default: return XOMComplex.NaN;
-			}
+		if (z.isInfinite()) {
+			if (z.isRe()) return z.re().isNeg() ? XOMComplex.NEGATIVE_INFINITY : XOMComplex.POSITIVE_INFINITY;
+			if (z.isIm()) return z.im().isNeg() ? XOMComplex.NEGATIVE_I : XOMComplex.POSITIVE_I;
+			return XOMComplex.NaN;
 		}
-		else if (z.isZero()) return XOMComplex.ZERO;
-		else return multiply(XOMComplex.I.negate(),erf(multiply(XOMComplex.I,z,mc,mp),mc,mp),mc,mp);
+		if (z.isZero()) return XOMComplex.ZERO;
+		return erf(XOMComplex.POSITIVE_I.multiply(z, mc), mc, mp).multiply(XOMComplex.NEGATIVE_I, mc);
 	}
 	
-	private static final XOMComplex TWO = new XOMComplex(2, 0);
-	private static final XOMComplex HALF = new XOMComplex(0.5, 0);
+	private static final XOMComplex ONE_HALF = new XOMComplex(0.5, 0);
 	private static final XOMComplex GAMMA_G = new XOMComplex(7, 0);
 	private static final XOMComplex[] GAMMA_P = {
 		new XOMComplex(0.99999999999980993227684700473478, 0),
@@ -813,74 +439,97 @@ public class XOMComplexMath {
 		new XOMComplex(1.50563273514931155834e-7, 0)
 	};
 	
-	private static XOMComplex[] gammaTZX(XOMComplex z, MathContext mc, MathProcessor mp) {
-		z = subtract(z,XOMComplex.ONE,mc,mp);
+	private static XOMComplex[] gammaTZX(XOMComplex z, MathContext mc) {
+		z = z.subtract(XOMComplex.ONE, mc);
 		XOMComplex x = GAMMA_P[0];
 		for (int i = 1; i < GAMMA_P.length; i++) {
-			x = add(x,divide(GAMMA_P[i],add(z,new XOMComplex(i,0),mc,mp),mc,mp),mc,mp);
+			x = x.add(GAMMA_P[i].divide(new XOMComplex(i, 0).add(z, mc), mc), mc);
 		}
-		XOMComplex t = add(add(z,GAMMA_G,mc,mp),HALF,mc,mp);
-		return new XOMComplex[] { t, add(z,HALF,mc,mp), x };
+		XOMComplex t = z.add(GAMMA_G, mc).add(ONE_HALF, mc);
+		return new XOMComplex[] { t, z.add(ONE_HALF, mc), x };
 	}
 	
 	public static XOMComplex gamma(XOMComplex z, MathContext mc, MathProcessor mp) {
 		if (z.isNaN()) return XOMComplex.NaN;
-		if (z.isInfinite()) return (z.getQuadrant() == XOMComplex.QUADRANT_POSITIVE_REAL) ? XOMComplex.POSITIVE_INFINITY : XOMComplex.NaN;
-		if (z.isReal() && z.realPart().signum() <= 0 && z.realPart().remainder(BigDecimal.ONE).signum() == 0) return XOMComplex.NaN;
-		if (z.realPart().doubleValue() < 0.5) {
-			XOMComplex s = sin(multiply(XOMComplex.PI,z,mc,mp),mc,mp);
-			XOMComplex t = gamma(subtract(XOMComplex.ONE,z,mc,mp),mc,mp);
-			return divide(XOMComplex.PI,multiply(s,t,mc,mp),mc,mp);
+		if (z.isInfinite()) return (z.isRe() && z.re().isPos()) ? XOMComplex.POSITIVE_INFINITY : XOMComplex.NaN;
+		if (z.isRe() && !z.re().isPos() && z.re().frac().isZero()) return XOMComplex.NaN;
+		if (z.re().toDouble() < 0.5) {
+			XOMComplex pi = new XOMComplex(mp.pi(mc), 0);
+			XOMComplex s = sin(pi.multiply(z, mc), mc, mp);
+			XOMComplex t = gamma(XOMComplex.ONE.subtract(z, mc), mc, mp);
+			return pi.divide(s.multiply(t, mc), mc);
 		}
-		else {
-			XOMComplex[] tzx = gammaTZX(z,mc,mp);
-			XOMComplex k = sqrt(multiply(XOMComplex.PI,TWO,mc,mp),mc,mp);
-			XOMComplex p = multiply(k,pow(tzx[0],tzx[1],mc,mp),mc,mp);
-			XOMComplex e = multiply(p,exp(tzx[0].negate(),mc,mp),mc,mp);
-			return multiply(e,tzx[2],mc,mp);
-		}
+		XOMComplex[] tzx = gammaTZX(z, mc);
+		XOMComplex pi = new XOMComplex(mp.pi(mc), 0);
+		XOMComplex k = sqrt(XOMComplex.TWO.multiply(pi, mc), mc, mp);
+		XOMComplex p = k.multiply(pow(tzx[0], tzx[1], mc, mp), mc);
+		XOMComplex e = p.multiply(exp(tzx[0].negate(), mc, mp), mc);
+		return e.multiply(tzx[2], mc);
 	}
 	
 	public static XOMComplex loggamma(XOMComplex z, MathContext mc, MathProcessor mp) {
 		if (z.isNaN()) return XOMComplex.NaN;
-		if (z.isInfinite()) return (z.getQuadrant() == XOMComplex.QUADRANT_POSITIVE_REAL) ? XOMComplex.POSITIVE_INFINITY : XOMComplex.NaN;
-		if (z.isReal() && z.realPart().signum() <= 0 && z.realPart().remainder(BigDecimal.ONE).signum() == 0) return XOMComplex.NaN;
-		if (z.realPart().doubleValue() < 0.5) {
-			XOMComplex s = sin(multiply(XOMComplex.PI,z,mc,mp),mc,mp);
-			XOMComplex t = loggamma(subtract(XOMComplex.ONE,z,mc,mp),mc,mp);
-			return subtract(log(divide(XOMComplex.PI,s,mc,mp),mc,mp),t,mc,mp);
+		if (z.isInfinite()) return (z.isRe() && z.re().isPos()) ? XOMComplex.POSITIVE_INFINITY : XOMComplex.NaN;
+		if (z.isRe() && !z.re().isPos() && z.re().frac().isZero()) return XOMComplex.NaN;
+		if (z.re().toDouble() < 0.5) {
+			XOMComplex pi = new XOMComplex(mp.pi(mc), 0);
+			XOMComplex s = sin(pi.multiply(z, mc), mc, mp);
+			XOMComplex t = loggamma(XOMComplex.ONE.subtract(z, mc), mc, mp);
+			return log(pi.divide(s, mc), mc, mp).subtract(t, mc);
 		}
-		else {
-			XOMComplex[] tzx = gammaTZX(z,mc,mp);
-			XOMComplex k = log(sqrt(multiply(XOMComplex.PI,TWO,mc,mp),mc,mp),mc,mp);
-			XOMComplex p = add(k,multiply(tzx[1],log(tzx[0],mc,mp),mc,mp),mc,mp);
-			XOMComplex e = subtract(p,tzx[0],mc,mp);
-			return add(e,log(tzx[2],mc,mp),mc,mp);
-		}
+		XOMComplex[] tzx = gammaTZX(z, mc);
+		XOMComplex pi = new XOMComplex(mp.pi(mc), 0);
+		XOMComplex k = log(sqrt(XOMComplex.TWO.multiply(pi, mc), mc, mp), mc, mp);
+		XOMComplex p = k.add(tzx[1].multiply(log(tzx[0], mc, mp), mc), mc);
+		XOMComplex e = p.subtract(tzx[0], mc);
+		return e.add(log(tzx[2], mc, mp), mc);
 	}
 	
 	public static XOMComplex fact(XOMComplex n, MathContext mc, MathProcessor mp) {
-		return gamma(add(n,XOMComplex.ONE,mc,mp),mc,mp);
+		return gamma(XOMComplex.ONE.add(n, mc), mc, mp);
 	}
+	
 	public static XOMComplex logfact(XOMComplex n, MathContext mc, MathProcessor mp) {
-		return loggamma(add(n,XOMComplex.ONE,mc,mp),mc,mp);
+		return loggamma(XOMComplex.ONE.add(n, mc), mc, mp);
 	}
+	
 	public static XOMComplex beta(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
-		return divide(multiply(gamma(a,mc,mp),gamma(b,mc,mp),mc,mp),gamma(add(a,b,mc,mp),mc,mp),mc,mp);
+		XOMComplex a1 = gamma(a, mc, mp);
+		XOMComplex b1 = gamma(b, mc, mp);
+		XOMComplex ab = gamma(a.add(b, mc), mc, mp);
+		return a1.multiply(b1, mc).divide(ab, mc);
 	}
+	
 	public static XOMComplex logbeta(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
-		return subtract(add(loggamma(a,mc,mp),loggamma(b,mc,mp),mc,mp),loggamma(add(a,b,mc,mp),mc,mp),mc,mp);
+		XOMComplex a1 = loggamma(a, mc, mp);
+		XOMComplex b1 = loggamma(b, mc, mp);
+		XOMComplex ab = loggamma(a.add(b, mc), mc, mp);
+		return a1.add(b1, mc).subtract(ab, mc);
 	}
+	
 	public static XOMComplex nPr(XOMComplex n, XOMComplex r, MathContext mc, MathProcessor mp) {
-		return divide(gamma(add(n,XOMComplex.ONE,mc,mp),mc,mp),gamma(add(subtract(n,r,mc,mp),XOMComplex.ONE,mc,mp),mc,mp),mc,mp);
+		XOMComplex n1 = gamma(XOMComplex.ONE.add(n, mc), mc, mp);
+		XOMComplex nr = gamma(XOMComplex.ONE.add(n, mc).subtract(r, mc), mc, mp);
+		return n1.divide(nr, mc);
 	}
+	
 	public static XOMComplex lognPr(XOMComplex n, XOMComplex r, MathContext mc, MathProcessor mp) {
-		return subtract(loggamma(add(n,XOMComplex.ONE,mc,mp),mc,mp),loggamma(add(subtract(n,r,mc,mp),XOMComplex.ONE,mc,mp),mc,mp),mc,mp);
+		XOMComplex n1 = loggamma(XOMComplex.ONE.add(n, mc), mc, mp);
+		XOMComplex nr = loggamma(XOMComplex.ONE.add(n, mc).subtract(r, mc), mc, mp);
+		return n1.subtract(nr, mc);
 	}
+	
 	public static XOMComplex nCr(XOMComplex n, XOMComplex r, MathContext mc, MathProcessor mp) {
-		return divide(divide(gamma(add(n,XOMComplex.ONE,mc,mp),mc,mp),gamma(add(r,XOMComplex.ONE,mc,mp),mc,mp),mc,mp),gamma(add(subtract(n,r,mc,mp),XOMComplex.ONE,mc,mp),mc,mp),mc,mp);
+		XOMComplex n1 = gamma(XOMComplex.ONE.add(n, mc), mc, mp);
+		XOMComplex r1 = gamma(XOMComplex.ONE.add(r, mc), mc, mp);
+		XOMComplex nr = gamma(XOMComplex.ONE.add(n, mc).subtract(r, mc), mc, mp);
+		return n1.divide(r1, mc).divide(nr, mc);
 	}
+	
 	public static XOMComplex lognCr(XOMComplex n, XOMComplex r, MathContext mc, MathProcessor mp) {
-		return subtract(subtract(loggamma(add(n,XOMComplex.ONE,mc,mp),mc,mp),loggamma(add(r,XOMComplex.ONE,mc,mp),mc,mp),mc,mp),loggamma(add(subtract(n,r,mc,mp),XOMComplex.ONE,mc,mp),mc,mp),mc,mp);
+		XOMComplex n1 = loggamma(XOMComplex.ONE.add(n, mc), mc, mp);
+		XOMComplex r1 = loggamma(XOMComplex.ONE.add(r, mc), mc, mp);
+		XOMComplex nr = loggamma(XOMComplex.ONE.add(n, mc).subtract(r, mc), mc, mp);
+		return n1.subtract(r1, mc).subtract(nr, mc);
 	}
 }

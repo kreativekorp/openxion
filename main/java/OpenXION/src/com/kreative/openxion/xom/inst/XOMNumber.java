@@ -1,5 +1,5 @@
 /*
- * Copyright &copy; 2009-2011 Rebecca G. Bettencourt / Kreative Software
+ * Copyright &copy; 2009-2026 Rebecca G. Bettencourt / Kreative Software
  * <p>
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -27,169 +27,111 @@
 
 package com.kreative.openxion.xom.inst;
 
-import java.math.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
 import com.kreative.openxion.XNContext;
 import com.kreative.openxion.xom.XOMValue;
 import com.kreative.openxion.xom.XOMVariant;
 
-public class XOMNumber extends XOMValue {
+public class XOMNumber extends XOMValue implements Comparable<XOMNumber> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final BigDecimal BIGDECIMAL_PI = new BigDecimal("3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117068");
 	public static final BigDecimal BIGDECIMAL_E = new BigDecimal("2.718281828459045235360287471352662497757247093699959574966967627724076630353547594571382178525166427");
 	public static final BigDecimal BIGDECIMAL_PHI = new BigDecimal("1.618033988749894848204586834365638117720309179805762862135448622705260462818902449707207204189391137");
+	public static final BigDecimal BIGDECIMAL_GAMMA = new BigDecimal("0.5772156649015328606065120900824024310421593359399235988057672348848677267776646709369470632917467495");
 	
-	public static final XOMNumber ZERO = new XOMNumber(BigDecimal.ZERO);
-	public static final XOMNumber ONE = new XOMNumber(BigDecimal.ONE);
-	public static final XOMNumber TEN = new XOMNumber(BigDecimal.TEN);
+	public static final XOMNumber ZERO = new XOMNumber(0);
+	public static final XOMNumber ONE = new XOMNumber(1);
+	public static final XOMNumber TWO = new XOMNumber(2);
+	public static final XOMNumber THREE = new XOMNumber(3);
+	public static final XOMNumber FOUR = new XOMNumber(4);
+	public static final XOMNumber TEN = new XOMNumber(10);
+	public static final XOMNumber TWELVE = new XOMNumber(12);
+	public static final XOMNumber ONE_EIGHTY = new XOMNumber(180);
 	public static final XOMNumber PI = new XOMNumber(BIGDECIMAL_PI);
 	public static final XOMNumber E = new XOMNumber(BIGDECIMAL_E);
 	public static final XOMNumber PHI = new XOMNumber(BIGDECIMAL_PHI);
-	public static final XOMNumber POSITIVE_INFINITY = new XOMNumber(false, false);
-	public static final XOMNumber NEGATIVE_INFINITY = new XOMNumber(false, true);
-	public static final XOMNumber NaN = new XOMNumber(true, false);
+	public static final XOMNumber GAMMA = new XOMNumber(BIGDECIMAL_GAMMA);
+	public static final XOMNumber NEGATIVE_ONE = new XOMNumber(-1);
+	public static final XOMNumber POSITIVE_INFINITY = new XOMNumber(Double.POSITIVE_INFINITY);
+	public static final XOMNumber NEGATIVE_INFINITY = new XOMNumber(Double.NEGATIVE_INFINITY);
+	public static final XOMNumber NaN = new XOMNumber(null);
 	
-	private BigDecimal theNumber;
-	private boolean undefined;
+	private final BigDecimal bigValue;
+	private final double doubleValue;
 	
 	public XOMNumber(Number n) {
 		if (n == null) {
-			this.theNumber = BigDecimal.ZERO;
-			this.undefined = true;
+			this.bigValue = null;
+			this.doubleValue = Double.NaN;
 		} else if (n instanceof BigDecimal) {
-			this.theNumber = (BigDecimal)n;
-			this.undefined = false;
+			this.bigValue = (BigDecimal)n;
+			this.doubleValue = bigValue.doubleValue();
 		} else if (n instanceof BigInteger) {
-			this.theNumber = new BigDecimal((BigInteger)n);
-			this.undefined = false;
-		} else if (n instanceof Double) {
-			double d = n.doubleValue();
-			if (Double.isNaN(d) || Double.isInfinite(d)) {
-				this.theNumber = Double.isNaN(d) ? BigDecimal.ZERO : (d < 0) ? BigDecimal.ONE.negate() : BigDecimal.ONE;
-				this.undefined = true;
+			this.bigValue = new BigDecimal((BigInteger)n);
+			this.doubleValue = bigValue.doubleValue();
+		} else if (n instanceof Double || n instanceof Float) {
+			double v = n.doubleValue();
+			if (Double.isNaN(v) || Double.isInfinite(v)) {
+				this.bigValue = null;
+				this.doubleValue = v;
+			} else if (v == 0) {
+				this.bigValue = BigDecimal.ZERO;
+				this.doubleValue = v;
 			} else {
-				this.theNumber = BigDecimal.valueOf(d);
-				this.undefined = false;
-			}
-		} else if (n instanceof Float) {
-			float f = n.floatValue();
-			if (Float.isNaN(f) || Float.isInfinite(f)) {
-				this.theNumber = Float.isNaN(f) ? BigDecimal.ZERO : (f < 0) ? BigDecimal.ONE.negate() : BigDecimal.ONE;
-				this.undefined = true;
-			} else {
-				this.theNumber = new BigDecimal(Float.toString(f));
-				this.undefined = false;
+				this.bigValue = BigDecimal.valueOf(v);
+				this.doubleValue = bigValue.doubleValue();
 			}
 		} else if (n instanceof Long || n instanceof Integer || n instanceof Short || n instanceof Byte) {
-			this.theNumber = BigDecimal.valueOf(n.longValue());
-			this.undefined = false;
+			this.bigValue = BigDecimal.valueOf(n.longValue());
+			this.doubleValue = bigValue.doubleValue();
 		} else {
-			double d = n.doubleValue();
-			if (Double.isNaN(d) || Double.isInfinite(d)) {
-				this.theNumber = Double.isNaN(d) ? BigDecimal.ZERO : (d < 0) ? BigDecimal.ONE.negate() : BigDecimal.ONE;
-				this.undefined = true;
-			} else {
-				this.theNumber = BigDecimal.valueOf(d);
-				this.undefined = false;
-			}
+			throw new IllegalArgumentException("unknown subclass of java.lang.Number: " + n.getClass());
 		}
-	}
-	
-	private XOMNumber(boolean nan, boolean neg) {
-		this.theNumber = nan ? BigDecimal.ZERO : neg ? BigDecimal.ONE.negate() : BigDecimal.ONE;
-		this.undefined = true;
-	}
-	
-	public boolean isUndefined() {
-		return theNumber == null || undefined;
 	}
 	
 	public boolean isNaN() {
-		return theNumber == null || (undefined && (theNumber.compareTo(BigDecimal.ZERO) == 0));
+		return bigValue == null && Double.isNaN(doubleValue);
 	}
 	
 	public boolean isInfinite() {
-		return theNumber != null && (undefined && !(theNumber.compareTo(BigDecimal.ZERO) == 0));
+		return bigValue == null && Double.isInfinite(doubleValue);
+	}
+	
+	public boolean isFinite() {
+		return bigValue != null;
 	}
 	
 	public boolean isZero() {
-		return theNumber != null && !undefined && (theNumber.compareTo(BigDecimal.ZERO) == 0);
+		return (bigValue != null) ? (bigValue.signum() == 0) : (doubleValue == 0);
 	}
 	
-	public static final int SIGN_NaN = Integer.MIN_VALUE;
-	public static final int SIGN_NEGATIVE = -1;
-	public static final int SIGN_ZERO = 0;
-	public static final int SIGN_POSITIVE = 1;
-	
-	public int getSign() {
-		if (theNumber == null) return SIGN_NaN;
-		else if (undefined) {
-			int cmp = theNumber.compareTo(BigDecimal.ZERO);
-			if (cmp < 0) return SIGN_NEGATIVE;
-			else if (cmp > 0) return SIGN_POSITIVE;
-			else return SIGN_NaN;
-		}
-		else {
-			int cmp = theNumber.compareTo(BigDecimal.ZERO);
-			if (cmp < 0) return SIGN_NEGATIVE;
-			else if (cmp > 0) return SIGN_POSITIVE;
-			else return SIGN_ZERO;
-		}
+	public boolean isPos() {
+		return (bigValue != null) ? (bigValue.signum() > 0) : (doubleValue > 0);
 	}
 	
-	public int getOppositeSign() {
-		if (theNumber == null) return SIGN_NaN;
-		else if (undefined) {
-			int cmp = theNumber.compareTo(BigDecimal.ZERO);
-			if (cmp < 0) return SIGN_POSITIVE;
-			else if (cmp > 0) return SIGN_NEGATIVE;
-			else return SIGN_NaN;
-		}
-		else {
-			int cmp = theNumber.compareTo(BigDecimal.ZERO);
-			if (cmp < 0) return SIGN_POSITIVE;
-			else if (cmp > 0) return SIGN_NEGATIVE;
-			else return SIGN_ZERO;
-		}
+	public boolean isNeg() {
+		return (bigValue != null) ? (bigValue.signum() < 0) : (doubleValue < 0);
 	}
 	
 	public XOMNumber abs() {
-		if (theNumber == null) return NaN;
-		else if (undefined) {
-			int cmp = theNumber.compareTo(BigDecimal.ZERO);
-			if (cmp == 0) return NaN;
-			else return POSITIVE_INFINITY;
-		}
-		else return new XOMNumber(theNumber.abs());
+		if (bigValue != null && bigValue.signum() != 0) return new XOMNumber(bigValue.abs());
+		return new XOMNumber(Math.abs(doubleValue));
 	}
 	
 	public XOMNumber negate() {
-		if (theNumber == null) return NaN;
-		else if (undefined) {
-			int cmp = theNumber.compareTo(BigDecimal.ZERO);
-			if (cmp < 0) return POSITIVE_INFINITY;
-			else if (cmp > 0) return NEGATIVE_INFINITY;
-			else return NaN;
-		}
-		else return new XOMNumber(theNumber.negate());
+		if (bigValue != null && bigValue.signum() != 0) return new XOMNumber(bigValue.negate());
+		return new XOMNumber(-doubleValue);
 	}
 	
 	public XOMNumber signum() {
-		if (theNumber == null) return NaN;
-		else if (undefined) {
-			int cmp = theNumber.compareTo(BigDecimal.ZERO);
-			if (cmp > 0) return ONE;
-			else if (cmp < 0) return ONE.negate();
-			else return NaN;
-		}
-		else {
-			int cmp = theNumber.compareTo(BigDecimal.ZERO);
-			if (cmp > 0) return ONE;
-			else if (cmp < 0) return ONE.negate();
-			else return ZERO;
-		}
+		if (bigValue != null && bigValue.signum() != 0) return new XOMNumber(bigValue.signum());
+		return new XOMNumber(Math.signum(doubleValue));
 	}
 	
 	public XOMNumber ceil() {
@@ -217,103 +159,108 @@ public class XOMNumber extends XOMValue {
 	}
 	
 	public XOMNumber round(RoundingMode rm) {
-		if (theNumber == null || undefined) return this;
-		else return new XOMNumber(theNumber.divide(BigDecimal.ONE, 0, rm));
+		if (bigValue == null || bigValue.signum() == 0) return this;
+		return new XOMNumber(bigValue.divide(BigDecimal.ONE, 0, rm));
 	}
 	
 	public XOMNumber frac() {
-		if (theNumber == null || undefined) return NaN;
-		else return new XOMNumber(theNumber.subtract(theNumber.divide(BigDecimal.ONE, 0, RoundingMode.DOWN)));
+		if (bigValue == null || bigValue.signum() == 0) return this;
+		BigDecimal intValue = bigValue.divide(BigDecimal.ONE, 0, RoundingMode.DOWN);
+		return new XOMNumber(bigValue.subtract(intValue));
 	}
 	
 	public Number toNumber() {
-		if (theNumber == null) return Double.NaN;
-		else if (undefined) {
-			int cmp = theNumber.compareTo(BigDecimal.ZERO);
-			if (cmp < 0) return Double.NEGATIVE_INFINITY;
-			else if (cmp > 0) return Double.POSITIVE_INFINITY;
-			else return Double.NaN;
-		}
-		else return theNumber;
+		return (bigValue != null && bigValue.signum() != 0) ? bigValue : doubleValue;
 	}
 	
 	public BigDecimal toBigDecimal() {
-		if (theNumber == null || undefined) return null;
-		else return theNumber;
+		return bigValue;
 	}
 	
 	public double toDouble() {
-		if (theNumber == null) return Double.NaN;
-		else if (undefined) {
-			int cmp = theNumber.compareTo(BigDecimal.ZERO);
-			if (cmp < 0) return Double.NEGATIVE_INFINITY;
-			else if (cmp > 0) return Double.POSITIVE_INFINITY;
-			else return Double.NaN;
-		}
-		else return theNumber.doubleValue();
+		return doubleValue;
+	}
+	
+	public double toClampedDouble() {
+		if (bigValue == null || bigValue.signum() == 0) return doubleValue;
+		if (doubleValue == 0) return bigValue.signum() * Double.MIN_VALUE;
+		if (Double.isInfinite(doubleValue)) return bigValue.signum() * Double.MAX_VALUE;
+		return doubleValue;
 	}
 	
 	public long toLong() {
-		if (theNumber == null || undefined) return 0;
-		else return theNumber.longValue();
+		return (bigValue != null) ? bigValue.longValue() : 0;
 	}
 	
 	public int toInt() {
-		if (theNumber == null || undefined) return 0;
-		else return theNumber.intValue();
+		return (bigValue != null) ? bigValue.intValue() : 0;
 	}
 	
 	public String toLanguageString() {
-		if (theNumber == null) return "NAN";
-		else if (undefined) {
-			int cmp = theNumber.compareTo(BigDecimal.ZERO);
-			if (cmp < 0) return "-INF";
-			else if (cmp > 0) return "INF";
-			else return "NAN";
-		}
-		else return theNumber.toString()
+		if (bigValue != null) return bigValue.toString()
 			.replaceAll("[Ee][-]([0-9]+)", "''$1")
 			.replaceAll("[Ee][+]?([0-9]+)", "'$1");
+		return (doubleValue < 0) ? "-INF" : (doubleValue > 0) ? "INF" : "NAN";
 	}
+	
 	public String toTextString(XNContext ctx) {
-		if (theNumber == null) return "NAN";
-		else if (undefined) {
-			int cmp = theNumber.compareTo(BigDecimal.ZERO);
-			if (cmp < 0) return "-INF";
-			else if (cmp > 0) return "INF";
-			else return "NAN";
-		}
-		else return ctx.getNumberFormat().format(theNumber);
+		if (bigValue != null) return ctx.getNumberFormat().format(bigValue);
+		return (doubleValue < 0) ? "-INF" : (doubleValue > 0) ? "INF" : "NAN";
 	}
+	
 	public List<? extends XOMVariant> toVariantList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
+	
 	public List<? extends XOMVariant> toPrimitiveList(XNContext ctx) {
 		return Arrays.asList(this);
 	}
+	
 	public int hashCode() {
-		return (theNumber == null) ? 0 : undefined ? theNumber.signum() : theNumber.hashCode();
+		return (bigValue != null) ? bigValue.hashCode() : 0;
 	}
+	
 	public boolean equals(Object o) {
 		if (o instanceof XOMNumber) {
 			XOMNumber other = (XOMNumber)o;
-			if (this.isNaN() && other.isNaN()) {
-				return true;
-			}
-			else if (this.isNaN() || other.isNaN()) {
-				return false;
-			}
-			else if (this.undefined && other.undefined) {
-				return (this.theNumber.compareTo(BigDecimal.ZERO) == other.theNumber.compareTo(BigDecimal.ZERO));
-			}
-			else if (this.undefined || other.undefined) {
-				return false;
-			}
-			else {
-				return this.theNumber.compareTo(other.theNumber) == 0;
-			}
+			if (this.isFinite() && other.isFinite()) return (
+				this.bigValue.compareTo(other.bigValue) == 0);
+			if (this.isFinite() || other.isFinite()) return false;
+			return this.doubleValue == other.doubleValue;
 		} else {
 			return false;
 		}
+	}
+	
+	public int compareTo(XOMNumber other) {
+		if (this.isFinite() && other.isFinite())
+			return this.bigValue.compareTo(other.bigValue);
+		Double a = Double.valueOf(this.toClampedDouble());
+		Double b = Double.valueOf(other.toClampedDouble());
+		return a.compareTo(b);
+	}
+	
+	public XOMNumber add(XOMNumber other, MathContext mc) {
+		if (this.isFinite() && other.isFinite())
+			return new XOMNumber(this.bigValue.add(other.bigValue, mc));
+		return new XOMNumber(this.toClampedDouble() + other.toClampedDouble());
+	}
+	
+	public XOMNumber subtract(XOMNumber other, MathContext mc) {
+		if (this.isFinite() && other.isFinite())
+			return new XOMNumber(this.bigValue.subtract(other.bigValue, mc));
+		return new XOMNumber(this.toClampedDouble() - other.toClampedDouble());
+	}
+	
+	public XOMNumber multiply(XOMNumber other, MathContext mc) {
+		if (this.isFinite() && !this.isZero() && other.isFinite() && !other.isZero())
+			return new XOMNumber(this.bigValue.multiply(other.bigValue, mc));
+		return new XOMNumber(this.toClampedDouble() * other.toClampedDouble());
+	}
+	
+	public XOMNumber divide(XOMNumber other, MathContext mc) {
+		if (this.isFinite() && !this.isZero() && other.isFinite() && !other.isZero())
+			return new XOMNumber(this.bigValue.divide(other.bigValue, mc));
+		return new XOMNumber(this.toClampedDouble() / other.toClampedDouble());
 	}
 }
