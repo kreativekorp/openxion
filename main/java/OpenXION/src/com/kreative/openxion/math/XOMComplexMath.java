@@ -66,14 +66,14 @@ public class XOMComplexMath {
 		if (a.isNaN() || b.isNaN()) return XOMComplex.NaN;
 		if (b.isZero()) return (a.isFinite() && !a.isZero()) ? XOMComplex.ONE : XOMComplex.NaN;
 		if (b.equals(XOMComplex.ONE)) return a;
-		XOMNumber r = XOMNumberMath.hypot(a.im(), a.re(), mc, mp);
-		XOMNumber s = XOMNumberMath.atan2(a.im(), a.re(), mc, mp);
-		XOMNumber e = XOMNumberMath.exp(s.negate().multiply(b.im(), mc), mc, mp);
-		XOMNumber m = XOMNumberMath.pow(r, b.re(), mc, mp).multiply(e, mc);
-		XOMNumber n = XOMNumberMath.log(r, mc, mp).multiply(b.im(), mc).add(s.multiply(b.re(), mc), mc);
-		XOMNumber rp = XOMNumberMath.cos(n, mc, mp).multiply(m, mc);
-		XOMNumber ip = XOMNumberMath.sin(n, mc, mp).multiply(m, mc);
-		return new XOMComplex(rp.toNumber(), ip.toNumber());
+		XOMNumber h = XOMNumberMath.hypot(a.im(), a.re(), mc, mp);
+		XOMNumber t = XOMNumberMath.atan2(a.im(), a.re(), mc, mp);
+		XOMNumber e = XOMNumberMath.exp(t.multiply(b.im(), mc).negate(), mc, mp);
+		XOMNumber m = XOMNumberMath.pow(h, b.re(), mc, mp).multiply(e, mc);
+		XOMNumber n = XOMNumberMath.log(h,mc,mp).multiply(b.im(),mc).add(t.multiply(b.re(),mc),mc);
+		XOMNumber r = XOMNumberMath.cos(n, mc, mp).multiply(m, mc);
+		XOMNumber i = XOMNumberMath.sin(n, mc, mp).multiply(m, mc);
+		return new XOMComplex(r.toNumber(), i.toNumber());
 	}
 	
 	public static XOMComplex annuity(XOMComplex a, XOMComplex b, MathContext mc, MathProcessor mp) {
@@ -257,77 +257,71 @@ public class XOMComplexMath {
 	}
 	
 	public static XOMComplex sinh(XOMComplex n, MathContext mc, MathProcessor mp) {
-		XOMComplex ix = new XOMComplex(n.im().negate().toNumber(), n.re().toNumber());
-		XOMComplex sinix = sin(ix, mc, mp);
-		return new XOMComplex(sinix.im().toNumber(), sinix.re().negate().toNumber());
+		XOMNumber sh = XOMNumberMath.sinh(n.re(), mc, mp);
+		XOMNumber c = XOMNumberMath.cos(n.im(), mc, mp);
+		XOMNumber ch = XOMNumberMath.cosh(n.re(), mc, mp);
+		XOMNumber s = XOMNumberMath.sin(n.im(), mc, mp);
+		XOMNumber r = sh.multiply(c, mc);
+		XOMNumber i = ch.multiply(s, mc);
+		return new XOMComplex(r.toNumber(), i.toNumber());
 	}
 	
 	public static XOMComplex cosh(XOMComplex n, MathContext mc, MathProcessor mp) {
-		XOMComplex ix = new XOMComplex(n.im().negate().toNumber(), n.re().toNumber());
-		return cos(ix, mc, mp);
+		XOMNumber ch = XOMNumberMath.cosh(n.re(), mc, mp);
+		XOMNumber c = XOMNumberMath.cos(n.im(), mc, mp);
+		XOMNumber sh = XOMNumberMath.sinh(n.re(), mc, mp);
+		XOMNumber s = XOMNumberMath.sin(n.im(), mc, mp);
+		XOMNumber r = ch.multiply(c, mc);
+		XOMNumber i = sh.multiply(s, mc);
+		return new XOMComplex(r.toNumber(), i.toNumber());
 	}
 	
 	public static XOMComplex tanh(XOMComplex n, MathContext mc, MathProcessor mp) {
-		XOMComplex ix = new XOMComplex(n.im().negate().toNumber(), n.re().toNumber());
-		XOMComplex tanix = tan(ix, mc, mp);
-		return new XOMComplex(tanix.im().toNumber(), tanix.re().negate().toNumber());
+		return sinh(n, mc, mp).divide(cosh(n, mc, mp), mc);
 	}
 	
 	public static XOMComplex coth(XOMComplex n, MathContext mc, MathProcessor mp) {
-		XOMComplex ix = new XOMComplex(n.im().negate().toNumber(), n.re().toNumber());
-		XOMComplex cotix = cot(ix, mc, mp);
-		return new XOMComplex(cotix.im().negate().toNumber(), cotix.re().toNumber());
+		return cosh(n, mc, mp).divide(sinh(n, mc, mp), mc);
 	}
 	
 	public static XOMComplex sech(XOMComplex n, MathContext mc, MathProcessor mp) {
-		XOMComplex ix = new XOMComplex(n.im().negate().toNumber(), n.re().toNumber());
-		return sec(ix, mc, mp);
+		return XOMComplex.ONE.divide(cosh(n, mc, mp), mc);
 	}
 	
 	public static XOMComplex csch(XOMComplex n, MathContext mc, MathProcessor mp) {
-		XOMComplex ix = new XOMComplex(n.im().negate().toNumber(), n.re().toNumber());
-		XOMComplex cscix = csc(ix, mc, mp);
-		return new XOMComplex(cscix.im().negate().toNumber(), cscix.re().toNumber());
+		return XOMComplex.ONE.divide(sinh(n, mc, mp), mc);
 	}
 	
 	public static XOMComplex asin(XOMComplex n, MathContext mc, MathProcessor mp) {
 		XOMComplex s = sqrt(XOMComplex.ONE.subtract(n.multiply(n, mc), mc), mc, mp);
-		XOMComplex l = log(s.add(n.multiply(XOMComplex.POSITIVE_I, mc), mc), mc, mp);
-		return l.multiply(XOMComplex.NEGATIVE_I, mc);
+		return log(s.add(n.muli(), mc), mc, mp).mulni();
 	}
 	
 	public static XOMComplex acos(XOMComplex n, MathContext mc, MathProcessor mp) {
 		XOMComplex s = sqrt(XOMComplex.ONE.subtract(n.multiply(n, mc), mc), mc, mp);
-		XOMComplex l = log(n.add(s.multiply(XOMComplex.POSITIVE_I, mc), mc), mc, mp);
-		return l.multiply(XOMComplex.NEGATIVE_I, mc);
+		return log(n.add(s.muli(), mc), mc, mp).mulni();
 	}
 	
 	public static XOMComplex atan(XOMComplex n, MathContext mc, MathProcessor mp) {
-		XOMComplex ix = XOMComplex.POSITIVE_I.multiply(n, mc);
-		XOMComplex ln1mix = log(XOMComplex.ONE.subtract(ix, mc), mc, mp);
-		XOMComplex ln1pix = log(XOMComplex.ONE.add(ix, mc), mc, mp);
-		XOMComplex a = ln1mix.subtract(ln1pix, mc);
-		return XOMComplex.POSITIVE_I.multiply(a, mc).divide(XOMComplex.TWO, mc);
+		XOMComplex z = XOMComplex.POSITIVE_I.multiply(n, mc);
+		XOMComplex lomz = log(XOMComplex.ONE.subtract(z, mc), mc, mp);
+		XOMComplex lopz = log(XOMComplex.ONE.add(z, mc), mc, mp);
+		return lomz.subtract(lopz, mc).muli().divide(XOMComplex.TWO, mc);
 	}
 	
 	public static XOMComplex acot(XOMComplex n, MathContext mc, MathProcessor mp) {
-		XOMComplex ix = XOMComplex.POSITIVE_I.divide(n, mc);
-		XOMComplex ln1mix = log(XOMComplex.ONE.subtract(ix, mc), mc, mp);
-		XOMComplex ln1pix = log(XOMComplex.ONE.add(ix, mc), mc, mp);
-		XOMComplex a = ln1mix.subtract(ln1pix, mc);
-		return XOMComplex.POSITIVE_I.multiply(a, mc).divide(XOMComplex.TWO, mc);
+		XOMComplex z = XOMComplex.POSITIVE_I.divide(n, mc);
+		XOMComplex lomz = log(XOMComplex.ONE.subtract(z, mc), mc, mp);
+		XOMComplex lopz = log(XOMComplex.ONE.add(z, mc), mc, mp);
+		return lomz.subtract(lopz, mc).muli().divide(XOMComplex.TWO, mc);
 	}
 	
 	public static XOMComplex asec(XOMComplex n, MathContext mc, MathProcessor mp) {
-		XOMComplex s = sqrt(XOMComplex.ONE.subtract(XOMComplex.ONE.divide(n.multiply(n, mc), mc), mc), mc, mp);
-		XOMComplex l = log(XOMComplex.ONE.divide(n, mc).add(s.multiply(XOMComplex.POSITIVE_I, mc), mc), mc, mp);
-		return l.multiply(XOMComplex.NEGATIVE_I, mc);
+		return acos(XOMComplex.ONE.divide(n, mc), mc, mp);
 	}
 	
 	public static XOMComplex acsc(XOMComplex n, MathContext mc, MathProcessor mp) {
-		XOMComplex s = sqrt(XOMComplex.ONE.subtract(XOMComplex.ONE.divide(n.multiply(n, mc), mc), mc), mc, mp);
-		XOMComplex l = log(s.add(XOMComplex.POSITIVE_I.divide(n, mc), mc), mc, mp);
-		return l.multiply(XOMComplex.NEGATIVE_I, mc);
+		return asin(XOMComplex.ONE.divide(n, mc), mc, mp);
 	}
 	
 	public static XOMComplex asinh(XOMComplex n, MathContext mc, MathProcessor mp) {

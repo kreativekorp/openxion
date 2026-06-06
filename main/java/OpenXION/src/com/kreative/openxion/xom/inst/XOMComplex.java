@@ -96,6 +96,14 @@ public class XOMComplex extends XOMValue {
 		return new XOMComplex(re.negate().toNumber(), im.negate().toNumber());
 	}
 	
+	public XOMComplex muli() {
+		return new XOMComplex(im.negate().toNumber(), re.toNumber());
+	}
+	
+	public XOMComplex mulni() {
+		return new XOMComplex(im.toNumber(), re.negate().toNumber());
+	}
+	
 	public XOMComplex ceil() {
 		return round(RoundingMode.CEILING);
 	}
